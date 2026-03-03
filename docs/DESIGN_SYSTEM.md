@@ -14,8 +14,8 @@
 ## 색상 토큰 (라이트/다크 모드)
 | Token | Light | Dark | 비고 |
 |-------|-------|------|------|
-| `bg.base` | `#FFFFFF` | `#111827` | 페이지 배경 |
-| `bg.surface` | `#F9FAFB` | `#1F2937` | 카드/코드블록/칩 배경 |
+| `bg.base` | `#FFFFFF` | `#030712` | 페이지 배경 (gray-950) |
+| `bg.surface` | `#F9FAFB` | `#111827` | 카드/코드블록/칩 배경 (gray-900) |
 | `text.primary` | `#111827` | `#F9FAFB` | 제목/강조 텍스트 |
 | `text.secondary` | `#374151` | `#D1D5DB` | 본문 텍스트 |
 | `text.muted` | `#6B7280` | `#9CA3AF` | 보조/캡션 텍스트 |
@@ -33,15 +33,26 @@
 - 화면 전체 Teal 면적 비중 5% 이하 목표
 
 ## 타이포그래피
-### 폰트 전략 (빠른 로딩 우선)
-- 웹폰트 기본 미사용, OS 내장/로컬 설치 폰트 우선
-- 영문 스택: `"Helvetica Neue", "Inter", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif`
-- 한글 스택: `"NanumSquare Neo", "Pretendard Variable", "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif`
-- 페이지 기본 `font-sans`: 한글 스택 우선 + 영문 스택 결합
-- v2에서 Inter/Pretendard self-host는 성능 측정 후 검토
+### 폰트 전략 (성능 우선)
+- v1: `next/font/google`로 Inter 로드 (latin subset, `display: 'swap'`, preload 자동)
+- CDN `<link>` 방식 사용 금지 — 반드시 `next/font` 사용
+- 영문/UI 기본: `Inter` → CSS 변수 `--font-inter`로 등록
+- 한글: 웹폰트 없이 시스템 폰트 스택 (`Apple SD Gothic Neo`, `Malgun Gothic`, `Noto Sans KR`)
+- `--font-sans`: `var(--font-inter)` + 한글 시스템 폰트 fallback
+- `--font-heading`: 현재 `var(--font-sans)`와 동일, 추후 분리 가능하도록 별도 변수 유지
+- 한글 웹폰트(Pretendard/NanumSquare Neo) preload는 성능 측정 전까지 하지 않음
+- v2에서 한글 웹폰트 추가 시 `--font-heading` 또는 `--font-sans` 변수만 교체
+
+### 헤딩 크기/굵기
+| 레벨 | 크기 | 굵기 (weight) | 용도 |
+|------|------|--------------|------|
+| `h1` | 26px | 600 (semibold) | 페이지 제목, 이름 |
+| `h2` | 20px (text-xl) | 540 | 섹션 제목 (Latest Ideas 등) |
+| `h3` | 16px (text-base) | 480 | 카드/리스트 글 제목 |
 
 ### 크기/행간/자간
-- 본문 16~17px, 모바일 15~16px, `leading-relaxed`(약 1.7)
+- 본문 16px, 보조 텍스트 14px (text-sm), 메타 12px (text-xs)
+- `leading-relaxed`(약 1.7)
 - 영문 제목 `tracking-tight`, 한글 제목 `tracking-normal`
 - 영문 문단 자간 `0 ~ -0.01em`, 한글 문단 자간 `0 ~ 0.01em` 권장
 - 문단 간격은 넉넉하게 유지 (여백이 위계 역할)

@@ -40,7 +40,7 @@ export default async function HomePage({
       <HeroSection name={dict.hero.name} tagline={dict.hero.tagline} />
 
       {/* Short bio */}
-      <p className="text-text-secondary leading-relaxed pb-4 border-b border-line-default">
+      <p className="text-sm text-text-muted leading-relaxed pb-4 border-b border-line-default">
         {dict.hero.bio_short}
       </p>
 

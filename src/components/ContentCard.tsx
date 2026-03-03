@@ -35,7 +35,7 @@ export default function ContentCard({ post, locale }: ContentCardProps) {
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <h3 className="text-base font-medium text-text-primary group-hover:text-accent transition-colors leading-snug">
+          <h3 className="text-base font-[480] text-text-primary group-hover:text-accent transition-colors leading-snug">
             {post.title}
           </h3>
           <p className="text-sm text-text-muted mt-1 line-clamp-2">

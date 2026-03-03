@@ -22,7 +22,7 @@ export default function HeroSection({ name, tagline }: HeroSectionProps) {
       </div>
 
       <div>
-        <h1 className="text-2xl font-bold text-text-primary tracking-tight">
+        <h1 className="text-[26px] font-semibold text-text-primary tracking-tight">
           {name}
         </h1>
         <p className="text-text-secondary mt-1">{tagline}</p>
