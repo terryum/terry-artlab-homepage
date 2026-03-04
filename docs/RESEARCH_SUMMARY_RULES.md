@@ -112,6 +112,32 @@
 
 ---
 
+## `card_summary` 작성 규칙
+
+- 목록 카드에 표시되는 짧은 요약 (summary의 축약 버전)
+- 카드 line-clamp: 모바일 4줄 / 데스크톱 3줄
+- **ko**: 85-100자 (모바일 4줄 이내 기준)
+- **en**: 150-180자 (모바일 4줄 이내 기준)
+- 핵심 문제 + 핵심 해결 방법 + 대표 수치 1개 포함
+- 예시 (ko): `"시각·언어에만 의존하던 VLA 모델에 6축 힘-토크 피드백을 MoE로 융합하여, 접촉이 잦은 5가지 로봇 조작에서 기존 대비 평균 23.2%p 성능 향상을 달성했다."`
+- 예시 (en): `"VLA models struggle with contact-heavy tasks due to missing force feedback. ForceVLA fuses 6-axis force-torque sensing via MoE, achieving 23.2%p avg. gain on five manipulation tasks."`
+
+---
+
+## Cover 이미지 규칙
+
+### 상세 페이지 (`cover_image`)
+- 원본 비율 유지 (crop 없음)
+- max-height 384px 제한, 가로는 콘텐츠 영역에 맞춤
+- `cover_caption`: 선택한 figure의 원문 캡션을 그대로 사용 (**번역하지 않음**)
+
+### 카드 썸네일 (`cover_thumb`)
+- `cover_thumb.webp`: 1:1 크롭, 최소 192×192px
+- 텍스트가 아닌 다이어그램/그림 중심 부분을 선택
+- 없으면 `cover_image`가 center crop으로 대체
+
+---
+
 ## 한국어/영어 작성 원칙
 
 - 제목/고유명사/기술 용어는 원문 유지 우선

@@ -50,6 +50,9 @@
   - `kind` (`write` | `read`)
   - `source_url` (없으면 null)
   - `cover_image` (`./cover.webp`)
+  - `cover_caption` (원문 figure 캡션, 선택)
+  - `cover_thumb` (`./cover_thumb.webp`, 카드 썸네일용, 선택)
+  - `card_summary` (카드/목록 전용 짧은 요약, 선택)
 
 ## `meta.json` 규칙 (v1 optional)
 - `meta.json`은 v1에서 **선택사항**이다. (필수 아님)
