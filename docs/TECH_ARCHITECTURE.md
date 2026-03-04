@@ -54,33 +54,41 @@ v1 개인 웹사이트의 기술 구성과 시스템 경계를 정의한다.
 
 ### Claude Code
 - 포스팅 퍼블리시 자동화 (번역/cover/meta/이미지 정리)
-- 프로젝트 설정 파일 초안 생성 (`package.json`, lint, formatter, env 예시 등)
-- CI/CD 관련 설정 초안 생성 (예: GitHub Actions, Vercel 설정 보조 파일)
-- 초기 개발용 더미 콘텐츠 생성
+- 프로젝트 설정 및 코드 변경
 
-## 렌더링/빌드 전략 (요약)
-- Home/목록/상세: SSG 우선
-- 언어 분기: 미들웨어 또는 진입 라우트에서 처리
+## 렌더링/빌드 전략
+- **모든 페이지 SSG** (100% 정적 생성, ISR 미사용)
+- 새 포스트 반영 시 전체 빌드 필요 (Git push → Vercel 자동 빌드)
+- 언어 분기: 미들웨어에서 처리 (`src/middleware.ts`)
 - 검색: v1 제외 (목록 필터 정도만 허용)
-- 콘텐츠 처리 세부 규칙: `POSTING_WORKFLOW.md` 준수
+
+## 캐싱 전략
+
+### 페이지 (HTML)
+- SSG로 빌드 시점에 정적 HTML 생성
+- Vercel CDN + Cloudflare CDN 이중 캐싱
+- 새 빌드 시 자동 무효화
+
+### 이미지
+| 대상 | 캐시 정책 | 설정 위치 |
+|------|-----------|-----------|
+| `/images/*` (프로필 등 정적) | `public, max-age=31536000, immutable` (1년) | `next.config.ts` headers |
+| Next.js 최적화 이미지 | `minimumCacheTTL: 86400` (24시간) | `next.config.ts` images |
+| 포스트 커버/figure | Vercel 기본 캐싱 | 자동 |
+
+### 기타
+- DNS Prefetch: 전역 활성화 (`X-DNS-Prefetch-Control: on`)
+- 폰트: Next.js `next/font`로 자동 최적화 + 캐싱
 
 ## 최소 백엔드 범위 (v1)
-Substack 이전 단계이므로 뉴스레터는 **최소 구독 폼 처리**만 고려한다.
-- 허용 기능: 이메일/언어선호/관심사 제출 및 검증
-- 구현 위치: Vercel 서버리스(Route Handler) 또는 외부 이메일 서비스 API 연동
-- 제외 기능: 자체 발송 시스템, 관리자 CMS, 결제/멤버십
+- v1에서는 백엔드 기능 없음 (100% 정적 사이트)
+- 뉴스레터/구독 기능은 v2 이후
 
 ## 환경 구성
 - Local: 더미 콘텐츠 포함 개발 환경
 - Preview: PR/브랜치 기반 미리보기 (Vercel)
 - Production: 메인 브랜치 배포
 - 환경변수는 Vercel/GitHub 시크릿으로 관리 (비밀키 클라이언트 노출 금지)
-
-## v1 구현 산출물 (Claude Code 자동 생성 대상)
-- 프로젝트 기본 설정 파일 (TS/Next/Tailwind/Lint/Format)
-- 배포/실행 문서 초안
-- CI 설정 초안 (필요 시)
-- 더미 포스트/더미 섹션 데이터
 
 ## v2 확장 포인트 (참고)
 - Substack 연동/이관
