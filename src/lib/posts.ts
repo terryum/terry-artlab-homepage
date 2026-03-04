@@ -62,6 +62,12 @@ function normalizeMeta(
     coverImage = `/posts/${slug}/${coverImage.slice(2)}`;
   }
 
+  // Normalize cover_thumb path
+  let coverThumb = (data.cover_thumb as string) || undefined;
+  if (coverThumb?.startsWith('./')) {
+    coverThumb = `/posts/${slug}/${coverThumb.slice(2)}`;
+  }
+
   return {
     post_id: (data.post_id as string) || slug,
     locale: (data.locale as string) || 'ko',
@@ -74,6 +80,9 @@ function normalizeMeta(
     content_type: contentType as 'writing' | 'reading',
     tags: (data.tags as string[]) || [],
     cover_image: coverImage,
+    cover_caption: data.cover_caption as string | undefined,
+    cover_thumb: coverThumb,
+    card_summary: data.card_summary as string | undefined,
     reading_time_min: data.reading_time_min as number | undefined,
     seo_title: data.seo_title as string | undefined,
     seo_description: data.seo_description as string | undefined,

@@ -10,6 +10,9 @@ export interface PostMeta {
   content_type: 'writing' | 'reading';
   tags: string[];
   cover_image: string;
+  cover_caption?: string;
+  cover_thumb?: string;
+  card_summary?: string;
   reading_time_min?: number;
   seo_title?: string;
   seo_description?: string;

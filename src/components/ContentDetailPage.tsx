@@ -86,16 +86,24 @@ export default function ContentDetailPage({
 
       {/* Cover image */}
       {meta.cover_image && (
-        <div className="relative w-full aspect-video mb-8 rounded-lg overflow-hidden bg-bg-surface">
-          <Image
-            src={meta.cover_image}
-            alt={meta.title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 672px"
-            priority
-          />
-        </div>
+        <figure className="mb-8">
+          <div className="rounded-lg overflow-hidden bg-bg-surface flex justify-center">
+            <Image
+              src={meta.cover_image}
+              alt={meta.title}
+              width={1200}
+              height={675}
+              className="w-full h-auto max-h-96 object-contain"
+              sizes="(max-width: 768px) 100vw, 672px"
+              priority
+            />
+          </div>
+          {meta.cover_caption && (
+            <figcaption className="text-xs text-text-muted text-center mt-2">
+              {meta.cover_caption}
+            </figcaption>
+          )}
+        </figure>
       )}
 
       {/* MDX body */}

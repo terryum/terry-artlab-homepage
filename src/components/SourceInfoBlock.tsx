@@ -26,6 +26,23 @@ function buildScholarUrl(title: string): string {
   return `https://scholar.google.com/scholar?q=${encodeURIComponent(title)}`;
 }
 
+/** Parse "Name (Affiliation)" entries → authors with affiliation indices + deduplicated affiliation list */
+function groupAffiliations(authors: string[]): {
+  parsed: { name: string; affIdx: number }[];
+  affiliations: string[];
+} {
+  const affMap = new Map<string, number>(); // affiliation → 1-based index
+  const parsed = authors.map((entry) => {
+    const match = entry.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
+    if (!match) return { name: entry.trim(), affIdx: 0 };
+    const name = match[1].trim();
+    const aff = match[2].trim();
+    if (!affMap.has(aff)) affMap.set(aff, affMap.size + 1);
+    return { name, affIdx: affMap.get(aff)! };
+  });
+  return { parsed, affiliations: [...affMap.keys()] };
+}
+
 function LinkBadge({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <a
@@ -107,11 +124,35 @@ export default function SourceInfoBlock({
               </svg>
             </button>
           )}
-          {open && sourceAuthorsFull && (
-            <p className="text-xs text-text-muted mt-1.5 leading-relaxed">
-              {sourceAuthorsFull.join(', ')}
-            </p>
-          )}
+          {open && sourceAuthorsFull && (() => {
+            const { parsed, affiliations } = groupAffiliations(sourceAuthorsFull);
+            const hasAffiliations = affiliations.length > 0;
+            return (
+              <div className="text-xs text-text-muted mt-1.5 leading-relaxed">
+                <p>
+                  {parsed.map((a, i) => (
+                    <span key={i}>
+                      {i > 0 && ', '}
+                      {a.name}
+                      {hasAffiliations && a.affIdx > 0 && (
+                        <sup className="text-[9px] ml-[1px]">{a.affIdx}</sup>
+                      )}
+                    </span>
+                  ))}
+                </p>
+                {hasAffiliations && (
+                  <p className="mt-1 text-[11px] text-text-muted/70">
+                    {affiliations.map((aff, i) => (
+                      <span key={i}>
+                        {i > 0 && '  '}
+                        <sup className="text-[9px]">{i + 1}</sup>{aff}
+                      </span>
+                    ))}
+                  </p>
+                )}
+              </div>
+            );
+          })()}
         </div>
       )}
     </div>

@@ -19,16 +19,16 @@ export default function ContentCard({ post, locale }: ContentCardProps) {
 
   return (
     <Link href={href} className="block group border-b border-line-default py-6 first:pt-0 last:border-b-0">
-      <article className="flex gap-4">
+      <article className="flex gap-6">
         {/* Thumbnail */}
-        {post.cover_image && (
-          <div className="hidden sm:block flex-shrink-0 w-24 h-24 relative rounded overflow-hidden bg-bg-surface">
+        {(post.cover_thumb || post.cover_image) && (
+          <div className="hidden sm:block flex-shrink-0 w-28 h-28 relative rounded overflow-hidden bg-bg-surface">
             <Image
-              src={post.cover_image}
+              src={post.cover_thumb || post.cover_image}
               alt={post.title}
               fill
               className="object-cover"
-              sizes="96px"
+              sizes="112px"
             />
           </div>
         )}
@@ -38,8 +38,8 @@ export default function ContentCard({ post, locale }: ContentCardProps) {
           <h3 className="text-base font-[480] text-text-primary group-hover:text-accent transition-colors leading-snug">
             {post.title}
           </h3>
-          <p className="text-sm text-text-muted mt-1 line-clamp-2">
-            {post.summary}
+          <p className="text-sm text-text-muted mt-1 line-clamp-4 sm:line-clamp-3">
+            {post.card_summary || post.summary}
           </p>
           <div className="flex items-center gap-2 mt-2 flex-wrap">
             <time className="text-xs text-text-muted">{dateStr}</time>
