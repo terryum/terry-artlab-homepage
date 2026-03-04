@@ -1,0 +1,102 @@
+---
+post_id: "2505-forcevla-force-aware-moe"
+locale: "ko"
+title: "ForceVLA: 접촉이 많은 조작을 위한 힘 인식 MoE 기반 VLA 모델"
+summary: "기존 VLA 모델이 시각·언어에만 의존해 접촉이 많은 조작에서 한계를 보이는 문제를, 6축 힘-토크 피드백을 Mixture-of-Experts로 융합하는 ForceVLA 프레임워크로 해결한 연구. 5가지 접촉 태스크에서 기존 대비 평균 23.2%p 성능 향상을 달성했다."
+slug: "2505-forcevla-force-aware-moe"
+published_at: "2025-05-28T00:00:00Z"
+updated_at: "2026-03-04T00:00:00Z"
+status: "published"
+content_type: "reading"
+tags:
+  - "Robotics"
+  - "VLA"
+  - "Force Sensing"
+  - "Manipulation"
+  - "NeurIPS 2025"
+cover_image: "./cover.webp"
+reading_time_min: 8
+source_url: "https://arxiv.org/abs/2505.22159"
+source_title: "ForceVLA: Enhancing VLA Models with a Force-aware MoE for Contact-rich Manipulation"
+source_author: "Jiawen Yu et al."
+source_type: "arXiv"
+source_project_url: "https://sites.google.com/view/forcevla2025"
+source_authors_full:
+  - "Jiawen Yu (Fudan University)"
+  - "Hairuo Liu (Shanghai Jiao Tong University)"
+  - "Qiaojun Yu (Shanghai AI Lab)"
+  - "Jieji Ren (Shanghai Jiao Tong University)"
+  - "Ce Hao (National University of Singapore)"
+  - "Haitong Ding (Shanghai University)"
+  - "Guangyu Huang (Xi'an Jiaotong University)"
+  - "Guofan Huang (Fudan University)"
+  - "Yan Song (Fudan University)"
+  - "Panpan Cai (Shanghai Jiao Tong University)"
+  - "Cewu Lu (Shanghai Jiao Tong University)"
+  - "Wenqiang Zhang (Fudan University)"
+references:
+  - title: "π₀: A Vision-Language-Action Flow Model for General Robot Control"
+    author: "Black et al. (2024)"
+    description: "ForceVLA의 베이스 프레임워크. 비전-언어-행동 flow 모델로, ForceVLA는 이 위에 힘 인식 MoE를 추가한 구조."
+    arxiv_url: "https://arxiv.org/abs/2410.24164"
+    scholar_url: "https://scholar.google.com/scholar?q=pi0+vision+language+action+flow+model+general+robot+control"
+  - title: "OpenVLA: An Open-Source Vision-Language-Action Model"
+    author: "Kim et al. (2024)"
+    description: "오픈소스 VLA 모델. 본 논문에서 주요 비교 대상으로 언급."
+    arxiv_url: "https://arxiv.org/abs/2406.09246"
+    scholar_url: "https://scholar.google.com/scholar?q=OpenVLA+open-source+vision-language-action+model"
+  - title: "RT-1: Robotics Transformer for Real-World Control at Scale"
+    author: "Brohan et al. (2022)"
+    description: "대규모 실세계 로봇 데이터 기반 Transformer. VLA 연구의 기반이 된 핵심 선행 연구."
+    arxiv_url: "https://arxiv.org/abs/2212.06817"
+    scholar_url: "https://scholar.google.com/scholar?q=RT-1+robotics+transformer+real+world+control+at+scale"
+translation_of: null
+translated_to:
+  - "en"
+newsletter_eligible: false
+featured: false
+---
+
+## TL;DR
+
+VLA 모델에 힘 감지가 빠져있어 접촉이 많은 조작에서 한계를 보이는 문제를, 태스크 단계별로 힘 정보의 중요도를 동적 라우팅하는 **MoE 기반 힘-비전-언어 융합**(ForceVLA)으로 해결했다.
+
+## 문제
+
+기존 Vision-Language-Action(VLA) 모델은 시각과 언어 입력에 주로 의존하며, 물리적 접촉이 중요한 조작 태스크에서 한계를 보인다. 플러그 삽입, 표면 닦기, 오이 껍질 벗기기 같은 태스크는 접촉 단계마다 요구되는 힘의 크기와 방향이 달라지지만, 기존 모델은 이러한 동적 변화를 감지하고 적응하는 메커니즘이 없다.
+
+특히 시각적 가림(occlusion)이 발생하거나 접촉 역학이 불확실한 상황에서, 힘/촉각 피드백 없이는 정밀한 제어가 불가능하다. 기존에도 힘 데이터를 단순 concatenation으로 추가하는 시도가 있었지만, 태스크 단계별로 힘 정보의 중요도가 달라지는 점을 반영하지 못했다.
+
+## 핵심 아이디어
+
+**FVLMoE(Force-aware Vision-Language MoE)**: 4개의 전문가 네트워크로 구성된 sparse MoE 모듈이 태스크 단계(접근, 접촉, 삽입 등)에 따라 시각-언어 임베딩과 6축 힘 토큰의 융합 방식을 동적으로 라우팅한다. 힘 데이터를 단순히 입력에 붙이는 것이 아니라, VLM 처리 이후 단계에서 사전학습된 표현을 보존하면서 힘 정보를 주입한다.
+
+핵심 구성 요소:
+
+- **힘 토큰화**: 6축 raw force-torque 데이터(f ∈ R^6)를 선형 투영하여 2048차원 토큰으로 변환
+- **Sparse MoE**: 게이팅 네트워크가 토큰별로 top-1 전문가를 선택, 태스크 단계에 따라 다른 전문가가 활성화
+- **Flow-based Action Head**: 융합된 멀티모달 특징을 element-wise addition으로 행동 생성 헤드에 주입
+- **ForceVLA-Data**: 5가지 태스크, 244개 시연, 14만 타임스텝의 동기화된 비전/고유감각/힘-토크 데이터셋
+
+## 주요 결과
+
+- **평균 성공률 60.5%** (5개 접촉 태스크), 힘 없는 π₀-base 대비 **+23.2%p** 향상 (37.3% → 60.5%)
+- **플러그 삽입 태스크 성공률 ~80%**, 단순 힘 concatenation 방식(π₀-base w/ F, 40.2%) 대비 대폭 향상
+- **시각 가림(occlusion) 조건에서 90% 성공률** — 힘 피드백이 시각 정보 부재를 보상함을 입증
+
+## 한계점
+
+### 저자가 언급한 한계점
+
+- **추정 외력 사용**: 직접 측정이 아닌 추정된 외력 값을 사용하므로, 극도의 촉각 민감도가 요구되는 시나리오에서 정밀도 한계 가능
+- **고가 센서 의존성**: 실험이 통합 힘-토크 센서를 갖춘 고가 로봇 플랫폼(Flexiv Rizon)에서 수행되어 범용 접근성 제한
+
+### AI 분석 한계점
+
+- **소규모 데이터**: 244개 시연(태스크당 ~50개)은 다른 VLA 연구 대비 매우 적은 규모로, 스케일링 시 성능 변화 불확실 (추론)
+- **단일 로봇 플랫폼**: Flexiv Rizon + Dahuan 그리퍼 조합에서만 검증되어, 다른 로봇/그리퍼로의 전이 가능성 미검증 (추론)
+- **제한된 태스크 다양성**: 5개 태스크 모두 테이블탑 조작에 한정, 이동 조작이나 양팔 조작 등 복잡한 시나리오 미포함 (추론)
+
+## Terry's memo
+
+{/* empty */}

@@ -1,0 +1,101 @@
+---
+post_id: "2505-forcevla-force-aware-moe"
+locale: "en"
+title: "ForceVLA: Enhancing VLA Models with a Force-aware MoE for Contact-rich Manipulation"
+summary: "Existing VLA models rely on vision and language alone, struggling with contact-rich tasks. ForceVLA integrates 6-axis force-torque feedback via a Mixture-of-Experts fusion module, achieving a 23.2%p average improvement over baselines across five contact-rich manipulation tasks."
+slug: "2505-forcevla-force-aware-moe"
+published_at: "2025-05-28T00:00:00Z"
+updated_at: "2026-03-04T00:00:00Z"
+status: "published"
+content_type: "reading"
+tags:
+  - "Robotics"
+  - "VLA"
+  - "Force Sensing"
+  - "Manipulation"
+  - "NeurIPS 2025"
+cover_image: "./cover.webp"
+reading_time_min: 8
+source_url: "https://arxiv.org/abs/2505.22159"
+source_title: "ForceVLA: Enhancing VLA Models with a Force-aware MoE for Contact-rich Manipulation"
+source_author: "Jiawen Yu et al."
+source_type: "arXiv"
+source_project_url: "https://sites.google.com/view/forcevla2025"
+source_authors_full:
+  - "Jiawen Yu (Fudan University)"
+  - "Hairuo Liu (Shanghai Jiao Tong University)"
+  - "Qiaojun Yu (Shanghai AI Lab)"
+  - "Jieji Ren (Shanghai Jiao Tong University)"
+  - "Ce Hao (National University of Singapore)"
+  - "Haitong Ding (Shanghai University)"
+  - "Guangyu Huang (Xi'an Jiaotong University)"
+  - "Guofan Huang (Fudan University)"
+  - "Yan Song (Fudan University)"
+  - "Panpan Cai (Shanghai Jiao Tong University)"
+  - "Cewu Lu (Shanghai Jiao Tong University)"
+  - "Wenqiang Zhang (Fudan University)"
+references:
+  - title: "π₀: A Vision-Language-Action Flow Model for General Robot Control"
+    author: "Black et al. (2024)"
+    description: "The base framework for ForceVLA. A VLA flow model on top of which ForceVLA adds force-aware MoE."
+    arxiv_url: "https://arxiv.org/abs/2410.24164"
+    scholar_url: "https://scholar.google.com/scholar?q=pi0+vision+language+action+flow+model+general+robot+control"
+  - title: "OpenVLA: An Open-Source Vision-Language-Action Model"
+    author: "Kim et al. (2024)"
+    description: "Open-source VLA model, referenced as a key comparison point in the paper."
+    arxiv_url: "https://arxiv.org/abs/2406.09246"
+    scholar_url: "https://scholar.google.com/scholar?q=OpenVLA+open-source+vision-language-action+model"
+  - title: "RT-1: Robotics Transformer for Real-World Control at Scale"
+    author: "Brohan et al. (2022)"
+    description: "Large-scale real-world robot data Transformer. A foundational prior work for the VLA research line."
+    arxiv_url: "https://arxiv.org/abs/2212.06817"
+    scholar_url: "https://scholar.google.com/scholar?q=RT-1+robotics+transformer+real+world+control+at+scale"
+translation_of: "2505-forcevla-force-aware-moe:ko"
+translated_to: []
+newsletter_eligible: false
+featured: false
+---
+
+## TL;DR
+
+VLA models lack force sensing, limiting contact-rich manipulation. **ForceVLA** solves this with an **MoE-based force-vision-language fusion** that dynamically routes force information importance across task phases.
+
+## Problem
+
+Existing Vision-Language-Action (VLA) models depend primarily on visual and linguistic inputs, showing limitations in tasks requiring significant physical contact. Tasks like plug insertion, surface wiping, and cucumber peeling demand varying force magnitudes and directions across different contact phases, but current models lack mechanisms to perceive and adapt to these dynamic variations.
+
+Under visual occlusion or contact uncertainty, precise control becomes impossible without force/tactile feedback. While prior attempts added force data through simple concatenation, they failed to account for the varying importance of force information across different task phases.
+
+## Key Idea
+
+**FVLMoE (Force-aware Vision-Language MoE)**: A sparse MoE module with 4 expert networks that dynamically routes the fusion of vision-language embeddings and 6-axis force tokens according to task phases (approach, contact, insertion, etc.). Rather than simply appending force data to inputs, it injects force information after VLM processing to preserve pretrained representations.
+
+Key components:
+
+- **Force tokenization**: Raw 6-axis force-torque data (f ∈ R^6) linearly projected to a 2048-dim token
+- **Sparse MoE**: Gating network selects top-1 expert per token, activating different experts per task phase
+- **Flow-based Action Head**: Fused multimodal features injected via element-wise addition into the action generation head
+- **ForceVLA-Data**: 5 tasks, 244 demonstrations, 140K synchronized vision/proprioception/force-torque timesteps
+
+## Key Results
+
+- **60.5% average success rate** across 5 contact tasks, **+23.2%p** over force-free π₀-base (37.3% → 60.5%)
+- **~80% success on plug insertion**, significantly outperforming naive force concatenation (π₀-base w/ F at 40.2%)
+- **90% success under visual occlusion** — demonstrating that force feedback compensates for missing visual information
+
+## Limitations
+
+### Author-stated limitations
+
+- **Estimated external wrench**: Uses estimated rather than directly measured force values, potentially limiting precision in scenarios demanding extreme haptic sensitivity
+- **Expensive sensor dependency**: Experiments conducted on high-cost robotic platforms with integrated force-torque sensors (Flexiv Rizon), limiting broader accessibility
+
+### AI analysis
+
+- **Small-scale data**: 244 demonstrations (~50 per task) is quite small compared to other VLA research; scaling behavior is uncertain (inference)
+- **Single robot platform**: Validated only on Flexiv Rizon + Dahuan gripper; transferability to other robots/grippers remains unverified (inference)
+- **Limited task diversity**: All 5 tasks are tabletop manipulation; mobile manipulation, bimanual tasks, and other complex scenarios are not covered (inference)
+
+## Terry's memo
+
+{/* empty */}
