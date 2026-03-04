@@ -2,7 +2,7 @@
 
 ## 목적
 v1 개인 웹사이트의 기술 구성과 시스템 경계를 정의한다.
-(세부 라우팅 규칙은 `I18N_ROUTING.md`, 콘텐츠 구조는 `CONTENT_MODEL.md`, 운영 절차는 `POSTING_WORKFLOW.md` 참고)
+(세부 라우팅 규칙은 `I18N_ROUTING.md`, 콘텐츠/발행 절차는 `POSTING_WORKFLOW.md` 참고)
 
 ## v1 핵심 결정사항 (확정)
 - 도메인 구매/관리: **Cloudflare Registrar**
@@ -62,7 +62,7 @@ v1 개인 웹사이트의 기술 구성과 시스템 경계를 정의한다.
 - Home/목록/상세: SSG 우선
 - 언어 분기: 미들웨어 또는 진입 라우트에서 처리
 - 검색: v1 제외 (목록 필터 정도만 허용)
-- 콘텐츠 처리 세부 규칙: `CONTENT_MODEL.md`, `POSTING_WORKFLOW.md` 준수
+- 콘텐츠 처리 세부 규칙: `POSTING_WORKFLOW.md` 준수
 
 ## 최소 백엔드 범위 (v1)
 Substack 이전 단계이므로 뉴스레터는 **최소 구독 폼 처리**만 고려한다.
