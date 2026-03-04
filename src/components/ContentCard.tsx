@@ -3,9 +3,8 @@ import Image from 'next/image';
 import TagChip from './TagChip';
 import SourceBadge from './SourceBadge';
 import { normalizeTagSlug } from '@/lib/tags';
+import { CONTENT_TYPE_TAG_SLUGS } from '@/lib/site-config';
 import type { PostMeta } from '@/types/post';
-
-const CONTENT_TYPE_SLUGS = new Set(['research', 'ideas']);
 
 interface ContentCardProps {
   post: PostMeta;
@@ -50,7 +49,7 @@ export default function ContentCard({ post, locale }: ContentCardProps) {
               <SourceBadge sourceType={post.source_type} />
             )}
             {post.tags
-              .filter((tag) => !CONTENT_TYPE_SLUGS.has(normalizeTagSlug(tag)))
+              .filter((tag) => !CONTENT_TYPE_TAG_SLUGS.has(normalizeTagSlug(tag)))
               .slice(0, 3)
               .map((tag) => (
                 <TagChip key={tag} tag={tag} />

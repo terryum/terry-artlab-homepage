@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import SocialIcons from './SocialIcons';
+import { SITE_CONFIG } from '@/lib/site-config';
 
 interface HeroSectionProps {
   name: string;
@@ -12,7 +13,7 @@ export default function HeroSection({ name, tagline }: HeroSectionProps) {
       {/* Profile photo */}
       <div className="flex-shrink-0 w-28 h-28 relative rounded-full overflow-hidden bg-bg-surface">
         <Image
-          src="/images/profile-placeholder.svg"
+          src={SITE_CONFIG.profileImage}
           alt={name}
           fill
           sizes="112px"

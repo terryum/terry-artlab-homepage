@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import LanguageSwitcher from './LanguageSwitcher';
 import ThemeToggle from './ThemeToggle';
+import { SITE_CONFIG } from '@/lib/site-config';
 import type { Locale } from '@/lib/i18n';
 
 interface NavItem {
@@ -41,7 +42,7 @@ export default function Header({ locale, dict }: HeaderProps) {
         <div className="flex items-center justify-between h-14">
           {/* Logo / Site name */}
           <Link href={`/${locale}`} className="font-semibold text-text-primary tracking-tight">
-            Terry Um
+            {SITE_CONFIG.name}
           </Link>
 
           {/* Desktop nav */}

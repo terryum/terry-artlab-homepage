@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { TAG_DISPLAY_LIMIT } from '@/lib/site-config';
 
 interface TagItem {
   slug: string;
@@ -48,7 +49,7 @@ export default function TagFilterBar({
           );
         })}
       </div>
-      {availableTags.length > 6 && (
+      {availableTags.length > TAG_DISPLAY_LIMIT && (
         <button
           onClick={() => setExpanded((prev) => !prev)}
           className="text-xs text-accent mt-2 hover:underline cursor-pointer"

@@ -2,20 +2,20 @@ import { compileMDX } from 'next-mdx-remote/rsc';
 import Image from 'next/image';
 import Link from 'next/link';
 import { createElement } from 'react';
+import Collapsible from '@/components/Collapsible';
+import Figure from '@/components/Figure';
+import { resolvePostAssetPath } from '@/lib/paths';
+import { FIGURE_DIMENSIONS } from '@/lib/site-config';
 
 function createMDXComponents(slug: string) {
   return {
     img: (props: React.ComponentProps<'img'>) => {
-      let src = typeof props.src === 'string' ? props.src : '';
-      // Transform relative paths to public paths
-      if (src.startsWith('./')) {
-        src = `/posts/${slug}/${src.slice(2)}`;
-      }
+      const src = resolvePostAssetPath(typeof props.src === 'string' ? props.src : '', slug);
       return createElement(Image, {
         src,
         alt: props.alt || '',
-        width: 800,
-        height: 450,
+        width: FIGURE_DIMENSIONS.width,
+        height: FIGURE_DIMENSIONS.height,
         className: 'rounded-md w-full h-auto',
         sizes: '(max-width: 768px) 100vw, 768px',
       });
@@ -36,6 +36,11 @@ function createMDXComponents(slug: string) {
         );
       }
       return createElement(Link, { href, className: props.className }, props.children);
+    },
+    Collapsible,
+    Figure: (props: { src: string; caption: string; alt?: string; number?: number }) => {
+      const src = resolvePostAssetPath(props.src, slug);
+      return createElement(Figure, { ...props, src });
     },
   };
 }

@@ -2,8 +2,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import TagChip from './TagChip';
 import SourceInfoBlock from './SourceInfoBlock';
-import ReferenceCard from './ReferenceCard';
+import AppendixSection from './AppendixSection';
 import LanguageSwitcher from './LanguageSwitcher';
+import { localizeGalleryItems } from '@/lib/localize';
 import type { PostMeta } from '@/types/post';
 import type { Locale } from '@/lib/i18n';
 
@@ -18,6 +19,12 @@ interface ContentDetailPageProps {
     author_label: string;
     view_all_authors: string;
     references_label: string;
+    references_foundational?: string;
+    references_recent?: string;
+    figures_gallery?: string;
+    tables_gallery?: string;
+    appendix_label?: string;
+    terrys_memo_label?: string;
   };
 }
 
@@ -33,6 +40,9 @@ export default function ContentDetailPage({
     locale === 'ko' ? 'ko-KR' : 'en-US',
     { year: 'numeric', month: 'long', day: 'numeric' }
   );
+
+  const localizedFigures = localizeGalleryItems(meta.figures, locale);
+  const localizedTables = localizeGalleryItems(meta.tables, locale);
 
   return (
     <article className="max-w-2xl mx-auto px-4 md:px-6 lg:px-8 py-10">
@@ -79,6 +89,7 @@ export default function ContentDetailPage({
           sourceType={meta.source_type}
           sourceProjectUrl={meta.source_project_url}
           sourceAuthorsFull={meta.source_authors_full}
+          firstAuthorScholarUrl={meta.first_author_scholar_url}
           publishedAt={meta.published_at}
           labels={labels}
         />
@@ -99,7 +110,7 @@ export default function ContentDetailPage({
             />
           </div>
           {meta.cover_caption && (
-            <figcaption className="text-xs text-text-muted text-center mt-2">
+            <figcaption className="text-sm text-text-muted text-left mt-2">
               {meta.cover_caption}
             </figcaption>
           )}
@@ -111,19 +122,15 @@ export default function ContentDetailPage({
         {children}
       </div>
 
-      {/* Key references (reading only) */}
-      {meta.references && meta.references.length > 0 && (
-        <section className="mt-10">
-          <h2 className="text-lg font-semibold text-text-primary mb-4">
-            {labels.references_label}
-          </h2>
-          <div className="flex flex-col gap-3">
-            {meta.references.map((ref) => (
-              <ReferenceCard key={ref.title} reference={ref} />
-            ))}
-          </div>
-        </section>
-      )}
+      {/* Appendix */}
+      <AppendixSection
+        locale={locale}
+        figures={localizedFigures}
+        tables={localizedTables}
+        references={meta.references}
+        terrys_memo={meta.terrys_memo}
+        labels={labels}
+      />
     </article>
   );
 }

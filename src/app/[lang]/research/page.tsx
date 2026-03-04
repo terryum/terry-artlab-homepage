@@ -1,7 +1,6 @@
-import { isValidLocale, type Locale } from '@/lib/i18n';
+import { type Locale } from '@/lib/i18n';
 import { getDictionary } from '@/lib/dictionaries';
-import { getAllPosts } from '@/lib/posts';
-import { computeTagCounts, sortTagsByCount, getTagLabel } from '@/lib/tags';
+import { buildContentIndexProps } from '@/lib/content-page-helpers';
 import ContentIndexPage from '@/components/ContentIndexPage';
 import type { Metadata } from 'next';
 
@@ -28,28 +27,21 @@ export default async function ResearchPage({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  if (!isValidLocale(lang)) return null;
-
-  const dict = await getDictionary(lang);
-  const posts = await getAllPosts(lang);
-
-  const tagCounts = computeTagCounts(posts);
-  const sorted = sortTagsByCount(tagCounts);
-  const allTags = sorted.map(({ slug, count }) => ({
-    slug,
-    label: getTagLabel(slug, lang),
-    count,
-  }));
+  const props = await buildContentIndexProps(lang, {
+    dictKey: 'research_index',
+    initialTag: 'research',
+  });
+  if (!props) return null;
 
   return (
     <ContentIndexPage
-      locale={lang}
-      title={dict.research_index.title}
-      description={dict.research_index.description}
-      posts={posts}
-      allTags={allTags}
-      initialSelectedTags={['research']}
-      filterDict={dict.filter}
+      locale={props.locale}
+      title={props.title}
+      description={props.description}
+      posts={props.posts}
+      allTags={props.allTags}
+      initialSelectedTags={props.initialSelectedTags}
+      filterDict={props.filterDict}
     />
   );
 }
