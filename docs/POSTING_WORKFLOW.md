@@ -16,12 +16,10 @@
 ## Ideas 탭 퍼블리시
 
 1. 사용자가 **Google Doc 또는 .md 파일**을 Claude Code에 전달
-2. Claude Code가 `docs/POST_GENERATOR_IDEAS.md`에 따라 자동 생성 (예정)
+2. Claude Code가 자동 생성 (v2 — Ideas 전용 Generator 스펙 미정)
    - 한국어 원문 → 영어 번역, cover/태그/메타데이터 자동 생성
 3. 출력: `posts/idea/<slug>/ko.mdx`, `en.mdx`, `cover.webp`
 4. 로컬 검증 후 Git push → Vercel 자동 배포
-
-> **참고**: `POST_GENERATOR_IDEAS.md`는 아직 미작성. 첫 Ideas 포스트 작성 시점에 스펙을 확정할 예정.
 
 ---
 
@@ -60,9 +58,11 @@ posts/
 - **사용자**: 원고/링크 준비, 퍼블리시 요청, 최종 검토
 - **Claude Code**: 요약/번역, 메타/커버 생성, 이미지 정규화, 파일 생성, Git 푸시
 
-### meta.json (v1 optional)
-- v1에서는 사용하지 않음. frontmatter가 유일한 메타 소스.
-- v2 이후 자동화 확대 시 활용 예정.
+### meta.json (v1 active)
+- 언어 무관 필드의 **single source of truth**.
+- `meta.json`이 base, MDX frontmatter가 override (shallow merge).
+- `meta.json` 없으면 기존처럼 frontmatter만 사용 (하위 호환).
+- **필드 목록 및 상세 스키마**: `docs/POST_GENERATOR_RESEARCH.md` > 메타데이터 스키마 참조
 
 ### 금지사항
 - 원문(`ko.mdx`) 의미를 바꾸는 자동 요약/번역 보정

@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-const LOCALES = ['ko', 'en'];
-const DEFAULT_LOCALE = 'en';
+import { LOCALES, DEFAULT_LOCALE, type Locale } from '@/lib/i18n';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -27,8 +25,8 @@ export function middleware(request: NextRequest) {
   const savedLang = request.cookies.get('preferred-lang')?.value;
   let locale = DEFAULT_LOCALE;
 
-  if (savedLang && LOCALES.includes(savedLang)) {
-    locale = savedLang;
+  if (savedLang && LOCALES.includes(savedLang as Locale)) {
+    locale = savedLang as Locale;
   } else {
     const acceptLang = request.headers.get('accept-language') || '';
     if (acceptLang.toLowerCase().startsWith('ko')) {

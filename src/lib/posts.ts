@@ -1,11 +1,29 @@
 import fs from 'fs/promises';
 import path from 'path';
 import matter from 'gray-matter';
-import type { Post, PostMeta } from '@/types/post';
+import type { Post, PostMeta, FigureItem, Reference } from '@/types/post';
 import { normalizeTagSlug } from '@/lib/tags';
+import { resolvePostAssetPath } from '@/lib/paths';
 
 const POSTS_DIR = path.join(process.cwd(), 'posts');
 const CATEGORIES = ['research', 'idea'] as const;
+
+async function readMetaJson(postDir: string): Promise<Record<string, unknown> | null> {
+  try {
+    const raw = await fs.readFile(path.join(postDir, 'meta.json'), 'utf-8');
+    return JSON.parse(raw) as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+}
+
+function stripUndefined(obj: Record<string, unknown>): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(obj)) {
+    if (v !== undefined && v !== null) out[k] = v;
+  }
+  return out;
+}
 type PostCategory = (typeof CATEGORIES)[number];
 
 const CATEGORY_TO_CONTENT_TYPE: Record<PostCategory, 'reading' | 'writing'> = {
@@ -42,41 +60,50 @@ export async function getAllSlugs(): Promise<string[]> {
   return slugs;
 }
 
+function resolveContentType(
+  data: Record<string, unknown>,
+  category?: PostCategory
+): 'writing' | 'reading' {
+  if (category) return CATEGORY_TO_CONTENT_TYPE[category];
+  let ct = (data.content_type || data.kind || 'writing') as string;
+  if (ct === 'write' || ct === 'ideas') ct = 'writing';
+  if (ct === 'read' || ct === 'research') ct = 'reading';
+  return ct as 'writing' | 'reading';
+}
+
+function normalizeTags(
+  data: Record<string, unknown>,
+  category?: PostCategory
+): string[] {
+  const rawTags: string[] = (data.tags as string[]) || [];
+  const tagSlugs = rawTags.map((t) => normalizeTagSlug(t));
+  const contentTypeTag = category === 'research' ? 'Research' : 'Ideas';
+  if (!tagSlugs.includes(normalizeTagSlug(contentTypeTag))) {
+    rawTags.unshift(contentTypeTag);
+  }
+  return rawTags;
+}
+
+function normalizeGalleryItems(
+  items: FigureItem[] | undefined,
+  slug: string
+): FigureItem[] {
+  return (items || []).map((item) => ({
+    ...item,
+    src: resolvePostAssetPath(item.src, slug),
+  }));
+}
+
 function normalizeMeta(
   data: Record<string, unknown>,
   slug: string,
   category?: PostCategory
 ): PostMeta {
-  // Determine content_type from directory category (authoritative) or fallback to frontmatter
-  let contentType: string;
-  if (category) {
-    contentType = CATEGORY_TO_CONTENT_TYPE[category];
-  } else {
-    contentType = (data.content_type || data.kind || 'writing') as string;
-    if (contentType === 'write' || contentType === 'ideas') contentType = 'writing';
-    if (contentType === 'read' || contentType === 'research') contentType = 'reading';
-  }
-
-  // Normalize cover_image path
-  let coverImage = (data.cover_image as string) || '';
-  if (coverImage.startsWith('./')) {
-    coverImage = `/posts/${slug}/${coverImage.slice(2)}`;
-  }
-
-  // Normalize cover_thumb path
-  let coverThumb = (data.cover_thumb as string) || undefined;
-  if (coverThumb?.startsWith('./')) {
-    coverThumb = `/posts/${slug}/${coverThumb.slice(2)}`;
-  }
-
-  // Auto-inject content_type tag based on folder
-  const rawTags: string[] = (data.tags as string[]) || [];
-  const tagSlugs = rawTags.map((t) => normalizeTagSlug(t));
-  const contentTypeTag = category === 'research' ? 'Research' : 'Ideas';
-  const contentTypeSlug = normalizeTagSlug(contentTypeTag);
-  if (!tagSlugs.includes(contentTypeSlug)) {
-    rawTags.unshift(contentTypeTag);
-  }
+  const contentType = resolveContentType(data, category);
+  const coverImage = resolvePostAssetPath((data.cover_image as string) || '', slug);
+  const rawThumb = (data.cover_thumb as string) || undefined;
+  const coverThumb = rawThumb ? resolvePostAssetPath(rawThumb, slug) : undefined;
+  const tags = normalizeTags(data, category);
 
   return {
     post_id: (data.post_id as string) || slug,
@@ -87,8 +114,8 @@ function normalizeMeta(
     published_at: (data.published_at as string) || new Date().toISOString(),
     updated_at: (data.updated_at as string) || (data.published_at as string) || new Date().toISOString(),
     status: (data.status as 'draft' | 'published') || 'draft',
-    content_type: contentType as 'writing' | 'reading',
-    tags: rawTags,
+    content_type: contentType,
+    tags,
     cover_image: coverImage,
     cover_caption: data.cover_caption as string | undefined,
     cover_thumb: coverThumb,
@@ -102,7 +129,14 @@ function normalizeMeta(
     source_type: data.source_type as string | undefined,
     source_project_url: data.source_project_url as string | undefined,
     source_authors_full: data.source_authors_full as string[] | undefined,
-    references: data.references as PostMeta['references'],
+    first_author_scholar_url: data.first_author_scholar_url as string | undefined,
+    references: ((data.references as Reference[] | undefined) || [])?.map((ref) => ({
+      ...ref,
+      category: ref.category || undefined,
+    })),
+    figures: normalizeGalleryItems(data.figures as FigureItem[] | undefined, slug),
+    tables: normalizeGalleryItems(data.tables as FigureItem[] | undefined, slug),
+    terrys_memo: data.terrys_memo as string | undefined,
     translation_of: data.translation_of as string | null | undefined,
     translated_to: data.translated_to as string[] | undefined,
     newsletter_eligible: data.newsletter_eligible as boolean | undefined,
@@ -116,9 +150,13 @@ export async function getPost(slug: string, locale: string): Promise<Post | null
   const filePath = path.join(resolved.dir, `${locale}.mdx`);
   try {
     const raw = await fs.readFile(filePath, 'utf-8');
-    const { data, content } = matter(raw);
+    const { data: frontmatter, content } = matter(raw);
+    const shared = await readMetaJson(resolved.dir);
+    const merged = shared
+      ? { ...shared, ...stripUndefined(frontmatter) }
+      : frontmatter;
     return {
-      meta: normalizeMeta(data, slug, resolved.category),
+      meta: normalizeMeta(merged, slug, resolved.category),
       content,
     };
   } catch {

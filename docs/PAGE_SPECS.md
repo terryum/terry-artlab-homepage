@@ -22,7 +22,7 @@
 1. Hero / Intro (이름, 소개, 프로필 사진, 소셜 아이콘)
 2. Latest Ideas (카드 3개 + View all)
 3. Latest Research (카드 3개 + View all)
-4. Newsletter subscribe block (v1)
+4. Newsletter subscribe block (v2 — 현재 미구현)
 5. Footer
 
 ## 2) Content Index Template (공용)

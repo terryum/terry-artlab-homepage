@@ -1,10 +1,6 @@
-import { notFound, redirect } from 'next/navigation';
-import { isValidLocale, type Locale } from '@/lib/i18n';
-import { getDictionary } from '@/lib/dictionaries';
-import { getPost, getPostAlternateLocale, getPostParamsByType, postExistsForLocale } from '@/lib/posts';
-import { renderMDX } from '@/lib/mdx';
+import { getPost, getPostParamsByType } from '@/lib/posts';
+import { buildContentDetailProps } from '@/lib/content-page-helpers';
 import ContentDetailPage from '@/components/ContentDetailPage';
-import FallbackBanner from '@/components/FallbackBanner';
 import type { Metadata } from 'next';
 
 export async function generateStaticParams() {
@@ -31,39 +27,20 @@ export default async function IdeasDetailPage({
   params: Promise<{ lang: string; slug: string }>;
 }) {
   const { lang, slug } = await params;
-  if (!isValidLocale(lang)) notFound();
-
-  let post = await getPost(slug, lang);
-  let showFallback = false;
-
-  // Fallback: if post doesn't exist in requested locale, check alternate
-  if (!post) {
-    const altLocale = lang === 'ko' ? 'en' : 'ko';
-    const existsInAlt = await postExistsForLocale(slug, altLocale);
-    if (existsInAlt) {
-      redirect(`/${altLocale}/ideas/${slug}`);
-    }
-    notFound();
-  }
-
-  // Only show writing posts on ideas route
-  if (post.meta.content_type !== 'writing') notFound();
-
-  const dict = await getDictionary(lang as Locale);
-  const { content } = await renderMDX(post.content, slug);
-  const alternateLocale = await getPostAlternateLocale(slug, lang);
+  const { locale, post, content, alternateLocale, labels } =
+    await buildContentDetailProps(lang, slug, {
+      contentType: 'writing',
+      routeSegment: 'ideas',
+    });
 
   return (
-    <>
-      {showFallback && <FallbackBanner message={dict.fallback_banner} />}
-      <ContentDetailPage
-        locale={lang as Locale}
-        meta={post.meta}
-        alternateLocale={alternateLocale}
-        labels={dict.detail}
-      >
-        {content}
-      </ContentDetailPage>
-    </>
+    <ContentDetailPage
+      locale={locale}
+      meta={post.meta}
+      alternateLocale={alternateLocale}
+      labels={labels}
+    >
+      {content}
+    </ContentDetailPage>
   );
 }
