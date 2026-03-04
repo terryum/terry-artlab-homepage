@@ -11,6 +11,9 @@ coverage/
 # --- Auto-generated from posts ---
 public/posts/
 
+# --- Paper PDFs (large files) ---
+paper/
+
 # --- Logs ---
 npm-debug.log*
 yarn-debug.log*

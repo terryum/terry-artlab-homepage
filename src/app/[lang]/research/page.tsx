@@ -16,12 +16,12 @@ export async function generateMetadata({
   const { lang } = await params;
   const dict = await getDictionary(lang as Locale);
   return {
-    title: dict.write_index.title,
-    description: dict.write_index.description,
+    title: dict.research_index.title,
+    description: dict.research_index.description,
   };
 }
 
-export default async function WritePage({
+export default async function ResearchPage({
   params,
 }: {
   params: Promise<{ lang: string }>;
@@ -30,13 +30,13 @@ export default async function WritePage({
   if (!isValidLocale(lang)) return null;
 
   const dict = await getDictionary(lang);
-  const posts = await getPostsByType(lang, 'writing');
+  const posts = await getPostsByType(lang, 'reading');
 
   return (
     <ContentIndexPage
       locale={lang}
-      title={dict.write_index.title}
-      description={dict.write_index.description}
+      title={dict.research_index.title}
+      description={dict.research_index.description}
       posts={posts}
     />
   );

@@ -19,21 +19,21 @@
 
 ### 페이지 경로
 - Home: `/ko`, `/en`
-- Ideas: `/ko/write`, `/en/write`
-- Research: `/ko/read`, `/en/read`
+- Ideas: `/ko/ideas`, `/en/ideas`
+- Research: `/ko/research`, `/en/research`
 - About: `/ko/about`, `/en/about`
 
 ### 상세 포스트 경로
-- Write post: `/ko/write/[slug]`, `/en/write/[slug]`
-- Read post: `/ko/read/[slug]`, `/en/read/[slug]`
+- Write post: `/ko/ideas/[slug]`, `/en/ideas/[slug]`
+- Read post: `/ko/research/[slug]`, `/en/research/[slug]`
 
 ## 사이트맵 (계층)
 - `/`
   - `/{locale}` (Home)
-    - `/{locale}/write`
-      - `/{locale}/write/[slug]`
-    - `/{locale}/read`
-      - `/{locale}/read/[slug]`
+    - `/{locale}/ideas`
+      - `/{locale}/ideas/[slug]`
+    - `/{locale}/research`
+      - `/{locale}/research/[slug]`
     - `/{locale}/about`
 
 ## 페이지별 IA

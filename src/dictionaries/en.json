@@ -1,8 +1,8 @@
 {
   "nav": {
     "home": "Home",
-    "write": "Ideas",
-    "read": "Research",
+    "ideas": "Ideas",
+    "research": "Research",
     "about": "About"
   },
   "hero": {
@@ -32,23 +32,25 @@
     ],
     "contact_label": "Contact"
   },
-  "write_index": {
+  "ideas_index": {
     "title": "Ideas",
     "description": "Thoughts on AI, robotics, startups, and manufacturing innovation."
   },
-  "read_index": {
+  "research_index": {
     "title": "Research",
     "description": "Key takeaways from papers and articles I find interesting."
   },
   "home": {
-    "latest_write": "Latest Ideas",
-    "latest_read": "Latest Research",
+    "latest_ideas": "Latest Ideas",
+    "latest_research": "Latest Research",
     "view_all": "View all"
   },
   "detail": {
     "back_to_list": "Back to list",
     "source_label": "Source",
     "author_label": "Author",
+    "view_all_authors": "View all authors",
+    "references_label": "Key References",
     "prev": "Previous",
     "next": "Next"
   },

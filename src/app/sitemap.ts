@@ -10,8 +10,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   for (const lang of ['ko', 'en']) {
     entries.push(
       { url: `${BASE_URL}/${lang}`, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
-      { url: `${BASE_URL}/${lang}/write`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-      { url: `${BASE_URL}/${lang}/read`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+      { url: `${BASE_URL}/${lang}/ideas`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+      { url: `${BASE_URL}/${lang}/research`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
       { url: `${BASE_URL}/${lang}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     );
   }
@@ -22,7 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const lang of ['ko', 'en']) {
       const meta = await getPostMeta(slug, lang);
       if (meta && meta.status === 'published') {
-        const section = meta.content_type === 'writing' ? 'write' : 'read';
+        const section = meta.content_type === 'writing' ? 'ideas' : 'research';
         entries.push({
           url: `${BASE_URL}/${lang}/${section}/${meta.slug}`,
           lastModified: new Date(meta.updated_at),

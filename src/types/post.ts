@@ -18,6 +18,16 @@ export interface PostMeta {
   source_title?: string;
   source_author?: string;
   source_type?: string;
+  source_project_url?: string;
+  source_authors_full?: string[];
+  // Key references
+  references?: {
+    title: string;
+    author?: string;
+    description: string;
+    arxiv_url?: string;
+    scholar_url?: string;
+  }[];
   // Translation tracking
   translation_of?: string | null;
   translated_to?: string[];

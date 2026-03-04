@@ -1,8 +1,8 @@
 {
   "nav": {
     "home": "Home",
-    "write": "Ideas",
-    "read": "Research",
+    "ideas": "Ideas",
+    "research": "Research",
     "about": "About"
   },
   "hero": {
@@ -32,23 +32,25 @@
     ],
     "contact_label": "연락처"
   },
-  "write_index": {
+  "ideas_index": {
     "title": "Ideas",
     "description": "AI, 로보틱스, 스타트업, 제조 혁신에 관한 생각을 나눕니다."
   },
-  "read_index": {
+  "research_index": {
     "title": "Research",
     "description": "관심 있게 읽은 논문과 아티클의 핵심을 정리합니다."
   },
   "home": {
-    "latest_write": "Latest Ideas",
-    "latest_read": "Latest Research",
+    "latest_ideas": "Latest Ideas",
+    "latest_research": "Latest Research",
     "view_all": "전체 보기"
   },
   "detail": {
     "back_to_list": "목록으로",
     "source_label": "원문",
     "author_label": "저자",
+    "view_all_authors": "모든 저자 보기",
+    "references_label": "주요 참조 논문",
     "prev": "이전 글",
     "next": "다음 글"
   },

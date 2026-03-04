@@ -25,7 +25,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function WriteDetailPage({
+export default async function IdeasDetailPage({
   params,
 }: {
   params: Promise<{ lang: string; slug: string }>;
@@ -41,12 +41,12 @@ export default async function WriteDetailPage({
     const altLocale = lang === 'ko' ? 'en' : 'ko';
     const existsInAlt = await postExistsForLocale(slug, altLocale);
     if (existsInAlt) {
-      redirect(`/${altLocale}/write/${slug}`);
+      redirect(`/${altLocale}/ideas/${slug}`);
     }
     notFound();
   }
 
-  // Only show writing posts on write route
+  // Only show writing posts on ideas route
   if (post.meta.content_type !== 'writing') notFound();
 
   const dict = await getDictionary(lang as Locale);

@@ -4,17 +4,57 @@ import matter from 'gray-matter';
 import type { Post, PostMeta } from '@/types/post';
 
 const POSTS_DIR = path.join(process.cwd(), 'posts');
+const CATEGORIES = ['research', 'idea'] as const;
+type PostCategory = (typeof CATEGORIES)[number];
 
-export async function getAllSlugs(): Promise<string[]> {
-  const entries = await fs.readdir(POSTS_DIR, { withFileTypes: true });
-  return entries.filter((e) => e.isDirectory()).map((e) => e.name);
+const CATEGORY_TO_CONTENT_TYPE: Record<PostCategory, 'reading' | 'writing'> = {
+  research: 'reading',
+  idea: 'writing',
+};
+
+async function resolvePostPath(
+  slug: string
+): Promise<{ dir: string; category: PostCategory } | null> {
+  for (const cat of CATEGORIES) {
+    const dir = path.join(POSTS_DIR, cat, slug);
+    try {
+      const s = await fs.stat(dir);
+      if (s.isDirectory()) return { dir, category: cat };
+    } catch {
+      continue;
+    }
+  }
+  return null;
 }
 
-function normalizeMeta(data: Record<string, unknown>, slug: string): PostMeta {
-  // Support both content_type and kind fields
-  let contentType = (data.content_type || data.kind || 'writing') as string;
-  if (contentType === 'write') contentType = 'writing';
-  if (contentType === 'read') contentType = 'reading';
+export async function getAllSlugs(): Promise<string[]> {
+  const slugs: string[] = [];
+  for (const cat of CATEGORIES) {
+    const catDir = path.join(POSTS_DIR, cat);
+    try {
+      const entries = await fs.readdir(catDir, { withFileTypes: true });
+      slugs.push(...entries.filter((e) => e.isDirectory()).map((e) => e.name));
+    } catch {
+      // category directory doesn't exist yet
+    }
+  }
+  return slugs;
+}
+
+function normalizeMeta(
+  data: Record<string, unknown>,
+  slug: string,
+  category?: PostCategory
+): PostMeta {
+  // Determine content_type from directory category (authoritative) or fallback to frontmatter
+  let contentType: string;
+  if (category) {
+    contentType = CATEGORY_TO_CONTENT_TYPE[category];
+  } else {
+    contentType = (data.content_type || data.kind || 'writing') as string;
+    if (contentType === 'write' || contentType === 'ideas') contentType = 'writing';
+    if (contentType === 'read' || contentType === 'research') contentType = 'reading';
+  }
 
   // Normalize cover_image path
   let coverImage = (data.cover_image as string) || '';
@@ -41,6 +81,9 @@ function normalizeMeta(data: Record<string, unknown>, slug: string): PostMeta {
     source_title: data.source_title as string | undefined,
     source_author: data.source_author as string | undefined,
     source_type: data.source_type as string | undefined,
+    source_project_url: data.source_project_url as string | undefined,
+    source_authors_full: data.source_authors_full as string[] | undefined,
+    references: data.references as PostMeta['references'],
     translation_of: data.translation_of as string | null | undefined,
     translated_to: data.translated_to as string[] | undefined,
     newsletter_eligible: data.newsletter_eligible as boolean | undefined,
@@ -49,12 +92,14 @@ function normalizeMeta(data: Record<string, unknown>, slug: string): PostMeta {
 }
 
 export async function getPost(slug: string, locale: string): Promise<Post | null> {
-  const filePath = path.join(POSTS_DIR, slug, `${locale}.mdx`);
+  const resolved = await resolvePostPath(slug);
+  if (!resolved) return null;
+  const filePath = path.join(resolved.dir, `${locale}.mdx`);
   try {
     const raw = await fs.readFile(filePath, 'utf-8');
     const { data, content } = matter(raw);
     return {
-      meta: normalizeMeta(data, slug),
+      meta: normalizeMeta(data, slug, resolved.category),
       content,
     };
   } catch {
@@ -93,7 +138,9 @@ export async function getLatestPosts(
 }
 
 export async function postExistsForLocale(slug: string, locale: string): Promise<boolean> {
-  const filePath = path.join(POSTS_DIR, slug, `${locale}.mdx`);
+  const resolved = await resolvePostPath(slug);
+  if (!resolved) return false;
+  const filePath = path.join(resolved.dir, `${locale}.mdx`);
   try {
     await fs.access(filePath);
     return true;

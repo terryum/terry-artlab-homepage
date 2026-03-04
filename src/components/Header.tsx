@@ -15,7 +15,7 @@ interface NavItem {
 interface HeaderProps {
   locale: Locale;
   dict: {
-    nav: { home: string; write: string; read: string; about: string };
+    nav: { home: string; ideas: string; research: string; about: string };
   };
 }
 
@@ -25,8 +25,8 @@ export default function Header({ locale, dict }: HeaderProps) {
 
   const navItems: NavItem[] = [
     { href: `/${locale}`, label: dict.nav.home },
-    { href: `/${locale}/write`, label: dict.nav.write },
-    { href: `/${locale}/read`, label: dict.nav.read },
+    { href: `/${locale}/ideas`, label: dict.nav.ideas },
+    { href: `/${locale}/research`, label: dict.nav.research },
     { href: `/${locale}/about`, label: dict.nav.about },
   ];
 

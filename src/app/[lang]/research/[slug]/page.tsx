@@ -25,7 +25,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ReadDetailPage({
+export default async function ResearchDetailPage({
   params,
 }: {
   params: Promise<{ lang: string; slug: string }>;
@@ -41,12 +41,12 @@ export default async function ReadDetailPage({
     const altLocale = lang === 'ko' ? 'en' : 'ko';
     const existsInAlt = await postExistsForLocale(slug, altLocale);
     if (existsInAlt) {
-      redirect(`/${altLocale}/read/${slug}`);
+      redirect(`/${altLocale}/research/${slug}`);
     }
     notFound();
   }
 
-  // Only show reading posts on read route
+  // Only show reading posts on research route
   if (post.meta.content_type !== 'reading') notFound();
 
   const dict = await getDictionary(lang as Locale);

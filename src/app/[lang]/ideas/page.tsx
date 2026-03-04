@@ -16,12 +16,12 @@ export async function generateMetadata({
   const { lang } = await params;
   const dict = await getDictionary(lang as Locale);
   return {
-    title: dict.read_index.title,
-    description: dict.read_index.description,
+    title: dict.ideas_index.title,
+    description: dict.ideas_index.description,
   };
 }
 
-export default async function ReadPage({
+export default async function IdeasPage({
   params,
 }: {
   params: Promise<{ lang: string }>;
@@ -30,13 +30,13 @@ export default async function ReadPage({
   if (!isValidLocale(lang)) return null;
 
   const dict = await getDictionary(lang);
-  const posts = await getPostsByType(lang, 'reading');
+  const posts = await getPostsByType(lang, 'writing');
 
   return (
     <ContentIndexPage
       locale={lang}
-      title={dict.read_index.title}
-      description={dict.read_index.description}
+      title={dict.ideas_index.title}
+      description={dict.ideas_index.description}
       posts={posts}
     />
   );

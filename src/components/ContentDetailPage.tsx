@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import TagChip from './TagChip';
 import SourceInfoBlock from './SourceInfoBlock';
+import ReferenceCard from './ReferenceCard';
 import LanguageSwitcher from './LanguageSwitcher';
 import type { PostMeta } from '@/types/post';
 import type { Locale } from '@/lib/i18n';
@@ -15,6 +16,8 @@ interface ContentDetailPageProps {
     back_to_list: string;
     source_label: string;
     author_label: string;
+    view_all_authors: string;
+    references_label: string;
   };
 }
 
@@ -25,7 +28,7 @@ export default function ContentDetailPage({
   alternateLocale,
   labels,
 }: ContentDetailPageProps) {
-  const section = meta.content_type === 'writing' ? 'write' : 'read';
+  const section = meta.content_type === 'writing' ? 'ideas' : 'research';
   const dateStr = new Date(meta.published_at).toLocaleDateString(
     locale === 'ko' ? 'ko-KR' : 'en-US',
     { year: 'numeric', month: 'long', day: 'numeric' }
@@ -74,6 +77,9 @@ export default function ContentDetailPage({
           sourceTitle={meta.source_title}
           sourceAuthor={meta.source_author}
           sourceType={meta.source_type}
+          sourceProjectUrl={meta.source_project_url}
+          sourceAuthorsFull={meta.source_authors_full}
+          publishedAt={meta.published_at}
           labels={labels}
         />
       )}
@@ -96,6 +102,20 @@ export default function ContentDetailPage({
       <div className="prose max-w-none">
         {children}
       </div>
+
+      {/* Key references (reading only) */}
+      {meta.references && meta.references.length > 0 && (
+        <section className="mt-10">
+          <h2 className="text-lg font-semibold text-text-primary mb-4">
+            {labels.references_label}
+          </h2>
+          <div className="flex flex-col gap-3">
+            {meta.references.map((ref) => (
+              <ReferenceCard key={ref.title} reference={ref} />
+            ))}
+          </div>
+        </section>
+      )}
     </article>
   );
 }

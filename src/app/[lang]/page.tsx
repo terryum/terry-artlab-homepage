@@ -46,8 +46,8 @@ export default async function HomePage({
 
       {/* Latest Ideas */}
       <LatestSection
-        title={dict.home.latest_write}
-        viewAllHref={`/${lang}/write`}
+        title={dict.home.latest_ideas}
+        viewAllHref={`/${lang}/ideas`}
         viewAllText={dict.home.view_all}
         posts={latestWriting}
         locale={lang}
@@ -55,8 +55,8 @@ export default async function HomePage({
 
       {/* Latest Research */}
       <LatestSection
-        title={dict.home.latest_read}
-        viewAllHref={`/${lang}/read`}
+        title={dict.home.latest_research}
+        viewAllHref={`/${lang}/research`}
         viewAllText={dict.home.view_all}
         posts={latestReading}
         locale={lang}

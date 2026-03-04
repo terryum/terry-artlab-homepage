@@ -23,12 +23,12 @@
 - 과도한 CMS/복잡한 백엔드 기능은 v1에 넣지 않음
 
 ## 구현 절대 규칙
-- `Ideas` / `Research`는 **공용 템플릿**으로 구현 (경로: `/write`, `/read`)
+- `Ideas` / `Research`는 **공용 템플릿**으로 구현 (경로: `/ideas`, `/research`)
 - 차이는 최소 필드만 허용 (예: Research의 arXiv 원문 링크/출처)
 - i18n 라우팅/fallback은 `docs/I18N_ROUTING.md` 기준으로 구현
 
 ## 콘텐츠/자동화 규칙
-- 콘텐츠 구조 기준: `posts/<slug>/ko.mdx`, `en.mdx`, `cover.webp`
+- 콘텐츠 구조 기준: `posts/{research,idea}/<slug>/ko.mdx`, `en.mdx`, `cover.webp`
 - 퍼블리시 시 이미지 파일명 자동 정규화 가능 (반드시 본문 경로 치환까지 완료)
 - `meta.json`은 v1 optional (없으면 frontmatter 기준)
 - 콘텐츠 삭제/대량 변경은 기본 금지, 필요 시 분리 커밋 + 검증 후 진행

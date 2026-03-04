@@ -10,7 +10,7 @@ interface ContentCardProps {
 }
 
 export default function ContentCard({ post, locale }: ContentCardProps) {
-  const section = post.content_type === 'writing' ? 'write' : 'read';
+  const section = post.content_type === 'writing' ? 'ideas' : 'research';
   const href = `/${locale}/${section}/${post.slug}`;
   const dateStr = new Date(post.published_at).toLocaleDateString(
     locale === 'ko' ? 'ko-KR' : 'en-US',
