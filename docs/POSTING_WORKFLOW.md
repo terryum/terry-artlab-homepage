@@ -1,86 +1,61 @@
 # POSTING_WORKFLOW.md
 
-## 목적
-VS Code에서 작성한 한국어 원고(마크다운/MDX)와 이미지 자산을 입력으로 받아, Claude Code가 한/영 포스트를 생성·정리·검증한 뒤 GitHub에 푸시하여 사이트에 반영하는 운영 절차를 정의한다.
+> 포스트를 퍼블리시하는 전체 흐름을 정의하는 라우팅 문서.
+> 각 탭별 상세 스펙은 전용 Generator 문서를 참조한다.
 
-## 적용 범위 (v1)
-- 대상: `Ideas` 탭의 수동 작성 포스트
-- 입력 언어: 한국어 원문 1개
-- 출력: `ko.mdx`, `en.mdx`, `cover.webp`, 이미지 자산, (선택) `meta.json`
-- 배포: GitHub push 이후 자동 배포 파이프라인 사용
+---
 
-## 운영 원칙
-- 원문 작성은 항상 한국어로 진행한다.
-- 영어 버전은 Claude Code가 번역/보정하여 생성한다.
-- 포스트 단위 폴더(`posts/<slug>/`)를 기준으로 관리한다.
-- 파일 구조/메타 필드는 `CONTENT_MODEL.md`를 따른다.
+## Research 탭 퍼블리시
 
-## 작성자(사용자) 준비물
-- VS Code에서 작성한 한국어 원고 파일 (`post-ko.md` 또는 `ko.mdx` 초안)
-- 본문에 사용할 이미지 파일들 (파일명 규칙 미준수여도 허용)
-- 선택 정보(있으면 좋음): 제목 후보, 태그 후보, 발행일, 커버 스타일 메모
+1. 사용자가 **arXiv 링크**를 Claude Code에 전달
+2. Claude Code가 `docs/POST_GENERATOR_RESEARCH.md`에 따라 자동 생성
+   - 논문 읽기 + 요약 규칙: `docs/RESEARCH_SUMMARY_RULES.md`
+3. 출력: `posts/research/<slug>/ko.mdx`, `en.mdx`, `cover.webp`
+4. 로컬 검증 후 Git push → Vercel 자동 배포
 
-## 입력 권장 형태 (예시)
-- `drafts/<date>-<topic>/post-ko.md`
-- `drafts/<date>-<topic>/images/*`
-- 또는 하나의 폴더 안에 원고 + 이미지를 함께 배치
+## Ideas 탭 퍼블리시
 
-## Claude Code 퍼블리시 절차 (표준)
-1. 입력 폴더/파일 확인
-2. 한국어 원문 파싱 (제목/본문/이미지 참조/링크 확인)
-3. slug 생성 또는 검증 (`posts/<slug>/`)
-4. 포스트 폴더 생성(없으면 생성)
-5. 이미지 자산 복사 및 파일명 자동 정규화(리네임)
-6. 원문 본문의 이미지 경로를 정규화된 파일명으로 치환
-7. cover.webp 자동 생성 (본문 내용/이미지 참조)
-8. 한국어 포스트 `ko.mdx` 생성(또는 정리)
-9. 영어 번역/보정 후 `en.mdx` 생성
-10. frontmatter 자동 생성/동기화 (ko/en 공통 필드 일치)
-11. (선택) `meta.json` 생성/업데이트
-12. 로컬 검증(필수 체크리스트 수행)
-13. Git commit / push
+1. 사용자가 **Google Doc 또는 .md 파일**을 Claude Code에 전달
+2. Claude Code가 `docs/POST_GENERATOR_IDEAS.md`에 따라 자동 생성 (예정)
+   - 한국어 원문 → 영어 번역, cover/태그/메타데이터 자동 생성
+3. 출력: `posts/idea/<slug>/ko.mdx`, `en.mdx`, `cover.webp`
+4. 로컬 검증 후 Git push → Vercel 자동 배포
 
-## 이미지 파일명 자동 정규화 규칙 (퍼블리시 시)
-- 사용자가 임의 파일명으로 첨부해도 퍼블리시 시점에 규칙에 맞게 리네임한다.
-- 권장 형식: `fig-01-<slugified-label>.<ext>` / `cover.webp`
-- 리네임 후 반드시 본문 내 이미지 경로를 함께 치환한다.
-- 충돌 시 순번을 증가시켜 고유 파일명 보장 (`fig-02`, `fig-03` ...)
-- 원본 확장자는 유지하되, 사이트 정책상 필요하면 추가 변환(WebP 등) 가능
+> **참고**: `POST_GENERATOR_IDEAS.md`는 아직 미작성. 첫 Ideas 포스트 작성 시점에 스펙을 확정할 예정.
 
-## cover / 메타 자동 생성 규칙 (v1)
-- `cover.webp`: 본문 주제/키워드/대표 이미지 참조하여 자동 생성
-- frontmatter: Claude Code가 자동 생성/보완
-- `meta.json`: v1에서는 선택사항(optional), 필요 시에만 생성
+---
 
-## 로컬 검증 체크리스트 (푸시 전)
-- `ko.mdx`, `en.mdx` 모두 존재하는가
-- 두 파일 frontmatter의 공통 필드가 정합한가 (`post_id`, `slug`, 날짜 등)
-- 본문 이미지 경로가 실제 파일과 일치하는가
-- 리네임된 이미지 파일이 포스트 폴더에 존재하는가
-- `cover.webp` 생성되었는가
-- 깨진 외부 링크/상대 링크가 없는가 (가능 범위 내 확인)
+## 공통 규칙
 
-## Git 커밋 규칙 (권장)
+### 디렉토리 구조
+```text
+posts/
+  research/<slug>/   ← content_type: reading
+  idea/<slug>/       ← content_type: writing
+```
+- **폴더가 content_type의 source of truth** (`src/lib/posts.ts`가 자동 판별)
+- `post_id == slug == 폴더명` (항상 동일)
+
+### slug 규칙
+- 형식: `YYMM-<short-name>-<additional-context>`
+- Research: arXiv v1 제출일 기준 / Ideas: 작성일 기준
+
+### 파일명 규칙
+- 모두 소문자 + 하이픈: `cover.webp`, `cover_thumb.webp`, `fig-1.png`
+- 사용자가 임의 파일명 첨부 시 퍼블리시 단계에서 자동 정규화 + 본문 경로 치환
+
+### 로컬 검증 (푸시 전)
+- [ ] `ko.mdx`, `en.mdx` 모두 존재
+- [ ] 필수 frontmatter 키 존재, ko/en 공통 필드 정합
+- [ ] 본문 이미지 경로가 실제 파일과 일치
+- [ ] `cover.webp` 존재
+- [ ] `npm run build` 성공
+
+### Git 커밋 규칙
 - 신규 포스트: `feat(post): add <slug> (ko/en)`
 - 포스트 수정: `chore(post): update <slug>`
-- 번역/메타 재생성: `chore(post): regenerate en/meta for <slug>`
+- **콘텐츠 변경과 사이트 기능 변경을 같은 커밋에 섞지 않는다**
 
-## 실패/예외 처리 규칙
-- 번역 실패 시: 한국어만 임시 게시하지 않고 실패 원인 기록 후 재시도 (원칙)
-- 이미지 누락 시: 누락 목록을 명시하고 퍼블리시 중단
-- slug 충돌 시: 기존 포스트와 비교 후 새 slug 제안/생성
-- cover 생성 실패 시: 기본 더미 cover로 대체 후 경고 기록 가능
-
-## 초기 개발 단계용 더미 콘텐츠 규칙
-- 사이트 초기 구현 시 실제 콘텐츠가 부족하면 더미 포스트/더미 카드/더미 이미지/더미 텍스트를 생성해 개발한다.
-- 더미 콘텐츠는 `dummy` 태그 또는 명시적 표시를 두어 실제 콘텐츠와 구분한다.
-- 실제 퍼블리시 파이프라인 연결 전까지는 더미 콘텐츠로 레이아웃/라우팅/목록/상세 페이지를 검증한다.
-
-## 운영자 역할 vs Claude Code 역할
-- 운영자(사용자): 원고 작성, 이미지 준비, 퍼블리시 요청, 최종 검토
-- Claude Code: 번역, 메타/커버 생성, 이미지 정규화, 파일 생성/정리, Git 푸시
-
-## 향후 확장 (v2+)
-- arXiv 링크 기반 `Research` 자동 포스트 생성 워크플로우 추가
-- Substack용 내보내기 포맷 생성(반자동 발행)
-- 퍼블리시 파이프라인 로그/상태 추적(`meta.json` 활용) 강화
+### 역할 분담
+- **사용자**: 원고/링크 준비, 퍼블리시 요청, 최종 검토
+- **Claude Code**: 요약/번역, 메타/커버 생성, 이미지 정규화, 파일 생성, Git 푸시
