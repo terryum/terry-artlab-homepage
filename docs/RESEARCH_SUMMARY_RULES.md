@@ -102,9 +102,8 @@
 
 ### `card_summary` (카드 부연설명)
 - 홈/리스트 카드에서 제목 아래 표시되는 짧은 설명
-- 카드 line-clamp: 모바일 4줄 / 데스크톱 3줄
-- **ko**: 85-100자 / **en**: 150-180자
-- **내용**: 핵심 문제 + 해결 방법 + 대표 수치 1개
+- **TL;DR 텍스트를 그대로 사용** (별도 작성 불필요)
+- 카드 line-clamp: 모바일 8줄 / 데스크톱 4줄
 - 제목과 중복되는 표현 피하기, 제목이 못 전달하는 맥락을 보충
 
 ### `summary` (상세 요약)
@@ -112,17 +111,19 @@
 - 2-3문장, 문제 + 방법 + 결과 수치 포함
 
 ### 썸네일 (`cover-thumb.webp`)
-- 홈/리스트 카드 왼쪽에 표시되는 112×112 정사각 이미지
+- 홈/리스트 카드 왼쪽에 표시되는 **정사각형** 이미지 (144px 표시, 288px 2x retina)
 - **원칙: 실제 로봇/실험 장면 사진 우선**, 다이어그램/아키텍처 그림 지양
 - 선택 우선순위:
   1. 논문의 실제 로봇/하드웨어/실험 사진 (task setup, hardware, teaser 중 실사 부분)
   2. 실사가 없으면 가장 직관적인 개념도
   3. cover.webp fallback (아키텍처 다이어그램 등)
-- **meta.json `thumb_source`**: cover.webp 대신 다른 figure를 소스로 지정
-  - 예: `"thumb_source": "./fig-2.jpg"` → fig-2에서 center crop
-  - 미지정 시 cover.webp에서 자동 생성
-- 빌드타임에 `generate-thumbnails.mjs`가 자동 생성 (112×112, center crop, webp q80)
-- 목표 크기: < 5KB
+- **meta.json 썸네일 제어 필드**:
+  - `thumb_source`: 소스 이미지 (예: `"./fig-6.jpg"`), 미지정 시 cover.webp
+  - `thumb_position`: crop 기준점 (sharp position 값: `"centre"`, `"top"`, `"left"` 등), 기본값 `"centre"`
+  - `thumb_extract`: 수동 crop 영역 `{left, top, width, height}` — 핵심 부분만 잘라낸 후 정사각 리사이즈
+- **정사각 crop**: `fit: 'cover'`로 288×288 정사각 생성, 중요 부분이 잘리면 `thumb_position` 또는 `thumb_extract`로 조정
+- 빌드타임에 `generate-thumbnails.mjs`가 자동 생성 (288×288, cover crop, webp q80)
+- 목표 크기: < 15KB
 
 ### `cover_caption`
 - 선택한 cover figure의 원문 캡션 그대로 (**번역하지 않음**)

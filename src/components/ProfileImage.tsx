@@ -11,7 +11,7 @@ interface ProfileImageProps {
   className?: string;
 }
 
-export default function ProfileImage({ alt, size = 112, className = '' }: ProfileImageProps) {
+export default function ProfileImage({ alt, size = 144, className = '' }: ProfileImageProps) {
   const [open, setOpen] = useState(false);
 
   return (

@@ -1,8 +1,8 @@
 import { isValidLocale, type Locale } from '@/lib/i18n';
 import { getDictionary } from '@/lib/dictionaries';
-import { getAboutContent, getBioPlainText } from '@/lib/about';
-import SocialIcons from '@/components/SocialIcons';
+import { getAboutContent, getBioContent, getBioPlainText } from '@/lib/about';
 import ProfileImage from '@/components/ProfileImage';
+import SocialIcons from '@/components/SocialIcons';
 import type { Metadata } from 'next';
 
 export function generateStaticParams() {
@@ -33,30 +33,26 @@ export default async function AboutPage({
   if (!isValidLocale(lang)) return null;
 
   const dict = await getDictionary(lang);
+  const bioContent = await getBioContent(lang);
   const aboutContent = await getAboutContent(lang);
 
   return (
     <div className="max-w-3xl mx-auto px-4 md:px-6 lg:px-8 py-10">
       {/* Profile section */}
       <div className="flex flex-col items-center text-center mb-10">
-        <ProfileImage alt={dict.hero.name} size={128} className="mb-4" />
+        <ProfileImage alt={dict.hero.name} size={144} className="mb-4" />
         <h1 className="text-2xl font-bold text-text-primary tracking-tight">
           {dict.hero.name}
         </h1>
-        <p className="text-text-secondary mt-1">{dict.hero.tagline}</p>
+        <div className="text-sm text-text-muted leading-relaxed mt-1 prose prose-sm prose-neutral dark:prose-invert max-w-none">
+          {bioContent}
+        </div>
+        <SocialIcons className="mt-3" />
       </div>
 
       {/* Detailed bio from MDX */}
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         {aboutContent}
-      </div>
-
-      {/* Contact */}
-      <div className="mt-12 pt-8 border-t border-line-default">
-        <h2 className="text-lg font-semibold text-text-primary tracking-tight mb-4">
-          {dict.about.contact_label}
-        </h2>
-        <SocialIcons />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 export const SITE_CONFIG = {
   name: 'Terry Um',
-  profileImage: '/images/profile_terry.jpeg',
+  profileImage: '/images/profile_terry.webp',
   profileImageOriginal: '/images/profile_terry_original.jpg',
   social: {
     linkedin: 'https://linkedin.com/in/terryum',

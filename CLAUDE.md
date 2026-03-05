@@ -31,6 +31,10 @@
 - `Ideas` / `Research`는 **공용 템플릿**으로 구현 (경로: `/ideas`, `/research`)
 - 차이는 최소 필드만 허용 (예: Research의 arXiv 원문 링크/출처)
 - i18n 라우팅/fallback은 `docs/I18N_ROUTING.md` 기준으로 구현
+- **하드코딩 자제**: 비슷한 구조의 코드/콘텐츠는 최대한 재사용하여 구현하고, 중복이 발견되면 리팩토링을 제안할 것
+
+## i18n 콘텐츠 규칙
+- 한글 또는 영어 중 하나의 콘텐츠 변경을 요청받으면 **양쪽 언어 모두** 반영할 것
 
 ## 콘텐츠/자동화 규칙
 - 콘텐츠 구조 기준: `posts/{research,idea}/<slug>/ko.mdx`, `en.mdx`, `cover.webp`
