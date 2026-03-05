@@ -1,9 +1,11 @@
 /**
- * Prebuild script: generates 112×112 center-cropped thumbnails for post cards.
+ * Prebuild script: generates 288×288 square thumbnails for post cards.
+ * Uses cover crop by default; meta.json can override crop position.
  *
- * Source priority:
- *   1. meta.json `thumb_source` field (e.g. "./fig-6.jpg") — for robot photos etc.
- *   2. cover.webp fallback
+ * meta.json fields:
+ *   - thumb_source: source image (e.g. "./fig-6.jpg"), fallback: cover.webp
+ *   - thumb_position: sharp crop position (e.g. "top", "left", "centre")
+ *   - thumb_extract: {left, top, width, height} for manual crop region
  *
  * Run: node scripts/generate-thumbnails.mjs
  */
@@ -13,22 +15,24 @@ import sharp from 'sharp';
 
 const POSTS_DIR = join(process.cwd(), 'posts');
 const PUBLIC_POSTS_DIR = join(process.cwd(), 'public', 'posts');
-const SIZE = 112;
-const CONTENT_DIRS = ['research', 'idea'];
+const SIZE = 288; // 2x retina for 144px display
+const CONTENT_DIRS = ['research', 'idea', 'essay'];
 
-/** Read thumb_source from meta.json, returns resolved path or null */
-async function getThumbSource(postDir) {
+/** Read thumbnail config from meta.json */
+async function getThumbConfig(postDir) {
   try {
     const raw = await readFile(join(postDir, 'meta.json'), 'utf-8');
     const meta = JSON.parse(raw);
-    if (meta.thumb_source) {
-      // resolve "./fig-6.jpg" relative to postDir
-      return join(postDir, meta.thumb_source.replace(/^\.\//, ''));
-    }
+    return {
+      source: meta.thumb_source
+        ? join(postDir, meta.thumb_source.replace(/^\.\//, ''))
+        : null,
+      position: meta.thumb_position || 'centre',
+      extract: meta.thumb_extract || null, // {left, top, width, height}
+    };
   } catch {
-    /* no meta.json or no thumb_source */
+    return { source: null, position: 'centre', extract: null };
   }
-  return null;
 }
 
 async function generateThumbnails() {
@@ -51,10 +55,10 @@ async function generateThumbnails() {
       const outDir = join(PUBLIC_POSTS_DIR, slug);
       const thumbPath = join(outDir, 'cover-thumb.webp');
 
-      // Determine source: thumb_source > cover.webp
-      const customSrc = await getThumbSource(postDir);
+      // Determine source and crop config
+      const config = await getThumbConfig(postDir);
       const coverPath = join(postDir, 'cover.webp');
-      const srcPath = customSrc || coverPath;
+      const srcPath = config.source || coverPath;
 
       let srcStat;
       try {
@@ -76,10 +80,15 @@ async function generateThumbnails() {
 
       try {
         await mkdir(outDir, { recursive: true });
-        await sharp(srcPath)
-          .resize(SIZE, SIZE, { fit: 'cover', position: 'centre' })
-          .webp({ quality: 80 })
-          .toFile(thumbPath);
+        let pipeline = sharp(srcPath);
+        // Manual extract region takes priority over position-based crop
+        if (config.extract) {
+          pipeline = pipeline.extract(config.extract);
+        }
+        pipeline = pipeline
+          .resize(SIZE, SIZE, { fit: 'cover', position: config.position })
+          .webp({ quality: 80 });
+        await pipeline.toFile(thumbPath);
         generated++;
       } catch (err) {
         console.warn(`Failed: ${slug}:`, err.message);

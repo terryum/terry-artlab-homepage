@@ -35,13 +35,13 @@ export default function ContentCard({ post, locale }: ContentCardProps) {
       <article className="flex gap-6">
         {/* Thumbnail */}
         {(post.cover_thumb || post.cover_image) && (
-          <div className="hidden sm:block flex-shrink-0 w-28 h-28 relative rounded overflow-hidden bg-bg-surface">
+          <div className="hidden sm:block flex-shrink-0 w-36 h-36 relative rounded overflow-hidden bg-bg-surface">
             <Image
               src={post.cover_thumb || post.cover_image}
               alt={post.title}
               fill
               className="object-cover"
-              sizes="112px"
+              sizes="144px"
             />
           </div>
         )}
@@ -54,7 +54,7 @@ export default function ContentCard({ post, locale }: ContentCardProps) {
               <span className="text-xs font-normal text-text-muted ml-1.5">{sourceDateLabel}</span>
             )}
           </h3>
-          <p className="text-sm text-text-muted mt-1 line-clamp-4 sm:line-clamp-3">
+          <p className="text-sm text-text-muted mt-1 line-clamp-8 sm:line-clamp-4">
             {summary}
           </p>
           <div className="flex items-center gap-2 mt-2 flex-wrap">

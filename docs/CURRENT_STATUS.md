@@ -4,39 +4,38 @@
 
 ## 1) 세션 스냅샷
 - 마지막 업데이트: 2026-03-05 (KST)
-- 현재 단계: KaTeX 수식 지원 도입 완료
-- 전체 진행도(대략): 100% (v1 기능 완료 + 리팩토링 + 개선 + KaTeX)
+- 현재 단계: 썸네일 개선 + card_summary 통합 + About 리라이트 + 테마 색상 조정
+- 전체 진행도(대략): 100% (v1 기능 완료 + 지속 개선)
 
 ## 2) 지금 기준 핵심 결정 (최대 5개)
-- 인프라: Cloudflare + Vercel + GitHub
+- 인프라: Namecheap(DNS) + Vercel(배포+SSL) + GitHub
+- 도메인: `terry.artlab.ai` (Namecheap CNAME → cname.vercel-dns.com)
 - 스택: Next.js 15.5 (App Router) + TypeScript + Tailwind CSS v4 + next-mdx-remote v6
-- 콘텐츠 구조: `posts/{research,idea}/<slug>/meta.json`, `ko.mdx`, `en.mdx`, `cover.webp`
-- 메타데이터: `meta.json` (언어 무관) + MDX frontmatter (언어별), shallow merge
-- 수식: remark-math + rehype-katex로 `$...$`(인라인), `$$...$$`(블록) LaTeX 지원
+- 썸네일: 288×288 정사각 cover crop, meta.json `thumb_position`/`thumb_extract`로 crop 조정 가능
+- card_summary = TL;DR 텍스트 그대로 사용 (별도 작성 불필요)
 
 ## 3) 완료됨
 - [x] v1 전체 기능 (스캐폴딩~ForceVLA 포스팅~UI 개선)
 - [x] 리팩토링: 유틸 추출, 라우트 통합, 컴포넌트 분리, 설정 중앙화, 문서 정리
-- [x] KaTeX 수식 지원: remark-math + rehype-katex 도입, DexForce/ForceVLA 포스트 수식 LaTeX 변환
-- [x] 수식 작성 규칙 문서화 (RESEARCH_SUMMARY_RULES.md, POST_GENERATOR_RESEARCH.md)
+- [x] 썸네일 규칙 강화: 112→288px, center crop→cover crop + position/extract 지원
+- [x] TL;DR→card_summary 통합, ContentCard line-clamp 모바일 8줄/데스크톱 4줄
+- [x] About 페이지 리라이트 + 하단 연락처/소셜 섹션 삭제
+- [x] 라이트 모드 배경색 조정 (#FFFFFF→#ECF0F2 푸른 회색), 다크 모드 약간 밝게 (#030712→#0B1120)
 
 ## 4) 진행 중 / 막힘
-- 진행 중: 없음
 - 막힘/리스크: 없음
 
 ## 5) 다음 3개 작업 (우선순위)
-1. Vercel 배포 확인
-2. 다음 논문 포스팅 추가 (새 규칙 기반)
-3. Ideas 탭 첫 포스트 작성
+1. 다음 논문 포스팅 추가 (새 규칙 기반)
+2. Ideas 탭 첫 포스트 작성
+3. Essays 탭 콘텐츠 추가
 
 ## 6) 검증 상태 (요약)
-- 빌드: `npm run build` 성공 (18페이지 SSG 정상 생성)
-- KaTeX: 인라인/블록 수식 빌드 정상, 모바일 overflow-x:auto 적용
+- 빌드: 확인 필요 (이번 세션 변경사항 커밋 전)
+- 썸네일: DexForce 288×288 13.9KB, ForceVLA 288×288 15.0KB 정상 생성
 
 ## 7) 컨텍스트 메모 (다음 세션용)
 - `.next` 캐시: `npm run build`에서 자동 정리 (scripts/clean-next.mjs)
-- 수식 파이프라인: remark-math → rehype-katex, CSS는 globals.css에서 import
-- Figure.tsx: `isCover` prop으로 cover/inline 통합, `priority` prop으로 LCP 제어
-- 공유 유틸: `src/lib/paths.ts`, `src/lib/references.ts`, `src/lib/localize.ts`, `src/lib/site-config.ts`
-- 라우트 헬퍼: `src/lib/content-page-helpers.ts` (Index + Detail 공통 로직)
-- 메타데이터 스키마 정본: `docs/POST_GENERATOR_RESEARCH.md`
+- 썸네일 스크립트: `scripts/generate-thumbnails.mjs` — meta.json `thumb_source`, `thumb_position`, `thumb_extract` 지원
+- About 페이지: 하단 Contact 섹션 제거됨, SocialIcons는 프로필 섹션에만 남아있음
+- 테마 색상: 라이트 bg-base `#ECF0F2`, bg-surface `#E3E8EB` / 다크 bg-base `#0B1120`, bg-surface `#1A2332`

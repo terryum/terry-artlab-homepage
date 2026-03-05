@@ -10,7 +10,7 @@ export default function ListSkeleton() {
       {/* Card list skeleton */}
       {[0, 1, 2, 3, 4].map((i) => (
         <div key={i} className="flex gap-4 py-6 border-b border-line-default">
-          <div className="hidden sm:block flex-shrink-0 w-24 h-24 bg-bg-surface rounded" />
+          <div className="hidden sm:block flex-shrink-0 w-36 h-36 bg-bg-surface rounded" />
           <div className="flex-1 space-y-2">
             <div className="h-4 w-3/4 bg-bg-surface rounded" />
             <div className="h-3 w-full bg-bg-surface rounded" />

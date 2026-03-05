@@ -2,8 +2,8 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-bg-base: #FFFFFF;
-  --color-bg-surface: #F9FAFB;
+  --color-bg-base: #ECF0F2;
+  --color-bg-surface: #E3E8EB;
   --color-text-primary: #111827;
   --color-text-secondary: #374151;
   --color-text-muted: #6B7280;
@@ -21,8 +21,8 @@
 
 /* Dark mode — override the same --color-* custom properties that @theme generates */
 [data-theme="dark"] {
-  --color-bg-base: #030712;
-  --color-bg-surface: #111827;
+  --color-bg-base: #0B1120;
+  --color-bg-surface: #1A2332;
   --color-text-primary: #F9FAFB;
   --color-text-secondary: #D1D5DB;
   --color-text-muted: #9CA3AF;
