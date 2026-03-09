@@ -22,7 +22,6 @@ export async function generateMetadata({
   const dict = await getDictionary(locale);
   const bioText = await getBioPlainText(locale);
   return {
-    title: `${dict.hero.name} | ${dict.hero.tagline}`,
     description: bioText,
   };
 }
