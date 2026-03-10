@@ -8,9 +8,25 @@
   "status": "published",
   "content_type": "reading",
   "domain": "robotics",
-  "subfields": ["wearable-sensing", "hand-tracking", "soft-robotics", "teleoperation"],
-  "key_concepts": ["stretchable-sensor", "liquid-metal", "forward-kinematics", "bone-length-estimation", "joint-angle-estimation", "kalman-filter"],
-  "methodology": ["gaussian-process-regression", "bayesian-estimation", "forward-kinematics"],
+  "subfields": [
+    "wearable-sensing",
+    "hand-tracking",
+    "soft-robotics",
+    "teleoperation"
+  ],
+  "key_concepts": [
+    "stretchable-sensor",
+    "liquid-metal",
+    "forward-kinematics",
+    "bone-length-estimation",
+    "joint-angle-estimation",
+    "kalman-filter"
+  ],
+  "methodology": [
+    "gaussian-process-regression",
+    "bayesian-estimation",
+    "forward-kinematics"
+  ],
   "contribution_type": "system",
   "relations": [],
   "ai_summary": {
@@ -18,7 +34,11 @@
     "problem": "Existing hand tracking gloves require bulky multi-sensor setups or manual bone length measurement, and evaluate only on limited hand poses",
     "solution": "One-size-fits-all stretchable glove with 9 eGaIn traces that estimates bone lengths via initial stretch + Bayesian refinement, and joint angles via Kalman filter, using comprehensive motion data for calibration",
     "key_result": "Bone length error 2.1mm, joint angle error 4.16°, fingertip 3D error 4.02mm — outperforming commercial hand tracking systems",
-    "limitations": ["Only tracks 3 fingers (thumb, index, middle)", "Bone length refinement requires constrained poses", "Linear sensor model limits accuracy"]
+    "limitations": [
+      "Only tracks 3 fingers (thumb, index, middle)",
+      "Bone length refinement requires constrained poses",
+      "Linear sensor model limits accuracy"
+    ]
   },
   "tags": [
     "Research",
@@ -91,5 +111,7 @@
   ],
   "tables": [],
   "newsletter_eligible": false,
-  "featured": false
+  "featured": false,
+  "citation_status": "failed",
+  "citation_updated_at": "2026-03-10T16:04:29.196Z"
 }
