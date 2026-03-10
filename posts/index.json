@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-10T01:11:28.809Z",
+  "generated_at": "2026-03-10T01:19:39.568Z",
   "total_posts": 7,
   "posts": [
     {
@@ -248,7 +248,10 @@
       "methodology": [],
       "contribution_type": null,
       "tags": [
-        "Ideas"
+        "Ideas",
+        "AI",
+        "Physical AI",
+        "Research Philosophy"
       ],
       "source_author": null,
       "source_date": null,
@@ -345,7 +348,10 @@
       "methodology": [],
       "contribution_type": null,
       "tags": [
-        "Ideas"
+        "Ideas",
+        "AI",
+        "Human-AI Collaboration",
+        "AI Scientist"
       ],
       "source_author": null,
       "source_date": null,
