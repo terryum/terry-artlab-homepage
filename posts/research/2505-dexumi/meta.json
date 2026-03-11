@@ -1,0 +1,121 @@
+{
+  "post_id": "2505-dexumi",
+  "slug": "2505-dexumi",
+  "post_number": 8,
+  "published_at": "2026-03-11T00:00:00+09:00",
+  "updated_at": "2026-03-11T00:00:00+09:00",
+  "status": "published",
+  "content_type": "reading",
+  "tags": ["dexterous-manipulation", "teleoperation", "imitation-learning", "robot-hand", "exoskeleton", "data-collection"],
+  "cover_image": "./cover.webp",
+  "cover_caption": "DexUMI transfer dexterous human manipulation skills to various robot hand by using wearable exoskeletons and a data processing framework. We demonstrate DexUMI's capability and effectiveness on both underactuated (e.g., Inspire) and fully-actuated (e.g., XHand) robot hand for a wide variety of manipulation tasks.",
+  "reading_time_min": 8,
+  "source_url": "https://arxiv.org/abs/2505.21864",
+  "source_title": "DexUMI: Using Human Hand as the Universal Manipulation Interface for Dexterous Manipulation",
+  "source_author": "Mengda Xu et al.",
+  "source_type": "arXiv",
+  "source_project_url": "https://dex-umi.github.io/",
+  "source_authors_full": [
+    {"name": "Mengda Xu", "affiliation": "Stanford University, Columbia University, J.P. Morgan AI Research"},
+    {"name": "Han Zhang", "affiliation": "Stanford University"},
+    {"name": "Yifan Hou", "affiliation": "Stanford University"},
+    {"name": "Zhenjia Xu", "affiliation": "NVIDIA"},
+    {"name": "Linxi Fan", "affiliation": "NVIDIA"},
+    {"name": "Manuela Veloso", "affiliation": "J.P. Morgan AI Research, Carnegie Mellon University"},
+    {"name": "Shuran Song", "affiliation": "Stanford University, Columbia University"}
+  ],
+  "figures": [
+    {
+      "src": "./fig-1.png",
+      "caption": "DexUMI transfer dexterous human manipulation skills to various robot hand by using wearable exoskeletons and a data processing framework. We demonstrate DexUMI's capability and effectiveness on both underactuated (e.g., Inspire) and fully-actuated (e.g., XHand) robot hand for a wide variety of manipulation tasks.",
+      "caption_ko": "DexUMI는 웨어러블 exoskeleton과 데이터 처리 프레임워크를 이용해 인간의 dexterous manipulation 스킬을 다양한 로봇 손으로 전이한다. underactuated(Inspire)와 fully-actuated(XHand) 두 종류의 로봇 손 모두에서 다양한 조작 태스크에 대한 효과를 실증한다.",
+      "number": 1
+    },
+    {
+      "src": "./fig-2.png",
+      "caption": "Exoskeleton Design. The optimized exoskeleton design shares the same joint-to-fingertip position mapping as the target robot hand while maintaining the wearability.",
+      "caption_ko": "Exoskeleton 설계. 최적화된 exoskeleton 설계는 대상 로봇 손과 동일한 joint-to-fingertip 위치 매핑을 공유하면서도 착용성을 유지한다.",
+      "number": 2
+    },
+    {
+      "src": "./fig-3.png",
+      "caption": "Mechanism Optimization. To avoid thumb collision between human hand and exoskeleton, the hardware optimization step allows us to move the exoskeleton thumb backward while still preserving the original fingertip and joint mapping in SE(3) space.",
+      "caption_ko": "메커니즘 최적화. 인간 손과 exoskeleton 사이의 엄지 충돌을 방지하기 위해, SE(3) 공간의 원래 fingertip 및 joint 매핑을 유지하면서 exoskeleton 엄지를 후방으로 이동시킨다.",
+      "number": 3
+    },
+    {
+      "src": "./fig-4.png",
+      "caption": "Bridging the Visual Gap. To convert the visual observation into policy training data, we first segment the exoskeleton using SAM2 and inpaint the missing background. The corresponding joint action is replayed on the dexterous hand to obtain the robot hand image.",
+      "caption_ko": "시각적 격차 해소. 시각 관측을 정책 학습 데이터로 변환하기 위해, SAM2로 exoskeleton을 segmentation하고 누락된 배경을 inpainting한다. 그런 다음 해당 joint 동작을 dexterous hand에서 재생하여 로봇 손 이미지를 얻는다.",
+      "number": 4
+    },
+    {
+      "src": "./fig-5.png",
+      "caption": "Policy Rollout: We evaluate DexUMI's capabilities across challenging real-world tasks. The Cube task tests basic picking precision. The Egg Carton task evaluates multi-finger coordination. The Tea Picking task assesses performance on contact-rich manipulation requiring millimeter-level fine-grained fingertip actions. Finally, the Kitchen task tests capabilities on long-horizon high-precision actions.",
+      "caption_ko": "정책 실행: DexUMI의 능력을 도전적인 실세계 태스크에서 평가한다. Cube 태스크는 기본 피킹 정밀도를, Egg Carton은 다중 손가락 협조를, Tea Picking은 밀리미터 수준의 접촉 중심 조작을, Kitchen은 장시간 고정밀 동작 체인을 테스트한다.",
+      "number": 5
+    },
+    {
+      "src": "./fig-6.png",
+      "caption": "Comparisons. a) The policy outputs relative hand actions yield more precise action and demonstrate better multi-finger coordination. b) Even with noisy tactile sensor reading, the tactile significantly improve tasks which is visually challenging.",
+      "caption_ko": "비교 실험. a) 정책이 상대적 hand 동작을 출력할 때 더 정밀한 동작과 더 나은 다중 손가락 협조를 보인다. b) 촉각 센서 판독값에 노이즈가 있더라도, 시각적으로 어려운 태스크에서 성능을 크게 향상시킨다.",
+      "number": 6
+    },
+    {
+      "src": "./fig-7.png",
+      "caption": "Efficiency: Collection throughput (CT) within 15-minute. Though DexUMI still slower than bare hand, it achieves significant higher efficiency than teleportation.",
+      "caption_ko": "효율성: 15분 내 데이터 수집 처리량(CT). DexUMI는 맨손보다 느리지만, 원격 조종 방식보다 유의미하게 높은 효율성을 달성한다.",
+      "number": 7
+    },
+    {
+      "src": "./fig-8.png",
+      "caption": "Inpainting Results. The visual observations in the original collected dataset contain exoskeletons and human hands. The software adaptation layer replaces these pixels with corresponding robot hand images while preserving the natural occlusion relationships during hand-object interactions.",
+      "caption_ko": "Inpainting 결과. 원래 수집된 데이터셋의 시각 관측에는 exoskeleton과 인간 손이 포함되어 있다. 소프트웨어 적응 레이어는 hand-object 상호작용 중 자연스러운 occlusion 관계를 보존하면서 해당 픽셀을 로봇 손 이미지로 교체한다.",
+      "number": 8
+    },
+    {
+      "src": "./fig-9.png",
+      "caption": "Inspire Mocap: We use motion capture system to record fingertips trajectories in the flange coordinate. We attached marker on fingers and flange to capture the fingertip pose in flange coordinate.",
+      "caption_ko": "Inspire Mocap: 모션 캡처 시스템을 이용해 flange 좌표에서 fingertip 궤적을 기록한다. 손가락과 flange에 마커를 부착하여 flange 좌표에서의 fingertip 자세를 캡처한다.",
+      "number": 9
+    },
+    {
+      "src": "./fig-10.png",
+      "caption": "Joint Encoder Circuit: The rotary sensor acts as a variable resistor with three output pins. As it rotates with the joint, the voltage on the ADC line changes approximately linearly.",
+      "caption_ko": "Joint Encoder 회로: 회전 센서는 세 개의 출력 핀을 가진 가변 저항으로 동작한다. joint와 함께 회전함에 따라 ADC 라인의 전압이 근사 선형적으로 변한다.",
+      "number": 10
+    },
+    {
+      "src": "./fig-11.png",
+      "caption": "Voltage Divider Circuit: This simple voltage divider circuit converts the resistance change of the FSR sensor into an analog voltage on the ADC line.",
+      "caption_ko": "Voltage Divider 회로: 이 간단한 전압 분배기 회로는 FSR 센서의 저항 변화를 ADC 라인의 아날로그 전압으로 변환한다.",
+      "number": 11
+    }
+  ],
+  "tables": [],
+  "newsletter_eligible": false,
+  "featured": false,
+  "domain": "robotics",
+  "subfields": ["dexterous-manipulation", "teleoperation", "imitation-learning", "data-collection"],
+  "key_concepts": ["exoskeleton", "kinematic-gap", "visual-gap", "ai-inpainting", "relative-action", "tactile-sensing", "universal-manipulation-interface", "workspace-optimization"],
+  "methodology": ["exoskeleton-hardware", "bi-level-optimization", "sam2-segmentation", "diffusion-policy", "relative-action-representation", "fsr-tactile"],
+  "contribution_type": "system",
+  "relations": [
+    {"target": "2407-stretchable-glove-hand-pose", "type": "related"},
+    {"target": "2501-dexforce-force-informed-actions", "type": "related"},
+    {"target": "2505-forcevla-force-aware-moe", "type": "related"}
+  ],
+  "ai_summary": {
+    "one_liner": "DexUMI bridges kinematic and visual gaps between human and robot hands via exoskeleton hardware and AI inpainting to enable efficient dexterous manipulation skill transfer.",
+    "problem": "Teaching dexterous manipulation to robot hands is blocked by two gaps: kinematic gap (human and robot hand morphologies differ) and visual gap (demonstration data shows human hands, causing distribution shift during robot execution).",
+    "solution": "Hardware adaptation via wearable exoskeleton with bi-level workspace-matching optimization; software adaptation via SAM2 segmentation + AI inpainting to replace human hand appearances with robot hand images in collected demonstrations.",
+    "key_result": "Average 86% task success rate across 4 challenging real-world tasks on two different robot platforms; 3.2× higher data collection efficiency than teleoperation.",
+    "limitations": [
+      "Requires per-robot-hand exoskeleton design and fabrication",
+      "Camera must be rigidly attached to robot hand/exoskeleton",
+      "Robot hand images for inpainting still require real hardware in the loop"
+    ]
+  },
+  "thumb_source": "./fig-5.png",
+  "thumb_position": "top"
+}
