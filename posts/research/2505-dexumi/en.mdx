@@ -1,0 +1,108 @@
+---
+locale: "en"
+title: "DexUMI: Human Hand as Universal Interface for Dexterous Manipulation"
+summary: "DexUMI combines a wearable exoskeleton (to bridge the kinematic gap) with SAM2-based AI inpainting (to bridge the visual gap), converting human dexterous manipulation demonstrations into robot training data. It achieves an average 86% task success rate across two robot hand platforms (Inspire, XHand) and 3.2× more efficient data collection than teleoperation."
+card_summary: "Teaching dexterous manipulation to robot hands faces two fundamental barriers: kinematic gap and visual gap. DexUMI resolves both simultaneously — via wearable exoskeleton and SAM2 + AI inpainting — achieving 86% average task success rate across two different robot hand platforms."
+seo_title: "DexUMI: Using Human Hand as Universal Manipulation Interface for Dexterous Robots"
+seo_description: "DexUMI resolves kinematic and visual gaps between human and robot hands using a wearable exoskeleton and AI inpainting pipeline, achieving 86% task success rate on Inspire and XHand robot platforms."
+translation_of: "2505-dexumi:ko"
+terrys_memo: ""
+references:
+  - title: "Universal Manipulation Interface: In-The-Wild Robot Teaching Without In-The-Wild Robots"
+    author: "Chi et al. (2024)"
+    description: "The original UMI paper for grippers, which established the paradigm of using in-the-wild human demonstrations for robot learning. DexUMI directly extends this concept to 5-finger dexterous hands, tackling the additional kinematic and visual gap challenges."
+    arxiv_url: "https://arxiv.org/abs/2402.10329"
+    category: "foundational"
+  - title: "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion"
+    author: "Chi et al. (2023)"
+    description: "The diffusion-based imitation learning backbone used in DexUMI for policy training. Its ability to learn multi-modal action distributions in continuous high-dimensional spaces makes it well-suited for dexterous manipulation tasks."
+    arxiv_url: "https://arxiv.org/abs/2303.04137"
+    category: "foundational"
+  - title: "DexTreme: Transfer of Agile In-hand Manipulation from Simulation to Reality"
+    author: "Handa et al. (2023)"
+    description: "Achieves dexterous in-hand manipulation via sim-to-real transfer with large-scale RL training. DexUMI takes a complementary approach — leveraging real human demonstrations — avoiding extensive simulation infrastructure while directly capturing contact-rich behaviors."
+    arxiv_url: "https://arxiv.org/abs/2210.13702"
+    category: "foundational"
+  - title: "Stretchable Tactile Glove for Hand Pose Estimation and Data Collection in Dexterous Manipulation"
+    author: "Hou et al. (2024)"
+    description: "A tactile glove-based approach to dexterous data collection from the same Stanford group. Compared to DexUMI's exoskeleton approach, it offers different trade-offs between wearability and kinematic accuracy."
+    arxiv_url: "https://arxiv.org/abs/2407.11874"
+    post_slug: "2407-stretchable-glove-hand-pose"
+    category: "recent"
+  - title: "DexForce: Extracting Force-Informed Actions from Kinesthetic Demonstrations for Dexterous Manipulation"
+    author: "Hou et al. (2025)"
+    description: "Extracts force information from kinesthetic demonstrations to learn dexterous manipulation. Complementary to DexUMI's tactile integration — both works highlight the importance of force/contact signals in contact-rich dexterous tasks."
+    arxiv_url: "https://arxiv.org/abs/2501.07640"
+    post_slug: "2501-dexforce-force-informed-actions"
+    category: "recent"
+---
+
+## TL;DR
+
+Teaching dexterous manipulation to robot hands faces two fundamental barriers: **kinematic gap** and **visual gap**. DexUMI resolves both simultaneously — the former through a wearable exoskeleton, the latter through SAM2 + AI inpainting — achieving an average 86% task success rate across two different robot hand platforms.
+
+## Problem
+
+Dexterous robot manipulation research is bottlenecked by the difficulty of collecting large-scale, high-quality demonstration data. While imitation learning works well for low-DoF grippers, extending it to 5-finger robot hands introduces two simultaneous problems. **Kinematic gap**: human and robot hands differ in joint structure, degrees of freedom, and finger proportions, making direct control mapping infeasible. **Visual gap**: data collected by humans directly manipulating objects shows human hands — not robot hands — causing distribution shift when a policy trained on this data runs on an actual robot. Existing teleoperation approaches partially address the kinematic gap, but remain data-collection-inefficient and leave the visual gap unresolved.
+
+## Core Idea
+
+DexUMI resolves both gaps via separate **hardware adaptation** and **software adaptation** layers:
+
+- **Hardware adaptation (kinematic gap)**: A wearable exoskeleton designed via bi-level optimization to match the target robot hand's fingertip workspace, aligning the joint-to-fingertip mapping while remaining ergonomically wearable
+- **Software adaptation (visual gap)**: SAM2 segments the exoskeleton out of collected demonstration videos; the background is inpainted; then the corresponding joint actions are replayed on the actual robot hand and photographed to replace the human hand appearance
+- **Relative action representation**: Using relative hand actions (rather than absolute joint positions) as policy output yields more precise, better-coordinated multi-finger movements
+- **Tactile feedback integration**: FSR-based tactile sensors improve performance on contact-rich tasks that are difficult to distinguish visually
+
+<Figure src="./fig-4.png" caption="Fig. 4: Bridging the Visual Gap. To convert the visual observation into policy training data, we first segment the exoskeleton using SAM2 and inpaint the missing background. The corresponding joint action is replayed on the dexterous hand to obtain the robot hand image." number={4} />
+
+<Collapsible title="Method Details">
+
+### Hardware Optimization
+
+The exoskeleton design is determined via bi-level optimization. The goal is to find design parameters $p$ (joint positions, linkage lengths) that maximize the workspace similarity between the exoskeleton fingertip workspace $W_{\text{exo}}^{\text{tip}}(p)$ and the robot hand workspace $W_{\text{robot}}^{\text{tip}}$:
+
+$$\max_{p} \, S\!\left(W_{\text{exo}}^{\text{tip}}(p),\, W_{\text{robot}}^{\text{tip}}\right)$$
+
+To avoid thumb collision, a mechanism optimization step moves the exoskeleton thumb backward while preserving the original fingertip and joint mapping in SE(3) space. Each finger joint uses a rotary encoder to estimate joint angle from ADC voltage:
+
+$$\alpha_{\text{joint}} = \frac{V_{\text{ADC}}}{V_{\text{supply}}} \times 360°$$
+
+Tactile force is measured by converting FSR sensor resistance change via a voltage divider: $F = k\!\left(\frac{V_{\text{supply}}}{V_{\text{ADC}}} - 1\right)$
+
+### Software Pipeline
+
+1. **Segmentation**: SAM2 extracts exoskeleton regions from collected video frames
+2. **Background Inpainting**: Fills removed regions with plausible background
+3. **Robot Hand Rendering**: Replays corresponding joint commands on the real robot hand and captures images from the same camera position
+4. **Occlusion Handling**: Preserves natural occlusion relationships during hand-object interactions
+
+<Figure src="./fig-2.png" caption="Fig. 2: Exoskeleton Design. The optimized exoskeleton design shares the same joint-to-fingertip position mapping as the target robot hand while maintaining the wearability." number={2} />
+
+</Collapsible>
+
+## Key Results
+
+Per-task success rates from Table 1 (Inspire robot hand):
+
+- **Cube Picking**: 100% — validates basic picking precision
+- **Egg Carton**: 85% — requires multi-finger coordination
+- **Tea Picking with Tool**: 100% — millimeter-level contact-rich manipulation
+- **Kitchen (Knob / Pan / Salt)**: 100% / 85% / 95% — long-horizon, high-precision task chain
+
+On the XHand (fully-actuated) platform, 85–90% success rates demonstrate **platform-agnostic generality**. Data collection throughput is **3.2× higher** than teleoperation (measured over 15-minute windows).
+
+<Figure src="./fig-5.png" caption="Fig. 5: Policy Rollout: We evaluate DexUMI's capabilities across challenging real-world tasks. The Cube task tests basic picking precision. The Egg Carton task evaluates multi-finger coordination. The Tea Picking task assesses performance on contact-rich manipulation requiring millimeter-level fine-grained fingertip actions. Finally, the Kitchen task tests capabilities on long-horizon high-precision actions." number={5} />
+
+## Achievements and Limitations
+
+**What's newly achieved:**
+- First system to resolve kinematic gap and visual gap **simultaneously in a single integrated pipeline**
+- High success rates demonstrated across two architecturally distinct robot hands (underactuated Inspire and fully-actuated XHand)
+- 3.2× data collection efficiency gain, partially alleviating the data bottleneck in dexterous manipulation learning
+
+**Limitations:**
+- Per-robot-hand exoskeleton design and fabrication required (limits scalability)
+- Software adaptation (inpainting) still requires real robot hardware in the loop; lighting effects cannot be fully reproduced
+- Camera must be rigidly attached to the robot hand/exoskeleton — a structural constraint on deployment flexibility
+- 🤖 All experiments use a single fixed-viewpoint camera setup; generalization to varied camera placements or unstructured environments remains unverified

@@ -1,0 +1,107 @@
+---
+locale: "ko"
+title: "DexUMI: 인간 손을 범용 조작 인터페이스로"
+summary: "DexUMI는 착용형 exoskeleton(kinematic gap 해소)과 SAM2 기반 AI inpainting(visual gap 해소)을 결합하여 인간의 dexterous manipulation 시연을 로봇 손의 학습 데이터로 변환한다. 두 종류의 로봇 손(Inspire, XHand)에서 평균 86% 태스크 성공률과 teleoperation 대비 3.2배 데이터 수집 효율 향상을 달성했다."
+card_summary: "로봇 손에 dexterous manipulation을 가르치는 데는 kinematic gap과 visual gap이라는 두 가지 근본적 장벽이 있다. DexUMI는 착용형 exoskeleton으로 전자를, SAM2 + AI inpainting으로 후자를 동시에 해소하여 서로 다른 두 종류의 로봇 손에서 평균 86% 태스크 성공률을 달성했다."
+seo_title: "DexUMI: 인간 손을 Dexterous Manipulation 범용 인터페이스로 활용하기"
+seo_description: "착용형 exoskeleton과 AI inpainting으로 인간 손과 로봇 손 사이의 kinematic/visual gap을 동시에 해소하는 DexUMI 프레임워크. Inspire와 XHand 두 로봇 플랫폼에서 평균 86% 성공률 달성."
+terrys_memo: ""
+references:
+  - title: "Universal Manipulation Interface: In-The-Wild Robot Teaching Without In-The-Wild Robots"
+    author: "Chi et al. (2024)"
+    description: "그리퍼를 대상으로 한 UMI의 원조 논문. 인간이 물체를 직접 조작한 시연 데이터를 로봇 학습에 활용하는 paradigm을 확립했다. DexUMI는 이 개념을 5-finger dexterous hand로 확장하며 kinematic/visual gap이라는 추가 문제를 해결한다."
+    arxiv_url: "https://arxiv.org/abs/2402.10329"
+    category: "foundational"
+  - title: "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion"
+    author: "Chi et al. (2023)"
+    description: "DexUMI가 정책 학습 backbone으로 사용하는 diffusion-based imitation learning 방법론. 연속적 고차원 동작 공간에서 multi-modal 행동 분포를 학습할 수 있어 dexterous manipulation에 적합하다."
+    arxiv_url: "https://arxiv.org/abs/2303.04137"
+    category: "foundational"
+  - title: "DexTreme: Transfer of Agile In-hand Manipulation from Simulation to Reality"
+    author: "Handa et al. (2023)"
+    description: "sim-to-real transfer로 dexterous in-hand manipulation을 달성한 연구. 강화학습 기반 접근으로 대규모 시뮬레이션 훈련이 필요하지만, DexUMI는 실제 인간 시연을 직접 활용함으로써 설계 복잡도를 낮춘다."
+    arxiv_url: "https://arxiv.org/abs/2210.13702"
+    category: "foundational"
+  - title: "Stretchable Tactile Glove for Hand Pose Estimation and Data Collection in Dexterous Manipulation"
+    author: "Hou et al. (2024)"
+    description: "동일한 Stanford 그룹의 dexterous hand 데이터 수집 연구로, 촉각 글러브 기반 접근을 탐색했다. DexUMI의 exoskeleton 방식과 비교하여 착용성과 kinematic 정확도의 trade-off가 상이하다."
+    arxiv_url: "https://arxiv.org/abs/2407.11874"
+    post_slug: "2407-stretchable-glove-hand-pose"
+    category: "recent"
+  - title: "DexForce: Extracting Force-Informed Actions from Kinesthetic Demonstrations for Dexterous Manipulation"
+    author: "Hou et al. (2025)"
+    description: "kinesthetic demonstration에서 힘 정보를 추출하여 dexterous manipulation을 학습하는 연구. DexUMI의 촉각 통합과 상호보완적으로, 접촉 중심 조작에서 힘 신호의 중요성을 공유하는 관련 연구다."
+    arxiv_url: "https://arxiv.org/abs/2501.07640"
+    post_slug: "2501-dexforce-force-informed-actions"
+    category: "recent"
+---
+
+## TL;DR
+
+로봇 손에 dexterous manipulation을 가르치는 데는 **kinematic gap**과 **visual gap**이라는 두 가지 근본적 장벽이 있다. DexUMI는 착용형 exoskeleton으로 전자를, SAM2 + AI inpainting으로 후자를 동시에 해소하여 서로 다른 두 종류의 로봇 손에서 평균 86% 태스크 성공률을 달성했다.
+
+## 문제
+
+로봇 dexterous manipulation 연구는 대규모 고품질 demonstration 데이터 수집이라는 병목에 막혀있다. 기존 imitation learning은 DoF가 적은 그리퍼에서는 효과적이었지만, 5-finger robot hand로 확장하면 두 가지 문제가 동시에 등장한다. **Kinematic gap**: 인간 손과 로봇 손은 관절 구조, 자유도, 손가락 비율이 달라 단순한 제어 매핑이 불가능하다. **Visual gap**: 인간이 직접 물체를 조작하며 수집한 데이터에는 로봇 손이 아닌 인간 손이 등장하므로, 이 데이터로 학습한 policy는 실제 로봇 실행 시 distribution shift를 겪는다. 기존 teleoperation 방식은 kinematic gap을 부분적으로 해결하지만 데이터 수집 효율이 낮고, visual gap은 여전히 별도로 처리해야 한다.
+
+## 핵심 아이디어
+
+DexUMI는 **하드웨어 적응**과 **소프트웨어 적응** 두 레이어로 두 격차를 분리 해소한다.
+
+- **Hardware adaptation (kinematic gap)**: 대상 로봇 손의 fingertip workspace와 일치하도록 bi-level optimization으로 설계된 착용형 exoskeleton. exoskeleton과 로봇 손의 joint-to-fingertip 매핑을 맞추면서도 사람이 편안하게 착용 가능하도록 제약
+- **Software adaptation (visual gap)**: 인간 손이 등장하는 시연 영상에서 SAM2로 exoskeleton을 segmentation하고, 배경을 inpainting한 뒤, 해당 joint 동작을 실제 로봇 손에 재생·촬영하여 교체
+- **Relative action representation**: 절대 좌표 대신 상대적 hand 동작을 policy 출력으로 사용 → 더 정밀한 multi-finger 협조 달성
+- **Tactile feedback 통합**: FSR 기반 촉각 센서로 시각만으로는 구분하기 어려운 접촉 태스크 성능 향상
+
+<Figure src="./fig-4.png" caption="Fig. 4: 시각적 격차 해소. SAM2로 exoskeleton을 segmentation하고 배경을 inpainting한 뒤, 해당 joint 동작을 로봇 손에서 재생·촬영하여 인간 손 이미지를 교체한다." number={4} />
+
+<Collapsible title="구체적 방법">
+
+### 하드웨어 최적화
+
+Exoskeleton 설계는 bi-level optimization으로 결정된다. 목표는 exoskeleton fingertip workspace $W_{\text{exo}}^{\text{tip}}(p)$와 로봇 손 workspace $W_{\text{robot}}^{\text{tip}}$ 사이의 유사도를 최대화하는 설계 파라미터 $p$를 찾는 것이다:
+
+$$\max_{p} \, S\!\left(W_{\text{exo}}^{\text{tip}}(p),\, W_{\text{robot}}^{\text{tip}}\right)$$
+
+엄지 충돌 회피를 위해 SE(3) 공간에서 fingertip 매핑을 보존하면서 exoskeleton 엄지를 후방으로 이동하는 mechanism optimization이 추가된다. 각 손가락 관절에는 rotary encoder를 부착하여 ADC 라인의 전압 변화로 관절 각도를 추정한다:
+
+$$\alpha_{\text{joint}} = \frac{V_{\text{ADC}}}{V_{\text{supply}}} \times 360°$$
+
+촉각은 FSR 센서의 저항 변화를 voltage divider로 변환하여 측정한다: $F = k\!\left(\frac{V_{\text{supply}}}{V_{\text{ADC}}} - 1\right)$
+
+### 소프트웨어 파이프라인
+
+1. **Segmentation**: SAM2로 수집 영상에서 exoskeleton 영역 추출
+2. **Background Inpainting**: 제거된 영역에 자연스러운 배경 생성
+3. **Robot Hand Rendering**: 해당 joint 명령을 실제 로봇 손에 재생, 동일 카메라 위치에서 촬영
+4. **Occlusion 처리**: hand-object 상호작용 시 자연스러운 가림 관계 보존
+
+<Figure src="./fig-2.png" caption="Fig. 2: Exoskeleton 설계. 최적화된 exoskeleton은 대상 로봇 손과 동일한 joint-to-fingertip 위치 매핑을 공유하면서도 착용성을 유지한다." number={2} />
+
+</Collapsible>
+
+## 주요 결과
+
+Table 1에 따른 태스크별 성공률 (Inspire 로봇 손):
+
+- **Cube Picking**: 100% — 기본 피킹 정밀도 검증
+- **Egg Carton**: 85% — 다중 손가락 협조 요구
+- **Tea Picking with Tool**: 100% — 밀리미터 수준 접촉 조작
+- **Kitchen (Knob / Pan / Salt)**: 100% / 85% / 95% — 장시간 고정밀 태스크 체인
+
+XHand(fully-actuated)에서도 85~90% 성공률로 **플랫폼 무관한 범용성** 입증. 데이터 수집 효율은 기존 teleoperation 대비 **3.2배** 향상 (15분 기준 처리량 비교).
+
+<Figure src="./fig-5.png" caption="Fig. 5: Policy Rollout: 도전적인 실세계 태스크에서 DexUMI를 평가한다. Cube(피킹 정밀도), Egg Carton(다중 손가락 협조), Tea Picking(밀리미터 수준 접촉 조작), Kitchen(장시간 고정밀 동작 체인)." number={5} />
+
+## 달성점과 한계점
+
+**새롭게 달성한 점:**
+- Kinematic gap과 visual gap을 **하나의 통합 파이프라인**으로 동시 해소한 첫 번째 시스템
+- Underactuated(Inspire)와 fully-actuated(XHand) 두 종류의 상이한 로봇 손에서 모두 높은 성공률 실증
+- 데이터 수집 효율 3.2× 향상으로 dexterous manipulation 학습의 데이터 병목 완화
+
+**한계점:**
+- 로봇 손마다 별도의 exoskeleton 설계 및 하드웨어 제작이 필요 (확장성 제한)
+- 소프트웨어 적응(inpainting)에 여전히 실제 로봇 하드웨어가 필요하며, 조명 효과의 완전한 재현이 어려움
+- 카메라가 로봇 손/exoskeleton에 고정 부착되어야 하는 구조적 제약
+- 🤖 실험 태스크가 단일 고정 시점 카메라 환경에서 진행되어, 다양한 카메라 배치나 비정형 환경에서의 일반화 가능성은 미검증

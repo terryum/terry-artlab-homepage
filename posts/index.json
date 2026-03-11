@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-03-10T01:19:39.568Z",
-  "total_posts": 7,
+  "generated_at": "2026-03-11T01:41:57.631Z",
+  "total_posts": 8,
   "posts": [
     {
       "post_number": 1,
@@ -234,8 +234,8 @@
       "post_number": 5,
       "slug": "260310-on-the-manifold-frist-post",
       "content_type": "writing",
-      "title_en": "On the Manifold",
-      "title_ko": "On the Manifold",
+      "title_en": "260310-on-the-manifold-frist-post",
+      "title_ko": "260310-on-the-manifold-frist-post",
       "domain": "robotics",
       "subfields": [
         "research-philosophy"
@@ -279,7 +279,7 @@
       "slug": "2407-stretchable-glove-hand-pose",
       "content_type": "reading",
       "title_en": "Stretchable glove for accurate and robust hand pose reconstruction based on comprehensive motion data",
-      "title_ko": "신축성 글러브 기반의 포괄적 동작 데이터를 활용한 정확하고 강건한 손 자세 재구성",
+      "title_ko": "Stretchable glove for accurate and robust hand pose reconstruction based on comprehensive motion data",
       "domain": "robotics",
       "subfields": [
         "wearable-sensing",
@@ -332,8 +332,8 @@
       "post_number": 7,
       "slug": "260310-brain-augmentation",
       "content_type": "writing",
-      "title_en": "Brain Augmentation",
-      "title_ko": "Brain Augmentation",
+      "title_en": "260310-brain-augmentation",
+      "title_ko": "260310-brain-augmentation",
       "domain": "ml",
       "subfields": [
         "ai-research-methodology",
@@ -372,6 +372,78 @@
       "related_posts": [
         "260310-on-the-manifold-frist-post"
       ]
+    },
+    {
+      "post_number": 8,
+      "slug": "2505-dexumi",
+      "content_type": "reading",
+      "title_en": "DexUMI: Human Hand as Universal Interface for Dexterous Manipulation",
+      "title_ko": "DexUMI: 인간 손을 범용 조작 인터페이스로",
+      "domain": "robotics",
+      "subfields": [
+        "dexterous-manipulation",
+        "teleoperation",
+        "imitation-learning",
+        "data-collection"
+      ],
+      "key_concepts": [
+        "exoskeleton",
+        "kinematic-gap",
+        "visual-gap",
+        "ai-inpainting",
+        "relative-action",
+        "tactile-sensing",
+        "universal-manipulation-interface",
+        "workspace-optimization"
+      ],
+      "methodology": [
+        "exoskeleton-hardware",
+        "bi-level-optimization",
+        "sam2-segmentation",
+        "diffusion-policy",
+        "relative-action-representation",
+        "fsr-tactile"
+      ],
+      "contribution_type": "system",
+      "tags": [
+        "dexterous-manipulation",
+        "teleoperation",
+        "imitation-learning",
+        "robot-hand",
+        "exoskeleton",
+        "data-collection"
+      ],
+      "source_author": "Mengda Xu et al.",
+      "source_date": null,
+      "published_at": "2026-03-11T00:00:00+09:00",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "DexUMI bridges kinematic and visual gaps between human and robot hands via exoskeleton hardware and AI inpainting to enable efficient dexterous manipulation skill transfer.",
+        "problem": "Teaching dexterous manipulation to robot hands is blocked by two gaps: kinematic gap (human and robot hand morphologies differ) and visual gap (demonstration data shows human hands, causing distribution shift during robot execution).",
+        "solution": "Hardware adaptation via wearable exoskeleton with bi-level workspace-matching optimization; software adaptation via SAM2 segmentation + AI inpainting to replace human hand appearances with robot hand images in collected demonstrations.",
+        "key_result": "Average 86% task success rate across 4 challenging real-world tasks on two different robot platforms; 3.2× higher data collection efficiency than teleoperation.",
+        "limitations": [
+          "Requires per-robot-hand exoskeleton design and fabrication",
+          "Camera must be rigidly attached to robot hand/exoskeleton",
+          "Robot hand images for inpainting still require real hardware in the loop"
+        ]
+      },
+      "relations": [
+        {
+          "target": "2407-stretchable-glove-hand-pose",
+          "type": "related"
+        },
+        {
+          "target": "2501-dexforce-force-informed-actions",
+          "type": "related"
+        },
+        {
+          "target": "2505-forcevla-force-aware-moe",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null
     }
   ],
   "knowledge_graph": {
@@ -400,6 +472,21 @@
         "from": "2511-pi0-6-recap",
         "to": "2410-pi0-vla-flow-model",
         "type": "builds_on"
+      },
+      {
+        "from": "2505-dexumi",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "related"
+      },
+      {
+        "from": "2505-dexumi",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "related"
+      },
+      {
+        "from": "2505-dexumi",
+        "to": "2505-forcevla-force-aware-moe",
+        "type": "related"
       }
     ]
   },
@@ -487,10 +574,34 @@
     ],
     "research-methodology": [
       7
+    ],
+    "exoskeleton": [
+      8
+    ],
+    "kinematic-gap": [
+      8
+    ],
+    "visual-gap": [
+      8
+    ],
+    "ai-inpainting": [
+      8
+    ],
+    "relative-action": [
+      8
+    ],
+    "tactile-sensing": [
+      8
+    ],
+    "universal-manipulation-interface": [
+      8
+    ],
+    "workspace-optimization": [
+      8
     ]
   },
   "domain_stats": {
-    "robotics": 6,
+    "robotics": 7,
     "ml": 1
   }
 }
