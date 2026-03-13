@@ -26,7 +26,7 @@ export default function AdminLoginForm() {
         return;
       }
 
-      router.refresh();
+      router.push('/');
     } catch {
       setError('Something went wrong');
     } finally {

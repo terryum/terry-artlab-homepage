@@ -4,6 +4,7 @@ import SourceInfoBlock from './SourceInfoBlock';
 import AppendixSection from './AppendixSection';
 import Figure from './Figure';
 import LanguageSwitcher from './LanguageSwitcher';
+import ShareButton from './ShareButton';
 import { localizeGalleryItems } from '@/lib/localize';
 import type { PostMeta } from '@/types/post';
 import type { Locale } from '@/lib/i18n';
@@ -87,6 +88,7 @@ export default function ContentDetailPage({
             </span>
           )}
           <LanguageSwitcher locale={locale} />
+          <ShareButton />
         </div>
         {meta.tags.length > 0 && (
           <div className="flex gap-2 mt-3 flex-wrap">

@@ -3,7 +3,9 @@ import { isValidLocale, LOCALES, type Locale } from '@/lib/i18n';
 import { getDictionary } from '@/lib/dictionaries';
 import { getAllPosts } from '@/lib/posts';
 import { getNavTabs } from '@/lib/tabs';
+import { isAdminAuthenticated } from '@/lib/admin-auth';
 import Header from '@/components/Header';
+import AdminBar from '@/components/admin/AdminBar';
 import Footer from '@/components/Footer';
 
 export function generateStaticParams() {
@@ -26,6 +28,7 @@ export default async function LangLayout({
   const dict = await getDictionary(lang as Locale);
   const posts = await getAllPosts(lang);
   const navTabs = getNavTabs(posts, lang);
+  const isAdmin = await isAdminAuthenticated();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -33,6 +36,7 @@ export default async function LangLayout({
         Skip to content
       </a>
       <Header locale={lang as Locale} dict={dict} navTabs={navTabs} />
+      {isAdmin && <AdminBar locale={lang} />}
       <main id="main-content" className="flex-1">
         {children}
       </main>
