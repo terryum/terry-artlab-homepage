@@ -14,6 +14,7 @@ interface NavItem {
   href: string;
   label: string;
   tabSlug?: string;
+  author?: 'terry' | 'ai';
 }
 
 interface HeaderProps {
@@ -32,7 +33,7 @@ function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
 
   const navItems: NavItem[] = [
     { href: `/${locale}`, label: dict.nav.home },
-    ...navTabs.map(tab => ({ href: tab.href, label: tab.label, tabSlug: tab.tabSlug })),
+    ...navTabs.map(tab => ({ href: tab.href, label: tab.label, tabSlug: tab.tabSlug, author: tab.author })),
     { href: `/${locale}/about`, label: dict.nav.about },
   ];
 
@@ -67,7 +68,7 @@ function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
               <Link
                 key={item.tabSlug || item.href}
                 href={item.href}
-                className={`text-sm transition-colors ${
+                className={`flex items-center gap-1 text-sm transition-colors ${
                   isActive(item)
                     ? 'text-accent border-b-2 border-accent pb-[1px]'
                     : 'text-text-secondary hover:text-accent'
@@ -75,6 +76,15 @@ function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
                 aria-current={isActive(item) ? 'page' : undefined}
               >
                 {item.label}
+                {item.author && (
+                  <span className={`text-[10px] px-1 py-px rounded font-medium leading-none ${
+                    item.author === 'ai'
+                      ? 'bg-violet-100 text-violet-600 dark:bg-violet-900/40 dark:text-violet-400'
+                      : 'bg-sky-100 text-sky-600 dark:bg-sky-900/40 dark:text-sky-400'
+                  }`}>
+                    {item.author === 'ai' ? 'AI' : 'Terry'}
+                  </span>
+                )}
               </Link>
             ))}
             <div className="flex items-center gap-2">
@@ -113,7 +123,7 @@ function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
                 key={item.tabSlug || item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`text-sm px-2 py-1 transition-colors ${
+                className={`flex items-center gap-1.5 text-sm px-2 py-1 transition-colors ${
                   isActive(item)
                     ? 'text-accent font-medium'
                     : 'text-text-secondary hover:text-accent'
@@ -121,6 +131,15 @@ function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
                 aria-current={isActive(item) ? 'page' : undefined}
               >
                 {item.label}
+                {item.author && (
+                  <span className={`text-[10px] px-1 py-px rounded font-medium leading-none ${
+                    item.author === 'ai'
+                      ? 'bg-violet-100 text-violet-600 dark:bg-violet-900/40 dark:text-violet-400'
+                      : 'bg-sky-100 text-sky-600 dark:bg-sky-900/40 dark:text-sky-400'
+                  }`}>
+                    {item.author === 'ai' ? 'AI' : 'Terry'}
+                  </span>
+                )}
               </Link>
             ))}
           </nav>

@@ -20,12 +20,14 @@ export interface TabDefinition {
   slug: string;        // URL param value & tag slug
   matchTags: string[]; // posts matching ANY of these tags belong to this tab
   order: number;       // display order in nav menu
+  author: 'terry' | 'ai'; // content author type for nav badge
 }
 
 export const TAB_CONFIG: TabDefinition[] = [
-  { slug: 'ideas',    matchTags: ['ideas'],    order: 0 },
-  { slug: 'essays',   matchTags: ['essays'],   order: 1 },
-  { slug: 'research', matchTags: ['research'], order: 2 },
+  { slug: 'ideas',    matchTags: ['ideas'],    order: 0, author: 'terry' },
+  { slug: 'essays',   matchTags: ['essays'],   order: 1, author: 'terry' },
+  { slug: 'research', matchTags: ['research'], order: 2, author: 'ai'    },
+  { slug: 'reviews',  matchTags: ['reviews'],  order: 3, author: 'ai'    },
 ];
 
 /** All tab matchTags combined — used to hide tab tags from TagFilterBar & ContentCard */
