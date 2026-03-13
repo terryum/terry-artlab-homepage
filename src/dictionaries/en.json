@@ -17,7 +17,7 @@
   },
   "tabs_index": {
     "ideas": {
-      "title": "Ideas",
+      "title": "Tech",
       "description": "Thoughts on AI, Robotics, and change."
     },
     "essays": {
@@ -25,14 +25,19 @@
       "description": "Thoughts on people and life."
     },
     "research": {
-      "title": "Research Notes",
+      "title": "Papers",
       "description": "Reading notes on AI and robotics papers."
+    },
+    "reviews": {
+      "title": "Reviews",
+      "description": "AI-generated reviews on products, books, and more."
     }
   },
   "home": {
-    "latest_ideas": "Latest Ideas",
+    "latest_ideas": "Latest Tech",
     "latest_essays": "Latest Essays",
-    "latest_research": "Latest Research Notes",
+    "latest_research": "Latest Papers",
+    "latest_reviews": "Latest Reviews",
     "view_all": "View all",
     "show_more": "Show more",
     "no_posts_yet": "No posts yet."

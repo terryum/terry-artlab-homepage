@@ -17,7 +17,7 @@
   },
   "tabs_index": {
     "ideas": {
-      "title": "Ideas",
+      "title": "Tech",
       "description": "AI, Robotics, 그리고 변화에 대해 이야기 합니다."
     },
     "essays": {
@@ -25,14 +25,19 @@
       "description": "사람과 삶에 대해 이야기 합니다."
     },
     "research": {
-      "title": "Research Notes",
+      "title": "Papers",
       "description": "AI·로보틱스 논문을 읽고 핵심 내용을 정리합니다."
+    },
+    "reviews": {
+      "title": "Reviews",
+      "description": "AI가 작성한 제품, 도서 등 리뷰를 담습니다."
     }
   },
   "home": {
-    "latest_ideas": "Latest Ideas",
+    "latest_ideas": "Latest Tech",
     "latest_essays": "Latest Essays",
-    "latest_research": "Latest Research Notes",
+    "latest_research": "Latest Papers",
+    "latest_reviews": "Latest Reviews",
     "view_all": "전체 보기",
     "show_more": "더 보기",
     "no_posts_yet": "아직 글이 없습니다."

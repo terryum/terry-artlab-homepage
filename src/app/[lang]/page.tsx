@@ -31,6 +31,7 @@ const TAB_DICT_KEY: Record<string, string> = {
   ideas: 'latest_ideas',
   essays: 'latest_essays',
   research: 'latest_research',
+  reviews: 'latest_reviews',
 };
 
 export default async function HomePage({
