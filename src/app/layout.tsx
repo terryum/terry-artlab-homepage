@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import 'katex/dist/katex.min.css';
 import './globals.css';
 
@@ -51,6 +52,7 @@ export default function RootLayout({
       </head>
       <body className="font-sans leading-relaxed">
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
