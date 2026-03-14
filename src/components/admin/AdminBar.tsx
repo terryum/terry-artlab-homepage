@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { Container } from '@/components/ui/Container';
 
 const TABS = (locale: string) => [
-  { label: 'Notes', href: `/${locale}/admin/notes` },
   { label: 'Stats', href: `/${locale}/admin/stats` },
 ];
 
@@ -20,7 +20,7 @@ export default function AdminBar({ locale }: { locale: string }) {
 
   return (
     <nav className="border-b border-line-default bg-bg-primary overflow-x-auto">
-      <div className="max-w-4xl mx-auto px-4 md:px-6 lg:px-8 flex items-center justify-end gap-4 h-10">
+      <Container className="flex items-center justify-end gap-4 h-10">
         {TABS(locale).map((tab) => {
           const active = pathname.startsWith(tab.href);
           return (
@@ -44,7 +44,7 @@ export default function AdminBar({ locale }: { locale: string }) {
         >
           Logout
         </button>
-      </div>
+      </Container>
     </nav>
   );
 }

@@ -7,13 +7,9 @@ import ContentCard from './ContentCard';
 import { normalizeTagSlug } from '@/lib/tags';
 import { TAB_TAG_SLUGS } from '@/lib/site-config';
 import { getPostsForTab } from '@/lib/tabs';
+import { getDisplayTags } from '@/lib/display';
 import type { PostMeta } from '@/types/post';
-
-interface TagItem {
-  slug: string;
-  label: string;
-  count: number;
-}
+import type { TagItem } from '@/types/tag';
 
 interface TabTitleEntry {
   title: string;
@@ -122,8 +118,7 @@ function FilterablePostListInner({
   const filteredPosts = useMemo(() => {
     if (selectedTags.length === 0) return tabFilteredPosts;
     return tabFilteredPosts.filter((post) => {
-      const tagsToUse = post.display_tags?.length ? post.display_tags : post.tags;
-      const postTagSlugs = tagsToUse.map((t) => normalizeTagSlug(t));
+      const postTagSlugs = getDisplayTags(post).map((t) => normalizeTagSlug(t));
       return selectedTags.every((sel) => postTagSlugs.includes(sel));
     });
   }, [tabFilteredPosts, selectedTags]);
@@ -138,8 +133,7 @@ function FilterablePostListInner({
   const availableTags = useMemo(() => {
     const tagCounts = new Map<string, number>();
     for (const post of tabFilteredPosts) {
-      const tagsToUse = post.display_tags?.length ? post.display_tags : post.tags;
-      for (const tag of tagsToUse) {
+      for (const tag of getDisplayTags(post)) {
         const slug = normalizeTagSlug(tag);
         if (!TAB_TAG_SLUGS.has(slug)) {
           tagCounts.set(slug, (tagCounts.get(slug) || 0) + 1);

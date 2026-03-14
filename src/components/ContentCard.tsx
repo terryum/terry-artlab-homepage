@@ -3,6 +3,7 @@ import Image from 'next/image';
 import TagChip from './TagChip';
 import { normalizeTagSlug } from '@/lib/tags';
 import { TAB_TAG_SLUGS } from '@/lib/site-config';
+import { getDisplayTags, formatPostDate } from '@/lib/display';
 import tagsData from '@/data/tags.json';
 import type { PostMeta } from '@/types/post';
 
@@ -22,14 +23,6 @@ function getTabLabel(post: PostMeta, locale: string): string | null {
   return tagDef?.label[locale as 'ko' | 'en'] ?? tabSlug;
 }
 
-function formatSourceDateShort(dateStr: string, locale: string): string {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString(locale === 'ko' ? 'ko-KR' : 'en-US', {
-    year: 'numeric',
-    month: 'short',
-  });
-}
-
 export default function ContentCard({ post, locale, showTabTag, hidePubDate }: ContentCardProps) {
   const href = `/${locale}/posts/${post.slug}`;
   const isReading = post.content_type === 'reading';
@@ -37,11 +30,8 @@ export default function ContentCard({ post, locale, showTabTag, hidePubDate }: C
   // Reading: show source_date (or published_at fallback) in year/month format
   // Writing/Essay: show published_at with full date
   const metaDateStr = isReading
-    ? formatSourceDateShort(post.source_date || post.published_at, locale)
-    : new Date(post.published_at).toLocaleDateString(
-        locale === 'ko' ? 'ko-KR' : 'en-US',
-        { year: 'numeric', month: 'short', day: 'numeric' }
-      );
+    ? formatPostDate(post.source_date || post.published_at, locale, { year: 'numeric', month: 'short' })
+    : formatPostDate(post.published_at, locale, { year: 'numeric', month: 'short', day: 'numeric' });
 
   const summary = post.card_summary || post.summary;
 
@@ -100,7 +90,7 @@ export default function ContentCard({ post, locale, showTabTag, hidePubDate }: C
             {!isReading && !hidePubDate && <time className="text-xs text-text-muted">{metaDateStr}</time>}
             {(() => {
               const tabLabel = showTabTag ? getTabLabel(post, locale) : null;
-              const otherTags = (post.display_tags?.length ? post.display_tags : post.tags)
+              const otherTags = getDisplayTags(post)
                 .filter((tag) => !TAB_TAG_SLUGS.has(normalizeTagSlug(tag)))
                 .slice(0, tabLabel ? 2 : 3);
               return (

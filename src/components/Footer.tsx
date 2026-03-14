@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Container } from './ui/Container';
 import { SITE_CONFIG } from '@/lib/site-config';
 
 interface FooterProps {
@@ -11,7 +12,7 @@ export default function Footer({ copyright, locale }: FooterProps) {
 
   return (
     <footer className="border-t border-line-default mt-16">
-      <div className="max-w-4xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+      <Container className="py-8">
         <div className="flex items-center justify-between">
           <Link
             href={`/${locale}`}
@@ -23,7 +24,7 @@ export default function Footer({ copyright, locale }: FooterProps) {
             &copy; {year} {copyright}
           </p>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }

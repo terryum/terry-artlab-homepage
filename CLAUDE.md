@@ -1,26 +1,11 @@
 # CLAUDE.md
 
-## 목적
-- 이 파일은 Claude Code가 이 프로젝트에서 **가장 먼저 읽는 루트 규칙 파일**이다.
-- 상세 스펙은 `docs/` 문서에 있고, 이 파일은 **읽기 순서 + 절대 규칙 + 금지사항**만 담는다.
-
-## 시작 순서 (항상)
-1. `CLAUDE.md` (이 파일)
-2. `docs/CURRENT_STATUS.md`
-3. 현재 작업에 필요한 `docs/*.md`만 선택해서 읽기
-
-## 작업 방식 (중요)
-- 모든 문서를 한 번에 읽지 않는다.
-- 항상 **P0 + 현재 작업 관련 문서만** 읽는다.
-- 문서 내용을 재서술하지 말고, 필요한 제약조건만 유지한다.
-- 세부 규칙 충돌/모호함이 있으면 해당 전용 문서를 다시 확인한다.
+## 시작 순서
+`CLAUDE.md` → `docs/CURRENT_STATUS.md` → 현재 작업 관련 `docs/*.md`만 읽기
 
 ## Research 포스팅 fast path
-- arXiv 링크 + "포스팅 해줘" 요청 시:
-  1. `memory/posting-pipeline.md` **하나만** 읽고 바로 실행
-  2. `docs/POSTING_WORKFLOW.md` 읽지 않음
-  3. 요약 톤/규칙이 변경됐다는 지시가 있을 때만 `docs/RESEARCH_SUMMARY_RULES.md` 참조
-  4. arXiv 전용 로딩 세부사항: `docs/POST_LOADING_ARXIV.md` / 비-arXiv: `docs/POST_LOADING_ETC.md`
+- arXiv 포스팅: `memory/posting-pipeline.md`만 읽고 실행. 규칙 변경 지시 있을 때만 `docs/RESEARCH_SUMMARY_RULES.md` 참조
+- 로딩 세부사항: arXiv → `docs/POST_LOADING_ARXIV.md` / 비-arXiv → `docs/POST_LOADING_ETC.md`
 
 ## v1 범위 (절대)
 - v1은 **자체사이트만 개발**
@@ -32,6 +17,7 @@
 - 차이는 최소 필드만 허용 (예: Research의 arXiv 원문 링크/출처)
 - i18n 라우팅/fallback은 `docs/I18N_ROUTING.md` 기준으로 구현
 - **하드코딩 자제**: 비슷한 구조의 코드/콘텐츠는 최대한 재사용하여 구현하고, 중복이 발견되면 리팩토링을 제안할 것
+- 리팩토링 원칙은 `docs/REFACTOR_PRINCIPAL.md` 참조
 
 ## i18n 콘텐츠 규칙
 - 한글 또는 영어 중 하나의 콘텐츠 변경을 요청받으면 **양쪽 언어 모두** 반영할 것
@@ -56,9 +42,8 @@
 - 푸시 전 `git diff`로 변경 범위 확인
 - 자동화가 기존 콘텐츠를 예상 밖으로 변경하면 중단 후 확인
 
-## 세션 종료 규칙
-- `docs/CURRENT_STATUS.md`만 짧게 갱신 (append 금지)
-- 문서는 짧게 유지, 상세 설명은 전용 문서에만 기록
+## 세션 종료
+`docs/CURRENT_STATUS.md`만 짧게 갱신 (append 금지, 항상 덮어쓰기)
 
 ## 금지사항
 - 문서 스펙 무시 후 임의 구조 변경
