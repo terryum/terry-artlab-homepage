@@ -7,6 +7,7 @@ import LanguageSwitcher from './LanguageSwitcher';
 import ShareButton from './ShareButton';
 import { localizeGalleryItems } from '@/lib/localize';
 import { FigureGroupProvider } from '@/contexts/FigureGroupContext';
+import { formatPostDate } from '@/lib/display';
 import type { PostMeta } from '@/types/post';
 import type { Locale } from '@/lib/i18n';
 
@@ -41,10 +42,7 @@ export default function ContentDetailPage({
     meta.content_type === 'reading' ? 'research' :
     meta.content_type === 'essay'   ? 'essays'   : 'ideas';
   const section = `posts?tab=${tabSlug}`;
-  const dateStr = new Date(meta.published_at).toLocaleDateString(
-    locale === 'ko' ? 'ko-KR' : 'en-US',
-    { year: 'numeric', month: 'long', day: 'numeric' }
-  );
+  const dateStr = formatPostDate(meta.published_at, locale);
 
   const localizedFigures = localizeGalleryItems(meta.figures, locale);
   const localizedTables = localizeGalleryItems(meta.tables, locale);

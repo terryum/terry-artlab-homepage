@@ -6,6 +6,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { useState, Suspense } from 'react';
 import LanguageSwitcher from './LanguageSwitcher';
 import ThemeToggle from './ThemeToggle';
+import { Container } from './ui/Container';
 import { SITE_CONFIG } from '@/lib/site-config';
 import type { Locale } from '@/lib/i18n';
 import type { NavTabItem } from '@/lib/tabs';
@@ -85,7 +86,7 @@ function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
 
   return (
     <header className="border-b border-line-default">
-      <div className="max-w-4xl mx-auto px-4 md:px-6 lg:px-8">
+      <Container>
         <div className="flex items-center justify-between h-14">
           {/* Logo / Site name */}
           <Link href={`/${locale}`} className="flex items-center gap-2 text-sm text-text-secondary transition-colors hover:text-accent">
@@ -162,7 +163,7 @@ function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
             <MobileTabLink item={aboutItem} />
           </nav>
         )}
-      </div>
+      </Container>
     </header>
   );
 }
@@ -171,14 +172,14 @@ export default function Header(props: HeaderProps) {
   return (
     <Suspense fallback={
       <header className="border-b border-line-default">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 lg:px-8">
+        <Container>
           <div className="flex items-center justify-between h-14">
             <span className="flex items-center gap-2 text-sm text-text-secondary">
               <Image src="/images/logo-transparent-256.webp" alt={SITE_CONFIG.name} width={20} height={20} sizes="20px" priority />
               {SITE_CONFIG.name}
             </span>
           </div>
-        </div>
+        </Container>
       </header>
     }>
       <HeaderInner {...props} />

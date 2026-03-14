@@ -6,14 +6,9 @@ import { computeTagCounts, sortTagsByCount, getTagLabel } from '@/lib/tags';
 import { renderMDX } from '@/lib/mdx';
 import { TAB_CONFIG, TAB_TAG_SLUGS } from '@/lib/site-config';
 import type { PostMeta } from '@/types/post';
+import type { TagItem } from '@/types/tag';
 
 /* ─── Index page helpers ─── */
-
-interface TagItem {
-  slug: string;
-  label: string;
-  count: number;
-}
 
 interface TabTitleEntry {
   title: string;

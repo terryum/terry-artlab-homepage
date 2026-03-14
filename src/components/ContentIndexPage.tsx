@@ -1,12 +1,8 @@
 import ContentCard from './ContentCard';
 import FilterablePostList from './FilterablePostList';
+import { Container } from './ui/Container';
 import type { PostMeta } from '@/types/post';
-
-interface TagItem {
-  slug: string;
-  label: string;
-  count: number;
-}
+import type { TagItem } from '@/types/tag';
 
 interface FilterDict {
   show_more: string;
@@ -41,7 +37,7 @@ export default function ContentIndexPage({
   tabTitles,
 }: ContentIndexPageProps) {
   return (
-    <div className="max-w-4xl mx-auto px-4 md:px-6 lg:px-8 py-10">
+    <Container className="py-10">
       {allTags && filterDict ? (
         <FilterablePostList
           locale={locale}
@@ -70,6 +66,6 @@ export default function ContentIndexPage({
           )}
         </>
       )}
-    </div>
+    </Container>
   );
 }
