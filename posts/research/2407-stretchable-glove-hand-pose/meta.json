@@ -111,5 +111,6 @@
   ],
   "tables": [],
   "newsletter_eligible": false,
-  "featured": false
+  "featured": false,
+  "taxonomy_primary": "robotics/hand"
 }

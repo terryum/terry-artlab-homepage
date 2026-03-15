@@ -5,11 +5,13 @@ import AppendixSection from './AppendixSection';
 import Figure from './Figure';
 import LanguageSwitcher from './LanguageSwitcher';
 import ShareButton from './ShareButton';
+import RelatedPapers from './RelatedPapers';
 import { localizeGalleryItems } from '@/lib/localize';
 import { FigureGroupProvider } from '@/contexts/FigureGroupContext';
 import { formatPostDate } from '@/lib/display';
 import type { PostMeta } from '@/types/post';
 import type { Locale } from '@/lib/i18n';
+import type { RelatedPostData } from '@/lib/content-page-helpers';
 
 interface ContentDetailPageProps {
   locale: Locale;
@@ -29,6 +31,8 @@ interface ContentDetailPageProps {
     appendix_label?: string;
     terrys_memo_label?: string;
   };
+  relatedPosts?: RelatedPostData[];
+  taxonomyBreadcrumb?: { id: string; label: { ko: string; en: string } }[];
 }
 
 export default function ContentDetailPage({
@@ -37,6 +41,8 @@ export default function ContentDetailPage({
   children,
   alternateLocale,
   labels,
+  relatedPosts = [],
+  taxonomyBreadcrumb = [],
 }: ContentDetailPageProps) {
   const tabSlug =
     meta.content_type === 'reading' ? 'research' :
@@ -60,16 +66,26 @@ export default function ContentDetailPage({
 
   return (
     <article className="max-w-3xl mx-auto px-4 md:px-6 lg:px-8 py-10">
-      {/* Back to list */}
-      <Link
-        href={`/${locale}/${section}`}
-        className="text-sm text-text-muted hover:text-accent transition-colors inline-flex items-center gap-1 mb-6"
-      >
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-        </svg>
-        {labels.back_to_list}
-      </Link>
+      {/* Back to list / Taxonomy breadcrumb */}
+      <div className="flex items-center gap-1.5 flex-wrap mb-6">
+        <Link
+          href={`/${locale}/${section}`}
+          className="text-sm text-text-muted hover:text-accent transition-colors inline-flex items-center gap-1"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          {labels.back_to_list}
+        </Link>
+        {taxonomyBreadcrumb.map((node) => (
+          <span key={node.id} className="flex items-center gap-1.5">
+            <span className="text-text-muted text-sm">/</span>
+            <span className="text-sm text-text-muted">
+              {locale === 'ko' ? node.label.ko : node.label.en}
+            </span>
+          </span>
+        ))}
+      </div>
 
       {/* Header meta */}
       <header className="mb-8">
@@ -142,6 +158,11 @@ export default function ContentDetailPage({
         terrys_memo={meta.terrys_memo}
         labels={labels}
       />
+
+      {/* Related Papers (reading type only) */}
+      {meta.content_type === 'reading' && (
+        <RelatedPapers locale={locale} relatedPosts={relatedPosts} />
+      )}
 
       {/* Bottom back to list */}
       <div className="mt-12 pt-6 border-t border-line-default">
