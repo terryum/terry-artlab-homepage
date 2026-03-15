@@ -35,6 +35,7 @@ jobs:
 
       - name: Publish to Substack
         env:
+          SUBSTACK_COOKIE: ${{ secrets.SUBSTACK_COOKIE }}
           SUBSTACK_EMAIL: ${{ secrets.SUBSTACK_EMAIL }}
           SUBSTACK_PASSWORD: ${{ secrets.SUBSTACK_PASSWORD }}
           NEXT_PUBLIC_SUBSTACK_EN_URL: ${{ secrets.SUBSTACK_EN_URL }}
