@@ -134,18 +134,30 @@ def resolve_ko(post: dict) -> tuple[str, str]:
     return title, summary
 
 
-def build_en_post(post: dict) -> tuple[str, str]:
+
+def body_to_html(summary: str, link: str, cta: str) -> str:
+    """plain text → HTML (Substack draft_body 형식)."""
+    parts = []
+    if summary:
+        parts.append(f"<p>{summary}</p>")
+    parts.append(f'<p>{cta} <a href="{link}">{link}</a></p>')
+    return "".join(parts)
+
+
+def build_en_post(post: dict) -> tuple[str, str, str]:
+    """(title, subtitle, html_body)"""
     title, summary = resolve_en(post)
     link = f"{SITE_BASE_URL}/en/{post['content_type']}/{post['slug']}"
-    body = f"{summary}\n\nRead the full article →\n{link}" if summary else f"Read the full article →\n{link}"
-    return title, body
+    html = body_to_html(summary, link, "Read the full article →")
+    return title, summary, html
 
 
-def build_ko_post(post: dict) -> tuple[str, str]:
+def build_ko_post(post: dict) -> tuple[str, str, str]:
+    """(title, subtitle, html_body)"""
     title, summary = resolve_ko(post)
     link = f"{SITE_BASE_URL}/ko/{post['content_type']}/{post['slug']}"
-    body = f"{summary}\n\n전체 글 읽기 →\n{link}" if summary else f"전체 글 읽기 →\n{link}"
-    return title, body
+    html = body_to_html(summary, link, "전체 글 읽기 →")
+    return title, summary, html
 
 
 # ─── Substack API ───────────────────────────────────────────────────────────
@@ -176,7 +188,7 @@ class SubstackClient:
         name = profile.get("name", "unknown")
         print(f"  ✓ 인증 성공 (user: {name}, id: {self.user_id})")
 
-    def create_and_publish(self, subdomain: str, title: str, body: str) -> bool:
+    def create_and_publish(self, subdomain: str, title: str, subtitle: str, html_body: str) -> bool:
         pub_base = f"https://{subdomain}.substack.com"
 
         # 0) publication 방문 → 서브도메인 쿠키/CSRF 획득
@@ -189,20 +201,19 @@ class SubstackClient:
         if csrf:
             self.session.headers["X-CSRFToken"] = csrf
 
-        # 1) 드래프트 생성
+        # 1) 드래프트 생성 (draft_body는 HTML 문자열)
         draft_resp = self.session.post(
             f"{pub_base}/api/v1/drafts",
             json={
                 "draft_title": title,
-                "draft_subtitle": "",
-                "draft_body": json.dumps([{"type": "paragraph", "content": [{"type": "text", "text": body}]}]),
+                "draft_subtitle": subtitle,
+                "draft_body": html_body,
                 "draft_bylines": [{"id": self.user_id, "is_guest": False}],
                 "draft_podcast_url": "",
                 "draft_podcast_duration": None,
                 "draft_video_upload_id": None,
                 "draft_podcast_upload_id": None,
                 "draft_podcast_preview_upload_id": None,
-                "draft_cover_image": None,
                 "audience": "everyone",
                 "section_chosen": False,
             },
@@ -214,10 +225,10 @@ class SubstackClient:
         draft_id = draft_resp.json()["id"]
         print(f"  ✓ 드래프트 생성됨 (id={draft_id})")
 
-        # 2) 발행
+        # 3) 발행 (share_automatically=True → 타임라인에 커버+subtitle 포함 Note 자동 생성)
         pub_resp = self.session.post(
             f"{pub_base}/api/v1/drafts/{draft_id}/publish",
-            json={"send_email": True, "share_automatically": False},
+            json={"send_email": True, "share_automatically": True},
             timeout=15,
         )
         if pub_resp.status_code not in (200, 201):
@@ -227,14 +238,15 @@ class SubstackClient:
         return True
 
 
-def publish_post(client: "SubstackClient | None", subdomain: str, title: str, body: str, dry_run: bool) -> bool:
+def publish_post(client: "SubstackClient | None", subdomain: str, title: str, subtitle: str, html_body: str, dry_run: bool) -> bool:
     if dry_run:
         print(f"\n[DRY RUN] subdomain={subdomain}.substack.com")
-        print(f"  Title : {title}")
-        print(f"  Body  :\n{body}\n")
+        print(f"  Title    : {title}")
+        print(f"  Subtitle : {subtitle}")
+        print(f"  Body     : {html_body}\n")
         return True
     try:
-        return client.create_and_publish(subdomain, title, body)
+        return client.create_and_publish(subdomain, title, subtitle, html_body)
     except Exception as e:
         print(f"  ✗ 실패 ({subdomain}): {e}", file=sys.stderr)
         return False
@@ -268,8 +280,8 @@ def main():
 
     print(f"\n대상 포스트: [{post['content_type']}] {post['slug']}")
 
-    en_title, en_body = build_en_post(post)
-    ko_title, ko_body = build_ko_post(post)
+    en_title, en_subtitle, en_body = build_en_post(post)
+    ko_title, ko_subtitle, ko_body = build_ko_post(post)
 
     client = None
     if not args.dry_run:
@@ -279,13 +291,13 @@ def main():
 
     if SUBSTACK_EN_URL:
         print(f"\n[EN] {get_subdomain(SUBSTACK_EN_URL)}.substack.com")
-        en_ok = publish_post(client, get_subdomain(SUBSTACK_EN_URL), en_title, en_body, args.dry_run)
+        en_ok = publish_post(client, get_subdomain(SUBSTACK_EN_URL), en_title, en_subtitle, en_body, args.dry_run)
     else:
         print("NEXT_PUBLIC_SUBSTACK_EN_URL 없음 — EN 발행 건너뜀")
 
     if SUBSTACK_KO_URL:
         print(f"\n[KO] {get_subdomain(SUBSTACK_KO_URL)}.substack.com")
-        ko_ok = publish_post(client, get_subdomain(SUBSTACK_KO_URL), ko_title, ko_body, args.dry_run)
+        ko_ok = publish_post(client, get_subdomain(SUBSTACK_KO_URL), ko_title, ko_subtitle, ko_body, args.dry_run)
     else:
         print("NEXT_PUBLIC_SUBSTACK_KO_URL 없음 — KO 발행 건너뜀")
 
