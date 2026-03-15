@@ -6,6 +6,7 @@ import Figure from './Figure';
 import LanguageSwitcher from './LanguageSwitcher';
 import ShareButton from './ShareButton';
 import RelatedPapers from './RelatedPapers';
+import SubstackSubscribe from './SubstackSubscribe';
 import { localizeGalleryItems } from '@/lib/localize';
 import { FigureGroupProvider } from '@/contexts/FigureGroupContext';
 import { formatPostDate } from '@/lib/display';
@@ -160,6 +161,11 @@ export default function ContentDetailPage({
       {/* Related Papers (reading type only) */}
       {meta.content_type === 'papers' && (
         <RelatedPapers locale={locale} relatedPosts={relatedPosts} />
+      )}
+
+      {/* Substack subscribe (essays/tech only) */}
+      {(meta.content_type === 'essays' || meta.content_type === 'tech') && (
+        <SubstackSubscribe locale={locale} variant="article" />
       )}
 
       {/* Bottom back to list */}
