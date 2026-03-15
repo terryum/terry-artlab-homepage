@@ -4,8 +4,8 @@
 
 ## 1) 세션 스냅샷
 - 마지막 업데이트: 2026-03-15 (KST)
-- 현재 단계: 탭명·디렉토리·content_type 정렬 완료 (`feature/knowledge-graph` 브랜치)
-- 전체 진행도(대략): 100% (빌드 성공)
+- 현재 단계: Substack 연동 v1 구현 완료 (`feature/knowledge-graph` 브랜치)
+- 전체 진행도(대략): 100% (빌드/TypeScript 성공)
 
 ## 2) 지금 기준 핵심 결정 (최대 5개)
 - 인프라: Cloudflare(도메인/DNS/CDN) + Vercel(배포+SSL) + GitHub
@@ -21,29 +21,34 @@
 - [x] 포스팅 자동화: `.claude/commands/post.md` 슬래시 커맨드 + `scripts/extract-paper-pdf.py`
 - [x] 리팩토링: 웹 포스팅 UI/API 제거, Container 컴포넌트, display.ts 헬퍼, TagItem 단일화
 - [x] Knowledge Graph Phase 1~3 (taxonomy, clusters, RelatedPapers, TaxonomyFilter)
-- [x] 탭명·디렉토리·content_type 완전 정렬:
-  - `posts/research/` → `posts/papers/`, `posts/idea/` → `posts/tech/`, `posts/essay/` → `posts/essays/`
-  - content_type: `reading`→`papers`, `writing`→`tech`, `essay`→`essays`
-  - TAB_CONFIG, tags.json, dictionaries, ContentDetailPage, ContentCard 모두 정렬
+- [x] 탭명·디렉토리·content_type 완전 정렬
+- [x] **Substack 연동 v1**:
+  - `SubstackSubscribe.tsx` 컴포넌트 (article/footer 2가지 variant)
+  - `ContentDetailPage.tsx` — essays/tech 글 끝에 구독 CTA 삽입
+  - `Footer.tsx` — 전체 페이지 footer에 구독 링크 삽입
+  - `scripts/publish-substack.py` — 자동 티저 포스팅 (EN/KO)
+  - `.github/workflows/substack-publish.yml` — posts/index.json 변경 시 자동 트리거
 
 ## 4) 진행 중 / 막힘
 - `feature/knowledge-graph` 브랜치 작업 중 (main에 미병합)
 
 ## 5) 다음 3개 작업 (우선순위)
-1. `feature/knowledge-graph` → main PR 생성 + 병합
-2. 새 포스팅 시 `/post <arXiv URL>` 커맨드 사용 (Graph Analysis 단계 포함)
-3. 기타 신규 콘텐츠 추가
+1. **Substack 사전 조건 완료** (사용자 직접):
+   - EN/KO Substack URL 확인 후 `.env.local`에 `NEXT_PUBLIC_SUBSTACK_EN_URL`, `NEXT_PUBLIC_SUBSTACK_KO_URL` 등록
+   - Substack Account Settings → Password → 비밀번호 생성 (Google 로그인과 병행)
+   - GitHub Secrets에 `SUBSTACK_EMAIL`, `SUBSTACK_PASSWORD`, `SUBSTACK_EN_URL`, `SUBSTACK_KO_URL` 등록
+2. `feature/knowledge-graph` → main PR 생성 + 병합
+3. 첫 번째 Substack 발행 테스트: `python scripts/publish-substack.py --dry-run`
 
 ## 6) 검증 상태 (요약)
-- 빌드: 성공 (2026-03-15, feature/knowledge-graph)
-- TypeScript: 에러 없음
+- 빌드: 성공 (TypeScript OK, 2026-03-15)
 - `posts/index.json`: 11개 포스트, 3 clusters, 3 bridge papers, 1 outlier
 
 ## 7) 컨텍스트 메모 (다음 세션용)
-- `/post <url>` 슬래시 커맨드: `.claude/commands/post.md` (Step 3에 Graph Analysis 추가)
+- Substack 구독 URL 환경변수: `NEXT_PUBLIC_SUBSTACK_EN_URL`, `NEXT_PUBLIC_SUBSTACK_KO_URL`
+- SubstackSubscribe는 URL 미설정 시 자동으로 `null` 반환 (렌더링 안 함)
+- 발행 캐시: `.substack-published.json` (gitignore됨, CI에서 매번 재생성)
+- python-substack: `pip install substack-api` 필요
 - dev 서버: Turbopack 사용 중 — `⚠ Webpack is configured` 경고는 무해함
-- Container 컴포넌트: `src/components/ui/Container.tsx` (max-w-4xl 기본)
-- 공유 헬퍼: `src/lib/display.ts` (getDisplayTags, formatPostDate)
-- Taxonomy 파일: `posts/taxonomy.json` (robotics/*, ai/* 계층)
-- Graph 데이터: `posts/index.json` → knowledge_graph.clusters, taxonomy_stats
-- 디렉토리: `posts/papers/`, `posts/tech/`, `posts/essays/`, `posts/notes/`
+- Container 컴포넌트: `src/components/ui/Container.tsx`
+- 공유 헬퍼: `src/lib/display.ts`
