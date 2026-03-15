@@ -170,5 +170,6 @@
   "tables": [],
   "newsletter_eligible": false,
   "featured": false,
-  "starred": true
+  "starred": true,
+  "taxonomy_primary": "robotics/brain"
 }

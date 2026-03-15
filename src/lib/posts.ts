@@ -5,6 +5,26 @@ import type { Post, PostMeta, FigureItem, Reference, PostRelation, AISummary } f
 import { normalizeTagSlug } from '@/lib/tags';
 import { resolvePostAssetPath } from '@/lib/paths';
 
+const INDEX_PATH = path.join(process.cwd(), 'posts', 'index.json');
+const TAXONOMY_PATH = path.join(process.cwd(), 'posts', 'taxonomy.json');
+
+let _indexCache: Record<string, unknown> | null = null;
+let _taxonomyCache: Record<string, unknown> | null = null;
+
+export async function loadIndexJson(): Promise<Record<string, unknown>> {
+  if (_indexCache) return _indexCache;
+  const raw = await fs.readFile(INDEX_PATH, 'utf-8');
+  _indexCache = JSON.parse(raw) as Record<string, unknown>;
+  return _indexCache;
+}
+
+export async function loadTaxonomyJson(): Promise<Record<string, unknown>> {
+  if (_taxonomyCache) return _taxonomyCache;
+  const raw = await fs.readFile(TAXONOMY_PATH, 'utf-8');
+  _taxonomyCache = JSON.parse(raw) as Record<string, unknown>;
+  return _taxonomyCache;
+}
+
 const POSTS_DIR = path.join(process.cwd(), 'posts');
 const CATEGORIES = ['research', 'idea', 'essay'] as const;
 
@@ -161,6 +181,8 @@ function normalizeMeta(
     ai_summary: data.ai_summary as AISummary | undefined,
     idea_status: data.idea_status as PostMeta['idea_status'],
     related_posts: data.related_posts as string[] | undefined,
+    taxonomy_primary: data.taxonomy_primary as string | undefined,
+    taxonomy_secondary: data.taxonomy_secondary as string[] | undefined,
   };
 }
 
