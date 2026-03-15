@@ -112,52 +112,48 @@ def find_target_post(posts: list, target_slug: str | None, already_published: se
 
 # ─── Body builders ──────────────────────────────────────────────────────────
 
-def resolve_en(post: dict) -> tuple[str, str]:
-    """(title, summary) — MDX frontmatter 우선, index.json fallback"""
-    fm = read_mdx_frontmatter(post["slug"], post["content_type"], "en")
-    title = fm.get("title") or post.get("title_en", post["slug"])
-    summary = fm.get("summary") or fm.get("card_summary", "")
-    if not summary:
-        ai = post.get("ai_summary") or {}
-        summary = ai.get("one_liner", "")
-    return title, summary
 
 
-def resolve_ko(post: dict) -> tuple[str, str]:
-    """(title, summary) — MDX frontmatter 우선, index.json fallback"""
-    fm = read_mdx_frontmatter(post["slug"], post["content_type"], "ko")
-    title = fm.get("title") or post.get("title_ko", post["slug"])
-    summary = fm.get("summary") or fm.get("card_summary", "")
-    if not summary:
-        ai = post.get("ai_summary") or {}
-        summary = ai.get("one_liner", "")
-    return title, summary
-
-
-
-def body_to_html(summary: str, link: str, cta: str) -> str:
-    """plain text → HTML (Substack draft_body 형식)."""
-    parts = []
-    if summary:
-        parts.append(f"<p>{summary}</p>")
-    parts.append(f'<p>{cta} <a href="{link}">{link}</a></p>')
-    return "".join(parts)
+def to_prosemirror(paragraphs: list[str], link: str, cta: str) -> str:
+    """텍스트 문단 목록 → Substack draft_body (ProseMirror JSON 문자열)."""
+    content = []
+    for p in paragraphs:
+        if p:
+            content.append({"type": "paragraph", "content": [{"type": "text", "text": p}]})
+    content.append({
+        "type": "paragraph",
+        "content": [
+            {"type": "text", "text": f"{cta} "},
+            {"type": "text", "marks": [{"type": "link", "attrs": {"href": link, "target": "_blank"}}], "text": link},
+        ],
+    })
+    return json.dumps({"type": "doc", "content": content})
 
 
 def build_en_post(post: dict) -> tuple[str, str, str]:
-    """(title, subtitle, html_body)"""
-    title, summary = resolve_en(post)
+    """(title, subtitle, prosemirror_body)"""
+    fm = read_mdx_frontmatter(post["slug"], post["content_type"], "en")
+    title = fm.get("title") or post.get("title_en", post["slug"])
+    summary = fm.get("summary", "")
+    card_summary = fm.get("card_summary", "")
+    subtitle = summary  # 카드/이메일 헤더에 표시
+    paragraphs = [p for p in [summary, card_summary] if p]
     link = f"{SITE_BASE_URL}/en/{post['content_type']}/{post['slug']}"
-    html = body_to_html(summary, link, "Read the full article →")
-    return title, summary, html
+    body = to_prosemirror(paragraphs, link, "Read the full article →")
+    return title, subtitle, body
 
 
 def build_ko_post(post: dict) -> tuple[str, str, str]:
-    """(title, subtitle, html_body)"""
-    title, summary = resolve_ko(post)
+    """(title, subtitle, prosemirror_body)"""
+    fm = read_mdx_frontmatter(post["slug"], post["content_type"], "ko")
+    title = fm.get("title") or post.get("title_ko", post["slug"])
+    summary = fm.get("summary", "")
+    card_summary = fm.get("card_summary", "")
+    subtitle = summary
+    paragraphs = [p for p in [summary, card_summary] if p]
     link = f"{SITE_BASE_URL}/ko/{post['content_type']}/{post['slug']}"
-    html = body_to_html(summary, link, "전체 글 읽기 →")
-    return title, summary, html
+    body = to_prosemirror(paragraphs, link, "전체 글 읽기 →")
+    return title, subtitle, body
 
 
 # ─── Substack API ───────────────────────────────────────────────────────────
