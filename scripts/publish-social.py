@@ -244,9 +244,8 @@ def build_linkedin_text(post: dict) -> tuple[str, str]:
     lines = []
     if description:
         lines.append(description)
-    lines.append("")
-    lines.append("Read more ↓")
     if tags:
+        lines.append("")
         lines.append(tags)
 
     return "\n".join(lines), url
