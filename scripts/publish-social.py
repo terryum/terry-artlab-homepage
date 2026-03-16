@@ -296,7 +296,16 @@ def publish_facebook(text: str, url: str, dry_run: bool) -> bool:
     )
     if resp.status_code == 200:
         post_id = resp.json().get("id", "?")
+        # permalink_url을 API로 직접 조회
+        pl_resp = requests.get(
+            f"https://graph.facebook.com/v20.0/{post_id}",
+            params={"fields": "permalink_url", "access_token": token},
+            timeout=10,
+        )
+        permalink = pl_resp.json().get("permalink_url", "") if pl_resp.status_code == 200 else ""
         print(f"  ✓ Facebook 게시 완료 (post_id={post_id})")
+        if permalink:
+            print(f"  ✓ Facebook URL: {permalink}")
         return True
     else:
         print(f"  ✗ Facebook 실패 ({resp.status_code}): {resp.text[:300]}", file=sys.stderr)

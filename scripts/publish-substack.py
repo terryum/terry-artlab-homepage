@@ -196,7 +196,7 @@ def build_en_post(post: dict) -> tuple[str, str, list[str], str]:
     title = fm.get("title") or post.get("title_en", post["slug"])
     summary = fm.get("summary", "")
     card_summary = fm.get("card_summary", "")
-    subtitle = summary  # 카드/이메일 헤더에 표시
+    subtitle = summary[:255]  # Substack draft_subtitle 255자 제한
     paragraphs = [p for p in [summary, card_summary] if p]
     link = f"{SITE_BASE_URL}/en/{post['content_type']}/{post['slug']}"
     return title, subtitle, paragraphs, link
@@ -208,7 +208,7 @@ def build_ko_post(post: dict) -> tuple[str, str, list[str], str]:
     title = fm.get("title") or post.get("title_ko", post["slug"])
     summary = fm.get("summary", "")
     card_summary = fm.get("card_summary", "")
-    subtitle = summary
+    subtitle = summary[:255]  # Substack draft_subtitle 255자 제한
     paragraphs = [p for p in [summary, card_summary] if p]
     link = f"{SITE_BASE_URL}/ko/{post['content_type']}/{post['slug']}"
     return title, subtitle, paragraphs, link
