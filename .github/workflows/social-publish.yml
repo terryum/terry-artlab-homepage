@@ -1,0 +1,67 @@
+name: Social Media Publish
+
+on:
+  push:
+    branches: [main]
+    paths: ['posts/index.json']
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: '특정 포스트 slug (비워두면 최신 미발행)'
+        required: false
+        default: ''
+      platform:
+        description: '플랫폼 (facebook,threads,linkedin,x — 비워두면 전체)'
+        required: false
+        default: ''
+      dry_run:
+        description: 'Dry run (true/false)'
+        required: false
+        default: 'false'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests requests-oauthlib python-dotenv
+
+      - name: Publish to social media
+        env:
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+          FACEBOOK_PAGE_ACCESS_TOKEN: ${{ secrets.FACEBOOK_PAGE_ACCESS_TOKEN }}
+          THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
+          THREADS_USER_ID: ${{ secrets.THREADS_USER_ID }}
+          THREADS_TOKEN_CREATED: ${{ secrets.THREADS_TOKEN_CREATED }}
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_PERSON_URN: ${{ secrets.LINKEDIN_PERSON_URN }}
+          LINKEDIN_TOKEN_CREATED: ${{ secrets.LINKEDIN_TOKEN_CREATED }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+          SITE_BASE_URL: https://terry.artlab.ai
+        run: |
+          ARGS=""
+          [ "${{ inputs.dry_run }}" = "true" ] && ARGS="$ARGS --dry-run"
+          [ -n "${{ inputs.slug }}" ] && ARGS="$ARGS --slug=${{ inputs.slug }}"
+          [ -n "${{ inputs.platform }}" ] && ARGS="$ARGS --platform=${{ inputs.platform }}"
+          python scripts/publish-social.py $ARGS
+
+      - name: Commit cache update
+        if: ${{ inputs.dry_run != 'true' }}
+        run: |
+          git config user.name "Terry Homepage Bot"
+          git config user.email "bot@terry-homepage.noreply"
+          git add .social-published.json || true
+          git diff --cached --quiet || git commit -m "chore: social publish cache update"
+          git push

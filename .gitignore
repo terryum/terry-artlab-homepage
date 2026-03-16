@@ -12,8 +12,9 @@ coverage/
 # --- Paper PDFs (large files) ---
 paper/
 
-# --- Substack publish cache ---
+# --- Publish caches ---
 .substack-published.json
+.social-published.json
 
 # --- Logs ---
 npm-debug.log*

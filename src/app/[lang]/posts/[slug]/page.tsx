@@ -17,9 +17,28 @@ export async function generateMetadata({
   const { lang, slug } = await params;
   const post = await getPost(slug, lang);
   if (!post) return { title: 'Not Found' };
+
+  const title = post.meta.seo_title || post.meta.title;
+  const description = post.meta.seo_description || post.meta.summary;
+  const coverImage = post.meta.cover_image || `/posts/${slug}/cover.webp`;
+  const pageUrl = `/posts/${slug}`;
+
   return {
-    title: post.meta.seo_title || post.meta.title,
-    description: post.meta.seo_description || post.meta.summary,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: pageUrl,
+      type: 'article',
+      images: coverImage ? [{ url: coverImage, width: 1200, height: 630, alt: title }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: coverImage ? [coverImage] : [],
+    },
   };
 }
 

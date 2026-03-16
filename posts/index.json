@@ -242,10 +242,10 @@
     },
     {
       "post_number": 5,
-      "slug": "260310-on-the-manifold-frist-post",
+      "slug": "260310-on-the-manifold-first-post",
       "content_type": "essays",
-      "title_en": "260310-on-the-manifold-frist-post",
-      "title_ko": "260310-on-the-manifold-frist-post",
+      "title_en": "260310-on-the-manifold-first-post",
+      "title_ko": "260310-on-the-manifold-first-post",
       "domain": "robotics",
       "subfields": [
         "research-philosophy"
@@ -384,7 +384,7 @@
       "relations": [],
       "idea_status": "exploring",
       "related_posts": [
-        "260310-on-the-manifold-frist-post"
+        "260310-on-the-manifold-first-post"
       ],
       "taxonomy_primary": null,
       "taxonomy_secondary": []
