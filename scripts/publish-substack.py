@@ -78,21 +78,25 @@ def load_index() -> dict:
         return json.load(f)
 
 
-def load_published_cache() -> set:
+def load_published_cache() -> dict:
+    """{ slug: {"en": bool, "ko": bool} } 구조 반환."""
     if PUBLISHED_CACHE.exists():
         with open(PUBLISHED_CACHE, encoding="utf-8") as f:
             data = json.load(f)
-        return set(data.get("published", []))
-    return set()
+        # 구버전 호환 (list → dict 변환)
+        if isinstance(data.get("published"), list):
+            return {s: {"en": True, "ko": True} for s in data["published"]}
+        return data.get("published", {})
+    return {}
 
 
-def save_published_cache(published: set):
-    data = {"published": sorted(published)}
+def save_published_cache(published: dict):
+    data = {"published": published}
     with open(PUBLISHED_CACHE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+        json.dump(data, f, indent=2, ensure_ascii=False)
 
 
-def find_target_post(posts: list, target_slug: str | None, already_published: set) -> dict | None:
+def find_target_post(posts: list, target_slug: str | None, already_published: dict) -> dict | None:
     candidates = [p for p in posts if p.get("content_type") in PUBLISHABLE_TYPES]
     if not candidates:
         return None
@@ -196,7 +200,8 @@ def build_en_post(post: dict) -> tuple[str, str, list[str], str]:
     title = fm.get("title") or post.get("title_en", post["slug"])
     summary = fm.get("summary", "")
     card_summary = fm.get("card_summary", "")
-    subtitle = summary[:255]  # Substack draft_subtitle 255자 제한
+    # 부제: card_summary(짧은 1-2줄) 우선, 없으면 summary 앞 120자
+    subtitle = (card_summary or summary[:120]).strip()
     paragraphs = [p for p in [summary, card_summary] if p]
     link = f"{SITE_BASE_URL}/en/{post['content_type']}/{post['slug']}"
     return title, subtitle, paragraphs, link
@@ -208,7 +213,8 @@ def build_ko_post(post: dict) -> tuple[str, str, list[str], str]:
     title = fm.get("title") or post.get("title_ko", post["slug"])
     summary = fm.get("summary", "")
     card_summary = fm.get("card_summary", "")
-    subtitle = summary[:255]  # Substack draft_subtitle 255자 제한
+    # 부제: card_summary(짧은 1-2줄) 우선, 없으면 summary 앞 120자
+    subtitle = (card_summary or summary[:120]).strip()
     paragraphs = [p for p in [summary, card_summary] if p]
     link = f"{SITE_BASE_URL}/ko/{post['content_type']}/{post['slug']}"
     return title, subtitle, paragraphs, link
@@ -403,40 +409,53 @@ def main():
     if not args.dry_run:
         client = SubstackClient(SUBSTACK_COOKIE)
 
+    slug = post["slug"]
+    lang_cache = already_published.get(slug, {})
     en_ok = ko_ok = False
 
     if SUBSTACK_EN_URL:
         subdomain = get_subdomain(SUBSTACK_EN_URL)
         print(f"\n[EN] {subdomain}.substack.com")
-        en_ok = publish_post(
-            client, subdomain,
-            en_title, en_subtitle, en_paragraphs, en_link,
-            cta="Read the full article",
-            image_url=image_url,
-            note_intro=en_note_intro,
-            dry_run=args.dry_run,
-        )
+        if lang_cache.get("en") and not args.dry_run:
+            print(f"  ℹ️ 이미 발행됨 — 건너뜀 (재발행하려면 캐시에서 수동 삭제)")
+            en_ok = True
+        else:
+            en_ok = publish_post(
+                client, subdomain,
+                en_title, en_subtitle, en_paragraphs, en_link,
+                cta="Read the full article",
+                image_url=image_url,
+                note_intro=en_note_intro,
+                dry_run=args.dry_run,
+            )
     else:
         print("NEXT_PUBLIC_SUBSTACK_EN_URL 없음 — EN 발행 건너뜀")
 
     if SUBSTACK_KO_URL:
         subdomain = get_subdomain(SUBSTACK_KO_URL)
         print(f"\n[KO] {subdomain}.substack.com")
-        ko_ok = publish_post(
-            client, subdomain,
-            ko_title, ko_subtitle, ko_paragraphs, ko_link,
-            cta="전체 글 읽기",
-            image_url=image_url,
-            note_intro=ko_note_intro,
-            dry_run=args.dry_run,
-        )
+        if lang_cache.get("ko") and not args.dry_run:
+            print(f"  ℹ️ 이미 발행됨 — 건너뜀 (재발행하려면 캐시에서 수동 삭제)")
+            ko_ok = True
+        else:
+            ko_ok = publish_post(
+                client, subdomain,
+                ko_title, ko_subtitle, ko_paragraphs, ko_link,
+                cta="전체 글 읽기",
+                image_url=image_url,
+                note_intro=ko_note_intro,
+                dry_run=args.dry_run,
+            )
     else:
         print("NEXT_PUBLIC_SUBSTACK_KO_URL 없음 — KO 발행 건너뜀")
 
     if not args.dry_run and (en_ok or ko_ok):
-        already_published.add(post["slug"])
+        already_published[slug] = {
+            "en": lang_cache.get("en", False) or en_ok,
+            "ko": lang_cache.get("ko", False) or ko_ok,
+        }
         save_published_cache(already_published)
-        print(f"\n캐시 저장: {post['slug']}")
+        print(f"\n캐시 저장: {slug} (en={already_published[slug]['en']}, ko={already_published[slug]['ko']})")
 
 
 if __name__ == "__main__":
