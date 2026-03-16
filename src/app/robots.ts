@@ -11,6 +11,7 @@ export default function robots(): MetadataRoute.Robots {
           'Yeti',
           'DuckDuckBot',
           'facebookexternalhit', // Facebook 링크 미리보기 (AI 학습봇 FacebookBot과 다름)
+          'Facebot',             // Facebook OG 이미지 파일 fetcher (facebookexternalhit의 2단계)
           'Twitterbot',          // X/Twitter 링크 미리보기
           'LinkedInBot',         // LinkedIn 링크 미리보기
         ],
