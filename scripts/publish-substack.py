@@ -170,6 +170,9 @@ def to_prosemirror(
         if p:
             content.append({"type": "paragraph", "content": [{"type": "text", "text": p}]})
 
+    # CTA 앞 빈 줄
+    content.append({"type": "paragraph", "content": []})
+
     # 전체 글 읽기 CTA — 링크 텍스트 문단 (button 노드 사용 시 구독 위젯 사라짐)
     content.append({
         "type": "paragraph",
