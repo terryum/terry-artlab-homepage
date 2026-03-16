@@ -13,7 +13,7 @@ EN/KO Substack Publication에 티저 + 홈페이지 링크를 포스팅한다.
                                     Chrome → F12 → Application → Cookies → substack.com → substack.sid
     NEXT_PUBLIC_SUBSTACK_EN_URL     영어 Substack URL (예: https://terry-en.substack.com)
     NEXT_PUBLIC_SUBSTACK_KO_URL     한국어 Substack URL (예: https://terry-ko.substack.com)
-    SITE_BASE_URL                   홈페이지 베이스 URL (기본: https://onthemanifold.com)
+    SITE_BASE_URL                   홈페이지 베이스 URL (기본: https://terry.artlab.ai)
 """
 import os
 import sys
@@ -110,30 +110,88 @@ def find_target_post(posts: list, target_slug: str | None, already_published: se
     return unpublished[0]
 
 
+def find_cover_image(post: dict) -> Path | None:
+    """포스트의 커버 이미지 경로 반환. 없으면 None."""
+    post_dir = POSTS_DIR / post["content_type"] / post["slug"]
+    for ext in ["webp", "jpg", "jpeg", "png"]:
+        p = post_dir / f"cover.{ext}"
+        if p.exists():
+            return p
+    return None
+
+
 # ─── Body builders ──────────────────────────────────────────────────────────
 
+def to_prosemirror(
+    paragraphs: list[str],
+    link: str,
+    cta: str,
+    image_url: str | None = None,
+) -> str:
+    """텍스트 문단 목록 → Substack draft_body (ProseMirror JSON 문자열).
 
-
-def to_prosemirror(paragraphs: list[str], link: str, cta: str) -> str:
-    """텍스트 문단 목록 → Substack draft_body (ProseMirror JSON 문자열)."""
+    주의: button 노드를 사용하면 Substack이 네이티브 구독 위젯을 제거한다.
+    CTA는 링크 텍스트 문단으로 처리해야 구독 위젯이 유지된다.
+    """
     content = []
+
+    # 커버 이미지 (본문 최상단 — 타임라인 썸네일로 자동 사용)
+    if image_url:
+        content.append({
+            "type": "image",
+            "attrs": {
+                "src": image_url,
+                "alt": None,
+                "title": None,
+                "fullscreen": False,
+                "imageSize": "normal",
+                "height": None,
+                "width": None,
+                "resizeWidth": None,
+                "bytes": None,
+                "href": None,
+                "captionVisible": False,
+                "caption": None,
+                "belowTheFold": False,
+                "isProcessing": False,
+                "align": "center",
+                "exposeToMetadata": True,
+            },
+        })
+        # 이미지 뒤 빈 줄
+        content.append({"type": "paragraph", "content": []})
+
+    # 본문 문단
     for p in paragraphs:
         if p:
             content.append({"type": "paragraph", "content": [{"type": "text", "text": p}]})
-    # CTA 버튼 노드
+
+    # 전체 글 읽기 CTA — 링크 텍스트 문단 (button 노드 사용 시 구독 위젯 사라짐)
     content.append({
-        "type": "button",
-        "attrs": {
-            "url": link,
-            "text": cta,
-            "alignment": "center",
-        },
+        "type": "paragraph",
+        "attrs": {"textAlign": "center"},
+        "content": [{
+            "type": "text",
+            "text": f"{cta} →",
+            "marks": [{
+                "type": "link",
+                "attrs": {
+                    "href": link,
+                    "target": "_blank",
+                    "rel": "noopener noreferrer nofollow",
+                    "class": None,
+                },
+            }],
+        }],
     })
+    # CTA 뒤 빈 줄 (구독 위젯과 간격 확보)
+    content.append({"type": "paragraph", "content": []})
+
     return json.dumps({"type": "doc", "content": content})
 
 
-def build_en_post(post: dict) -> tuple[str, str, str]:
-    """(title, subtitle, prosemirror_body)"""
+def build_en_post(post: dict) -> tuple[str, str, list[str], str]:
+    """(title, subtitle, paragraphs, link)"""
     fm = read_mdx_frontmatter(post["slug"], post["content_type"], "en")
     title = fm.get("title") or post.get("title_en", post["slug"])
     summary = fm.get("summary", "")
@@ -141,12 +199,11 @@ def build_en_post(post: dict) -> tuple[str, str, str]:
     subtitle = summary  # 카드/이메일 헤더에 표시
     paragraphs = [p for p in [summary, card_summary] if p]
     link = f"{SITE_BASE_URL}/en/{post['content_type']}/{post['slug']}"
-    body = to_prosemirror(paragraphs, link, "Read the full article")
-    return title, subtitle, body
+    return title, subtitle, paragraphs, link
 
 
-def build_ko_post(post: dict) -> tuple[str, str, str]:
-    """(title, subtitle, prosemirror_body)"""
+def build_ko_post(post: dict) -> tuple[str, str, list[str], str]:
+    """(title, subtitle, paragraphs, link)"""
     fm = read_mdx_frontmatter(post["slug"], post["content_type"], "ko")
     title = fm.get("title") or post.get("title_ko", post["slug"])
     summary = fm.get("summary", "")
@@ -154,8 +211,20 @@ def build_ko_post(post: dict) -> tuple[str, str, str]:
     subtitle = summary
     paragraphs = [p for p in [summary, card_summary] if p]
     link = f"{SITE_BASE_URL}/ko/{post['content_type']}/{post['slug']}"
-    body = to_prosemirror(paragraphs, link, "전체 글 읽기")
-    return title, subtitle, body
+    return title, subtitle, paragraphs, link
+
+
+def copy_cover_to_public(post: dict, cover_path: Path) -> str | None:
+    """커버 이미지를 public/posts/{slug}/ 에 복사하고 공개 URL 반환."""
+    slug = post["slug"]
+    dest_dir = REPO_ROOT / "public" / "posts" / slug
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    dest = dest_dir / cover_path.name
+    import shutil
+    shutil.copy2(cover_path, dest)
+    url = f"{SITE_BASE_URL}/posts/{slug}/{cover_path.name}"
+    print(f"  ✓ 커버 이미지 public 복사 완료: /posts/{slug}/{cover_path.name}")
+    return url
 
 
 # ─── Substack API ───────────────────────────────────────────────────────────
@@ -186,7 +255,17 @@ class SubstackClient:
         name = profile.get("name", "unknown")
         print(f"  ✓ 인증 성공 (user: {name}, id: {self.user_id})")
 
-    def create_and_publish(self, subdomain: str, title: str, subtitle: str, html_body: str) -> bool:
+    def create_and_publish(
+        self,
+        subdomain: str,
+        title: str,
+        subtitle: str,
+        paragraphs: list[str],
+        link: str,
+        cta: str,
+        image_url: str | None,
+        note_intro: str | None,
+    ) -> bool:
         pub_base = f"https://{subdomain}.substack.com"
 
         # 0) publication 방문 → 서브도메인 쿠키/CSRF 획득
@@ -199,13 +278,16 @@ class SubstackClient:
         if csrf:
             self.session.headers["X-CSRFToken"] = csrf
 
-        # 1) 드래프트 생성 (draft_body는 HTML 문자열)
+        # 1) ProseMirror 본문 빌드 (button 노드 없음 → 구독 위젯 자동 추가됨)
+        body = to_prosemirror(paragraphs, link, cta, image_url)
+
+        # 3) 드래프트 생성
         draft_resp = self.session.post(
             f"{pub_base}/api/v1/drafts",
             json={
                 "draft_title": title,
                 "draft_subtitle": subtitle,
-                "draft_body": html_body,
+                "draft_body": body,
                 "draft_bylines": [{"id": self.user_id, "is_guest": False}],
                 "draft_podcast_url": "",
                 "draft_podcast_duration": None,
@@ -223,10 +305,13 @@ class SubstackClient:
         draft_id = draft_resp.json()["id"]
         print(f"  ✓ 드래프트 생성됨 (id={draft_id})")
 
-        # 3) 발행 (share_automatically=True → 타임라인에 커버+subtitle 포함 Note 자동 생성)
+        # 4) 발행 (note_intro → 타임라인 Note 1줄 소개)
+        publish_payload: dict = {"send_email": True, "share_automatically": True}
+        if note_intro:
+            publish_payload["note_body"] = note_intro  # 지원 여부는 Substack API에 따라 다름
         pub_resp = self.session.post(
             f"{pub_base}/api/v1/drafts/{draft_id}/publish",
-            json={"send_email": True, "share_automatically": True},
+            json=publish_payload,
             timeout=15,
         )
         if pub_resp.status_code not in (200, 201):
@@ -236,15 +321,32 @@ class SubstackClient:
         return True
 
 
-def publish_post(client: "SubstackClient | None", subdomain: str, title: str, subtitle: str, html_body: str, dry_run: bool) -> bool:
+def publish_post(
+    client: "SubstackClient | None",
+    subdomain: str,
+    title: str,
+    subtitle: str,
+    paragraphs: list[str],
+    link: str,
+    cta: str,
+    image_url: str | None,
+    note_intro: str | None,
+    dry_run: bool,
+) -> bool:
     if dry_run:
+        body_preview = to_prosemirror(paragraphs, link, cta, image_url)
         print(f"\n[DRY RUN] subdomain={subdomain}.substack.com")
         print(f"  Title    : {title}")
         print(f"  Subtitle : {subtitle}")
-        print(f"  Body     : {html_body}\n")
+        print(f"  Note     : {note_intro}")
+        print(f"  Image    : {image_url}")
+        print(f"  Body     : {body_preview}\n")
         return True
     try:
-        return client.create_and_publish(subdomain, title, subtitle, html_body)
+        return client.create_and_publish(
+            subdomain, title, subtitle, paragraphs, link,
+            cta, image_url, note_intro,
+        )
     except Exception as e:
         print(f"  ✗ 실패 ({subdomain}): {e}", file=sys.stderr)
         return False
@@ -278,8 +380,24 @@ def main():
 
     print(f"\n대상 포스트: [{post['content_type']}] {post['slug']}")
 
-    en_title, en_subtitle, en_body = build_en_post(post)
-    ko_title, ko_subtitle, ko_body = build_ko_post(post)
+    en_title, en_subtitle, en_paragraphs, en_link = build_en_post(post)
+    ko_title, ko_subtitle, ko_paragraphs, ko_link = build_ko_post(post)
+    cover_path = find_cover_image(post)
+
+    # 커버 이미지를 public/posts/에 복사 → 공개 URL로 Substack 이미지 노드에 삽입
+    image_url: str | None = None
+    if cover_path:
+        print(f"  커버 이미지: {cover_path.name}")
+        if not args.dry_run:
+            image_url = copy_cover_to_public(post, cover_path)
+        else:
+            image_url = f"{SITE_BASE_URL}/posts/{post['slug']}/{cover_path.name}"
+    else:
+        print("  커버 이미지 없음")
+
+    # 타임라인 1줄 소개 (EN/KO 각각)
+    en_note_intro = f"New post: {en_title}" + (f" — {en_subtitle}" if en_subtitle else "")
+    ko_note_intro = f"새 글: {ko_title}" + (f" — {ko_subtitle}" if ko_subtitle else "")
 
     client = None
     if not args.dry_run:
@@ -288,14 +406,30 @@ def main():
     en_ok = ko_ok = False
 
     if SUBSTACK_EN_URL:
-        print(f"\n[EN] {get_subdomain(SUBSTACK_EN_URL)}.substack.com")
-        en_ok = publish_post(client, get_subdomain(SUBSTACK_EN_URL), en_title, en_subtitle, en_body, args.dry_run)
+        subdomain = get_subdomain(SUBSTACK_EN_URL)
+        print(f"\n[EN] {subdomain}.substack.com")
+        en_ok = publish_post(
+            client, subdomain,
+            en_title, en_subtitle, en_paragraphs, en_link,
+            cta="Read the full article",
+            image_url=image_url,
+            note_intro=en_note_intro,
+            dry_run=args.dry_run,
+        )
     else:
         print("NEXT_PUBLIC_SUBSTACK_EN_URL 없음 — EN 발행 건너뜀")
 
     if SUBSTACK_KO_URL:
-        print(f"\n[KO] {get_subdomain(SUBSTACK_KO_URL)}.substack.com")
-        ko_ok = publish_post(client, get_subdomain(SUBSTACK_KO_URL), ko_title, ko_subtitle, ko_body, args.dry_run)
+        subdomain = get_subdomain(SUBSTACK_KO_URL)
+        print(f"\n[KO] {subdomain}.substack.com")
+        ko_ok = publish_post(
+            client, subdomain,
+            ko_title, ko_subtitle, ko_paragraphs, ko_link,
+            cta="전체 글 읽기",
+            image_url=image_url,
+            note_intro=ko_note_intro,
+            dry_run=args.dry_run,
+        )
     else:
         print("NEXT_PUBLIC_SUBSTACK_KO_URL 없음 — KO 발행 건너뜀")
 
