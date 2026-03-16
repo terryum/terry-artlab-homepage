@@ -235,18 +235,17 @@ def build_threads_text(post: dict) -> tuple[str, str]:
 
 
 def build_linkedin_text(post: dict) -> tuple[str, str]:
-    """(text, url) — 3000자"""
+    """(text, url) — 3000자. URL은 ARTICLE 카드로 별도 첨부."""
     fm = read_mdx_frontmatter(post["slug"], post["content_type"], "en")
-    title = fm.get("title") or post.get("title_en", post["slug"])
-    ai_summary = extract_ai_summary(post.get("ai_summary")) or fm.get("summary") or fm.get("card_summary", "")
+    description = fm.get("summary") or fm.get("card_summary") or extract_ai_summary(post.get("ai_summary"))
     url = f"{SITE_BASE_URL}/posts/{post['slug']}"
     tags = get_hashtags(post, "en")
 
     lines = []
-    if ai_summary:
-        lines.append(ai_summary)
-        lines.append("")
-    lines.append(f"Read more → {url}")
+    if description:
+        lines.append(description)
+    lines.append("")
+    lines.append("Read more ↓")
     if tags:
         lines.append(tags)
 
@@ -362,7 +361,7 @@ def publish_threads(text: str, url: str, dry_run: bool) -> bool:
 
 # ─── LinkedIn API ────────────────────────────────────────────────────────────
 
-def publish_linkedin(text: str, dry_run: bool) -> bool:
+def publish_linkedin(text: str, url: str, dry_run: bool) -> bool:
     token = os.environ.get("LINKEDIN_ACCESS_TOKEN", "")
     person_urn = os.environ.get("LINKEDIN_PERSON_URN", "")
 
@@ -370,6 +369,7 @@ def publish_linkedin(text: str, dry_run: bool) -> bool:
         print(f"\n[DRY RUN] LinkedIn")
         print(f"  URN     : {person_urn or '(미설정)'}")
         print(f"  Text    :\n{text}\n")
+        print(f"  Link    : {url}")
         return True
 
     if not check_token_expiry("LinkedIn", "LINKEDIN_TOKEN_CREATED"):
@@ -385,7 +385,8 @@ def publish_linkedin(text: str, dry_run: bool) -> bool:
         "specificContent": {
             "com.linkedin.ugc.ShareContent": {
                 "shareCommentary": {"text": text},
-                "shareMediaCategory": "NONE",
+                "shareMediaCategory": "ARTICLE",
+                "media": [{"status": "READY", "originalUrl": url}],
             }
         },
         "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"},
@@ -502,7 +503,7 @@ def main():
 
         elif platform == "linkedin":
             text, url = build_linkedin_text(post)
-            ok = publish_linkedin(text, args.dry_run)
+            ok = publish_linkedin(text, url, args.dry_run)
 
         elif platform == "x":
             text, url = build_x_text(post)
