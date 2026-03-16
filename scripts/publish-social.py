@@ -202,7 +202,7 @@ def build_facebook_text(post: dict) -> tuple[str, str]:
     url = f"{FACEBOOK_BASE_URL}/ko/posts/{post['slug']}"
     tags = get_hashtags(post, "ko")
 
-    lines = [title, ""]
+    lines = []
     if description:
         lines.append(description)
     if tags:
