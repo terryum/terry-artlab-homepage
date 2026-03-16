@@ -361,6 +361,15 @@ def publish_threads(text: str, url: str, dry_run: bool) -> bool:
     if resp2.status_code in (200, 201):
         thread_id = resp2.json().get("id", "?")
         print(f"  ✓ Threads 게시 완료 (id={thread_id})")
+        # permalink 조회
+        pl_resp = requests.get(
+            f"https://graph.threads.net/v1.0/{thread_id}",
+            params={"fields": "permalink", "access_token": token},
+            timeout=10,
+        )
+        permalink = pl_resp.json().get("permalink", "") if pl_resp.status_code == 200 else ""
+        if permalink:
+            print(f"  ✓ Threads URL: {permalink}")
         return True
     else:
         print(f"  ✗ Threads 게시 실패 ({resp2.status_code}): {resp2.text[:300]}", file=sys.stderr)
