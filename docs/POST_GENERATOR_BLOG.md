@@ -144,7 +144,7 @@ sharp('posts/<type>/<slug>/cover_Original.png')
 ---
 locale: "ko"
 title: "<한국어 제목>"
-subtitle: "<Substack 부제, 에세이적 1줄, 25자 이내>"
+subtitle: "<Substack 부제, 에세이적 1줄, 35자 이내>"
 summary: "<2-3문장 요약>"
 card_summary: "<카드용 짧은 요약, 2줄 이내>"
 terrys_memo: ""
