@@ -12,12 +12,12 @@ const LABELS = {
   en: {
     headline: 'Subscribe to On the Manifold',
     description: 'New essays and tech posts — delivered to your inbox.',
-    button: 'Subscribe on Substack',
+    button: 'Subscribe',
   },
   ko: {
     headline: 'On the Manifold 구독하기',
     description: '새 에세이와 테크 포스트를 뉴스레터로 받아보세요.',
-    button: 'Substack 구독하기',
+    button: '구독하기',
   },
 };
 
@@ -51,8 +51,8 @@ export default function SubstackSubscribe({
   // article variant
   return (
     <div className="mt-12 pt-8 border-t border-line-default">
-      <div className="bg-surface-subtle rounded-xl px-6 py-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-        <div className="flex-1 min-w-0">
+      <div className="bg-surface-subtle rounded-xl px-6 py-6 flex flex-col sm:flex-row items-start sm:items-center gap-2 justify-center">
+        <div>
           <p className="font-semibold text-text-primary text-base leading-snug">
             {labels.headline}
           </p>
@@ -62,12 +62,9 @@ export default function SubstackSubscribe({
           href={subscribeUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-accent text-white text-sm font-medium hover:opacity-90 transition-opacity"
+          className="shrink-0 ml-16 inline-flex items-center px-4 py-2 rounded-lg bg-accent text-white text-sm font-medium hover:opacity-90 transition-opacity"
         >
           {labels.button}
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
         </a>
       </div>
     </div>

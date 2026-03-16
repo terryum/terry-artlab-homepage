@@ -9,8 +9,8 @@
 
 | 타입 | 폴더 | content_type | 특징 |
 |---|---|---|---|
-| **Ideas** | `posts/idea/<slug>/` | `"writing"` | 짧은 단상, 아이디어, 에세이 (~ 수백 ~ 수천 자) |
-| **Essays** | `posts/essay/<slug>/` | `"writing"` | 긴 형식 에세이 (섹션 구조 가능) |
+| **Ideas** | `posts/idea/<slug>/` | `"ideas"` | 짧은 단상, 아이디어, 에세이 (~ 수백 ~ 수천 자) |
+| **Essays** | `posts/essay/<slug>/` | `"essays"` | 긴 형식 에세이 (섹션 구조 가능) |
 
 둘 다 동일한 파이프라인 사용. 배치 폴더와 tags만 다름.
 
@@ -111,7 +111,7 @@ sharp('posts/<type>/<slug>/cover_Original.png')
   "published_at": "<ISO 8601>",
   "updated_at": "<ISO 8601>",
   "status": "published",
-  "content_type": "writing",
+  "content_type": "<ideas 또는 essays>",
   "tags": ["<Ideas 또는 Essays>", "<주제 태그1>", "<주제 태그2>"],
   "cover_image": "./cover.webp",
   "thumb_source": "./thumb_original.png",
@@ -171,6 +171,11 @@ terrys_memo: ""
 - 헤더는 `##`부터 사용 (H1은 title frontmatter)
 - 필요시 `<Figure>`, `<Collapsible>` 컴포넌트 사용 가능
 
+#### Substack 구독 블럭 (자동 삽입)
+- MDX에 직접 추가할 필요 없음
+- `ContentDetailPage.tsx`가 `content_type === 'essays' || 'tech'` 조건으로 포스트 하단에 자동 삽입
+- Ideas 포스트(`content_type: "ideas"`)에도 구독 블럭을 표시하려면 `ContentDetailPage.tsx`의 조건에 `'ideas'` 추가 필요
+
 ### Step 5) 빌드 스크립트 실행
 ```bash
 node scripts/copy-post-images.mjs
@@ -191,7 +196,7 @@ node scripts/generate-index.mjs
 | `published_at` | string | ISO 8601 |
 | `updated_at` | string | ISO 8601 |
 | `status` | string | `"draft"` 또는 `"published"` |
-| `content_type` | string | `"writing"` |
+| `content_type` | string | `"essays"` 또는 `"ideas"` (폴더 타입과 일치) |
 | `tags` | string[] | `["Ideas"]` 또는 `["Essays"]` + 추가 태그 (카테고리 태그 **대문자** 필수) |
 | `cover_image` | string | `"./cover.webp"` |
 | `thumb_source` | string | 썸네일 소스 (optional) |

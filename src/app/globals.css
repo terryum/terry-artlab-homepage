@@ -77,6 +77,24 @@ body {
   --tw-prose-captions: var(--color-text-muted);
 }
 
+/* Header nav group tags */
+.nav-tag-ai {
+  background-color: #ddd6fe;
+  color: #5b21b6;
+}
+.nav-tag-terry {
+  background-color: #bae6fd;
+  color: #1e40af;
+}
+[data-theme="dark"] .nav-tag-ai {
+  background-color: rgb(109 40 217 / 0.35);
+  color: #a78bfa;
+}
+[data-theme="dark"] .nav-tag-terry {
+  background-color: rgb(14 165 233 / 0.25);
+  color: #7dd3fc;
+}
+
 .prose a:hover {
   color: var(--color-accent);
 }
