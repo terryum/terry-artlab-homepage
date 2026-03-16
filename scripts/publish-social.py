@@ -215,9 +215,8 @@ def build_facebook_text(post: dict) -> tuple[str, str]:
 def build_threads_text(post: dict) -> tuple[str, str]:
     """(text, url) — 500자 제한"""
     fm = read_mdx_frontmatter(post["slug"], post["content_type"], "ko")
-    title = fm.get("title") or post.get("title_ko", post["slug"])
     description = fm.get("summary") or fm.get("card_summary") or extract_ai_summary(post.get("ai_summary"))
-    url = f"{SITE_BASE_URL}/posts/{post['slug']}"
+    url = f"{FACEBOOK_BASE_URL}/posts/{post['slug']}?utm_source=threads&utm_medium=social"
     tags = get_hashtags(post, "ko")
 
     suffix_parts = [url]
@@ -225,10 +224,8 @@ def build_threads_text(post: dict) -> tuple[str, str]:
         suffix_parts.append(tags)
     suffix = "\n" + "\n".join(suffix_parts)
 
-    # 500자 제한 — 제목 + 설명 truncate
-    body = title
-    if description:
-        body += "\n\n" + description
+    # 500자 제한 — 설명 truncate
+    body = description or ""
 
     max_body = 500 - len(suffix) - 2  # 여유 2자
     if len(body) > max_body:
@@ -245,7 +242,7 @@ def build_linkedin_text(post: dict) -> tuple[str, str]:
     url = f"{SITE_BASE_URL}/posts/{post['slug']}"
     tags = get_hashtags(post, "en")
 
-    lines = [title, ""]
+    lines = []
     if ai_summary:
         lines.append(ai_summary)
         lines.append("")
@@ -259,23 +256,24 @@ def build_linkedin_text(post: dict) -> tuple[str, str]:
 def build_x_text(post: dict) -> tuple[str, str]:
     """(text, url) — 280자 (URL은 23자로 계산)"""
     fm = read_mdx_frontmatter(post["slug"], post["content_type"], "en")
-    title = fm.get("title") or post.get("title_en", post["slug"])
+    description = fm.get("summary") or fm.get("card_summary") or extract_ai_summary(post.get("ai_summary"))
     url = f"{SITE_BASE_URL}/posts/{post['slug']}"
     tags = get_hashtags(post, "en")
 
-    # URL은 Twitter t.co로 23자 고정, 해시태그 포함 후 제목 truncate
+    # URL은 Twitter t.co로 23자 고정, 해시태그 포함 후 설명 truncate
     url_part = f" → {url}"
     tag_part = f"\n{tags}" if tags else ""
     suffix = url_part + tag_part
 
     url_char_count = 23  # t.co URL 고정 길이
     suffix_count = 4 + url_char_count + (1 + len(tag_part) if tags else 0)  # " → " + url + tags
-    max_title = 280 - suffix_count
+    max_desc = 280 - suffix_count
 
-    if len(title) > max_title:
-        title = title[: max_title - 3] + "..."
+    body = description or ""
+    if len(body) > max_desc:
+        body = body[: max_desc - 3] + "..."
 
-    return title + suffix, url
+    return body + suffix, url
 
 
 # ─── Facebook API ────────────────────────────────────────────────────────────
