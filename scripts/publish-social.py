@@ -53,6 +53,7 @@ except ImportError:
 import requests
 
 SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "https://terry.artlab.ai")
+FACEBOOK_BASE_URL = os.environ.get("FACEBOOK_BASE_URL", "https://terry-artlab.vercel.app")
 
 REPO_ROOT = Path(__file__).parent.parent
 INDEX_PATH = REPO_ROOT / "posts" / "index.json"
@@ -198,7 +199,7 @@ def build_facebook_text(post: dict) -> tuple[str, str]:
     fm = read_mdx_frontmatter(post["slug"], post["content_type"], "ko")
     title = fm.get("title") or post.get("title_ko", post["slug"])
     description = fm.get("summary") or fm.get("card_summary") or extract_ai_summary(post.get("ai_summary"))
-    url = f"{SITE_BASE_URL}/ko/posts/{post['slug']}"
+    url = f"{FACEBOOK_BASE_URL}/ko/posts/{post['slug']}"
     tags = get_hashtags(post, "ko")
 
     lines = [title, ""]
