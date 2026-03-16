@@ -206,7 +206,7 @@ def build_en_post(post: dict) -> tuple[str, str, list[str], str]:
     # 부제: frontmatter subtitle 우선, 없으면 card_summary, 없으면 summary 앞 80자
     subtitle = (fm.get("subtitle") or card_summary or summary[:80]).strip()
     paragraphs = [p for p in [summary, card_summary] if p]
-    link = f"{SITE_BASE_URL}/en/{post['content_type']}/{post['slug']}"
+    link = f"{SITE_BASE_URL}/en/posts/{post['slug']}"
     return title, subtitle, paragraphs, link
 
 
@@ -219,7 +219,7 @@ def build_ko_post(post: dict) -> tuple[str, str, list[str], str]:
     # 부제: frontmatter subtitle 우선, 없으면 card_summary, 없으면 summary 앞 80자
     subtitle = (fm.get("subtitle") or card_summary or summary[:80]).strip()
     paragraphs = [p for p in [summary, card_summary] if p]
-    link = f"{SITE_BASE_URL}/ko/{post['content_type']}/{post['slug']}"
+    link = f"{SITE_BASE_URL}/ko/posts/{post['slug']}"
     return title, subtitle, paragraphs, link
 
 
