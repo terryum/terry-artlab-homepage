@@ -65,8 +65,15 @@
 ## 추출 규칙
 
 ### 1저자 Google Scholar URL 추출
-- Google Scholar에서 논문 제목 검색 → 1저자 프로필 링크 추출
-- 못 찾으면 빈 값 (SourceInfoBlock에서 비활성화)
+1. WebFetch로 Scholar 직접 접근 시도 → 1저자 프로필 링크(`/citations?user=...`) 추출
+2. **봇 차단 시 검색 URL fallback**: 논문 제목 앞 4단어를 하이픈 연결로 구성
+   ```
+   https://scholar.google.com/scholar?&q={제목-앞-4단어-kebab}
+   예: "PP-Tac: Paper Picking..." → pp-tac-paper-picking
+   ```
+3. **fallback URL 검증**: WebFetch로 해당 URL 접근
+   - "없는 페이지(not found)" → `first_author_scholar_url` 빈 값으로 설정
+   - 결과 있거나 차단(blocked) → fallback URL을 `first_author_scholar_url`로 사용
 - frontmatter 키: `first_author_scholar_url`
 
 ### Figure/Table 전수 추출
