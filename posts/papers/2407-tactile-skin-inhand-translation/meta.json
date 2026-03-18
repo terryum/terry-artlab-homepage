@@ -1,0 +1,174 @@
+{
+  "post_id": "2407-tactile-skin-inhand-translation",
+  "slug": "2407-tactile-skin-inhand-translation",
+  "post_number": 13,
+  "published_at": "2026-03-18T09:00:00Z",
+  "updated_at": "2026-03-18T09:00:00Z",
+  "status": "published",
+  "content_type": "papers",
+  "tags": [
+    "Papers",
+    "Robotics",
+    "Tactile Sensing",
+    "Dexterous Manipulation",
+    "Sim-to-Real",
+    "Reinforcement Learning",
+    "CoRL 2024"
+  ],
+  "display_tags": [],
+  "cover_image": "./cover.webp",
+  "cover_caption": "Figure 1: We present a tactile skin model that enables zero-shot sim-to-real transfer of ternary shear and binary normal forces.",
+  "cover_figure_number": 1,
+  "reading_time_min": 8,
+  "domain": "robotics",
+  "subfields": [
+    "dexterous-manipulation",
+    "tactile-sensing",
+    "sim-to-real",
+    "reinforcement-learning"
+  ],
+  "key_concepts": [
+    "tactile-skin",
+    "shear-force-sensing",
+    "normal-force-sensing",
+    "sim-to-real",
+    "in-hand-translation",
+    "ReSkin",
+    "finger-gaiting"
+  ],
+  "methodology": [
+    "reinforcement-learning",
+    "sim-to-real",
+    "teacher-student-distillation",
+    "PPO"
+  ],
+  "contribution_type": "method",
+  "source_title": "Learning In-Hand Translation Using Tactile Skin With Shear and Normal Force Sensing",
+  "source_author": "Jessica Yin et al.",
+  "source_authors_full": [
+    "Jessica Yin (Meta FAIR / University of Pennsylvania GRASP Lab)",
+    "Haozhi Qi (Meta FAIR / UC Berkeley)",
+    "Jitendra Malik (Meta FAIR / UC Berkeley)",
+    "James Pikul (UW-Madison)",
+    "Mark Yim (University of Pennsylvania)",
+    "Tess Hellebrekers (Meta FAIR)"
+  ],
+  "source_url": "https://arxiv.org/abs/2407.07885",
+  "source_type": "arxiv",
+  "source_date": "2024-07-10",
+  "source_project_url": "https://jessicayin.github.io/tactile-skin-rl/",
+  "google_scholar_url": "https://scholar.google.com/scholar?q=learning-in-hand-translation-using-tactile",
+  "citation_count": null,
+  "ai_summary": {
+    "one_liner": "Tactile skin sensor model for zero-shot sim-to-real transfer of ternary shear and binary normal forces, enabling RL-based dexterous in-hand translation",
+    "problem": "Tactile simulation is either too slow (FEM) or too simplified (collision-based) for RL, and in-hand translation with shear force feedback has not been demonstrated",
+    "solution": "Novel tactile skin model simulating compliant ReSkin sensor with point-cloud penetration for normal forces and Coulomb-inspired shear forces, binarized for sim-to-real transfer",
+    "key_result": "S3-Axis policy: 93% avg success rate on OOD objects, +51% distance and +94% velocity over proprioception-only baseline in 190 real-world rollouts",
+    "limitations": [
+      "No vision input for precise goal specification",
+      "Frozen policy during deployment (no online adaptation)",
+      "Binary tactile signals only (continuous signals may enable better performance)"
+    ]
+  },
+  "taxonomy_primary": "robotics/hand/tactile",
+  "taxonomy_secondary": [
+    "robotics/hand/dexterous"
+  ],
+  "relations": [
+    {
+      "target": "2504-pp-tac",
+      "type": "related"
+    },
+    {
+      "target": "2407-stretchable-glove-hand-pose",
+      "type": "related"
+    },
+    {
+      "target": "2501-dexforce-force-informed-actions",
+      "type": "related"
+    }
+  ],
+  "idea_status": null,
+  "related_posts": null,
+  "featured": false,
+  "newsletter_eligible": false,
+  "thumb_source": "./fig-8.jpeg",
+  "thumb_position": "centre",
+  "figures": [
+    {
+      "number": 1,
+      "src": "./fig-1.png",
+      "caption": "Figure 1: We present a tactile skin model that enables zero-shot sim-to-real transfer of ternary shear and binary normal forces. We use it to learn an RL policy for dexterous in-hand translation that uses tactile and proprioceptive feedback to adapt to unseen object geometries, novel hand orientations, and new object dynamics. We evaluate our policies with over 190 real-world rollouts.",
+      "caption_ko": "Figure 1: 3축(전단+수직) 힘의 제로샷 sim-to-real 전이를 가능하게 하는 촉각 피부 모델을 제안한다. 이를 이용해 촉각·고유감각 피드백으로 미지의 물체 형상, 새로운 손 방향, 다양한 물체 역학에 적응하는 RL 기반 인핸드 이동 정책을 학습하였다. 190회 이상의 실세계 실험으로 평가하였다."
+    },
+    {
+      "number": 2,
+      "src": "./fig-2.png",
+      "caption": "Figure 2: Our modeling approach for sim-to-real transfer of tactile skin. A) We model the palm as a continuous surface with 16 discrete taxels, each corresponding to an underlying magnetometer. B) We use a cylinder for each taxel and extend the sensing range (R) beyond its collision geometry. C) We sample points on the object and represent the collision surface as a point cloud. Points within sensing range are denoted as i. D) We sum the penetration distances P_i = R − l_i, where l_i is the distance from point i to the sensor's origin. We calculate the sensor signals for shear and normal force using ΣP_i, object velocity, and object point density.",
+      "caption_ko": "Figure 2: 촉각 피부의 sim-to-real 전이를 위한 모델링 접근법. A) 팜을 16개의 이산 택셀(각 자기계에 대응)이 있는 연속 표면으로 모델링. B) 각 택셀을 실린더로 모델링하고 감지 범위(R)를 충돌 형상 너머로 확장. C) 물체 표면에서 점을 샘플링하여 접촉면을 포인트 클라우드로 표현. D) 침투 거리 P_i = R − l_i를 합산하여 전단력과 수직력 신호를 계산."
+    },
+    {
+      "number": 3,
+      "src": "./fig-3.png",
+      "caption": "Figure 3: Tactile signal comparisons during an entire episode of in-hand translation. A) A representative example of real-world ReSkin palm taxel output. The signals are periodic because the finger gait is periodic. B) The force sensor output of a simulated palm taxel, using the default IsaacGym force sensor model. The signals are sparse because the model relies on collision geometry penetration. C) The taxel outputs from our simulated S3-Axis tactile skin model, for the same taxel and the same rollout as B.",
+      "caption_ko": "Figure 3: 인핸드 이동 에피소드 전체의 촉각 신호 비교. A) 실세계 ReSkin 팜 택셀 출력의 대표 예시. 핑거 게이트가 주기적이므로 신호도 주기적이다. B) 기본 IsaacGym 힘 센서 모델을 사용한 시뮬레이션 팜 택셀 출력. 충돌 형상 침투에 의존하므로 신호가 희소하다. C) 제안하는 S3-Axis 촉각 피부 모델의 택셀 출력으로, B와 동일한 택셀 및 동일 롤아웃."
+    },
+    {
+      "number": 4,
+      "src": "./fig-4.png",
+      "caption": "Figure 4: Overview of our training and deployment pipeline. We train the policy in two stages, entirely in simulation. We use our tactile skin model in the second stage. The policy is directly deployed in the real world.",
+      "caption_ko": "Figure 4: 학습 및 배포 파이프라인 개요. 시뮬레이션에서 2단계로 정책을 학습한다. 2단계에서 촉각 피부 모델을 사용한다. 학습된 정책은 실세계에 직접 배포된다."
+    },
+    {
+      "number": 5,
+      "src": "./fig-5.png",
+      "caption": "Figure 5: Train and test sets. We train with cylinders and no hand tilt in simulation. We test on real objects with varying COM, geometries, and hand angles. Motion capture markers on the objects are only for measuring task metrics.",
+      "caption_ko": "Figure 5: 학습 및 테스트 세트. 시뮬레이션에서 실린더와 기울기 없는 상태로 학습한다. 다양한 무게중심, 형상, 손 각도를 가진 실제 물체로 테스트한다. 물체의 모션캡처 마커는 과제 메트릭 측정용이다."
+    },
+    {
+      "number": 6,
+      "src": "./fig-6.png",
+      "caption": "Figure 6: A. Real-world cylinder rollouts with S3-Axis and Proprio-Only. This shows superior S3-Axis policy performance compared to Proprio-Only for both ID and OOD conditions. Error bars indicate standard deviation. B. Three-axis tactile sensing policies demonstrate the best adaptation to OOD objects and unseen hand orientations. S3-axis enables 93% average success rate and +51% increase in distance over Proprio-Only. U3-axis enables +60% increase in velocity over Proprio-Only. These metrics are averaged over all real-world OOD experiments (30 rollouts/policy).",
+      "caption_ko": "Figure 6: A. S3-Axis와 Proprio-Only의 실세계 실린더 롤아웃. ID와 OOD 조건 모두에서 S3-Axis 정책이 우수한 성능을 보인다. B. 3축 촉각 정책이 OOD 물체와 미지의 손 방향에 가장 잘 적응한다. S3-Axis는 평균 93% 성공률과 Proprio-Only 대비 +51% 이동 거리 증가를 달성. U3-Axis는 Proprio-Only 대비 +60% 속도 증가를 달성. OOD 실험 전체(정책당 30회 롤아웃) 평균."
+    },
+    {
+      "number": 7,
+      "src": "./fig-7.png",
+      "caption": "Figure 7: A) Real world policy adaptation experiments. We highlight experiments near policy adaptation limits, and show that our S3-Axis and U3-Axis policies generally achieve the best task metrics. B) Latent space analysis. We use t-SNE to examine the extrinsics vector from our experiments. Complete policy failure correlates with high dispersion of the latent vector. C) Tactile policies explore more finger gaits. Phase portraits show how gaits differ between policies. Intersections through the Poincaré section in the S3-Axis phase portraits have +35% standard deviation compared to Proprio Only.",
+      "caption_ko": "Figure 7: A) 실세계 정책 적응 실험. 적응 한계 근처의 실험을 강조하며, S3-Axis와 U3-Axis 정책이 일반적으로 최고 과제 메트릭을 달성함을 보인다. B) 잠재 공간 분석. t-SNE로 외재 벡터를 분석. 정책 완전 실패는 잠재 벡터의 높은 분산과 상관관계가 있다. C) 촉각 정책이 더 많은 핑거 게이트를 탐색한다. 위상 초상도에서 S3-Axis의 푸앵카레 단면 교차 표준편차가 Proprio-Only 대비 +35%."
+    },
+    {
+      "number": 8,
+      "src": "./fig-8.jpeg",
+      "caption": "Figure 8: Demonstrations with diverse objects outside of our main test set. All items are being manipulated by either the U3-Axis policy or the S3-Axis policy. The weights of the objects range from 57 g (paper towel roll) to 524 g (rolling pin).",
+      "caption_ko": "Figure 8: 주요 테스트 세트 외 다양한 물체로의 시연. 모든 물체는 U3-Axis 또는 S3-Axis 정책으로 조작된다. 물체 무게 범위는 57g(키친타월 롤)에서 524g(밀대)까지."
+    }
+  ],
+  "tables": [],
+  "references": [
+    {
+      "title": "General In-Hand Object Rotation with Vision and Touch",
+      "author": "Haozhi Qi et al.",
+      "description": "Demonstrated in-hand object rotation with vision and touch using a teacher-student RL framework, establishing the two-stage distillation pipeline that this work builds upon for in-hand translation.",
+      "arxiv_url": "https://arxiv.org/abs/2309.02399",
+      "scholar_url": "https://scholar.google.com/scholar?q=general-in-hand-object-rotation",
+      "category": "foundational"
+    },
+    {
+      "title": "ReSkin: versatile, replaceable, lasting tactile skins",
+      "author": "Raunaq Bhirangi et al.",
+      "description": "Introduced the ReSkin magnetic elastomer tactile skin used in this work. The sensor provides 3-axis force sensing via magnetometers embedded in a soft elastomer, enabling replaceable, large-area tactile coverage.",
+      "arxiv_url": "https://arxiv.org/abs/2111.00071",
+      "scholar_url": "https://scholar.google.com/scholar?q=reskin-versatile-replaceable-lasting-tactile",
+      "category": "foundational"
+    },
+    {
+      "title": "Rotating without Seeing: Towards In-Hand Dexterity Through Touch",
+      "author": "Zhao-Heng Yin et al.",
+      "description": "Achieved in-hand rotation using binary tactile feedback from force-sensitive resistors simulated with IsaacGym's default contact model. This work extends beyond it by modeling both shear and normal forces for a more challenging translation task.",
+      "arxiv_url": "https://arxiv.org/abs/2303.10880",
+      "scholar_url": "https://scholar.google.com/scholar?q=rotating-without-seeing-towards-in-hand",
+      "category": "recent"
+    }
+  ]
+}

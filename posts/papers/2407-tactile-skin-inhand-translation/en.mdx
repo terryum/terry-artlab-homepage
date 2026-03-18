@@ -1,0 +1,86 @@
+---
+locale: "en"
+translation_of: "2407-tactile-skin-inhand-translation:ko"
+title: "Tactile Skin: Learning In-Hand Translation with Shear and Normal Forces"
+summary: "A novel tactile skin sensor model that bridges the sim-to-real gap for 3-axis (shear + normal) binary force signals. Zero-shot sim-to-real transfer enables the S3-Axis policy to achieve 93% average success rate on unseen objects across 190+ real-world rollouts."
+card_summary: "A tactile skin sensor model resolving the fidelity-speed tradeoff in tactile simulation, enabling zero-shot sim-to-real transfer of shear and normal forces for in-hand translation with +51% distance improvement over proprioception-only baselines."
+cover_caption: "Figure 1: We present a tactile skin model that enables zero-shot sim-to-real transfer of ternary shear and binary normal forces."
+published_at: "2026-03-18T09:00:00Z"
+source_type: "arxiv"
+source_url: "https://arxiv.org/abs/2407.07885"
+source_date: "2024-07-10"
+display_tags: []
+---
+
+## TL;DR
+
+Tactile simulation is either too slow (FEM) or too simplified (collision-based) for RL. This work models ReSkin magnetic elastomer sensors using point-cloud penetration for normal forces and Coulomb-inspired shear forces, binarized for sim-to-real transfer, achieving 5000 FPS simulation and zero-shot in-hand translation on real hardware.
+
+## Problem
+
+Tactile sensing is essential for dexterous manipulation, yet a large gap persists between tactile simulation and reality. FEM-based approaches are accurate but too slow for RL training. Fast simulators like IsaacGym use collision geometry penetration which produces sparse, unrealistic shear force signals. Consequently, prior RL-based in-hand manipulation relied solely on normal forces or proprioception, and in-hand translation with shear force feedback had never been demonstrated.
+
+## Key Idea
+
+A novel sensor model approximates ReSkin tactile skin physics using point-cloud-based penetration. Three core design principles:
+
+- **Compliance modeling**: Each taxel's sensing range extends beyond its collision geometry, allowing sensor activation without physical collision
+- **Point-cloud penetration**: Object surfaces are uniformly sampled as point clouds; normal force is computed from summed penetration distances within sensing range
+- **Coulomb-inspired shear**: Shear signals multiply penetration sums by object linear and angular velocities, preserving directional information
+
+Final outputs are binarized — shear $S_{x}, S_{y} \in \{-1, 0, 1\}$, normal $S_z \in \{0, 1\}$ — to minimize the sim-to-real gap.
+
+<Figure src="./fig-4.png" caption="Figure 4: Overview of our training and deployment pipeline. We train the policy in two stages, entirely in simulation. We use our tactile skin model in the second stage. The policy is directly deployed in the real world." />
+
+<Collapsible title="Detailed Method">
+
+### Sensor Model Details
+
+ReSkin adhered to the palm uses 16 magnetometers for 3-axis force measurement. In simulation, each taxel is modeled as a cylinder (r=1.5cm) with sensing range $R$ extended beyond collision geometry.
+
+Shear signal:
+$$S_{x,t} = \frac{\sum_{i=1}^{n} P_i}{D}(v_{x,t} + \omega_{x,t})$$
+
+Normal signal:
+$$S_{z,t} = \frac{\sum_{i=1}^{n} P_i}{D}$$
+
+where $P_i = R - l_i$ is penetration distance, $D$ is object point density (total points / volume), and $v$, $\omega$ are object linear and angular velocities.
+
+### Two-Stage Training Pipeline
+
+1. **Oracle policy**: Encodes simulator privileged information (object position, velocity, size, mass, COM, friction) into 8D vector $z_t$. Trained with PPO.
+2. **Tactile policy**: Transformer observation encoder takes proprioception $q_t$ and tactile signals $[S_x, S_y, S_z]$ as input. Trained with $L_2$ loss to replicate oracle's $z_t$ and $a_t$; control policy is frozen.
+
+Training speed: 5000 FPS on 2× NVIDIA RTX-4090 with tactile sensors (~70% of proprioception-only speed).
+
+### Real-World Binarization
+
+Real ReSkin signals have significant hysteresis, so simple thresholding is insufficient. A time-derivative threshold is used: if the difference between signal history and current signal buffers exceeds the threshold, 1 or -1 is returned. Since ReSkin outputs at 78Hz (4× faster than the 20Hz policy rate), the delay is negligible.
+
+<Figure src="./fig-2.png" caption="Figure 2: Our modeling approach for sim-to-real transfer of tactile skin. A) We model the palm as a continuous surface with 16 discrete taxels, each corresponding to an underlying magnetometer. B) We use a cylinder for each taxel and extend the sensing range (R) beyond its collision geometry. C) We sample points on the object and represent the collision surface as a point cloud. D) We sum the penetration distances P_i = R − l_i to calculate shear and normal force signals." />
+
+</Collapsible>
+
+## Key Results
+
+- **In-domain (cylinder, 0° tilt)**: S3-Axis achieves +38% distance (+2cm) and +94% velocity (+0.16cm/s) over Proprio-Only
+- **OOD average (30 rollouts/policy)**: S3-Axis achieves 93% average success rate, +51% distance increase over Proprio-Only
+- **U3-Axis**: +60% average velocity over Proprio-Only, particularly strong on screwdriver (+32% velocity) and water bottle (+153% velocity)
+- **Hammer at 20° tilt (extreme condition)**: S3-Axis achieves +149% distance and +20% success over next best policy. U3-Axis completely fails, indicating signed shear direction information is critical
+
+<Figure src="./fig-6.png" caption="Figure 6: A. Real-world cylinder rollouts with S3-Axis and Proprio-Only. S3-Axis shows superior performance in both ID and OOD conditions. B. Three-axis tactile sensing policies demonstrate the best adaptation to OOD objects and unseen hand orientations. S3-axis enables 93% average success rate and +51% increase in distance over Proprio-Only. U3-axis enables +60% increase in velocity over Proprio-Only. Metrics averaged over all OOD experiments (30 rollouts/policy)." />
+
+## Achievements and Limitations
+
+**Key achievements**
+- First RL-tractable sensor model (5000 FPS) simulating shear + normal tactile skin
+- First sim-to-real demonstration of in-hand translation with shear force feedback
+- Systematic validation of 3-axis tactile superiority for OOD adaptation across 190+ real-world rollouts
+
+**Limitations**
+- Authors note: No vision input for precise goal specification; frozen policy during deployment (no online adaptation)
+- 🤖 AI analysis: Binary tactile signals incur significant information loss. Extending to continuous signals may improve performance, but would re-open the sim-to-real gap — a fundamental tradeoff that remains unresolved
+
+## Terry's memo
+
+- *(None)*

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-03-18T01:03:04.084Z",
-  "total_posts": 12,
+  "generated_at": "2026-03-18T07:03:34.259Z",
+  "total_posts": 13,
   "posts": [
     {
       "post_number": 1,
@@ -60,7 +60,7 @@
       ],
       "idea_status": null,
       "related_posts": null,
-      "taxonomy_primary": "robotics/brain",
+      "taxonomy_primary": "robotics/brain/vla",
       "taxonomy_secondary": [
         "robotics/arm"
       ]
@@ -121,7 +121,7 @@
       ],
       "idea_status": null,
       "related_posts": null,
-      "taxonomy_primary": "robotics/brain",
+      "taxonomy_primary": "robotics/brain/vla",
       "taxonomy_secondary": []
     },
     {
@@ -178,7 +178,7 @@
       ],
       "idea_status": null,
       "related_posts": null,
-      "taxonomy_primary": "robotics/arm",
+      "taxonomy_primary": "robotics/arm/force-control",
       "taxonomy_secondary": []
     },
     {
@@ -237,7 +237,7 @@
       ],
       "idea_status": null,
       "related_posts": null,
-      "taxonomy_primary": "robotics/brain",
+      "taxonomy_primary": "robotics/brain/vla",
       "taxonomy_secondary": []
     },
     {
@@ -339,7 +339,7 @@
       "relations": [],
       "idea_status": null,
       "related_posts": null,
-      "taxonomy_primary": "robotics/hand",
+      "taxonomy_primary": "robotics/hand/tactile",
       "taxonomy_secondary": []
     },
     {
@@ -460,7 +460,7 @@
       ],
       "idea_status": null,
       "related_posts": null,
-      "taxonomy_primary": "robotics/arm",
+      "taxonomy_primary": "robotics/arm/exoskeleton",
       "taxonomy_secondary": [
         "robotics/hand"
       ]
@@ -533,7 +533,7 @@
       ],
       "idea_status": null,
       "related_posts": null,
-      "taxonomy_primary": "robotics/arm",
+      "taxonomy_primary": "robotics/arm/exoskeleton",
       "taxonomy_secondary": []
     },
     {
@@ -604,7 +604,7 @@
       ],
       "idea_status": null,
       "related_posts": null,
-      "taxonomy_primary": "robotics/hand",
+      "taxonomy_primary": "robotics/hand/dexterous",
       "taxonomy_secondary": [
         "robotics/arm"
       ]
@@ -739,9 +739,83 @@
       ],
       "idea_status": null,
       "related_posts": null,
-      "taxonomy_primary": "robotics/hand",
+      "taxonomy_primary": "robotics/hand/tactile",
       "taxonomy_secondary": [
         "robotics/arm"
+      ]
+    },
+    {
+      "post_number": 13,
+      "slug": "2407-tactile-skin-inhand-translation",
+      "content_type": "papers",
+      "title_en": "Tactile Skin: Learning In-Hand Translation with Shear and Normal Forces",
+      "title_ko": "Tactile Skin: 촉각 피부로 배우는 인핸드 이동",
+      "domain": "robotics",
+      "subfields": [
+        "dexterous-manipulation",
+        "tactile-sensing",
+        "sim-to-real",
+        "reinforcement-learning"
+      ],
+      "key_concepts": [
+        "tactile-skin",
+        "shear-force-sensing",
+        "normal-force-sensing",
+        "sim-to-real",
+        "in-hand-translation",
+        "ReSkin",
+        "finger-gaiting"
+      ],
+      "methodology": [
+        "reinforcement-learning",
+        "sim-to-real",
+        "teacher-student-distillation",
+        "PPO"
+      ],
+      "contribution_type": "method",
+      "tags": [
+        "Papers",
+        "Robotics",
+        "Tactile Sensing",
+        "Dexterous Manipulation",
+        "Sim-to-Real",
+        "Reinforcement Learning",
+        "CoRL 2024"
+      ],
+      "source_author": "Jessica Yin et al.",
+      "source_date": "2024-07-10",
+      "published_at": "2026-03-18T09:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "Tactile skin sensor model for zero-shot sim-to-real transfer of ternary shear and binary normal forces, enabling RL-based dexterous in-hand translation",
+        "problem": "Tactile simulation is either too slow (FEM) or too simplified (collision-based) for RL, and in-hand translation with shear force feedback has not been demonstrated",
+        "solution": "Novel tactile skin model simulating compliant ReSkin sensor with point-cloud penetration for normal forces and Coulomb-inspired shear forces, binarized for sim-to-real transfer",
+        "key_result": "S3-Axis policy: 93% avg success rate on OOD objects, +51% distance and +94% velocity over proprioception-only baseline in 190 real-world rollouts",
+        "limitations": [
+          "No vision input for precise goal specification",
+          "Frozen policy during deployment (no online adaptation)",
+          "Binary tactile signals only (continuous signals may enable better performance)"
+        ]
+      },
+      "relations": [
+        {
+          "target": "2504-pp-tac",
+          "type": "related"
+        },
+        {
+          "target": "2407-stretchable-glove-hand-pose",
+          "type": "related"
+        },
+        {
+          "target": "2501-dexforce-force-informed-actions",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "robotics/hand/tactile",
+      "taxonomy_secondary": [
+        "robotics/hand/dexterous"
       ]
     }
   ],
@@ -831,12 +905,27 @@
         "from": "2504-pp-tac",
         "to": "2407-stretchable-glove-hand-pose",
         "type": "related"
+      },
+      {
+        "from": "2407-tactile-skin-inhand-translation",
+        "to": "2504-pp-tac",
+        "type": "related"
+      },
+      {
+        "from": "2407-tactile-skin-inhand-translation",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "related"
+      },
+      {
+        "from": "2407-tactile-skin-inhand-translation",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "related"
       }
     ],
     "clusters": [
       {
-        "id": "robotics-brain",
-        "label": "robotics/brain",
+        "id": "robotics-brain/vla",
+        "label": "robotics/brain/vla",
         "post_numbers": [
           1,
           2,
@@ -847,14 +936,26 @@
           "flow-matching"
         ],
         "taxonomy_nodes": [
-          "robotics/brain"
+          "robotics/brain/vla"
         ]
       },
       {
-        "id": "robotics-arm",
-        "label": "robotics/arm",
+        "id": "robotics-hand/tactile",
+        "label": "robotics/hand/tactile",
         "post_numbers": [
-          3,
+          6,
+          12,
+          13
+        ],
+        "core_concepts": [],
+        "taxonomy_nodes": [
+          "robotics/hand/tactile"
+        ]
+      },
+      {
+        "id": "robotics-arm/exoskeleton",
+        "label": "robotics/arm/exoskeleton",
+        "post_numbers": [
           8,
           9
         ],
@@ -862,32 +963,14 @@
           "exoskeleton"
         ],
         "taxonomy_nodes": [
-          "robotics/arm"
-        ]
-      },
-      {
-        "id": "robotics-hand",
-        "label": "robotics/hand",
-        "post_numbers": [
-          6,
-          10,
-          12
-        ],
-        "core_concepts": [
-          "dexterous-hand"
-        ],
-        "taxonomy_nodes": [
-          "robotics/hand"
+          "robotics/arm/exoskeleton"
         ]
       }
     ],
-    "bridge_papers": [
-      1,
-      8,
-      10,
-      12
-    ],
+    "bridge_papers": [],
     "outlier_papers": [
+      3,
+      10,
       11
     ]
   },
@@ -1079,18 +1162,47 @@
     ],
     "deformable-objects": [
       12
+    ],
+    "tactile-skin": [
+      13
+    ],
+    "shear-force-sensing": [
+      13
+    ],
+    "normal-force-sensing": [
+      13
+    ],
+    "sim-to-real": [
+      13
+    ],
+    "in-hand-translation": [
+      13
+    ],
+    "ReSkin": [
+      13
+    ],
+    "finger-gaiting": [
+      13
     ]
   },
   "domain_stats": {
-    "robotics": 10,
+    "robotics": 11,
     "ml": 2
   },
   "taxonomy_stats": {
-    "robotics/brain": 3,
+    "robotics/brain/vla": 3,
     "robotics/arm:secondary": 3,
-    "robotics/arm": 3,
-    "robotics/hand": 3,
+    "robotics/arm/force-control": 1,
+    "robotics/hand/tactile": 3,
+    "robotics/arm/exoskeleton": 2,
     "robotics/hand:secondary": 1,
-    "ai/agent": 1
+    "robotics/hand/dexterous": 1,
+    "ai/agent": 1,
+    "robotics/hand/dexterous:secondary": 1,
+    "robotics/arm": 3,
+    "robotics/hand": 4,
+    "robotics/brain": 3,
+    "robotics": 10,
+    "ai": 1
   }
 }
