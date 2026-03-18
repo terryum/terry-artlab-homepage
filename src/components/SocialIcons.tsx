@@ -82,10 +82,12 @@ const socialLinks = [
 ];
 
 export default function SocialIcons({ className = '' }: { className?: string }) {
-  function handleClick(e: React.MouseEvent<HTMLAnchorElement>, link: typeof socialLinks[number]) {
-    if (link.name === 'Email') {
-      e.preventDefault();
-      window.location.href = `mailto:${EMAIL_PARTS[0]}@${EMAIL_PARTS[1]}`;
+  // Reveal mailto href only on user interaction (hover/focus/touch)
+  // so bots never see the address, but native <a> click works on all platforms.
+  function revealEmail(e: React.SyntheticEvent<HTMLAnchorElement>) {
+    const el = e.currentTarget;
+    if (el.href.endsWith('#')) {
+      el.href = `mailto:${EMAIL_PARTS[0]}@${EMAIL_PARTS[1]}`;
     }
   }
 
@@ -97,7 +99,9 @@ export default function SocialIcons({ className = '' }: { className?: string }) 
           href={link.href}
           target={link.name === 'Email' ? undefined : '_blank'}
           rel={link.name === 'Email' ? undefined : 'noopener noreferrer'}
-          onClick={(e) => handleClick(e, link)}
+          onMouseEnter={link.name === 'Email' ? revealEmail : undefined}
+          onFocus={link.name === 'Email' ? revealEmail : undefined}
+          onTouchStart={link.name === 'Email' ? revealEmail : undefined}
           className="text-text-muted hover:text-accent transition-colors"
           aria-label={link.name}
         >
