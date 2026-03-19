@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-03-19T04:49:26.351Z",
-  "total_posts": 14,
+  "generated_at": "2026-03-19T04:59:33.528Z",
+  "total_posts": 15,
   "posts": [
     {
       "post_number": 1,
@@ -895,6 +895,85 @@
       "taxonomy_secondary": [
         "robotics/hand/dexterous"
       ]
+    },
+    {
+      "post_number": 15,
+      "slug": "2602-robopaint",
+      "content_type": "papers",
+      "title_en": "RoboPaint: From Human Demonstration to Any Robot and Any View",
+      "title_ko": "RoboPaint: 인간 시연에서 어떤 로봇·어떤 뷰로도",
+      "domain": "robotics",
+      "subfields": [
+        "data-collection",
+        "human-robot-transfer",
+        "dexterous-manipulation",
+        "sim-to-real"
+      ],
+      "key_concepts": [
+        "Real-Sim-Real",
+        "human-to-robot-retargeting",
+        "3D-Gaussian-Splatting",
+        "tactile-retargeting",
+        "dexterous-manipulation",
+        "data-augmentation",
+        "VLA",
+        "cross-embodiment"
+      ],
+      "methodology": [
+        "kinematic-tactile-retargeting",
+        "3DGS-scene-reconstruction",
+        "isaac-sim-rendering",
+        "imitation-learning",
+        "VLA-fine-tuning"
+      ],
+      "contribution_type": "system",
+      "tags": [
+        "Papers",
+        "Robotics",
+        "Data Collection",
+        "Human-Robot Transfer",
+        "3D Gaussian Splatting",
+        "VLA"
+      ],
+      "source_author": "Jiacheng Fan et al.",
+      "source_date": "2026-02-05",
+      "published_at": "2026-03-19T10:00:00+09:00",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "텔레오퍼레이션 없이 인간 시연을 기구학·촉각 리타겟팅 + 3DGS 시뮬 렌더링으로 어떤 로봇·카메라 뷰로도 변환하는 Real-Sim-Real 데이터 파이프라인",
+        "problem": "텔레오퍼레이션 기반 로봇 훈련 데이터 수집은 느리고 비용이 높으며, 인간과 로봇의 손 구조 차이(cross-embodiment gap)를 해결하기 어려움",
+        "solution": "멀티모달 인간 데이터(RGB-D, 글러브 관절각, 촉각) 수집 → Dex-Tactile 리타겟팅 → 3DGS 장면 재구성 + Isaac Sim 렌더링으로 임의 뷰 데이터 생성",
+        "key_result": "리타겟팅 성공률 84% (10개 태스크), 생성 데이터로 학습한 π0.5 VLA 80% 평균 성공 (텔레오퍼 대비 -20%p), 데이터 수집 속도 2.6~5.3× 향상",
+        "limitations": [
+          "손목 카메라가 3DGS 포인트 클라우드에 너무 근접해 렌더링 아티팩트 발생",
+          "텔레오퍼레이션 대비 VLA 성능 20%p 차이 (손목 카메라 없이 83% vs 47%)",
+          "🤖 3DGS 장면 재구성 정밀도에 따라 시뮬 데이터 품질이 결정적으로 의존 — 반사면/유리 물체 등 재구성 어려운 환경에서 실용성 제약 가능"
+        ]
+      },
+      "relations": [
+        {
+          "target": "2505-dexumi",
+          "type": "compares_with"
+        },
+        {
+          "target": "2506-exostart",
+          "type": "compares_with"
+        },
+        {
+          "target": "2509-dexop",
+          "type": "compares_with"
+        },
+        {
+          "target": "2410-pi0-vla-flow-model",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "robotics/arm/exoskeleton",
+      "taxonomy_secondary": [
+        "robotics/hand/dexterous"
+      ]
     }
   ],
   "knowledge_graph": {
@@ -1018,6 +1097,26 @@
         "from": "2409-3dtactile-dex",
         "to": "2505-dexumi",
         "type": "related"
+      },
+      {
+        "from": "2602-robopaint",
+        "to": "2505-dexumi",
+        "type": "compares_with"
+      },
+      {
+        "from": "2602-robopaint",
+        "to": "2506-exostart",
+        "type": "compares_with"
+      },
+      {
+        "from": "2602-robopaint",
+        "to": "2509-dexop",
+        "type": "compares_with"
+      },
+      {
+        "from": "2602-robopaint",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "related"
       }
     ],
     "clusters": [
@@ -1058,7 +1157,8 @@
         "label": "robotics/arm/exoskeleton",
         "post_numbers": [
           8,
-          9
+          9,
+          15
         ],
         "core_concepts": [
           "exoskeleton"
@@ -1066,6 +1166,20 @@
         "taxonomy_nodes": [
           "robotics/arm/exoskeleton"
         ]
+      },
+      {
+        "id": "concept-VLA",
+        "label": "VLA",
+        "post_numbers": [
+          1,
+          2,
+          4,
+          15
+        ],
+        "core_concepts": [
+          "VLA"
+        ],
+        "taxonomy_nodes": []
       }
     ],
     "bridge_papers": [],
@@ -1079,7 +1193,8 @@
     "VLA": [
       1,
       2,
-      4
+      4,
+      15
     ],
     "flow-matching": [
       1,
@@ -1302,14 +1417,33 @@
       14
     ],
     "dexterous-manipulation": [
-      14
+      14,
+      15
     ],
     "GraphMAE": [
       14
+    ],
+    "Real-Sim-Real": [
+      15
+    ],
+    "human-to-robot-retargeting": [
+      15
+    ],
+    "3D-Gaussian-Splatting": [
+      15
+    ],
+    "tactile-retargeting": [
+      15
+    ],
+    "data-augmentation": [
+      15
+    ],
+    "cross-embodiment": [
+      15
     ]
   },
   "domain_stats": {
-    "robotics": 12,
+    "robotics": 13,
     "ml": 2
   },
   "taxonomy_stats": {
@@ -1317,15 +1451,15 @@
     "robotics/arm:secondary": 3,
     "robotics/arm/force-control": 1,
     "robotics/hand/tactile": 4,
-    "robotics/arm/exoskeleton": 2,
+    "robotics/arm/exoskeleton": 3,
     "robotics/hand:secondary": 1,
     "robotics/hand/dexterous": 1,
     "ai/agent": 1,
-    "robotics/hand/dexterous:secondary": 2,
-    "robotics/arm": 3,
+    "robotics/hand/dexterous:secondary": 3,
+    "robotics/arm": 4,
     "robotics/hand": 5,
     "robotics/brain": 3,
-    "robotics": 11,
+    "robotics": 12,
     "ai": 1
   }
 }

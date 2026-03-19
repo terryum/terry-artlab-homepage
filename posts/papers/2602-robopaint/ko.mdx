@@ -1,0 +1,109 @@
+---
+locale: "ko"
+title: "RoboPaint: 인간 시연에서 어떤 로봇·어떤 뷰로도"
+subtitle: "텔레오퍼 없이 인간 글러브 → 3DGS 시뮬로 로봇 데이터 생성"
+summary: "텔레오퍼레이션 없이 인간 시연을 어떤 로봇·카메라 뷰의 훈련 데이터로도 변환하는 Real-Sim-Real 파이프라인. 기구학·촉각 제약을 결합한 Dex-Tactile 리타겟팅으로 리타겟팅 성공률 84% 달성, 생성된 데이터로 학습한 π0.5 VLA가 3개 태스크에서 평균 80% 성공률을 기록한다."
+card_summary: "텔레오퍼레이션 없이 인간 글러브 시연 → Dex-Tactile 리타겟팅 + 3DGS 렌더링으로 어떤 로봇·카메라 뷰로도 VLA 훈련 데이터를 생성하는 Real-Sim-Real 파이프라인"
+cover_caption: "System Overview of the Real-Sim-Real Pipeline. Our framework begins with high-precision human data collection using instrumented gloves under our multiview Data-Acquisition-Room. The raw data is then processed through object pose estimation and Dex-Tactile joint retargeting to obtain the movement of target robot embodiment and object. The deployment scene is then reconstructed via 3D Gaussian Splatting and imported into simulation environment. Finally, we drive robot and objects accordingly and record robot demonstration from arbitrary view."
+published_at: "2026-03-19T10:00:00+09:00"
+source_type: "arxiv"
+source_url: "https://arxiv.org/abs/2602.05325"
+source_date: "2026-02-05"
+terrys_memo: ""
+---
+
+## TL;DR
+
+로봇 학습 데이터를 수집하려면 보통 텔레오퍼레이션이 필요하지만, RoboPaint는 **인간이 글러브를 끼고 자연스럽게 조작**한 시연만으로 어떤 로봇 구조·카메라 뷰의 훈련 데이터도 만든다. 기구학과 촉각 제약을 동시에 최적화하는 **Dex-Tactile 리타겟팅**과, 3D 가우시안 스플래팅(3DGS) 기반 시뮬 렌더링으로 실사와 구별하기 어려운 훈련 이미지를 생성한다.
+
+## 문제
+
+VLA 같은 대규모 정책 모델을 로봇 조작 태스크에 파인튜닝하려면 고품질의 로봇 시연 데이터가 필요하다. 기존 텔레오퍼레이션(ALOHA, GELLO 등)은 느리고 비싸며, 인간이 직접 로봇 팔을 조종해야 한다. 글러브·핸드헬드 인터페이스(UMI 등)는 그리퍼 수준으로만 적용 가능해 다관절 손(dexterous hand)에는 한계가 있다. 무엇보다 인간 손과 로봇 손의 구조가 달라(cross-embodiment gap) 인간 시연을 그대로 로봇에 이전하기 어렵고, 카메라 뷰 변화 없이는 데이터 다양성도 제한된다.
+
+## 핵심 아이디어
+
+RoboPaint는 세 단계로 이 문제를 해결한다. 인간이 글러브를 끼고 자유롭게 조작 → Dex-Tactile 리타겟팅으로 로봇 관절 상태 변환 → 3DGS로 재구성한 환경에서 시뮬 렌더링으로 훈련 이미지 생성.
+
+**핵심 구성 요소:**
+- **멀티모달 데이터 수집**: 멀티뷰 데이터 수집 룸(DAR)에서 RGB-D 카메라, RGB 카메라, 글러브 관절각, 촉각 신호를 동기화 수집
+- **Dex-Tactile 리타겟팅**: 기구학 항(손끝 위치/방향 정렬)과 촉각 항(접촉 일관성)을 동시에 최적화
+  - 촉각 항: 해부학적 대응 매핑으로 촉각 포인트를 로봇 링크에 투영, 거리 기반 sigmoid 가중치로 활성 접촉 영역 강조
+  - 접촉 오차 평균 **3.86 mm** 달성
+- **Real-Sim-Real 렌더링**: ArUco 마커로 미터 단위 정렬된 3DGS 장면을 Isaac Sim에 임포트, 리타겟팅된 궤적으로 로봇·물체 구동 후 임의 뷰에서 이미지 기록
+- **데이터 증강**: 배경 교체(복수의 DAR 재구성 활용) + 물체 재질 변경(3D 생성 텍스처)
+
+<Figure src="./fig-2.png" caption="System Overview of the Real-Sim-Real Pipeline. Our framework begins with high-precision human data collection using instrumented gloves under our multiview Data-Acquisition-Room. The raw data is then processed through object pose estimation and Dex-Tactile joint retargeting to obtain the movement of target robot embodiment and object. The deployment scene is then reconstructed via 3D Gaussian Splatting and imported into simulation environment. Finally, we drive robot and objects accordingly and record robot demonstration from arbitrary view." />
+
+<Collapsible title="구체적 방법">
+
+### Dex-Tactile 리타겟팅 목적 함수
+
+리타겟팅은 두 항의 가중 합으로 최적화된다:
+
+$$\min_{\mathbf{q}} \mathcal{L}_{kin}(\mathbf{q}) + \lambda \mathcal{L}_{tac}(\mathbf{q})$$
+
+**기구학 항** $\mathcal{L}_{kin}$: 인간 글러브의 손끝 위치·방향과 로봇 손의 해당 링크 포즈를 정렬. 관절 한계 페널티 포함.
+
+**촉각 항** $\mathcal{L}_{tac}$: 해부학적 대응 매핑 $\phi: \mathcal{T}_{human} \to \mathcal{T}_{robot}$으로 인간 촉각 포인트를 로봇 링크 표면에 투영. 거리 기반 감쇠로 활성 접촉 가중치 조절:
+
+$$w_i = \sigma\left(-k \cdot d_i\right), \quad \mathcal{L}_{tac} = \sum_i w_i \cdot \|p_i^{robot} - \hat{p}_i\|^2$$
+
+여기서 $d_i$는 공간적 불일치(spatial discrepancy), $\sigma$는 시그모이드 함수.
+
+### 3DGS 장면 재구성 + Isaac Sim 통합
+
+실제 배포 환경에서 멀티뷰 카메라로 이미지를 수집해 3DGS 모델 학습. ArUco 마커로 실제 미터 단위 스케일에 정렬 후 Universal Scene Description(USD) 포맷으로 Isaac Sim에 임포트. 리타겟팅된 로봇 궤적과 물체 포즈를 시뮬에서 재현하고, 임의 카메라 뷰에서 이미지 시퀀스 렌더링.
+
+### 데이터 증강
+
+**배경 교체**: 복수의 실제 배경을 3DGS로 재구성하고, 동일한 로봇·물체 궤적을 다른 배경에 렌더링해 데이터셋 다양성 확보.
+
+**재질 변경**: 오픈소스 3D 생성 도구로 물체 텍스처를 생성해 동일 형상의 다양한 재질 버전 렌더링 — 시각 도메인 갭 감소.
+
+</Collapsible>
+
+## 주요 결과
+
+### 리타겟팅 성공률
+
+10종의 다양한 물체(박스, 병, 가방 등) 조작 태스크에서 리타겟팅된 궤적의 실세계 재현:
+- **평균 84% 성공률** (물체당 10회 시연 테스트)
+- 평균 접촉 오차 **3.86 mm**
+
+### VLA 정책 성능 (π0.5, 손목 카메라 있음)
+
+| 태스크 | 텔레오퍼 | RoboPaint |
+|--------|---------|-----------|
+| 집어서 올려놓기 | 100% | 70% |
+| 직육면체 밀기 | 100% | 100% |
+| 붓기 | 100% | 70% |
+| **평균** | **100%** | **80%** |
+
+### 데이터 수집 효율
+
+| 태스크 | 속도 향상 |
+|--------|---------|
+| 집어서 올려놓기 | 2.57× |
+| 박스 열기 | 4.00× |
+| 직육면체 밀기 | 4.00× |
+| 과일 담기 | 4.28× |
+| 테이블 정리 | 4.80× |
+| 옷 접기 | 5.33× |
+
+<Figure src="./fig-7.png" caption="Deployment results for Task 1 (Pick and Place). The top two rows show the 'painted' images from our Real-Sim-Real pipeline. Rows 3 and 4 show the deployment results using teleoperated data, while rows 5 and 6 show the deployment results using Real-Sim-Real data." />
+
+## 달성점과 한계점
+
+**새롭게 달성한 점:**
+- 텔레오퍼레이션 없이 자연스러운 인간 시연만으로 다관절 로봇 손 훈련 데이터 생성 성공
+- 기구학·촉각 제약 결합으로 크로스 임바디먼트 갭을 3.86 mm 오차 수준으로 해소
+- 3DGS 기반 Real-Sim-Real 파이프라인으로 임의 카메라 뷰·배경·재질의 데이터 증강 실현
+
+**한계점:**
+- 손목 카메라가 3DGS 포인트 클라우드에 너무 근접해 렌더링 아티팩트 발생 (저자 언급, 개선 예정)
+- 텔레오퍼레이션 대비 VLA 성능 20%p 차이 (손목 카메라 제외 시 83.3% vs 46.6%로 더 확대)
+- 🤖 3DGS 장면 재구성 품질이 훈련 데이터 품질을 결정 — 반사면·유리·투명 물체가 많은 환경에서는 재구성 자체가 어려워 실용성 제약 가능
+
+## Terry's Memo
+
+- *(None)*

@@ -1,0 +1,159 @@
+{
+  "post_id": "2602-robopaint",
+  "slug": "2602-robopaint",
+  "post_number": 15,
+  "published_at": "2026-03-19T10:00:00+09:00",
+  "updated_at": "2026-03-19T10:00:00+09:00",
+  "status": "published",
+  "content_type": "papers",
+  "tags": ["Papers", "Robotics", "Data Collection", "Human-Robot Transfer", "3D Gaussian Splatting", "VLA"],
+  "display_tags": ["Data Collection", "Human-Robot Transfer", "3D Gaussian Splatting", "VLA"],
+  "cover_image": "./cover.webp",
+  "cover_figure_number": 2,
+  "thumb_source": "./fig-2.png",
+  "thumb_position": "left",
+  "reading_time_min": 8,
+  "domain": "robotics",
+  "subfields": ["data-collection", "human-robot-transfer", "dexterous-manipulation", "sim-to-real"],
+  "key_concepts": [
+    "Real-Sim-Real",
+    "human-to-robot-retargeting",
+    "3D-Gaussian-Splatting",
+    "tactile-retargeting",
+    "dexterous-manipulation",
+    "data-augmentation",
+    "VLA",
+    "cross-embodiment"
+  ],
+  "methodology": [
+    "kinematic-tactile-retargeting",
+    "3DGS-scene-reconstruction",
+    "isaac-sim-rendering",
+    "imitation-learning",
+    "VLA-fine-tuning"
+  ],
+  "contribution_type": "system",
+  "idea_status": null,
+  "related_posts": null,
+  "taxonomy_primary": "robotics/arm/exoskeleton",
+  "taxonomy_secondary": ["robotics/hand/dexterous"],
+  "relations": [
+    { "target": "2505-dexumi", "type": "compares_with" },
+    { "target": "2506-exostart", "type": "compares_with" },
+    { "target": "2509-dexop", "type": "compares_with" },
+    { "target": "2410-pi0-vla-flow-model", "type": "related" }
+  ],
+  "source_title": "RoboPaint: From Human Demonstration to Any Robot and Any View",
+  "source_author": "Jiacheng Fan et al.",
+  "source_authors_full": [
+    { "name": "Jiacheng Fan", "affiliation": "Paxini Tech / Shanghai Jiao Tong University" },
+    { "name": "Zhiyue Zhao", "affiliation": "Paxini Tech" },
+    { "name": "Yiqian Zhang", "affiliation": "Paxini Tech" },
+    { "name": "Chao Chen", "affiliation": "Paxini Tech" },
+    { "name": "Peide Wang", "affiliation": "Paxini Tech" },
+    { "name": "Hengdi Zhang", "affiliation": "Paxini Tech / Zhejiang University" },
+    { "name": "Zhengxue Cheng", "affiliation": "Paxini Tech" }
+  ],
+  "source_url": "https://arxiv.org/abs/2602.05325",
+  "source_type": "arxiv",
+  "source_date": "2026-02-05",
+  "source_project_url": "https://github.com/px-DataCollection/px_omnisharing_dataprocess_kit",
+  "google_scholar_url": "https://scholar.google.com/scholar?&q=robopaint-from-human-demonstration-to",
+  "ai_summary": {
+    "one_liner": "텔레오퍼레이션 없이 인간 시연을 기구학·촉각 리타겟팅 + 3DGS 시뮬 렌더링으로 어떤 로봇·카메라 뷰로도 변환하는 Real-Sim-Real 데이터 파이프라인",
+    "problem": "텔레오퍼레이션 기반 로봇 훈련 데이터 수집은 느리고 비용이 높으며, 인간과 로봇의 손 구조 차이(cross-embodiment gap)를 해결하기 어려움",
+    "solution": "멀티모달 인간 데이터(RGB-D, 글러브 관절각, 촉각) 수집 → Dex-Tactile 리타겟팅 → 3DGS 장면 재구성 + Isaac Sim 렌더링으로 임의 뷰 데이터 생성",
+    "key_result": "리타겟팅 성공률 84% (10개 태스크), 생성 데이터로 학습한 π0.5 VLA 80% 평균 성공 (텔레오퍼 대비 -20%p), 데이터 수집 속도 2.6~5.3× 향상",
+    "limitations": [
+      "손목 카메라가 3DGS 포인트 클라우드에 너무 근접해 렌더링 아티팩트 발생",
+      "텔레오퍼레이션 대비 VLA 성능 20%p 차이 (손목 카메라 없이 83% vs 47%)",
+      "🤖 3DGS 장면 재구성 정밀도에 따라 시뮬 데이터 품질이 결정적으로 의존 — 반사면/유리 물체 등 재구성 어려운 환경에서 실용성 제약 가능"
+    ]
+  },
+  "figures": [
+    {
+      "number": 1,
+      "src": "./fig-1.png",
+      "caption": "RoboPaint data pipeline. Our data pipeline can paint robot demonstration from multimodal data collected from human demonstration. The cross-embodiment problem between human and robot is resolved by our Dex-Tactile retargeting method.",
+      "caption_ko": "RoboPaint 데이터 파이프라인. 인간 시연에서 수집한 멀티모달 데이터를 로봇 시연 데이터로 변환한다. Dex-Tactile 리타겟팅 방법으로 인간-로봇 간 크로스 임바디먼트 문제를 해결한다."
+    },
+    {
+      "number": 2,
+      "src": "./fig-2.png",
+      "caption": "System Overview of the Real-Sim-Real Pipeline. Our framework begins with high-precision human data collection using instrumented gloves under our multiview Data-Acquisition-Room. The raw data is then processed through object pose estimation and Dex-Tactile joint retargeting to obtain the movement of target robot embodiment and object. The deployment scene is then reconstructed via 3D Gaussian Splatting and imported into simulation environment. Finally, we drive robot and objects accordingly and record robot demonstration from arbitrary view.",
+      "caption_ko": "Real-Sim-Real 파이프라인 시스템 개요. 멀티뷰 데이터 수집 룸에서 글러브로 고정밀 인간 데이터를 수집한 뒤, 물체 포즈 추정과 Dex-Tactile 리타겟팅으로 로봇 임바디먼트의 동작을 획득한다. 배포 환경을 3D 가우시안 스플래팅으로 재구성해 시뮬레이터에 임포트하고, 임의 뷰에서 로봇 시연 데이터를 기록한다."
+    },
+    {
+      "number": 3,
+      "src": "./fig-3.png",
+      "caption": "Simulation validation of our data collection pipeline and Real-Sim-Real data processing pipeline. The first row is the raw images of collected data. The second row is the re-projection results of glove, object and tactile point. The last row is the rendered images using our Real-Sim-Real data pipeline.",
+      "caption_ko": "데이터 수집 파이프라인과 Real-Sim-Real 처리 파이프라인의 시뮬레이션 검증. 첫 번째 행은 수집된 원본 이미지, 두 번째 행은 글러브·물체·촉각 포인트의 역투영 결과, 마지막 행은 Real-Sim-Real 파이프라인으로 렌더링된 이미지."
+    },
+    {
+      "number": 4,
+      "src": "./fig-4.png",
+      "caption": "Contact error in the simulation environment and success rates of real-world replay for different objects. Each object was tested on 10 demonstrations using retargeted DexH13 joint angles and retargeted dex-hand end trajectories.",
+      "caption_ko": "시뮬레이션 환경에서의 접촉 오차와 다양한 물체에 대한 실세계 재현 성공률. 각 물체는 리타겟팅된 DexH13 관절각과 말단 궤적을 사용해 10회씩 테스트됨."
+    },
+    {
+      "number": 5,
+      "src": "./fig-5.png",
+      "caption": "Data augmentation examples showing background replacement and object material changes. Top row shows the original scene, middle row demonstrates background change, and bottom row illustrates object material variation.",
+      "caption_ko": "배경 교체와 물체 재질 변경을 보여주는 데이터 증강 예시. 위쪽 행은 원본 장면, 가운데 행은 배경 변경, 아래쪽 행은 물체 재질 변형."
+    },
+    {
+      "number": 6,
+      "src": "./fig-6.png",
+      "caption": "Deployment action curves of Pi0.5 training on different data. The black curve shows the deployment action curve using our Real-Sim-Real data as training data. The blue curve shows the deployment action curve using teleoperation data as training data.",
+      "caption_ko": "다른 데이터로 학습한 π0.5의 배포 액션 곡선 비교. 검은 곡선은 Real-Sim-Real 데이터로 학습, 파란 곡선은 텔레오퍼레이션 데이터로 학습한 결과."
+    },
+    {
+      "number": 7,
+      "src": "./fig-7.png",
+      "caption": "Deployment results for Task 1 (Pick and Place). The top two rows show the 'painted' images from our Real-Sim-Real pipeline. Rows 3 and 4 show the deployment results using teleoperated data, while rows 5 and 6 show the deployment results using Real-Sim-Real data.",
+      "caption_ko": "태스크 1 (집어서 올려놓기) 배포 결과. 위 두 행은 Real-Sim-Real 파이프라인의 '페인팅' 이미지. 3~4행은 텔레오퍼레이션 데이터, 5~6행은 Real-Sim-Real 데이터로 학습한 배포 결과."
+    },
+    {
+      "number": 8,
+      "src": "./fig-8.png",
+      "caption": "Deployment results for Task 2 (Push Cuboid). The top two rows show the 'painted' images from our Real-Sim-Real pipeline. Rows 3 and 4 show the deployment results using teleoperated data, while rows 5 and 6 show the deployment results using Real-Sim-Real data.",
+      "caption_ko": "태스크 2 (직육면체 밀기) 배포 결과. 위 두 행은 Real-Sim-Real 파이프라인의 '페인팅' 이미지. 3~4행은 텔레오퍼레이션 데이터, 5~6행은 Real-Sim-Real 데이터로 학습한 배포 결과."
+    },
+    {
+      "number": 9,
+      "src": "./fig-9.png",
+      "caption": "Deployment results for Task 3 (Pour). The top two rows show the 'painted' images from our Real-Sim-Real pipeline. Rows 3 and 4 show the deployment results using teleoperation data, while rows 5 and 6 show the deployment results using Real-Sim-Real data.",
+      "caption_ko": "태스크 3 (붓기) 배포 결과. 위 두 행은 Real-Sim-Real 파이프라인의 '페인팅' 이미지. 3~4행은 텔레오퍼레이션 데이터, 5~6행은 Real-Sim-Real 데이터로 학습한 배포 결과."
+    }
+  ],
+  "tables": [],
+  "cover_caption": "System Overview of the Real-Sim-Real Pipeline. Our framework begins with high-precision human data collection using instrumented gloves under our multiview Data-Acquisition-Room. The raw data is then processed through object pose estimation and Dex-Tactile joint retargeting to obtain the movement of target robot embodiment and object. The deployment scene is then reconstructed via 3D Gaussian Splatting and imported into simulation environment. Finally, we drive robot and objects accordingly and record robot demonstration from arbitrary view.",
+  "newsletter_eligible": false,
+  "featured": false,
+  "references": [
+    {
+      "title": "DexUMI: Using Human Hand as the Universal Manipulation Interface for Dexterous Manipulation",
+      "author": "Xu et al.",
+      "description": "엑소스켈레톤으로 인간 손 시연을 로봇 손으로 전이하는 선행 연구. 시각 갭(visual gap) 해소에 AI 인페인팅을 사용하는 반면, RoboPaint는 3DGS 시뮬 렌더링으로 완전히 다른 뷰를 생성한다.",
+      "arxiv_url": "https://arxiv.org/abs/2505.21877",
+      "scholar_url": "https://scholar.google.com/scholar?q=DexUMI+human+hand+universal+manipulation+interface",
+      "category": "recent"
+    },
+    {
+      "title": "π₀: A Vision-Language-Action Flow Model for General Robot Control",
+      "author": "Black et al.",
+      "description": "RoboPaint에서 VLA 정책으로 채택된 π0.5의 기반 모델. 본 논문이 생성한 Real-Sim-Real 데이터로 π0.5를 파인튜닝해 80% 성공률을 달성한다.",
+      "arxiv_url": "https://arxiv.org/abs/2410.24164",
+      "scholar_url": "https://scholar.google.com/scholar?q=pi0+vision+language+action+flow+model+general+robot",
+      "category": "foundational"
+    },
+    {
+      "title": "Universal Manipulation Interface: In-The-Wild Robot Teaching Without In-The-Wild Robots",
+      "author": "Chi et al.",
+      "description": "핸드헬드 그리퍼로 인간 조작 데이터를 수집하는 UMI 접근법. RoboPaint는 다관절 손(dexterous hand)과 글러브 기반 촉각 리타겟팅으로 이를 확장한다.",
+      "arxiv_url": "https://arxiv.org/abs/2402.10329",
+      "scholar_url": "https://scholar.google.com/scholar?q=universal+manipulation+interface+in-the-wild+robot+teaching",
+      "category": "foundational"
+    }
+  ]
+}
