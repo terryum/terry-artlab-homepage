@@ -3,8 +3,8 @@
 > 목적: `/clear` 이후에도 이전 작업을 빠르게 재개하기 위한 **짧은 스냅샷** (append 금지, 매번 덮어쓰기)
 
 ## 1) 세션 스냅샷
-- 마지막 업데이트: 2026-03-18 (KST)
-- 현재 단계: Paper Graph DB 테스트 + 갭 보완 + E2E 검증 완료
+- 마지막 업데이트: 2026-03-19 (KST)
+- 현재 단계: 2512-unitachand 포스팅 완료 + 푸시 완료
 - 전체 진행도(대략): 100%
 
 ## 2) 지금 기준 핵심 결정 (최대 5개)
@@ -16,30 +16,28 @@
 
 ## 3) 완료됨
 - [x] v1 전체 기능 + AI Memory 시스템 + Research 포스팅 자동화
-- [x] Paper Graph DB (Supabase 스키마 + sync-papers.mjs + admin UI)
-- [x] **Graph DB 통합 테스트** (`scripts/test-graph.mjs`): 37/37 테스트 통과
-  - Paper CRUD, Edge 생성 규칙, 상태 관리, 수동 Edge, 새 Taxonomy, Edge 삭제, Layout, 리밸런싱
-- [x] **갭 보완 완료**:
-  - sync-papers.mjs: taxonomy 검증 + `--auto-taxonomy` 자동 추가 + 최상위 노드 과다 경고
-  - generate-index.mjs: 미등록 taxonomy를 leaf로 카운트 + 가장 가까운 ancestor로 rollup
-  - generate-thumbnails.mjs: CONTENT_DIRS 버그 수정 (`research/idea/essay` → `papers/essays/tech`)
-- [x] **E2E 검증**: `2407-tactile-skin-inhand-translation` 논문 포스팅 → Supabase sync → 3 meta edges + 3 auto edges + layout 생성 확인
+- [x] Paper Graph DB + Figure 투명배경 변환
+- [x] 2409-3dtactile-dex, 2602-robopaint 포스팅
+- [x] **2512-unitachand 포스팅 완료** (커밋 7b13a9a):
+  - "UniTacHand: Unified Spatio-Tactile Representation for Human to Robotic Hand Skill Transfer"
+  - Chi Zhang et al. (Peking University / BeingBeyond), arXiv 2025-12-24
+  - 13 figures (x1~x9 + section/imgs/* 혼합 명명), cover = fig-1 (파이프라인 개요)
+  - Taxonomy: robotics/hand/tactile (primary)
+  - 총 16개 포스트
 
 ## 4) 진행 중 / 막힘
 - 없음
 
 ## 5) 다음 3개 작업 (우선순위)
-1. **커밋 + 배포**: 변경사항 git commit + push + Vercel 배포
-2. **Admin Graph UI 검증**: `/admin/graph`에서 새 논문 노드 + 엣지 확인
-3. **추가 논문 포스팅**: 더 많은 논문 추가하여 그래프 확장
+1. **Admin Graph UI 검증**: `/admin/graph`에서 노드/엣지 확인 (Supabase 연결 필요)
+2. **posts/tech/260315-rebalancing/** 블로그 포스트 작업 (`/post --type=blog 260315-rebalancing`)
+3. **GA4 설정**: `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX` 환경변수 추가
 
 ## 6) 검증 상태 (요약)
-- 빌드: `npm run build` 성공 (54 pages, 13 posts)
-- `test-graph.mjs`: 37/37 테스트 통과
-- `validate-post.mjs`: 0 errors, 0 warnings
-- `posts/index.json`: 13개 포스트, 20 edges, 3 clusters
+- 빌드: `npm run build` 성공 (2026-03-19, 16 posts)
+- validate-post: 0 errors, 0 warnings ✅
 
 ## 7) 컨텍스트 메모 (다음 세션용)
-- 빌드 시 SSL 인증서 이슈 → `NODE_TLS_REJECT_UNAUTHORIZED=0`으로 우회 필요
-- dev 서버: Turbopack 사용 중 (`npm run dev`, 포트 3040)
+- arXiv HTML figures가 x1-x9 + section/imgs/* 혼합 사용하는 경우 있음 → 10번 이상은 실제 img src 확인 필요
 - Supabase: fyrgooabpegysrcawtdm.supabase.co (terry-paper-graph-db)
+- dev 서버: Turbopack 사용 중 (`npm run dev`, 포트 3040)
