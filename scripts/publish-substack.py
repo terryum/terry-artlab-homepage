@@ -15,27 +15,18 @@ EN/KO Substack Publication에 티저 + 홈페이지 링크를 포스팅한다.
     NEXT_PUBLIC_SUBSTACK_KO_URL     한국어 Substack URL (예: https://terry-ko.substack.com)
     SITE_BASE_URL                   홈페이지 베이스 URL (기본: https://terry.artlab.ai)
 """
+# social_common 임포트가 UTF-8 설정 + dotenv 로드를 처리함
+from social_common import (
+    REPO_ROOT, POSTS_DIR, INDEX_PATH, PUBLISHABLE_TYPES,
+    load_index, read_mdx_frontmatter,
+    get_publishable_candidates, find_post_by_slug, sort_by_published_at,
+)
+
 import os
 import sys
 import json
-import re
 import argparse
 from pathlib import Path
-
-# Windows cp949 콘솔에서 UTF-8 출력 강제
-if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
-    sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf-8', buffering=1)
-    sys.stderr = open(sys.stderr.fileno(), mode='w', encoding='utf-8', buffering=1)
-
-# .env.local 자동 로드 (python-dotenv)
-try:
-    from dotenv import load_dotenv
-    env_path = Path(__file__).parent.parent / ".env.local"
-    if env_path.exists():
-        load_dotenv(env_path)
-        print(f"[env] .env.local 로드됨")
-except ImportError:
-    pass  # dotenv 없어도 시스템 env로 동작
 
 import requests
 
@@ -44,39 +35,10 @@ SUBSTACK_COOKIE = os.environ.get("SUBSTACK_COOKIE", "")
 SUBSTACK_EN_URL = os.environ.get("NEXT_PUBLIC_SUBSTACK_EN_URL", "")
 SUBSTACK_KO_URL = os.environ.get("NEXT_PUBLIC_SUBSTACK_KO_URL", "")
 
-REPO_ROOT = Path(__file__).parent.parent
-INDEX_PATH = REPO_ROOT / "posts" / "index.json"
-POSTS_DIR = REPO_ROOT / "posts"
 PUBLISHED_CACHE = REPO_ROOT / ".substack-published.json"
 
-PUBLISHABLE_TYPES = {"essays", "tech"}
 
-
-# ─── MDX Frontmatter ────────────────────────────────────────────────────────
-
-def read_mdx_frontmatter(slug: str, content_type: str, locale: str) -> dict:
-    """MDX 파일의 frontmatter를 파싱해 dict 반환."""
-    mdx_path = POSTS_DIR / content_type / slug / f"{locale}.mdx"
-    if not mdx_path.exists():
-        return {}
-    text = mdx_path.read_text(encoding="utf-8")
-    m = re.match(r"^---\s*\n(.*?)\n---", text, re.DOTALL)
-    if not m:
-        return {}
-    result = {}
-    for line in m.group(1).splitlines():
-        if ":" in line:
-            key, _, val = line.partition(":")
-            result[key.strip()] = val.strip().strip('"')
-    return result
-
-
-# ─── Index ──────────────────────────────────────────────────────────────────
-
-def load_index() -> dict:
-    with open(INDEX_PATH, encoding="utf-8") as f:
-        return json.load(f)
-
+# ─── Cache ───────────────────────────────────────────────────────────────────
 
 def load_published_cache() -> dict:
     """{ slug: {"en": bool, "ko": bool} } 구조 반환."""
@@ -96,25 +58,23 @@ def save_published_cache(published: dict):
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
-def find_target_post(posts: list, target_slug: str | None, already_published: dict) -> dict | None:
-    candidates = [p for p in posts if p.get("content_type") in PUBLISHABLE_TYPES]
+def find_target_post(posts: list, target_slug: "str | None", already_published: dict) -> "dict | None":
+    candidates = get_publishable_candidates(posts)
     if not candidates:
         return None
     if target_slug:
-        for p in candidates:
-            if p["slug"] == target_slug:
-                return p
-        print(f"Error: slug '{target_slug}' not found in publishable posts.", file=sys.stderr)
-        return None
+        post = find_post_by_slug(candidates, target_slug)
+        if not post:
+            print(f"Error: slug '{target_slug}' not found in publishable posts.", file=sys.stderr)
+        return post
     unpublished = [p for p in candidates if p["slug"] not in already_published]
     if not unpublished:
         print("모든 publishable 포스트가 이미 발행되었습니다.")
         return None
-    unpublished.sort(key=lambda p: p.get("published_at", ""), reverse=True)
-    return unpublished[0]
+    return sort_by_published_at(unpublished)[0]
 
 
-def find_cover_image(post: dict) -> Path | None:
+def find_cover_image(post: dict) -> "Path | None":
     """포스트의 커버 이미지 경로 반환. 없으면 None."""
     post_dir = POSTS_DIR / post["content_type"] / post["slug"]
     for ext in ["webp", "jpg", "jpeg", "png"]:
@@ -130,7 +90,7 @@ def to_prosemirror(
     paragraphs: list[str],
     link: str,
     cta: str,
-    image_url: str | None = None,
+    image_url: "str | None" = None,
 ) -> str:
     """텍스트 문단 목록 → Substack draft_body (ProseMirror JSON 문자열).
 
@@ -199,9 +159,8 @@ def to_prosemirror(
     return json.dumps({"type": "doc", "content": content})
 
 
-def build_en_post(post: dict) -> tuple[str, str, list[str], str]:
+def build_en_post(post: dict, fm: dict) -> tuple[str, str, list[str], str]:
     """(title, subtitle, paragraphs, link)"""
-    fm = read_mdx_frontmatter(post["slug"], post["content_type"], "en")
     title = fm.get("title") or post.get("title_en", post["slug"])
     summary = fm.get("summary", "")
     card_summary = fm.get("card_summary", "")
@@ -212,9 +171,8 @@ def build_en_post(post: dict) -> tuple[str, str, list[str], str]:
     return title, subtitle, paragraphs, link
 
 
-def build_ko_post(post: dict) -> tuple[str, str, list[str], str]:
+def build_ko_post(post: dict, fm: dict) -> tuple[str, str, list[str], str]:
     """(title, subtitle, paragraphs, link)"""
-    fm = read_mdx_frontmatter(post["slug"], post["content_type"], "ko")
     title = fm.get("title") or post.get("title_ko", post["slug"])
     summary = fm.get("summary", "")
     card_summary = fm.get("card_summary", "")
@@ -225,7 +183,7 @@ def build_ko_post(post: dict) -> tuple[str, str, list[str], str]:
     return title, subtitle, paragraphs, link
 
 
-def copy_cover_to_public(post: dict, cover_path: Path) -> str | None:
+def copy_cover_to_public(post: dict, cover_path: Path) -> "str | None":
     """커버 이미지를 public/posts/{slug}/ 에 복사하고 공개 URL 반환."""
     slug = post["slug"]
     dest_dir = REPO_ROOT / "public" / "posts" / slug
@@ -274,8 +232,8 @@ class SubstackClient:
         paragraphs: list[str],
         link: str,
         cta: str,
-        image_url: str | None,
-        note_intro: str | None,
+        image_url: "str | None",
+        note_intro: "str | None",
     ) -> bool:
         pub_base = f"https://{subdomain}.substack.com"
 
@@ -340,8 +298,8 @@ def publish_post(
     paragraphs: list[str],
     link: str,
     cta: str,
-    image_url: str | None,
-    note_intro: str | None,
+    image_url: "str | None",
+    note_intro: "str | None",
     dry_run: bool,
 ) -> bool:
     if dry_run:
@@ -389,20 +347,26 @@ def main():
     if not post:
         sys.exit(0)
 
-    print(f"\n대상 포스트: [{post['content_type']}] {post['slug']}")
+    slug = post["slug"]
+    content_type = post["content_type"]
+    print(f"\n대상 포스트: [{content_type}] {slug}")
 
-    en_title, en_subtitle, en_paragraphs, en_link = build_en_post(post)
-    ko_title, ko_subtitle, ko_paragraphs, ko_link = build_ko_post(post)
+    # frontmatter를 1회만 읽어 각 builder에 전달
+    fm_en = read_mdx_frontmatter(slug, content_type, "en")
+    fm_ko = read_mdx_frontmatter(slug, content_type, "ko")
+
+    en_title, en_subtitle, en_paragraphs, en_link = build_en_post(post, fm_en)
+    ko_title, ko_subtitle, ko_paragraphs, ko_link = build_ko_post(post, fm_ko)
     cover_path = find_cover_image(post)
 
     # 커버 이미지를 public/posts/에 복사 → 공개 URL로 Substack 이미지 노드에 삽입
-    image_url: str | None = None
+    image_url: "str | None" = None
     if cover_path:
         print(f"  커버 이미지: {cover_path.name}")
         if not args.dry_run:
             image_url = copy_cover_to_public(post, cover_path)
         else:
-            image_url = f"{SITE_BASE_URL}/posts/{post['slug']}/{cover_path.name}"
+            image_url = f"{SITE_BASE_URL}/posts/{slug}/{cover_path.name}"
     else:
         print("  커버 이미지 없음")
 
@@ -414,7 +378,6 @@ def main():
     if not args.dry_run:
         client = SubstackClient(SUBSTACK_COOKIE)
 
-    slug = post["slug"]
     lang_cache = already_published.get(slug, {})
     en_ok = ko_ok = False
 

@@ -27,40 +27,27 @@ Facebook Page, Threads, LinkedIn, X(Twitter)에 공유한다.
 
     SITE_BASE_URL                   홈페이지 베이스 URL (기본: https://terry.artlab.ai)
 """
+# social_common 임포트가 UTF-8 설정 + dotenv 로드를 처리함
+from social_common import (
+    REPO_ROOT, POSTS_DIR, INDEX_PATH, PUBLISHABLE_TYPES,
+    load_index, read_mdx_frontmatter,
+    get_publishable_candidates, find_post_by_slug, sort_by_published_at,
+)
+
 import os
 import sys
 import json
-import re
 import argparse
 from datetime import date, datetime
 from pathlib import Path
-
-# Windows cp949 콘솔에서 UTF-8 출력 강제
-if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
-    sys.stdout = open(sys.stdout.fileno(), mode="w", encoding="utf-8", buffering=1)
-    sys.stderr = open(sys.stderr.fileno(), mode="w", encoding="utf-8", buffering=1)
-
-# .env.local 자동 로드 (python-dotenv)
-try:
-    from dotenv import load_dotenv
-    env_path = Path(__file__).parent.parent / ".env.local"
-    if env_path.exists():
-        load_dotenv(env_path)
-        print("[env] .env.local 로드됨")
-except ImportError:
-    pass  # dotenv 없어도 시스템 env로 동작
 
 import requests
 
 SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "https://terry.artlab.ai")
 FACEBOOK_BASE_URL = os.environ.get("FACEBOOK_BASE_URL", "https://terry-artlab.vercel.app")
 
-REPO_ROOT = Path(__file__).parent.parent
-INDEX_PATH = REPO_ROOT / "posts" / "index.json"
-POSTS_DIR = REPO_ROOT / "posts"
 PUBLISHED_CACHE = REPO_ROOT / ".social-published.json"
 
-PUBLISHABLE_TYPES = {"essays", "tech"}
 ALL_PLATFORMS = ["facebook", "threads", "linkedin", "x"]
 
 # 토큰 만료 경고 임계값 (일)
@@ -92,31 +79,7 @@ def check_token_expiry(platform: str, created_env: str) -> bool:
     return True
 
 
-# ─── MDX Frontmatter ────────────────────────────────────────────────────────
-
-def read_mdx_frontmatter(slug: str, content_type: str, locale: str) -> dict:
-    """MDX 파일의 frontmatter를 파싱해 dict 반환."""
-    mdx_path = POSTS_DIR / content_type / slug / f"{locale}.mdx"
-    if not mdx_path.exists():
-        return {}
-    text = mdx_path.read_text(encoding="utf-8")
-    m = re.match(r"^---\s*\n(.*?)\n---", text, re.DOTALL)
-    if not m:
-        return {}
-    result = {}
-    for line in m.group(1).splitlines():
-        if ":" in line:
-            key, _, val = line.partition(":")
-            result[key.strip()] = val.strip().strip('"')
-    return result
-
-
 # ─── Index / Cache ───────────────────────────────────────────────────────────
-
-def load_index() -> dict:
-    with open(INDEX_PATH, encoding="utf-8") as f:
-        return json.load(f)
-
 
 def load_published_cache() -> dict:
     """플랫폼별 발행 목록 로드. {platform: [slug, ...]}"""
@@ -131,23 +94,23 @@ def load_published_cache() -> dict:
 
 
 def save_published_cache(cache: dict):
-    data = {p: sorted(slugs) for p, slugs in cache.items()}
+    # set()으로 dedup 후 정렬 (중복 slug 저장 방지)
+    data = {p: sorted(set(slugs)) for p, slugs in cache.items()}
     with open(PUBLISHED_CACHE, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
-def find_target_post(posts: list, target_slug: str | None, cache: dict, platforms: list) -> dict | None:
+def find_target_post(posts: list, target_slug: "str | None", cache: dict, platforms: list) -> "dict | None":
     """발행 대상 포스트 반환. 플랫폼 중 하나라도 미발행이면 대상."""
-    candidates = [p for p in posts if p.get("content_type") in PUBLISHABLE_TYPES]
+    candidates = get_publishable_candidates(posts)
     if not candidates:
         return None
 
     if target_slug:
-        for p in candidates:
-            if p["slug"] == target_slug:
-                return p
-        print(f"Error: slug '{target_slug}'을 publishable 포스트에서 찾을 수 없습니다.", file=sys.stderr)
-        return None
+        post = find_post_by_slug(candidates, target_slug)
+        if not post:
+            print(f"Error: slug '{target_slug}'을 publishable 포스트에서 찾을 수 없습니다.", file=sys.stderr)
+        return post
 
     # 플랫폼 중 하나라도 미발행인 포스트 필터
     def needs_publish(post):
@@ -159,8 +122,7 @@ def find_target_post(posts: list, target_slug: str | None, cache: dict, platform
         print("모든 publishable 포스트가 선택된 플랫폼에 이미 발행되었습니다.")
         return None
 
-    unpublished.sort(key=lambda p: p.get("published_at", ""), reverse=True)
-    return unpublished[0]
+    return sort_by_published_at(unpublished)[0]
 
 
 # ─── 포스트 콘텐츠 빌더 ──────────────────────────────────────────────────────
@@ -192,11 +154,10 @@ def get_hashtags(post: dict, locale: str) -> str:
     return " ".join(f"#{t.replace(' ', '')}" for t in tags[:3])
 
 
-def build_facebook_text(post: dict) -> tuple[str, str]:
+def build_facebook_text(post: dict, fm: dict) -> tuple[str, str]:
     """(text, url)
     url은 Facebook link 파라미터용 — OG 태그가 직접 있는 언어 페이지를 사용.
     """
-    fm = read_mdx_frontmatter(post["slug"], post["content_type"], "ko")
     title = fm.get("title") or post.get("title_ko", post["slug"])
     description = fm.get("summary") or fm.get("card_summary") or extract_ai_summary(post.get("ai_summary"))
     url = f"{FACEBOOK_BASE_URL}/ko/posts/{post['slug']}"
@@ -212,9 +173,8 @@ def build_facebook_text(post: dict) -> tuple[str, str]:
     return "\n".join(lines), url
 
 
-def build_threads_text(post: dict) -> tuple[str, str]:
+def build_threads_text(post: dict, fm: dict) -> tuple[str, str]:
     """(text, url) — 500자 제한"""
-    fm = read_mdx_frontmatter(post["slug"], post["content_type"], "ko")
     description = fm.get("summary") or fm.get("card_summary") or extract_ai_summary(post.get("ai_summary"))
     url = f"{FACEBOOK_BASE_URL}/posts/{post['slug']}?utm_source=threads&utm_medium=social"
     tags = get_hashtags(post, "ko")
@@ -234,9 +194,8 @@ def build_threads_text(post: dict) -> tuple[str, str]:
     return body + suffix, url
 
 
-def build_linkedin_text(post: dict) -> tuple[str, str]:
+def build_linkedin_text(post: dict, fm: dict) -> tuple[str, str]:
     """(text, url) — 3000자. URL은 ARTICLE 카드로 별도 첨부."""
-    fm = read_mdx_frontmatter(post["slug"], post["content_type"], "en")
     description = fm.get("summary") or fm.get("card_summary") or extract_ai_summary(post.get("ai_summary"))
     url = f"{SITE_BASE_URL}/posts/{post['slug']}"
     tags = get_hashtags(post, "en")
@@ -251,9 +210,8 @@ def build_linkedin_text(post: dict) -> tuple[str, str]:
     return "\n".join(lines), url
 
 
-def build_x_text(post: dict) -> tuple[str, str]:
+def build_x_text(post: dict, fm: dict) -> tuple[str, str]:
     """(text, url) — 280자 (URL은 23자로 계산)"""
-    fm = read_mdx_frontmatter(post["slug"], post["content_type"], "en")
     description = fm.get("summary") or fm.get("card_summary") or extract_ai_summary(post.get("ai_summary"))
     url = f"{SITE_BASE_URL}/posts/{post['slug']}"
     tags = get_hashtags(post, "en")
@@ -497,7 +455,12 @@ def main():
         sys.exit(0)
 
     slug = post["slug"]
-    print(f"\n대상 포스트: [{post['content_type']}] {slug}")
+    content_type = post["content_type"]
+    print(f"\n대상 포스트: [{content_type}] {slug}")
+
+    # frontmatter를 1회만 읽어 각 builder에 전달
+    fm_ko = read_mdx_frontmatter(slug, content_type, "ko")
+    fm_en = read_mdx_frontmatter(slug, content_type, "en")
 
     results: dict[str, bool] = {}
 
@@ -511,19 +474,19 @@ def main():
         print(f"\n[{platform.upper()}]")
 
         if platform == "facebook":
-            text, url = build_facebook_text(post)
+            text, url = build_facebook_text(post, fm_ko)
             ok = publish_facebook(text, url, args.dry_run)
 
         elif platform == "threads":
-            text, url = build_threads_text(post)
+            text, url = build_threads_text(post, fm_ko)
             ok = publish_threads(text, url, args.dry_run)
 
         elif platform == "linkedin":
-            text, url = build_linkedin_text(post)
+            text, url = build_linkedin_text(post, fm_en)
             ok = publish_linkedin(text, url, args.dry_run)
 
         elif platform == "x":
-            text, url = build_x_text(post)
+            text, url = build_x_text(post, fm_en)
             ok = publish_x(text, args.dry_run)
 
         else:
