@@ -1,0 +1,100 @@
+---
+locale: "en"
+translation_of: "2512-osmo-tactile-glove:ko"
+title: "OSMO: Open-Source Tactile Glove for Human-to-Robot Skill Transfer"
+subtitle: "Close the gap with the same glove"
+summary: "OSMO is an open-source wearable tactile glove with 12 three-axis magnetic sensors that minimizes both visual and tactile embodiment gaps by equipping human demonstrators and robots with the identical glove. A policy trained exclusively on human demonstrations — without any real robot data — achieves 72% success on a contact-rich wiping task (vs. 56% vision-only), and all hardware designs, firmware, and assembly instructions are released open-source."
+card_summary: "Same glove on human and robot eliminates visual + tactile gaps at once — 72% wiping success with zero robot training data, fully open-source tactile glove hardware OSMO."
+cover_caption: "(A) The OSMO tactile glove for collecting in-the-wild human demonstrations provides full-hand coverage with 3-axis tactile sensors, integrates seamlessly with hand-tracking systems, and can be directly deployed on robots. (B) We demonstrate that a contact-rich wiping policy trained solely on OSMO tactile-glove human demonstrations can be directly deployed on a robot, outperforming vision-only policies. More videos, code, and design files are available at the project website."
+published_at: "2026-03-26T10:00:00Z"
+source_type: "arxiv"
+source_url: "https://arxiv.org/abs/2512.08920"
+source_date: "2025-12-09"
+display_tags: ["Papers", "Robotics", "Tactile Sensing", "Human-Robot Transfer", "Wearable", "Open Source"]
+tables: []
+references:
+  - title: "Learning In-Hand Translation Using Tactile Skin With Shear and Normal Force Sensing"
+    author: "Yin et al."
+    description: "Direct predecessor from the same first author (Jessica Yin). Used binary ReSkin-based tactile signals for in-hand translation. OSMO extends this to continuous 3-axis shear and normal forces with full-hand coverage."
+    arxiv_url: "https://arxiv.org/abs/2407.05167"
+    scholar_url: ""
+    category: "foundational"
+  - title: "DexUMI: Using Human Hand as the Universal Manipulation Interface for Dexterous Manipulation"
+    author: "Xu et al."
+    description: "Representative prior work on human-to-robot skill transfer via exoskeleton + AI inpainting to close the visual gap. OSMO addresses the same transfer problem but eliminates both visual and tactile gaps through shared hardware rather than post-processing."
+    arxiv_url: "https://arxiv.org/abs/2505.21654"
+    scholar_url: ""
+    category: "recent"
+  - title: "UniTacHand: Unified Spatio-Tactile Representation for Human to Robotic Hand Skill Transfer"
+    author: "Zhang et al."
+    description: "Contemporary work aligning heterogeneous tactile signals via MANO UV projection and contrastive learning. Contrasts with OSMO's hardware-sharing approach: UniTacHand handles domain mismatch in software while OSMO eliminates it at the hardware level."
+    arxiv_url: "https://arxiv.org/abs/2512.07254"
+    scholar_url: ""
+    category: "recent"
+---
+
+## TL;DR
+
+Video alone cannot capture contact signals. OSMO is an open-source wearable tactile glove with 12 three-axis magnetic sensors. By equipping both the human demonstrator and the robot with the **same glove**, OSMO eliminates the visual and tactile embodiment gap simultaneously. A policy trained exclusively on human demonstrations achieves 72% success on a contact-rich wiping task — without a single real robot data point.
+
+## Problem
+
+Contact-rich manipulation tasks — wiping, scrubbing, pressing — are hard to learn from visual demonstrations alone because force and pressure signals are invisible to cameras. Adding tactile sensors creates two challenges: first, an embodiment gap arises when transferring tactile signals from a human hand to a robot hand with different morphology and sensor placement; second, prior approaches (AI inpainting, domain alignment) close the visual gap but leave the tactile gap open. OSMO removes both gaps simultaneously through a single hardware-sharing strategy: put the **same glove on the human and the robot**.
+
+## Key Idea
+
+OSMO's design rests on three pillars:
+
+- **Shared glove platform**: the identical OSMO glove is worn by the human demonstrator and mounted on the robot hand. The robot looks the same as the human hand in the collected images — no image inpainting needed — and the tactile data is already in the same coordinate frame.
+- **12 three-axis magnetic sensors**: placed across fingertips (5) and palm (7) for full-hand coverage, measuring shear (XY) and normal forces simultaneously. Range: 0.3 N – 80 N. MuMetal magnetic shielding reduces inter-sensor crosstalk by 57%.
+- **Multi-device hand-tracking compatibility**: works out of the box with Aria Gen 2, Meta Quest 3, Apple Vision Pro, Manus glove, and plain RGB cameras — enabling unconstrained in-the-wild data collection.
+
+<Figure src="./fig-5.png" caption="A) Glove layout maximizing sensing coverage while minimizing encumbrance. B) The shared glove platform minimizes the visual gap between the human and robot hand." />
+
+## Method Detail
+
+<Collapsible title="Method Detail: Glove2Robot Policy Pipeline">
+
+**Collecting Human Demonstrations**
+
+RGB + stereo IR cameras record video and depth simultaneously while the OSMO glove streams tactile data. Hand pose is estimated by an off-the-shelf tracking device (Aria, Quest, etc.) and refined globally using depth.
+
+<Figure src="./fig-6.png" caption="Human demonstrations are captured with RGB + stereo IR cameras and OSMO tactile glove data. We estimate the hand pose and refine the global wrist position with depth. Inverse kinematics (IK) retargets the human hand positions to Franka arm and Ability Hand joint targets. The final dataset directly uses RGB images and tactile glove data from the human demonstration with the retargeted robot joint positions for policy training." />
+
+**IK Retargeting**
+
+Human hand joint angles and positions are mapped to Franka arm + Psyonic Ability Hand joint targets via inverse kinematics. The RGB images and tactile data remain unchanged; only the joint targets are re-expressed in the robot's configuration space.
+
+**Policy Training**
+
+The final dataset pairs human-demonstration RGB images and OSMO tactile readings with retargeted robot joint targets. Zero real robot data is included. 140 human demonstrations (~2 hours) are collected and used for training.
+
+</Collapsible>
+
+## Key Results
+
+On a wiping task requiring sustained contact pressure (12 rollouts per policy, 90-second episodes):
+
+- **Tactile + Vision + Proprioception**: **71.69% ± 27.43%**
+- Vision + Proprioception only: 55.75% ± 30.01% (−16%p)
+- Proprioception only: 27.12% ± 32.38% (−45%p)
+
+Tactile feedback eliminates contact-related failure modes: loss of contact pressure and surface slippage.
+
+<Figure src="./fig-7.png" caption="(A) Real robot policy rollouts with the Psyonic Ability Hand and Franka robot arm. (B) Failure modes for policies with and without tactile feedback." />
+
+## Achievements & Limitations
+
+**What this paper achieves**:
+- Hardware-sharing strategy eliminates visual + tactile embodiment gaps **simultaneously** — no inpainting, no domain alignment
+- 72% success with zero robot training data — dramatically lower data collection overhead
+- Complete hardware designs, firmware, and assembly instructions released open-source
+
+**Limitations**:
+- Designed and evaluated for right hand + Psyonic Ability Hand only (author-stated)
+- Single task (wiping) evaluation — generalization to other contact-rich tasks not shown (author-stated)
+- 🤖 The IK retargeting is tailored to the Ability Hand's joint structure, which would require redesign for robots with significantly different DOF counts or hand morphologies.
+
+## Terry's memo
+
+- *(None)*

@@ -1,0 +1,99 @@
+---
+locale: "ko"
+title: "OSMO: 인간-로봇 기술 이전을 위한 오픈소스 촉각 글러브"
+subtitle: "같은 글러브로 간극을 닫다"
+summary: "OSMO는 12개의 3축 자성 촉각 센서를 갖춘 오픈소스 웨어러블 촉각 글러브로, 인간과 로봇이 동일한 글러브를 착용함으로써 시각·촉각 구현 간극을 동시에 해소한다. 로봇 데이터 없이 인간 시연만으로 학습한 정책이 닦기 태스크에서 72% 성공률을 달성했으며(비전 전용 56% 대비), 하드웨어·펌웨어·조립 설명서를 완전 오픈소스로 공개했다."
+card_summary: "인간과 로봇에 같은 글러브를 장착해 visual·tactile gap을 한 번에 해소 — 로봇 데이터 없이 인간 시연만으로 72% 닦기 성공률, 완전 오픈소스 촉각 글러브 OSMO."
+cover_caption: "(A) The OSMO tactile glove for collecting in-the-wild human demonstrations provides full-hand coverage with 3-axis tactile sensors, integrates seamlessly with hand-tracking systems, and can be directly deployed on robots. (B) We demonstrate that a contact-rich wiping policy trained solely on OSMO tactile-glove human demonstrations can be directly deployed on a robot, outperforming vision-only policies. More videos, code, and design files are available at the project website."
+published_at: "2026-03-26T10:00:00Z"
+source_type: "arxiv"
+source_url: "https://arxiv.org/abs/2512.08920"
+source_date: "2025-12-09"
+display_tags: ["Papers", "Robotics", "Tactile Sensing", "Human-Robot Transfer", "Wearable", "Open Source"]
+tables: []
+references:
+  - title: "Learning In-Hand Translation Using Tactile Skin With Shear and Normal Force Sensing"
+    author: "Yin et al."
+    description: "OSMO의 직접적인 선행 연구 (동일 1저자 Jessica Yin). ReSkin 기반 2진 촉각 신호로 in-hand translation을 달성했으나, 이산 신호의 한계가 있었다. OSMO는 연속적인 3축 전단·법선력으로 이를 확장한다."
+    arxiv_url: "https://arxiv.org/abs/2407.05167"
+    scholar_url: ""
+    category: "foundational"
+  - title: "DexUMI: Using Human Hand as the Universal Manipulation Interface for Dexterous Manipulation"
+    author: "Xu et al."
+    description: "인간-로봇 기술 이전의 대표적 선행 연구. 엑소스켈레톤 + AI inpainting으로 visual gap을 해소하지만 촉각 신호는 고려하지 않는다. OSMO는 공유 글러브 전략으로 visual·tactile gap을 동시에 해소한다."
+    arxiv_url: "https://arxiv.org/abs/2505.21654"
+    scholar_url: ""
+    category: "recent"
+  - title: "UniTacHand: Unified Spatio-Tactile Representation for Human to Robotic Hand Skill Transfer"
+    author: "Zhang et al."
+    description: "이질적 촉각 데이터를 MANO UV 맵으로 정렬해 human-to-robot 이전을 달성한 동시대 연구. OSMO와 달리 소프트웨어 도메인 정렬 방식이며, OSMO는 하드웨어 공유로 gap 자체를 제거한다."
+    arxiv_url: "https://arxiv.org/abs/2512.07254"
+    scholar_url: ""
+    category: "recent"
+---
+
+## TL;DR
+
+비디오만으로는 접촉 신호를 포착할 수 없다. OSMO는 12개의 3축 자성 촉각 센서를 갖춘 오픈소스 웨어러블 촉각 글러브로, 인간과 로봇이 **동일한 글러브**를 장착해 시각·촉각 구현 간극을 한 번에 해소한다. 로봇 데이터 없이 인간 시연만으로 학습한 정책이 닦기 태스크에서 72% 성공률을 달성했다.
+
+## 문제
+
+접촉이 많은 조작 태스크 — 닦기, 문지르기, 물건 누르기 — 는 힘과 압력 신호 없이는 정책을 학습하기 어렵다. 비디오 시연은 시각 정보는 풍부하지만 접촉력을 담지 못한다. 이 문제를 해결하려면 촉각 센서가 필요한데, 두 가지 장벽이 있다. 첫째, 인간 손의 촉각 신호를 로봇 손으로 이전할 때 embodiment gap — 서로 다른 형태와 센서 배치 — 이 발생한다. 둘째, 기존 방법(AI inpainting, 도메인 정렬)은 visual gap은 해소하지만 촉각 gap은 남긴다. OSMO는 **같은 글러브를 인간과 로봇 모두에 장착**하는 하드웨어 공유 전략으로 두 간극을 동시에 제거한다.
+
+## 핵심 아이디어
+
+OSMO의 핵심은 세 가지다:
+
+- **동일 글러브 전략**: 인간 시연자와 로봇 손에 같은 OSMO 글러브를 장착한다. 로봇이 인간과 시각적으로 같아 보여 image inpainting이 필요 없고, 촉각 데이터도 동일한 좌표계에서 수집된다.
+- **12개 3축 자성 센서**: 손끝(엄지·검지·중지·약지·새끼손가락 각 1개) + 손바닥 7개 위치에 배치. 법선력 및 전단력(XY) 동시 측정, 감지 범위 0.3N~80N. MuMetal 자기 차폐재로 인접 센서 간 누화를 57% 감소시켰다.
+- **다양한 손 추적 기기 호환**: Aria Gen 2, Meta Quest 3, Apple Vision Pro, Manus 글러브, 일반 RGB 카메라 모두 호환 — "야외" 자유로운 데이터 수집 가능.
+
+<Figure src="./fig-5.png" caption="A) Glove layout maximizing sensing coverage while minimizing encumbrance. B) The shared glove platform minimizes the visual gap between the human and robot hand." />
+
+## 구체적 방법
+
+<Collapsible title="구체적 방법: Glove2Robot 정책 파이프라인">
+
+**인간 시연 수집**
+
+RGB + 스테레오 IR 카메라로 영상과 깊이를 동시에 기록하며, OSMO 글러브가 촉각 데이터를 실시간 스트리밍한다. 손 포즈는 기성품 추적 장치(Aria, Quest 등)로 추정하고, 깊이 정보로 전역 손목 위치를 정제한다.
+
+<Figure src="./fig-6.png" caption="Human demonstrations are captured with RGB + stereo IR cameras and OSMO tactile glove data. We estimate the hand pose and refine the global wrist position with depth. Inverse kinematics (IK) retargets the human hand positions to Franka arm and Ability Hand joint targets. The final dataset directly uses RGB images and tactile glove data from the human demonstration with the retargeted robot joint positions for policy training." />
+
+**역기구학(IK) 리타겟팅**
+
+인간의 손 관절 각도와 위치를 Franka 팔 + Psyonic Ability Hand의 관절 목표로 변환한다. 이 단계에서 RGB 이미지와 촉각 데이터는 그대로 유지되고, 관절 타겟만 로봇용으로 매핑된다.
+
+**정책 학습**
+
+최종 데이터셋은 인간 시연의 RGB 이미지 + OSMO 촉각 데이터 + 리타겟팅된 로봇 관절 목표로 구성된다. 로봇 데이터는 단 한 건도 포함되지 않는다. 140건의 인간 시연(약 2시간)으로 정책을 학습한다.
+
+</Collapsible>
+
+## 주요 결과
+
+닦기 태스크(sustained contact pressure 필요)에서 12회 롤아웃 기준:
+
+- **촉각 + 비전 + 고유감각**: **71.69% ± 27.43%**
+- 비전 + 고유감각 only: 55.75% ± 30.01% (−16%p)
+- 고유감각 only: 27.12% ± 32.38% (−45%p)
+
+촉각 피드백은 접촉력을 잃거나 미끄러지는 실패 모드를 제거했다.
+
+<Figure src="./fig-7.png" caption="(A) Real robot policy rollouts with the Psyonic Ability Hand and Franka robot arm. (B) Failure modes for policies with and without tactile feedback." />
+
+## 달성점과 한계점
+
+**새롭게 달성한 점**:
+- 하드웨어 공유 전략으로 visual + tactile embodiment gap을 **동시에** 해소 — image inpainting, 도메인 정렬 불필요
+- 로봇 데이터 없이 인간 시연만으로 72% 성공률 — 데이터 수집 비용 대폭 절감
+- 하드웨어·펌웨어·조립 지침 완전 오픈소스 공개
+
+**한계점**:
+- 현재 우측 손 + Psyonic Ability Hand에만 설계·검증됨 (저자 언급)
+- 단일 닦기 태스크 검증 — 다른 접촉 집약적 태스크로의 일반화 미확인 (저자 언급)
+- 🤖 IK retargeting이 Ability Hand 관절 구조 기반으로 설계돼, 관절 수·형태가 크게 다른 로봇 손으로 확장 시 IK 재설계가 필요하다.
+
+## Terry's memo
+
+- *(None)*

@@ -1,0 +1,129 @@
+{
+  "post_id": "2512-osmo-tactile-glove",
+  "slug": "2512-osmo-tactile-glove",
+  "post_number": 18,
+  "published_at": "2026-03-26T10:00:00Z",
+  "updated_at": "2026-03-26T10:00:00Z",
+  "status": "published",
+  "content_type": "papers",
+  "source_type": "arxiv",
+  "source_url": "https://arxiv.org/abs/2512.08920",
+  "source_date": "2025-12-09",
+  "source_author": "Jessica Yin et al.",
+  "source_title": "OSMO: Open-Source Tactile Glove for Human-to-Robot Skill Transfer",
+  "source_authors_full": "Jessica Yin (Meta FAIR), Haozhi Qi (Meta FAIR), Youngsun Wi (Meta FAIR, University of Michigan), Sayantan Kundu (Meta FAIR), Mike Lambeta (Meta FAIR), William Yang (University of Pennsylvania), Changhao Wang (Meta FAIR), Tingfan Wu (Meta FAIR), Jitendra Malik (Meta FAIR), Tess Hellebrekers (Meta FAIR)",
+  "source_project_url": "https://jessicayin.github.io/osmo_tactile_glove/",
+  "google_scholar_url": "https://scholar.google.com/scholar?&q=osmo-open-source-tactile-glove",
+  "tags": ["Papers", "Robotics", "Tactile Sensing", "Human-Robot Transfer", "Wearable", "Open Source"],
+  "cover_image": "./cover.webp",
+  "cover_caption": "(A) The OSMO tactile glove for collecting in-the-wild human demonstrations provides full-hand coverage with 3-axis tactile sensors, integrates seamlessly with hand-tracking systems, and can be directly deployed on robots. (B) We demonstrate that a contact-rich wiping policy trained solely on OSMO tactile-glove human demonstrations can be directly deployed on a robot, outperforming vision-only policies. More videos, code, and design files are available at the project website.",
+  "cover_figure_number": 1,
+  "thumb_source": "./fig-1.png",
+  "thumb_position": "top",
+  "reading_time_min": 9,
+  "domain": "robotics",
+  "subfields": [
+    "tactile-sensing",
+    "human-robot-transfer",
+    "contact-rich-manipulation"
+  ],
+  "key_concepts": [
+    "tactile-glove",
+    "wearable-sensor",
+    "3-axis-magnetic-sensor",
+    "human-to-robot-transfer",
+    "embodiment-gap",
+    "contact-rich-manipulation",
+    "MuMetal-shielding",
+    "skill-transfer",
+    "open-source-hardware",
+    "IK-retargeting"
+  ],
+  "methodology": [
+    "magnetic-tactile-sensing",
+    "IK-retargeting",
+    "behavior-cloning",
+    "imitation-learning"
+  ],
+  "contribution_type": "system",
+  "taxonomy_primary": "robotics/hand/tactile",
+  "taxonomy_secondary": [
+    "robotics/arm/exoskeleton"
+  ],
+  "relations": [
+    {
+      "target": "2407-tactile-skin-inhand-translation",
+      "type": "builds_on"
+    },
+    {
+      "target": "2512-unitachand",
+      "type": "compares_with"
+    },
+    {
+      "target": "2504-pp-tac",
+      "type": "related"
+    },
+    {
+      "target": "2409-3dtactile-dex",
+      "type": "related"
+    },
+    {
+      "target": "2505-dexumi",
+      "type": "compares_with"
+    }
+  ],
+  "idea_status": null,
+  "related_posts": null,
+  "ai_summary": {
+    "one_liner": "동일 오픈소스 촉각 글러브를 인간·로봇에 장착해 visual·tactile 구현 간극을 동시 해소, 로봇 데이터 없이 72% 성공률 달성",
+    "problem": "비디오 시연만으로는 접촉 신호 포착 불가, 촉각 센서의 embodiment gap이 인간→로봇 기술 이전을 막음",
+    "solution": "12개 3축 자성 촉각 센서 탑재 오픈소스 글러브 OSMO를 인간·로봇 공용으로 사용, IK retargeting으로 joint target 생성 후 정책 학습",
+    "key_result": "닦기 태스크: 72%(촉각) vs 56%(비전만) vs 27%(고유감각만), 로봇 데이터 0건",
+    "limitations": [
+      "우측 손 및 Ability Hand에만 설계·검증됨",
+      "단일 태스크(닦기) 검증",
+      "🤖 IK retargeting이 특정 로봇 손(Ability Hand) 기반이라 다른 형태의 로봇 말단으로 확장 시 재설계 필요"
+    ]
+  },
+  "figures": [
+    {
+      "number": 1,
+      "src": "./fig-1.png",
+      "caption": "(A) The OSMO tactile glove for collecting in-the-wild human demonstrations provides full-hand coverage with 3-axis tactile sensors, integrates seamlessly with hand-tracking systems, and can be directly deployed on robots. (B) We demonstrate that a contact-rich wiping policy trained solely on OSMO tactile-glove human demonstrations can be directly deployed on a robot, outperforming vision-only policies. More videos, code, and design files are available at the project website.",
+      "caption_ko": "(A) OSMO 촉각 글러브는 3축 촉각 센서로 손 전체를 커버하고, 손 추적 시스템과 원활하게 통합되며, 로봇에 직접 장착할 수 있다. (B) OSMO 촉각 글러브 인간 시연만으로 학습한 접촉 집약적 닦기 정책을 로봇에 직접 배포해 비전 전용 정책을 능가함을 보여준다."
+    },
+    {
+      "number": 2,
+      "src": "./fig-2.png",
+      "caption": "The OSMO tactile glove is designed to be compatible with off-the-shelf hand-tracking devices for in-the-wild data collection. OSMO is worn on the right hand, and the device's native hand-tracking estimates are overlaid. (A) Aria Gen 2, pick and place. (B) Quest 3, ironing. (C) Apple Vision Pro, espresso machine operation. (D) RGB video, pepper-grinder use. (E) Manus glove integration for hand-pose tracking robust to visual occlusion. The OSMO magnetic tactile sensors do not interfere with Manus finger tracking.",
+      "caption_ko": "OSMO 촉각 글러브는 야외 데이터 수집을 위해 기성품 손 추적 기기들과 호환되도록 설계됐다. OSMO를 오른손에 착용하고 기기의 고유 손 추적 추정치를 오버레이로 표시한다. (A) Aria Gen 2, 집어 올리기. (B) Quest 3, 다림질. (C) Apple Vision Pro, 에스프레소 머신 조작. (D) RGB 비디오, 후추 그라인더 사용. (E) 시각적 가림에 강건한 손 포즈 추적을 위한 Manus 글러브 통합. OSMO 자성 촉각 센서는 Manus 손가락 추적을 방해하지 않는다."
+    },
+    {
+      "number": 3,
+      "src": "./fig-3.png",
+      "caption": "(A) Layer-by-layer breakdown of the magnetic sensor assembly, including MuMetal shielding designed to reduce crosstalk and improve signal fidelity. (B) Wiring diagram of the sensors and microcontroller boards. Data is output via USB-C.",
+      "caption_ko": "(A) 자성 센서 조립체의 레이어별 분해도. 누화를 줄이고 신호 충실도를 향상시키기 위한 MuMetal 차폐 포함. (B) 센서와 마이크로컨트롤러 보드의 배선도. 데이터는 USB-C를 통해 출력된다."
+    },
+    {
+      "number": 5,
+      "src": "./fig-5.png",
+      "caption": "A) Glove layout maximizing sensing coverage while minimizing encumbrance. B) The shared glove platform minimizes the visual gap between the human and robot hand.",
+      "caption_ko": "A) 불편함을 최소화하면서 감지 커버리지를 최대화하는 글러브 레이아웃. B) 공유 글러브 플랫폼은 인간 손과 로봇 손 사이의 시각적 간극을 최소화한다."
+    },
+    {
+      "number": 6,
+      "src": "./fig-6.png",
+      "caption": "Human demonstrations are captured with RGB + stereo IR cameras and OSMO tactile glove data. We estimate the hand pose and refine the global wrist position with depth. Inverse kinematics (IK) retargets the human hand positions to Franka arm and Ability Hand joint targets. The final dataset directly uses RGB images and tactile glove data from the human demonstration with the retargeted robot joint positions for policy training.",
+      "caption_ko": "인간 시연은 RGB + 스테레오 IR 카메라와 OSMO 촉각 글러브 데이터로 캡처된다. 손 포즈를 추정하고 깊이로 전역 손목 위치를 정제한다. IK(역기구학)가 인간 손 위치를 Franka 팔과 Ability Hand 관절 목표로 리타겟팅한다. 최종 데이터셋은 정책 학습을 위해 인간 시연의 RGB 이미지와 촉각 글러브 데이터를 리타겟팅된 로봇 관절 위치와 함께 직접 사용한다."
+    },
+    {
+      "number": 7,
+      "src": "./fig-7.png",
+      "caption": "(A) Real robot policy rollouts with the Psyonic Ability Hand and Franka robot arm. (B) Failure modes for policies with and without tactile feedback.",
+      "caption_ko": "(A) Psyonic Ability Hand와 Franka 로봇 팔을 이용한 실제 로봇 정책 롤아웃. (B) 촉각 피드백이 있는 정책과 없는 정책의 실패 모드."
+    }
+  ],
+  "tables": [],
+  "newsletter_eligible": false,
+  "featured": false
+}

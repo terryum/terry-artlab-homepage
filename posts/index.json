@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-03-26T00:09:08.418Z",
-  "total_posts": 17,
+  "generated_at": "2026-03-26T01:17:49.521Z",
+  "total_posts": 18,
   "posts": [
     {
       "post_number": 1,
@@ -1125,6 +1125,89 @@
       "related_posts": null,
       "taxonomy_primary": "robotics/hand/dexterous",
       "taxonomy_secondary": []
+    },
+    {
+      "post_number": 18,
+      "slug": "2512-osmo-tactile-glove",
+      "content_type": "papers",
+      "title_en": "OSMO: Open-Source Tactile Glove for Human-to-Robot Skill Transfer",
+      "title_ko": "OSMO: 인간-로봇 기술 이전을 위한 오픈소스 촉각 글러브",
+      "domain": "robotics",
+      "subfields": [
+        "tactile-sensing",
+        "human-robot-transfer",
+        "contact-rich-manipulation"
+      ],
+      "key_concepts": [
+        "tactile-glove",
+        "wearable-sensor",
+        "3-axis-magnetic-sensor",
+        "human-to-robot-transfer",
+        "embodiment-gap",
+        "contact-rich-manipulation",
+        "MuMetal-shielding",
+        "skill-transfer",
+        "open-source-hardware",
+        "IK-retargeting"
+      ],
+      "methodology": [
+        "magnetic-tactile-sensing",
+        "IK-retargeting",
+        "behavior-cloning",
+        "imitation-learning"
+      ],
+      "contribution_type": "system",
+      "tags": [
+        "Papers",
+        "Robotics",
+        "Tactile Sensing",
+        "Human-Robot Transfer",
+        "Wearable",
+        "Open Source"
+      ],
+      "source_author": "Jessica Yin et al.",
+      "source_date": "2025-12-09",
+      "published_at": "2026-03-26T10:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "동일 오픈소스 촉각 글러브를 인간·로봇에 장착해 visual·tactile 구현 간극을 동시 해소, 로봇 데이터 없이 72% 성공률 달성",
+        "problem": "비디오 시연만으로는 접촉 신호 포착 불가, 촉각 센서의 embodiment gap이 인간→로봇 기술 이전을 막음",
+        "solution": "12개 3축 자성 촉각 센서 탑재 오픈소스 글러브 OSMO를 인간·로봇 공용으로 사용, IK retargeting으로 joint target 생성 후 정책 학습",
+        "key_result": "닦기 태스크: 72%(촉각) vs 56%(비전만) vs 27%(고유감각만), 로봇 데이터 0건",
+        "limitations": [
+          "우측 손 및 Ability Hand에만 설계·검증됨",
+          "단일 태스크(닦기) 검증",
+          "🤖 IK retargeting이 특정 로봇 손(Ability Hand) 기반이라 다른 형태의 로봇 말단으로 확장 시 재설계 필요"
+        ]
+      },
+      "relations": [
+        {
+          "target": "2407-tactile-skin-inhand-translation",
+          "type": "builds_on"
+        },
+        {
+          "target": "2512-unitachand",
+          "type": "compares_with"
+        },
+        {
+          "target": "2504-pp-tac",
+          "type": "related"
+        },
+        {
+          "target": "2409-3dtactile-dex",
+          "type": "related"
+        },
+        {
+          "target": "2505-dexumi",
+          "type": "compares_with"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "robotics/hand/tactile",
+      "taxonomy_secondary": [
+        "robotics/arm/exoskeleton"
+      ]
     }
   ],
   "knowledge_graph": {
@@ -1303,6 +1386,31 @@
         "from": "2201-mano-hand-model",
         "to": "2602-robopaint",
         "type": "related"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2407-tactile-skin-inhand-translation",
+        "type": "builds_on"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2512-unitachand",
+        "type": "compares_with"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2504-pp-tac",
+        "type": "related"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2409-3dtactile-dex",
+        "type": "related"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2505-dexumi",
+        "type": "compares_with"
       }
     ],
     "clusters": [
@@ -1330,11 +1438,13 @@
           12,
           13,
           14,
-          16
+          16,
+          18
         ],
         "core_concepts": [
           "diffusion-policy",
-          "dexterous-manipulation"
+          "dexterous-manipulation",
+          "human-to-robot-transfer"
         ],
         "taxonomy_nodes": [
           "robotics/hand/tactile"
@@ -1399,7 +1509,8 @@
       13,
       14,
       15,
-      16
+      16,
+      18
     ],
     "outlier_papers": [
       3,
@@ -1671,7 +1782,8 @@
       16
     ],
     "human-to-robot-transfer": [
-      16
+      16,
+      18
     ],
     "domain-adaptation": [
       16
@@ -1705,26 +1817,54 @@
     ],
     "body-hand-model": [
       17
+    ],
+    "tactile-glove": [
+      18
+    ],
+    "wearable-sensor": [
+      18
+    ],
+    "3-axis-magnetic-sensor": [
+      18
+    ],
+    "embodiment-gap": [
+      18
+    ],
+    "contact-rich-manipulation": [
+      18
+    ],
+    "MuMetal-shielding": [
+      18
+    ],
+    "skill-transfer": [
+      18
+    ],
+    "open-source-hardware": [
+      18
+    ],
+    "IK-retargeting": [
+      18
     ]
   },
   "domain_stats": {
-    "robotics": 15,
+    "robotics": 16,
     "ml": 2
   },
   "taxonomy_stats": {
     "robotics/brain/vla": 3,
     "robotics/arm:secondary": 3,
     "robotics/arm/force-control": 1,
-    "robotics/hand/tactile": 5,
+    "robotics/hand/tactile": 6,
     "robotics/arm/exoskeleton": 3,
     "robotics/hand:secondary": 1,
     "robotics/hand/dexterous": 2,
     "ai/agent": 1,
     "robotics/hand/dexterous:secondary": 4,
+    "robotics/arm/exoskeleton:secondary": 1,
     "robotics/arm": 4,
-    "robotics/hand": 7,
+    "robotics/hand": 8,
     "robotics/brain": 3,
-    "robotics": 14,
+    "robotics": 15,
     "ai": 1
   }
 }
