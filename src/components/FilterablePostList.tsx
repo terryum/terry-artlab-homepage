@@ -82,10 +82,18 @@ function FilterablePostListInner({
     }
   }, [selectedTab]);
 
+  // Reset tags when taxonomy changes (selected tags may not exist in new scope)
+  const prevTaxonomyRef = useRef(selectedTaxonomy);
+  useEffect(() => {
+    if (prevTaxonomyRef.current !== selectedTaxonomy) {
+      prevTaxonomyRef.current = selectedTaxonomy;
+      setSelectedTags([]);
+    }
+  }, [selectedTaxonomy]);
+
   // Sync tags and starred to URL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    // Preserve existing tab param
     const currentTab = params.get('tab');
     const newParams = new URLSearchParams();
     if (currentTab) newParams.set('tab', currentTab);
@@ -124,19 +132,9 @@ function FilterablePostListInner({
     return getPostsForTab(posts, selectedTab);
   }, [posts, selectedTab]);
 
-  // 2nd pass: AND filter by topic tags (display_tags takes priority over tags)
-  const filteredPosts = useMemo(() => {
-    if (selectedTags.length === 0) return tabFilteredPosts;
-    return tabFilteredPosts.filter((post) => {
-      const postTagSlugs = getDisplayTags(post).map((t) => normalizeTagSlug(t));
-      return selectedTags.every((sel) => postTagSlugs.includes(sel));
-    });
-  }, [tabFilteredPosts, selectedTags]);
-
-  // 3rd pass: filter by taxonomy (AND with tag filter)
+  // 2nd pass: filter by taxonomy (before tags, so tags reflect taxonomy scope)
   const taxonomyFilteredPosts = useMemo(() => {
-    if (!selectedTaxonomy) return filteredPosts;
-    // Recursively collect all descendant taxonomy nodes
+    if (!selectedTaxonomy) return tabFilteredPosts;
     const matchNodes = new Set<string>();
     function collectDescendants(nodeId: string) {
       matchNodes.add(nodeId);
@@ -144,22 +142,31 @@ function FilterablePostListInner({
       for (const child of n?.children ?? []) collectDescendants(child);
     }
     collectDescendants(selectedTaxonomy);
-    return filteredPosts.filter(p =>
+    return tabFilteredPosts.filter(p =>
       (p.taxonomy_primary && matchNodes.has(p.taxonomy_primary)) ||
       (p.taxonomy_secondary || []).some(s => matchNodes.has(s))
     );
-  }, [filteredPosts, selectedTaxonomy, taxonomyNodes]);
+  }, [tabFilteredPosts, selectedTaxonomy, taxonomyNodes]);
+
+  // 3rd pass: filter by topic tags (within taxonomy scope)
+  const tagFilteredPosts = useMemo(() => {
+    if (selectedTags.length === 0) return taxonomyFilteredPosts;
+    return taxonomyFilteredPosts.filter((post) => {
+      const postTagSlugs = getDisplayTags(post).map((t) => normalizeTagSlug(t));
+      return selectedTags.every((sel) => postTagSlugs.includes(sel));
+    });
+  }, [taxonomyFilteredPosts, selectedTags]);
 
   // 4th pass: filter by starred
   const finalPosts = useMemo(() => {
-    if (!starredOnly) return taxonomyFilteredPosts;
-    return taxonomyFilteredPosts.filter(p => p.starred);
-  }, [taxonomyFilteredPosts, starredOnly]);
+    if (!starredOnly) return tagFilteredPosts;
+    return tagFilteredPosts.filter(p => p.starred);
+  }, [tagFilteredPosts, starredOnly]);
 
-  // Compute available topic tags (excluding tab tags, display_tags takes priority)
+  // Available tags: computed from taxonomy-filtered posts (so counts reflect taxonomy scope)
   const availableTags = useMemo(() => {
     const tagCounts = new Map<string, number>();
-    for (const post of tabFilteredPosts) {
+    for (const post of taxonomyFilteredPosts) {
       for (const tag of getDisplayTags(post)) {
         const slug = normalizeTagSlug(tag);
         if (!TAB_TAG_SLUGS.has(slug)) {
@@ -174,58 +181,86 @@ function FilterablePostListInner({
         return { slug, label: existing?.label || slug, count };
       })
       .sort((a, b) => b.count - a.count);
-  }, [allTags, tabFilteredPosts]);
+  }, [allTags, taxonomyFilteredPosts]);
 
-  // Resolve title/description based on current tab
   const currentTitle = (selectedTab && tabTitles?.[selectedTab]?.title) || defaultTitle;
   const currentDescription = (selectedTab && tabTitles?.[selectedTab]?.description) || defaultDescription;
+
+  const hasTaxonomy = selectedTab === 'papers' && Object.keys(taxonomyNodes).length > 0;
 
   return (
     <div>
       <h1 className="text-2xl font-bold text-text-primary tracking-tight">{currentTitle}</h1>
       <p className="text-sm text-text-muted mt-2 mb-8">{currentDescription}</p>
 
-      {selectedTab === 'papers' && Object.keys(taxonomyNodes).length > 0 && (
-        <TaxonomyFilter
-          locale={locale}
-          nodes={taxonomyNodes}
-          stats={taxonomyStats}
-          selectedTaxonomy={selectedTaxonomy}
-          onSelect={setSelectedTaxonomy}
-        />
-      )}
+      <div className="lg:flex lg:gap-8 lg:items-start">
 
-      {selectedTab === 'papers' && (
-        <button
-          onClick={() => setStarredOnly(v => !v)}
-          className={`mb-3 inline-flex items-center gap-1.5 text-sm px-3 py-1 rounded-full border transition-colors ${
-            starredOnly
-              ? 'bg-amber-50 border-amber-300 text-amber-700 dark:bg-amber-900/30 dark:border-amber-600 dark:text-amber-400'
-              : 'border-line-default text-text-muted hover:border-amber-300 hover:text-amber-600'
-          }`}
-        >
-          <span>★</span>
-          <span>Seminal</span>
-        </button>
-      )}
+        {/* 왼쪽 사이드바: PC(lg+)에서만, Papers + taxonomy 있을 때 */}
+        {hasTaxonomy && (
+          <aside className="hidden lg:block w-52 shrink-0">
+            <div className="sticky top-24">
+              <TaxonomyFilter
+                variant="sidebar"
+                locale={locale}
+                nodes={taxonomyNodes}
+                stats={taxonomyStats}
+                selectedTaxonomy={selectedTaxonomy}
+                onSelect={setSelectedTaxonomy}
+              />
+            </div>
+          </aside>
+        )}
 
-      <TagFilterBar
-        availableTags={availableTags}
-        selectedSlugs={selectedTags}
-        onToggle={handleToggle}
-        showMoreLabel={showMoreLabel}
-        showLessLabel={showLessLabel}
-      />
+        {/* 오른쪽 메인 (또는 전체 너비) */}
+        <div className="flex-1 min-w-0">
 
-      {finalPosts.length === 0 ? (
-        <p className="text-text-muted py-8 text-center">{noResultsLabel}</p>
-      ) : (
-        <div>
-          {finalPosts.map((post) => (
-            <ContentCard key={post.post_id} post={post} locale={locale} />
-          ))}
+          {/* 모바일 taxonomy: inline card */}
+          {hasTaxonomy && (
+            <div className="lg:hidden">
+              <TaxonomyFilter
+                variant="inline"
+                locale={locale}
+                nodes={taxonomyNodes}
+                stats={taxonomyStats}
+                selectedTaxonomy={selectedTaxonomy}
+                onSelect={setSelectedTaxonomy}
+              />
+            </div>
+          )}
+
+          {selectedTab === 'papers' && (
+            <button
+              onClick={() => setStarredOnly(v => !v)}
+              className={`mb-3 inline-flex items-center gap-1.5 text-sm px-3 py-1 rounded-full border transition-colors ${
+                starredOnly
+                  ? 'bg-amber-50 border-amber-300 text-amber-700 dark:bg-amber-900/30 dark:border-amber-600 dark:text-amber-400'
+                  : 'border-line-default text-text-muted hover:border-amber-300 hover:text-amber-600'
+              }`}
+            >
+              <span>★</span>
+              <span>Seminal</span>
+            </button>
+          )}
+
+          <TagFilterBar
+            availableTags={availableTags}
+            selectedSlugs={selectedTags}
+            onToggle={handleToggle}
+            showMoreLabel={showMoreLabel}
+            showLessLabel={showLessLabel}
+          />
+
+          {finalPosts.length === 0 ? (
+            <p className="text-text-muted py-8 text-center">{noResultsLabel}</p>
+          ) : (
+            <div>
+              {finalPosts.map((post) => (
+                <ContentCard key={post.post_id} post={post} locale={locale} />
+              ))}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -14,6 +14,7 @@ interface TaxonomyFilterProps {
   stats: Record<string, number>;
   selectedTaxonomy: string | null;
   onSelect: (nodeId: string | null) => void;
+  variant?: 'inline' | 'sidebar';
 }
 
 const ROOT_NODES = ['robotics', 'ai'];
@@ -103,9 +104,55 @@ export default function TaxonomyFilter({
   stats,
   selectedTaxonomy,
   onSelect,
+  variant = 'inline',
 }: TaxonomyFilterProps) {
   const heading = locale === 'ko' ? '분야별 탐색' : 'Browse by Field';
+  const clearLabel = locale === 'ko' ? '전체 보기' : 'All';
 
+  const treeNodes = (
+    <div className="flex flex-col gap-0.5">
+      {ROOT_NODES.map((rootId) => {
+        const node = nodes[rootId];
+        if (!node) return null;
+        return (
+          <TaxonomyNodeItem
+            key={rootId}
+            nodeId={rootId}
+            node={node}
+            stats={stats}
+            selectedTaxonomy={selectedTaxonomy}
+            onSelect={onSelect}
+            locale={locale}
+            nodes={nodes}
+            depth={0}
+          />
+        );
+      })}
+    </div>
+  );
+
+  if (variant === 'sidebar') {
+    return (
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xs font-semibold text-text-muted uppercase tracking-wide">
+            {heading}
+          </span>
+          {selectedTaxonomy && (
+            <button
+              onClick={() => onSelect(null)}
+              className="text-xs text-accent hover:underline transition-colors"
+            >
+              {clearLabel}
+            </button>
+          )}
+        </div>
+        {treeNodes}
+      </div>
+    );
+  }
+
+  // inline (default): bordered card
   return (
     <div className="mb-6 p-3 rounded-lg border border-line-default bg-surface-subtle">
       <div className="flex items-center justify-between mb-2">
@@ -117,30 +164,11 @@ export default function TaxonomyFilter({
             onClick={() => onSelect(null)}
             className="text-xs text-text-muted hover:text-accent transition-colors"
           >
-            {locale === 'ko' ? '전체 보기' : 'All'}
+            {clearLabel}
           </button>
         )}
       </div>
-
-      <div className="flex flex-col gap-0.5">
-        {ROOT_NODES.map((rootId) => {
-          const node = nodes[rootId];
-          if (!node) return null;
-          return (
-            <TaxonomyNodeItem
-              key={rootId}
-              nodeId={rootId}
-              node={node}
-              stats={stats}
-              selectedTaxonomy={selectedTaxonomy}
-              onSelect={onSelect}
-              locale={locale}
-              nodes={nodes}
-              depth={0}
-            />
-          );
-        })}
-      </div>
+      {treeNodes}
     </div>
   );
 }
