@@ -1,3 +1,4 @@
+import 'katex/dist/katex.min.css';
 import { getPost } from '@/lib/posts';
 import type { Metadata } from 'next';
 import AutoRedirect from './AutoRedirect';

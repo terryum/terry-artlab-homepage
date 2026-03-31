@@ -1,8 +1,7 @@
 import { notFound } from 'next/navigation';
 import { isValidLocale, LOCALES, type Locale } from '@/lib/i18n';
 import { getDictionary } from '@/lib/dictionaries';
-import { getAllPosts } from '@/lib/posts';
-import { getNavTabs } from '@/lib/tabs';
+import { getNavTabsFromIndex } from '@/lib/tabs-server';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import Header from '@/components/Header';
 import AdminBar from '@/components/admin/AdminBar';
@@ -26,8 +25,7 @@ export default async function LangLayout({
   }
 
   const dict = await getDictionary(lang as Locale);
-  const posts = await getAllPosts(lang);
-  const navTabs = getNavTabs(posts, lang);
+  const navTabs = await getNavTabsFromIndex(lang);
   const isAdmin = await isAdminAuthenticated();
 
   return (

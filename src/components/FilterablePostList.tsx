@@ -2,9 +2,11 @@
 
 import { useState, useCallback, useMemo, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import TagFilterBar from './TagFilterBar';
 import ContentCard from './ContentCard';
-import TaxonomyFilter from './TaxonomyFilter';
+
+const TaxonomyFilter = dynamic(() => import('./TaxonomyFilter'), { ssr: false });
 import { normalizeTagSlug } from '@/lib/tags';
 import { TAB_TAG_SLUGS } from '@/lib/site-config';
 import { getPostsForTab } from '@/lib/tabs';

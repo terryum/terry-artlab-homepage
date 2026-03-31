@@ -1,3 +1,4 @@
+import 'katex/dist/katex.min.css';
 import { getPost, getAllPostParams } from '@/lib/posts';
 import { buildContentDetailProps } from '@/lib/content-page-helpers';
 import ContentDetailPage from '@/components/ContentDetailPage';

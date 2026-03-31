@@ -72,3 +72,4 @@ export function getNavTabs(posts: PostMeta[], locale: string): NavTabItem[] {
     author: tab.author,
   }));
 }
+
