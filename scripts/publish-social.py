@@ -475,12 +475,14 @@ def _fetch_og_tags(url: str) -> dict:
         print(f"  [WARNING] OG 태그 fetch 실패: {e}")
         return {}
 
+    import html as html_mod
+
     tags = {}
     for match in re.finditer(r'<meta\s+(?:property|name)=["\']og:(\w+)["\']\s+content=["\']([^"\']*)["\']', html):
-        tags[match.group(1)] = match.group(2)
+        tags[match.group(1)] = html_mod.unescape(match.group(2))
     # 역순 속성도 매칭 (content가 먼저 오는 경우)
     for match in re.finditer(r'<meta\s+content=["\']([^"\']*?)["\']\s+(?:property|name)=["\']og:(\w+)["\']', html):
-        tags.setdefault(match.group(2), match.group(1))
+        tags.setdefault(match.group(2), html_mod.unescape(match.group(1)))
     return tags
 
 
