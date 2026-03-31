@@ -3,10 +3,10 @@
 소셜미디어 자동 공유 스크립트.
 
 posts/index.json에서 essays|tech 포스트를 찾아
-Facebook Page, Threads, LinkedIn, X(Twitter)에 공유한다.
+Facebook Page, Threads, LinkedIn, X(Twitter), Bluesky에 공유한다.
 
 사용법:
-    python scripts/publish-social.py [--dry-run] [--slug=<slug>] [--platform=facebook,threads,linkedin,x]
+    python scripts/publish-social.py [--dry-run] [--slug=<slug>] [--platform=facebook,threads,linkedin,x,bluesky]
 
 환경변수 (.env.local):
     FACEBOOK_PAGE_ID                Facebook Page ID
@@ -25,6 +25,9 @@ Facebook Page, Threads, LinkedIn, X(Twitter)에 공유한다.
     X_ACCESS_TOKEN                  OAuth 1.0a Access Token
     X_ACCESS_TOKEN_SECRET           OAuth 1.0a Access Token Secret
 
+    BLUESKY_IDENTIFIER              Bluesky handle (e.g. user.bsky.social)
+    BLUESKY_APP_PASSWORD            App-specific password (만료 없음)
+
     SITE_BASE_URL                   홈페이지 베이스 URL (기본: https://terry.artlab.ai)
 """
 # social_common 임포트가 UTF-8 설정 + dotenv 로드를 처리함
@@ -35,6 +38,7 @@ from social_common import (
 )
 
 import os
+import re
 import sys
 import json
 import argparse
@@ -48,7 +52,7 @@ FACEBOOK_BASE_URL = os.environ.get("FACEBOOK_BASE_URL", "https://terry-artlab.ve
 
 PUBLISHED_CACHE = REPO_ROOT / ".social-published.json"
 
-ALL_PLATFORMS = ["facebook", "threads", "linkedin", "x"]
+ALL_PLATFORMS = ["facebook", "threads", "linkedin", "x", "bluesky"]
 
 # 토큰 만료 경고 임계값 (일)
 TOKEN_WARN_DAYS = 45
@@ -213,7 +217,9 @@ def build_linkedin_text(post: dict, fm: dict) -> tuple[str, str]:
 def build_x_text(post: dict, fm: dict) -> tuple[str, str]:
     """(text, url) — 280자 (URL은 23자로 계산)"""
     description = fm.get("summary") or fm.get("card_summary") or extract_ai_summary(post.get("ai_summary"))
-    url = f"{SITE_BASE_URL}/posts/{post['slug']}"
+    # X 카드 크롤러 캐시 우회를 위해 타임스탬프 쿼리 추가
+    cache_bust = date.today().strftime("%Y%m%d")
+    url = f"{SITE_BASE_URL}/posts/{post['slug']}?v={cache_bust}"
     tags = get_hashtags(post, "en")
 
     # URL은 Twitter t.co로 23자 고정, 해시태그 포함 후 설명 truncate
@@ -224,6 +230,24 @@ def build_x_text(post: dict, fm: dict) -> tuple[str, str]:
     suffix_count = 14 + url_char_count + len(tag_part)  # "\n\nRead more ↓\n" + url + tags
     max_desc = 280 - suffix_count - 5  # 5자 안전 마진 (weighted count 경계 방지)
 
+    body = description or ""
+    if len(body) > max_desc:
+        body = body[: max_desc - 3] + "..."
+
+    return body + suffix, url
+
+
+def build_bluesky_text(post: dict, fm: dict) -> tuple[str, str]:
+    """(text, url) — 300 grapheme 제한. URL은 external embed로 별도 첨부."""
+    description = fm.get("summary") or fm.get("card_summary") or extract_ai_summary(post.get("ai_summary"))
+    url = f"{SITE_BASE_URL}/posts/{post['slug']}"
+    tags = get_hashtags(post, "en")
+
+    # URL은 external embed로 전달 — 텍스트에 포함하지 않음
+    tag_part = f"\n\n{tags}" if tags else ""
+    suffix = "\n\nRead more ↓" + tag_part
+
+    max_desc = 300 - len(suffix) - 5  # 안전 마진
     body = description or ""
     if len(body) > max_desc:
         body = body[: max_desc - 3] + "..."
@@ -426,6 +450,158 @@ def publish_x(text: str, dry_run: bool) -> bool:
         return False
 
 
+# ─── Bluesky (AT Protocol) API ──────────────────────────────────────────────
+
+def _build_bluesky_facets(text: str) -> list:
+    """해시태그에 대한 Bluesky rich text facets 생성 (UTF-8 바이트 오프셋 기반)."""
+    facets = []
+    for match in re.finditer(r"#(\w+)", text):
+        tag = match.group(1)
+        byte_start = len(text[: match.start()].encode("utf-8"))
+        byte_end = len(text[: match.end()].encode("utf-8"))
+        facets.append({
+            "index": {"byteStart": byte_start, "byteEnd": byte_end},
+            "features": [{"$type": "app.bsky.richtext.facet#tag", "tag": tag}],
+        })
+    return facets
+
+
+def _fetch_og_tags(url: str) -> dict:
+    """URL에서 OG 태그(title, description, image)를 파싱."""
+    try:
+        resp = requests.get(url, timeout=15, headers={"User-Agent": "bot"})
+        html = resp.text
+    except Exception as e:
+        print(f"  [WARNING] OG 태그 fetch 실패: {e}")
+        return {}
+
+    tags = {}
+    for match in re.finditer(r'<meta\s+(?:property|name)=["\']og:(\w+)["\']\s+content=["\']([^"\']*)["\']', html):
+        tags[match.group(1)] = match.group(2)
+    # 역순 속성도 매칭 (content가 먼저 오는 경우)
+    for match in re.finditer(r'<meta\s+content=["\']([^"\']*?)["\']\s+(?:property|name)=["\']og:(\w+)["\']', html):
+        tags.setdefault(match.group(2), match.group(1))
+    return tags
+
+
+def _upload_bluesky_blob(image_url: str, access_token: str) -> "dict | None":
+    """이미지 URL을 다운로드 → Bluesky blob으로 업로드, blob ref 반환."""
+    try:
+        img_resp = requests.get(image_url, timeout=20)
+        if img_resp.status_code != 200:
+            print(f"  [WARNING] OG 이미지 다운로드 실패 ({img_resp.status_code})")
+            return None
+    except Exception as e:
+        print(f"  [WARNING] OG 이미지 다운로드 실패: {e}")
+        return None
+
+    content_type = img_resp.headers.get("Content-Type", "image/png")
+    blob_resp = requests.post(
+        "https://bsky.social/xrpc/com.atproto.repo.uploadBlob",
+        data=img_resp.content,
+        headers={
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": content_type,
+        },
+        timeout=30,
+    )
+    if blob_resp.status_code == 200:
+        return blob_resp.json().get("blob")
+    else:
+        print(f"  [WARNING] Bluesky blob 업로드 실패 ({blob_resp.status_code}): {blob_resp.text[:200]}")
+        return None
+
+
+def publish_bluesky(text: str, url: str, dry_run: bool) -> bool:
+    identifier = os.environ.get("BLUESKY_IDENTIFIER", "")
+    app_password = os.environ.get("BLUESKY_APP_PASSWORD", "")
+
+    if dry_run:
+        print(f"\n[DRY RUN] Bluesky")
+        print(f"  HANDLE  : {identifier or '(미설정)'}")
+        print(f"  Text    :\n{text}\n")
+        print(f"  Link    : {url}")
+        return True
+
+    if not identifier or not app_password:
+        print("  [SKIP] BLUESKY_IDENTIFIER 또는 BLUESKY_APP_PASSWORD 미설정")
+        return False
+
+    # Step 1: 세션 생성
+    session_resp = requests.post(
+        "https://bsky.social/xrpc/com.atproto.server.createSession",
+        json={"identifier": identifier, "password": app_password},
+        timeout=20,
+    )
+    if session_resp.status_code != 200:
+        print(f"  ✗ Bluesky 세션 생성 실패 ({session_resp.status_code}): {session_resp.text[:300]}", file=sys.stderr)
+        return False
+
+    session = session_resp.json()
+    access_token = session["accessJwt"]
+    did = session["did"]
+
+    # Step 2: OG 태그 fetch + 이미지 blob 업로드
+    og = _fetch_og_tags(url)
+    og_title = og.get("title", "")
+    og_desc = og.get("description", "")
+    og_image = og.get("image", "")
+
+    thumb_blob = None
+    if og_image:
+        print(f"  OG 이미지 업로드 중: {og_image}")
+        thumb_blob = _upload_bluesky_blob(og_image, access_token)
+
+    # Step 3: facets + record 구성
+    facets = _build_bluesky_facets(text)
+    now = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+    record = {
+        "$type": "app.bsky.feed.post",
+        "text": text,
+        "createdAt": now,
+    }
+    if facets:
+        record["facets"] = facets
+
+    # External embed (링크 카드 + 썸네일)
+    external = {
+        "uri": url,
+        "title": og_title,
+        "description": og_desc,
+    }
+    if thumb_blob:
+        external["thumb"] = thumb_blob
+    record["embed"] = {
+        "$type": "app.bsky.embed.external",
+        "external": external,
+    }
+
+    # Step 4: 포스트 생성
+    resp = requests.post(
+        "https://bsky.social/xrpc/com.atproto.repo.createRecord",
+        json={
+            "repo": did,
+            "collection": "app.bsky.feed.post",
+            "record": record,
+        },
+        headers={
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
+        },
+        timeout=20,
+    )
+    if resp.status_code == 200:
+        rkey = resp.json().get("uri", "").split("/")[-1]
+        post_url = f"https://bsky.app/profile/{identifier}/post/{rkey}"
+        print(f"  ✓ Bluesky 게시 완료 (rkey={rkey})")
+        print(f"  ✓ Bluesky URL: {post_url}")
+        return True
+    else:
+        print(f"  ✗ Bluesky 실패 ({resp.status_code}): {resp.text[:300]}", file=sys.stderr)
+        return False
+
+
 # ─── Main ────────────────────────────────────────────────────────────────────
 
 def main():
@@ -488,6 +664,10 @@ def main():
         elif platform == "x":
             text, url = build_x_text(post, fm_en)
             ok = publish_x(text, args.dry_run)
+
+        elif platform == "bluesky":
+            text, url = build_bluesky_text(post, fm_en)
+            ok = publish_bluesky(text, url, args.dry_run)
 
         else:
             ok = False
