@@ -13,6 +13,7 @@ import os
 import sys
 import json
 import argparse
+from datetime import date
 from pathlib import Path
 
 # ─── Manual env loading ──────────────────────────────────────────────────────
@@ -44,6 +45,7 @@ psub = importlib.util.module_from_spec(spec_sub)
 spec_sub.loader.exec_module(psub)
 
 SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "https://terry.artlab.ai")
+FACEBOOK_BASE_URL = os.environ.get("FACEBOOK_BASE_URL", "https://terry-artlab.vercel.app")
 PROJECTS_PATH = REPO_ROOT / "projects" / "gallery" / "projects.json"
 
 ALL_PLATFORMS = ["facebook", "threads", "linkedin", "x", "bluesky", "substack"]
@@ -111,17 +113,29 @@ def main():
         print(f"Error: 프로젝트를 찾을 수 없습니다: {args.slug}", file=sys.stderr)
         sys.exit(1)
 
-    # URL 결정
+    slug = args.slug
+    fallback_url = project["links"][0]["url"] if project["links"] else SITE_BASE_URL
+
+    # Platform-specific URLs (matching /post-share patterns)
     if project.get("embed_url"):
-        ko_url = f"{SITE_BASE_URL}/ko/projects/{args.slug}"
-        en_url = f"{SITE_BASE_URL}/en/projects/{args.slug}"
+        fb_url = f"{FACEBOOK_BASE_URL}/ko/projects/{slug}"
+        threads_url = f"{FACEBOOK_BASE_URL}/projects/{slug}?utm_source=threads&utm_medium=social"
+        neutral_url = f"{SITE_BASE_URL}/projects/{slug}"
+        cache_bust = date.today().strftime("%Y%m%d")
+        x_url = f"{SITE_BASE_URL}/projects/{slug}?v={cache_bust}"
+        substack_en_url = f"{SITE_BASE_URL}/en/projects/{slug}"
+        substack_ko_url = f"{SITE_BASE_URL}/ko/projects/{slug}"
     else:
-        ko_url = en_url = project["links"][0]["url"] if project["links"] else SITE_BASE_URL
+        fb_url = threads_url = neutral_url = x_url = fallback_url
+        substack_en_url = substack_ko_url = fallback_url
 
-    ko_text = build_ko_message(project, ko_url)
-    en_text = build_en_message(project, en_url)
+    # Platform-specific messages
+    ko_fb_text = build_ko_message(project, fb_url)
+    ko_threads_text = build_ko_message(project, threads_url)
+    en_text = build_en_message(project, neutral_url)
+    en_x_text = build_en_message(project, x_url)
 
-    print(f"대상 프로젝트: {args.slug} ({project['title']['en']})")
+    print(f"대상 프로젝트: {slug} ({project['title']['en']})")
     print(f"대상 플랫폼: {', '.join(platforms)}")
     print()
 
@@ -146,15 +160,15 @@ def main():
                 continue
 
         if platform == "facebook":
-            ok = ps.publish_facebook(ko_text, ko_url, args.dry_run)
+            ok = ps.publish_facebook(ko_fb_text, fb_url, args.dry_run)
         elif platform == "threads":
-            ok = ps.publish_threads(ko_text, ko_url, args.dry_run)
+            ok = ps.publish_threads(ko_threads_text, threads_url, args.dry_run)
         elif platform == "linkedin":
-            ok = ps.publish_linkedin(en_text, en_url, args.dry_run)
+            ok = ps.publish_linkedin(en_text, neutral_url, args.dry_run)
         elif platform == "x":
-            ok = ps.publish_x(en_text, args.dry_run)
+            ok = ps.publish_x(en_x_text, args.dry_run)
         elif platform == "bluesky":
-            ok = ps.publish_bluesky(en_text, en_url, args.dry_run)
+            ok = ps.publish_bluesky(en_text, neutral_url, args.dry_run)
         else:
             ok = False
 
@@ -194,7 +208,7 @@ def main():
                 title=en_title,
                 subtitle=en_desc[:80],
                 paragraphs=[en_desc],
-                link=en_url,
+                link=substack_en_url,
                 cta="Check it out",
                 image_url=cover_url,
                 note_intro=en_desc[:100],
@@ -211,7 +225,7 @@ def main():
                 title=ko_title,
                 subtitle=ko_desc[:80],
                 paragraphs=[ko_desc],
-                link=ko_url,
+                link=substack_ko_url,
                 cta="자세히 보기",
                 image_url=cover_url,
                 note_intro=ko_desc[:100],
