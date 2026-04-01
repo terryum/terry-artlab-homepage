@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation';
 import { isValidLocale, type Locale } from '@/lib/i18n';
-import { getDictionary } from '@/lib/dictionaries';
 import { getProject, getAllProjects } from '@/lib/projects';
 import ProjectEmbed from '@/components/ProjectEmbed';
 import type { Metadata } from 'next';
@@ -41,7 +40,6 @@ export default async function ProjectDetailPage({
   const project = await getProject(slug);
   if (!project || !project.embed_url) notFound();
 
-  const dict = await getDictionary(lang);
   const title = project.title[lang as 'ko' | 'en'] || project.title.en;
 
   return (
@@ -49,9 +47,7 @@ export default async function ProjectDetailPage({
       slug={project.slug}
       title={title}
       embedUrl={project.embed_url}
-      links={project.links}
       locale={lang}
-      backLabel={dict.detail.back_to_list}
     />
   );
 }
