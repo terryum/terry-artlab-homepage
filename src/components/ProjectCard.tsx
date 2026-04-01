@@ -83,9 +83,14 @@ export default function ProjectCard({ project, locale }: ProjectCardProps) {
 
       {/* Content */}
       <div className="p-4">
-        <h3 className="text-base font-semibold text-text-primary group-hover:text-accent transition-colors leading-snug">
-          {title}
-        </h3>
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="text-base font-semibold text-text-primary group-hover:text-accent transition-colors leading-snug">
+            {title}
+          </h3>
+          <time className="text-xs text-text-muted whitespace-nowrap flex-shrink-0">
+            {new Date(project.published_at).toLocaleDateString(locale === 'ko' ? 'ko-KR' : 'en-US', { year: 'numeric', month: 'short' })}
+          </time>
+        </div>
         <p className="text-sm text-text-muted mt-1.5 line-clamp-2">
           {description}
         </p>

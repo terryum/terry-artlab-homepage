@@ -108,6 +108,7 @@ function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
             <span className="text-[10px] px-1.5 py-0.5 rounded font-medium leading-none nav-tag-ai">AI</span>
             <div className="flex items-center gap-4 ml-1">
               {aiTabs.map(item => <TabLink key={item.tabSlug || item.href} item={item} />)}
+              <TabLink item={projectsItem} />
             </div>
 
             {/* Separator */}
@@ -118,13 +119,6 @@ function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
             <div className="flex items-center gap-4 ml-1">
               {terryTabs.map(item => <TabLink key={item.tabSlug || item.href} item={item} />)}
               <TabLink item={aboutItem} />
-            </div>
-
-            {/* Separator */}
-            <div className="w-px h-4 bg-line-default mx-2" />
-
-            <div className="flex items-center gap-4">
-              <TabLink item={projectsItem} />
             </div>
 
             <div className="flex items-center gap-2 ml-4">
@@ -161,6 +155,7 @@ function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
             {/* AI group */}
             <span className="mx-2 mt-0.5 mb-1 inline-block text-[10px] px-1.5 py-0.5 rounded font-medium leading-none nav-tag-ai">AI</span>
             {aiTabs.map(item => <MobileTabLink key={item.tabSlug || item.href} item={item} />)}
+            <MobileTabLink item={projectsItem} />
 
             {/* Separator */}
             <div className="h-px bg-line-default my-2 mx-2" />
@@ -169,11 +164,6 @@ function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
             <span className="mx-2 mt-0.5 mb-1 inline-block text-[10px] px-1.5 py-0.5 rounded font-medium leading-none nav-tag-terry">Terry</span>
             {terryTabs.map(item => <MobileTabLink key={item.tabSlug || item.href} item={item} />)}
             <MobileTabLink item={aboutItem} />
-
-            {/* Separator */}
-            <div className="h-px bg-line-default my-2 mx-2" />
-
-            <MobileTabLink item={projectsItem} />
           </nav>
         )}
       </Container>
