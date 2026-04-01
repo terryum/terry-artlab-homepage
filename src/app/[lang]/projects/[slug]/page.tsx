@@ -26,7 +26,10 @@ export async function generateMetadata({
   if (!project) return {};
   const title = project.title[lang as 'ko' | 'en'] || project.title.en;
   const description = project.description[lang as 'ko' | 'en'] || project.description.en;
-  const ogImage = project.cover_image;
+  // OG 이미지: webp는 X(Twitter) 크롤러 미지원 → jpg 변환본 사용
+  const ogImage = project.cover_image
+    ? project.cover_image.replace(/-cover\.webp$/, '-og.jpg')
+    : undefined;
   const pageUrl = `/${lang}/projects/${slug}`;
 
   return {
