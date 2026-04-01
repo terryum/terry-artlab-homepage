@@ -1,3 +1,9 @@
+---
+name: project
+description: "Project 갤러리 추가. GitHub URL 또는 수동 입력(책, 제품 등)으로 프로젝트 카드를 생성. 다중 링크, 커버 이미지 자동 생성(/gemini-3-image-generation) 지원."
+argument-hint: "<GitHub-URL | --type=book --title=... --url=...> [--featured] [--status=active|archived|wip]"
+---
+
 # Project 갤러리 추가 파이프라인
 
 입력: $ARGUMENTS
@@ -65,7 +71,8 @@ README.md도 읽어서:
   "tech_stack": ["Python", "Deep Learning"],
   "links": [
     { "type": "github", "url": "https://github.com/owner/repo" },
-    { "type": "demo", "url": "https://...", "label": "Live Demo" }
+    { "type": "demo", "url": "https://...", "label": "Live Demo" },
+    { "type": "paper", "url": "https://arxiv.org/abs/...", "label": "Paper" }
   ],
   "status": "active",
   "featured": false,
@@ -126,11 +133,23 @@ GitHub 경로와 동일한 Step 3~6을 따르되, 정보 수집을 사용자 입
 /project --type=book --slug=my-book --cover=/path/to/cover.jpg
 ```
 
-- `--type=book|product|other` → 링크 타입 결정 (book, demo, other)
+- `--type=book|product|other` → 첫 번째 링크 타입 결정
 - `--title` → 프로젝트 제목 (없으면 URL에서 추출하거나 사용자에게 요청)
-- `--url` → 메인 링크
+- `--url` → 주 링크 (썸네일 클릭 시 이동 대상, links 배열의 첫 번째)
 - `--cover` → 커버 이미지 경로 (있으면 sharp로 16:9 크롭 + WebP 변환)
 - `--slug` → 슬러그 (없으면 제목에서 자동 생성)
+
+### 다중 링크
+links 배열에 여러 링크를 추가할 수 있다. **첫 번째 링크가 primary** (썸네일 클릭 대상).
+사용자가 추가 링크를 언급하면 배열에 추가:
+```json
+"links": [
+  { "type": "other", "url": "https://blog.example.com", "label": "Blog" },
+  { "type": "book", "url": "https://kyobobook.co.kr/...", "label": "Book" },
+  { "type": "github", "url": "https://github.com/...", "label": "GitHub" }
+]
+```
+지원 타입: `github`, `demo`, `paper`, `book`, `other`
 
 ### 커버 이미지 처리
 - `--cover` 제공 시: sharp로 16:9 비율 크롭 → `public/images/projects/{slug}-cover.webp`로 저장

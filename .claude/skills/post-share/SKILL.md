@@ -1,3 +1,9 @@
+---
+name: post-share
+description: "Post Share — 소셜미디어 & Substack 발행. 포스트 식별자(번호/slug/제목)와 플랫폼을 지정하여 Facebook, Threads, LinkedIn, X, Bluesky, Substack에 발행."
+argument-hint: "<post-identifier> [platform-filter]"
+---
+
 # Post Share — 소셜미디어 & Substack 발행
 
 입력: $ARGUMENTS

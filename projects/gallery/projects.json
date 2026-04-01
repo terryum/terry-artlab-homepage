@@ -13,7 +13,8 @@
       "cover_image": "/images/projects/grad-school-story-cover.webp",
       "tech_stack": ["Book", "Grad School", "Career"],
       "links": [
-        { "type": "book", "url": "https://gradschoolstory.chkwon.net/", "label": "Book Site" }
+        { "type": "other", "url": "https://gradschoolstory.chkwon.net/", "label": "Blog" },
+        { "type": "book", "url": "https://product.kyobobook.co.kr/detail/S000001926765", "label": "Book" }
       ],
       "status": "archived",
       "featured": true,

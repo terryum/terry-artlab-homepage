@@ -1,8 +1,12 @@
+---
+name: post
+description: Post 생성 파이프라인. arXiv URL → Research 포스트, --type=blog → Blog 포스트 자동 생성. 커버 이미지 없을 시 /gemini-3-image-generation 사용.
+argument-hint: "<arXiv-URL | --type=blog slug> [--tags=TAG1,TAG2] [--memo=메모] [--featured]"
+---
+
 # Post 생성 파이프라인
 
 입력: $ARGUMENTS
-
----
 
 ## Step 0) 타입 자동 감지
 
