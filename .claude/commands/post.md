@@ -66,6 +66,10 @@ URL: `https://arxiv.org/pdf/<id>`
      (PDF fallback은 extract-paper-pdf.py 내부에서 자동으로 flatten 처리됨)
   b. `extraction_report.json` 읽기 → figures/captions 자동 적용
   c. `suggested_cover`를 `cover.webp`로 PIL 변환
+- **figure 추출 실패 또는 cover 후보 없음** → `/gemini-3-image-generation` 스킬로 커버 이미지 생성
+  - 프롬프트: 논문 제목/핵심 주제를 반영한 추상적 기술 일러스트, 16:9 비율, 텍스트 없이
+  - 생성된 이미지를 `posts/papers/<slug>/cover.webp`로 저장
+  - API 키가 없거나 생성 실패 시 → 커버 없이 진행 + 경고 출력
 
 ### Step R7) MDX 생성
 `docs/RESEARCH_SUMMARY_RULES.md` 기준으로 `ko.mdx` + `en.mdx` 생성
@@ -183,7 +187,10 @@ posts/<type>/<slug>/cover_Original.{png,jpg}  원본 커버 이미지
 ```
 
 - `post_original.md` 없으면 사용자에게 내용 요청
-- `cover_Original.*` 없으면 → `cover.webp` 생성 건너뜀 + 경고 출력
+- `cover_Original.*` 없으면 → `/gemini-3-image-generation` 스킬로 커버 이미지 생성
+  - 프롬프트: 포스트 제목/내용을 반영한 추상적 일러스트, 16:9 비율, 텍스트 없이
+  - 생성된 이미지를 `posts/<type>/<slug>/cover.webp`로 저장
+  - API 키가 없거나 생성 실패 시 → `cover.webp` 생성 건너뜀 + 경고 출력
   - `generate-thumbnails.mjs`는 `cover.webp` 없으면 해당 포스트를 건너뜀
 
 ### Step B3) Cover 이미지 변환

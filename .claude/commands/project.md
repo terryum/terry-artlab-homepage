@@ -78,6 +78,8 @@ README.md도 읽어서:
 
 생성된 이미지를 `public/images/projects/{slug}-cover.webp`로 저장한다.
 
+API 키가 없거나 생성 실패 시 → `scripts/gen-project-cover.mjs`를 참고하여 SVG 기반 placeholder 이미지를 생성한다.
+
 ## Step 5) projects.json 업데이트
 
 `projects/gallery/projects.json`을 읽어 `projects` 배열에 새 항목을 추가한다.
