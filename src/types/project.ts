@@ -1,5 +1,5 @@
 export interface ProjectLink {
-  type: 'github' | 'demo' | 'paper' | 'other';
+  type: 'github' | 'demo' | 'paper' | 'book' | 'other';
   url: string;
   label?: string;
 }

@@ -4,15 +4,26 @@
 
 ---
 
-## Step 1) GitHub URL 파싱
+## Step 0) 입력 타입 감지
+
+$ARGUMENTS에서 프로젝트 타입을 자동 감지한다.
+
+- `https://github.com/` 포함 → **GitHub 경로**
+- `--type=book` 명시 또는 GitHub URL 없음 → **수동 경로** (책, 제품 등)
+
+```
+/project https://github.com/terryum/awesome-deep-learning-papers          → GitHub 경로
+/project https://github.com/terryum/awesome-deep-learning-papers --featured
+/project --type=book --title="책 제목" --url=https://...                  → 수동 경로
+```
+
+---
+
+## GitHub 경로
+
+### Step 1) GitHub URL 파싱
 
 $ARGUMENTS에서 GitHub URL을 추출한다.
-
-```
-/project https://github.com/terryum/awesome-deep-learning-papers
-/project https://github.com/terryum/awesome-deep-learning-papers --featured
-/project https://github.com/terryum/awesome-deep-learning-papers --status=archived
-```
 
 - `owner/repo` 추출
 - `--featured` 플래그 확인 (기본: false)
@@ -102,3 +113,31 @@ links: GitHub
 ```
 
 `npx tsc --noEmit`으로 타입 체크를 실행한다.
+
+---
+
+## 수동 경로 (책, 제품 등)
+
+GitHub 경로와 동일한 Step 3~6을 따르되, 정보 수집을 사용자 입력/URL에서 한다.
+
+### 입력 파싱
+```
+/project --type=book --title="대학원생 때 알았더라면 좋았을 것들" --url=https://gradschoolstory.chkwon.net/
+/project --type=book --slug=my-book --cover=/path/to/cover.jpg
+```
+
+- `--type=book|product|other` → 링크 타입 결정 (book, demo, other)
+- `--title` → 프로젝트 제목 (없으면 URL에서 추출하거나 사용자에게 요청)
+- `--url` → 메인 링크
+- `--cover` → 커버 이미지 경로 (있으면 sharp로 16:9 크롭 + WebP 변환)
+- `--slug` → 슬러그 (없으면 제목에서 자동 생성)
+
+### 커버 이미지 처리
+- `--cover` 제공 시: sharp로 16:9 비율 크롭 → `public/images/projects/{slug}-cover.webp`로 저장
+  - 책 표지: 상단(제목 영역) 위주로 크롭
+- `--cover` 없으면: `/gemini-3-image-generation` 또는 SVG placeholder 사용
+
+### 메타데이터
+- 제목/설명은 ko/en 모두 입력 또는 번역 생성
+- `tech_stack`: 책이면 `["Book", ...]`, 제품이면 관련 기술
+- `published_at`: `--date=` 또는 사용자에게 질문

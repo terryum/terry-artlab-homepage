@@ -1,6 +1,26 @@
 {
   "projects": [
     {
+      "slug": "grad-school-story",
+      "title": {
+        "ko": "대학원생 때 알았더라면 좋았을 것들",
+        "en": "Things I Wish I Had Known in Grad School"
+      },
+      "description": {
+        "ko": "고민 많은 대학원생들의 필독서로 KAIST 도서대출 순위 1위를 꾸준히 기록함.",
+        "en": "A must-read for grad students, consistently ranked #1 in KAIST library checkouts."
+      },
+      "cover_image": "/images/projects/grad-school-story-cover.webp",
+      "tech_stack": ["Book", "Grad School", "Career"],
+      "links": [
+        { "type": "book", "url": "https://gradschoolstory.chkwon.net/", "label": "Book Site" }
+      ],
+      "status": "archived",
+      "featured": true,
+      "order": 0,
+      "published_at": "2016-07-01"
+    },
+    {
       "slug": "awesome-deep-learning-papers",
       "title": {
         "ko": "Awesome Deep Learning Papers",
@@ -17,7 +37,7 @@
       ],
       "status": "archived",
       "featured": true,
-      "order": 0,
+      "order": 1,
       "published_at": "2016-06-03"
     }
   ]
