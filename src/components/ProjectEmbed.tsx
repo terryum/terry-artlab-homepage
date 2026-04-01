@@ -20,9 +20,15 @@ export default function ProjectEmbed({
 
   useEffect(() => {
     trackEvent('project_view', { project_slug: slug, project_title: title });
+
+    // Hide footer on embed pages
+    const footer = document.querySelector('footer');
+    if (footer) footer.style.display = 'none';
+
     return () => {
       const seconds = Math.round((Date.now() - startRef.current) / 1000);
       trackEvent('project_time_spent', { project_slug: slug, seconds });
+      if (footer) footer.style.display = '';
     };
   }, [slug, title]);
 
