@@ -69,7 +69,7 @@ export default function ProjectEmbed({
 
       {/* Iframe */}
       <iframe
-        src={embedUrl}
+        src={`${embedUrl}${locale}/`}
         className="flex-1 w-full border-0"
         title={title}
         allow="clipboard-write"
