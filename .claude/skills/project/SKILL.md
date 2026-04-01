@@ -71,9 +71,9 @@ README.md도 읽어서:
   "tech_stack": ["Python", "Deep Learning"],
   "links": [
     { "type": "github", "url": "https://github.com/owner/repo" },
-    { "type": "demo", "url": "https://...", "label": "Live Demo" },
-    { "type": "paper", "url": "https://arxiv.org/abs/...", "label": "Paper" }
+    { "type": "demo", "url": "https://...", "label": "Live Demo" }
   ],
+  "embed_url": "https://my-project.vercel.app/",
   "status": "active",
   "featured": false,
   "order": 0,
@@ -84,6 +84,12 @@ README.md도 읽어서:
 - `order`는 기존 projects.json의 마지막 order + 1
 - `published_at`는 레포의 `created_at` 사용
 - `status`는 `pushed_at`이 1년 이내면 `active`, 아니면 `archived`
+
+### embed_url 규칙
+- **Vercel 링크** (`*.vercel.app`) → `embed_url`에 설정 (iframe 내부 임베딩)
+  - 카드 클릭 시 `/projects/[slug]` 내부 페이지로 이동
+- **그 외 링크** → `embed_url` 없음 (외부 링크, 새 탭에서 열림)
+- 사용자가 명시적으로 임베딩/외부 링크 지정 시 그에 따름
 
 ## Step 4) 커버 이미지 생성
 
