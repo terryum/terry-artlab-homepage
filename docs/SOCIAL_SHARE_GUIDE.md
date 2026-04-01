@@ -31,7 +31,37 @@
 
 ---
 
-## 2. 커버이미지 (OG 링크 프리뷰)
+## 2. 소개글 작성법 (Post)
+
+### 데이터 소스
+소셜미디어 소개글은 MDX frontmatter에서 우선순위 순으로 가져온다:
+1. `summary` — 소셜 공유용 주 텍스트
+2. `card_summary` — 짧은 버전 (X 등 글자 제한 플랫폼용 fallback)
+3. `ai_summary.one_liner` — 위 둘 다 없을 때 자동 생성본
+
+### 좋은 소개글의 특징
+실제 공유된 예시:
+
+> "We stand at an inflection point where AI is rapidly redefining the value of human thought and labor. This blog is a place for reading the gradient of that change and feeling out the contours of the world to come."
+
+> "In the age of AI, what matters in research is not 'knowing more myself' but 'building an environment where an AI scientist can sustain self-improving knowledge creation.'"
+
+**패턴:**
+- **핵심 인사이트를 1~2문장으로** — 글의 전체 내용이 아니라 가장 강한 메시지 하나
+- **"not X, but Y" 구조** — 역설이나 반전으로 시선을 끎
+- **방향성·비전 중심** — 기술적 디테일이 아니라 왜 이 글이 중요한지
+- **글의 톤과 일치** — 사색적이고 연구 지향적인 블로그 목소리 유지
+- **1~2문장, 40~80단어** — Facebook/LinkedIn에서 "더 보기" 없이 전문 노출
+
+### 쓰지 말아야 할 것
+- 글 내용의 요약이나 목차 나열 ("이 글에서는 A, B, C를 다룹니다")
+- 기술 용어 나열
+- 제목 반복
+- 홍보성 문구 ("꼭 읽어보세요!", "놓치지 마세요!")
+
+---
+
+## 3. 커버이미지 (OG 링크 프리뷰)
 
 ### 핵심 원칙
 > **이미지를 직접 업로드하면 안 된다.** 이미지 직접 업로드 시 클릭하면 이미지가 확대될 뿐 링크로 이동하지 않는다.
@@ -60,7 +90,7 @@
 
 ---
 
-## 3. URL 규칙
+## 4. URL 규칙
 
 ### 로캘 포함 필수
 > URL에 로캘(`/en/`, `/ko/`)을 반드시 포함해야 한다. 로캘 없는 URL(`/projects/slug`)은 302 리다이렉트되는데, **LinkedIn과 X 크롤러가 리다이렉트를 따라가지 못해** OG 태그를 읽지 못한다.
@@ -81,7 +111,7 @@
 
 ---
 
-## 4. 토큰 만료 관리
+## 5. 토큰 만료 관리
 
 | 플랫폼 | 만료 | 갱신 방법 |
 |--------|------|----------|
@@ -97,7 +127,7 @@
 
 ---
 
-## 5. 체크리스트
+## 6. 체크리스트
 
 발행 전 확인:
 - [ ] OG 이미지가 **JPG/PNG**인가? (webp면 X에서 실패)
