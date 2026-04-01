@@ -1,7 +1,11 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import ContentCard from './ContentCard';
-import ShowMoreButton from './ShowMoreButton';
 import type { PostMeta } from '@/types/post';
+
+const PAGE_SIZE = 3;
 
 interface LatestSectionProps {
   title: string;
@@ -26,6 +30,10 @@ export default function LatestSection({
   showTabTag,
   hidePubDate,
 }: LatestSectionProps) {
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const visiblePosts = posts.slice(0, visibleCount);
+  const hasMore = visibleCount < posts.length;
+
   return (
     <section className="py-8">
       <div className="flex items-center justify-between mb-4">
@@ -43,13 +51,19 @@ export default function LatestSection({
       {posts.length === 0 ? (
         <p className="text-text-muted text-sm py-4">{emptyText ?? 'No posts yet.'}</p>
       ) : (
-        <ShowMoreButton totalCount={posts.length} showMoreText={showMoreText}>
-          {(visibleCount) =>
-            posts.slice(0, visibleCount).map((post) => (
-              <ContentCard key={post.post_id} post={post} locale={locale} showTabTag={showTabTag} hidePubDate={hidePubDate} />
-            ))
-          }
-        </ShowMoreButton>
+        <div>
+          {visiblePosts.map((post) => (
+            <ContentCard key={post.post_id} post={post} locale={locale} showTabTag={showTabTag} hidePubDate={hidePubDate} />
+          ))}
+          {hasMore && (
+            <button
+              onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+              className="mt-4 w-full py-2 text-sm text-text-muted hover:text-accent transition-colors border border-line-default rounded-md"
+            >
+              {showMoreText ?? `+${Math.min(PAGE_SIZE, posts.length - visibleCount)} more`}
+            </button>
+          )}
+        </div>
       )}
     </section>
   );
