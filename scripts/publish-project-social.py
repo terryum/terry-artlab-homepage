@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-프로젝트 소셜미디어 공유 스크립트.
+프로젝트 소셜미디어 + Substack 공유 스크립트.
 
 projects/gallery/projects.json에서 프로젝트를 찾아
-Facebook Page, Threads, LinkedIn, X(Twitter), Bluesky에 공유한다.
+Facebook Page, Threads, LinkedIn, X(Twitter), Bluesky, Substack에 공유한다.
 
 사용법:
-    python scripts/publish-project-social.py --slug=<slug> [--dry-run] [--platform=facebook,threads,linkedin,x,bluesky]
+    python scripts/publish-project-social.py --slug=<slug> [--dry-run] [--platform=facebook,threads,linkedin,x,bluesky,substack]
 """
 import importlib.util
 import os
@@ -36,10 +36,17 @@ spec = importlib.util.spec_from_file_location(
 ps = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ps)
 
+# Import Substack functions
+spec_sub = importlib.util.spec_from_file_location(
+    "publish_substack", REPO_ROOT / "scripts" / "publish-substack.py"
+)
+psub = importlib.util.module_from_spec(spec_sub)
+spec_sub.loader.exec_module(psub)
+
 SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "https://terry.artlab.ai")
 PROJECTS_PATH = REPO_ROOT / "projects" / "gallery" / "projects.json"
 
-ALL_PLATFORMS = ["facebook", "threads", "linkedin", "x", "bluesky"]
+ALL_PLATFORMS = ["facebook", "threads", "linkedin", "x", "bluesky", "substack"]
 
 
 def load_projects():
@@ -118,9 +125,14 @@ def main():
     print(f"대상 플랫폼: {', '.join(platforms)}")
     print()
 
-    results = {}
+    # Cover image URL for Substack
+    cover_url = f"{SITE_BASE_URL}{project['cover_image']}" if project.get("cover_image") else None
 
-    for platform in platforms:
+    results = {}
+    social_platforms = [p for p in platforms if p != "substack"]
+    do_substack = "substack" in platforms
+
+    for platform in social_platforms:
         print(f"[{platform.upper()}]")
 
         # Token expiry check
@@ -148,6 +160,65 @@ def main():
 
         results[platform] = ok
         print()
+
+    # Substack publishing
+    if do_substack:
+        en_title = project["title"]["en"]
+        en_desc = project["description"]["en"]
+        ko_title = project["title"]["ko"]
+        ko_desc = project["description"]["ko"]
+
+        substack_cookie = os.environ.get("SUBSTACK_COOKIE", "")
+        en_sub_url = os.environ.get("NEXT_PUBLIC_SUBSTACK_EN_URL", "")
+        ko_sub_url = os.environ.get("NEXT_PUBLIC_SUBSTACK_KO_URL", "")
+
+        client = None
+        if not args.dry_run:
+            if not substack_cookie:
+                print("[SUBSTACK] Error: SUBSTACK_COOKIE not set", file=sys.stderr)
+                results["substack(en)"] = False
+                results["substack(ko)"] = False
+            else:
+                try:
+                    client = psub.SubstackClient(substack_cookie)
+                except Exception as e:
+                    print(f"[SUBSTACK] 인증 실패: {e}", file=sys.stderr)
+                    results["substack(en)"] = False
+                    results["substack(ko)"] = False
+
+        if "substack(en)" not in results and en_sub_url:
+            subdomain = psub.get_subdomain(en_sub_url)
+            print(f"[SUBSTACK EN]")
+            ok = psub.publish_post(
+                client, subdomain,
+                title=en_title,
+                subtitle=en_desc[:80],
+                paragraphs=[en_desc],
+                link=en_url,
+                cta="Check it out",
+                image_url=cover_url,
+                note_intro=en_desc[:100],
+                dry_run=args.dry_run,
+            )
+            results["substack(en)"] = ok
+            print()
+
+        if "substack(ko)" not in results and ko_sub_url:
+            subdomain = psub.get_subdomain(ko_sub_url)
+            print(f"[SUBSTACK KO]")
+            ok = psub.publish_post(
+                client, subdomain,
+                title=ko_title,
+                subtitle=ko_desc[:80],
+                paragraphs=[ko_desc],
+                link=ko_url,
+                cta="자세히 보기",
+                image_url=cover_url,
+                note_intro=ko_desc[:100],
+                dry_run=args.dry_run,
+            )
+            results["substack(ko)"] = ok
+            print()
 
     # Summary
     print(f"\n─── /project-share 결과 ─────────────────────────────")

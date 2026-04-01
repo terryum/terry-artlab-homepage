@@ -1,6 +1,6 @@
 ---
 name: project-share
-description: "Project Share — 프로젝트를 소셜미디어 & Substack에 공유. 프로젝트 URL/slug/제목으로 식별하여 Facebook, Threads, LinkedIn, X, Bluesky에 발행."
+description: "Project Share — 프로젝트를 소셜미디어 & Substack에 공유. 프로젝트 URL/slug/제목으로 식별하여 Facebook, Threads, LinkedIn, X, Bluesky, Substack에 발행."
 argument-hint: "<project-URL | slug | title> [platform-filter]"
 ---
 
@@ -28,8 +28,8 @@ argument-hint: "<project-URL | slug | title> [platform-filter]"
 **플랫폼 필터 파싱** (없으면 전체):
 - 한국어 명칭 인식: `페이스북` → facebook, `쓰레드`/`스레드` → threads, `링크드인` → linkedin, `X`/`엑스`/`트위터` → x, `블루스카이` → bluesky
 - `~에만`, `~만`, `--platform=a,b` 등 다양한 표현 수용
-- `소셜미디어`/`소셜` 키워드 → facebook,threads,linkedin,x,bluesky
-- 플랫폼 미지정 → 전체: facebook,threads,linkedin,x,bluesky
+- `소셜미디어`/`소셜` 키워드 → facebook,threads,linkedin,x,bluesky (substack 제외)
+- 플랫폼 미지정 → 전체: facebook,threads,linkedin,x,bluesky,substack
 
 식별 완료 후 출력:
 ```
@@ -91,7 +91,8 @@ python scripts/publish-project-social.py --slug={slug} --dry-run
 - `projects/gallery/projects.json`에서 프로젝트 조회
 - 한국어/영어 메시지 구성 (Facebook/Threads는 한국어, LinkedIn/X/Bluesky는 영어)
 - `embed_url` 있으면 `terry.artlab.ai/[lang]/projects/[slug]` URL 사용
-- 각 플랫폼 API로 발행
+- 소셜미디어 + Substack(EN/KO) API로 발행
+- Substack: 커버 이미지 + 설명 + CTA 링크로 티저 포스트 생성
 
 ### Step 5. 결과 요약 출력
 
@@ -104,6 +105,8 @@ python scripts/publish-project-social.py --slug={slug} --dry-run
 ✓ linkedin   — https://www.linkedin.com/feed/update/...
 ✓ x          — https://x.com/TerryUm_ML/status/...
 ✓ bluesky    — https://bsky.app/profile/.../post/...
+✓ substack(en) — https://terryum.substack.com/p/...
+✓ substack(ko) — https://taewoongum.substack.com/p/...
 ──────────────────────────────────────────────────────
 ```
 
