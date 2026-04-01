@@ -72,18 +72,34 @@ def build_hashtags(tech_stack):
     return " ".join(tags[:5])
 
 
-def build_ko_message(project, url):
-    title = project["title"]["ko"]
+def build_facebook_text(project):
+    """Facebook: 짧고 컴팩트하게. 빈 줄 없이. CTA 없음 (link 파라미터로 URL 전달)."""
     desc = project["description"]["ko"]
-    lines = [title, "", desc, "", f"자세히 보기 \U0001F449 {url}"]
-    return "\n".join(lines)
+    return desc
 
 
-def build_en_message(project, url):
-    title = project["title"]["en"]
+def build_threads_text(project):
+    """Threads: 설명 + Read more ↓ (link_attachment로 URL 전달)."""
+    desc = project["description"]["ko"]
+    return f"{desc}\n\nRead more \u2193"
+
+
+def build_linkedin_text(project):
+    """LinkedIn: 짧고 컴팩트하게. 빈 줄 없이. CTA 없음 (ARTICLE 카드로 URL 전달)."""
     desc = project["description"]["en"]
-    lines = [title, "", desc, "", f"Check it out \u2192 {url}"]
-    return "\n".join(lines)
+    return desc
+
+
+def build_x_text(project, url):
+    """X: 설명 + Read more ↓ + URL (인라인). 280자 제한."""
+    desc = project["description"]["en"]
+    return f"{desc}\n\nRead more \u2193\n{url}"
+
+
+def build_bluesky_text(project):
+    """Bluesky: 설명 + Read more ↓ (external embed로 URL 전달). 300 grapheme."""
+    desc = project["description"]["en"]
+    return f"{desc}\n\nRead more \u2193"
 
 
 def main():
@@ -110,24 +126,26 @@ def main():
     slug = args.slug
     fallback_url = project["links"][0]["url"] if project["links"] else SITE_BASE_URL
 
-    # Platform-specific URLs (matching /post-share patterns)
+    # Platform-specific URLs (로캘 포함 — 리다이렉트 없이 OG 크롤러가 직접 접근)
     if project.get("embed_url"):
         fb_url = f"{FACEBOOK_BASE_URL}/ko/projects/{slug}"
-        threads_url = f"{FACEBOOK_BASE_URL}/projects/{slug}?utm_source=threads&utm_medium=social"
-        neutral_url = f"{SITE_BASE_URL}/projects/{slug}"
+        threads_url = f"{FACEBOOK_BASE_URL}/ko/projects/{slug}?utm_source=threads&utm_medium=social"
+        linkedin_url = f"{SITE_BASE_URL}/en/projects/{slug}"
         cache_bust = date.today().strftime("%Y%m%d")
-        x_url = f"{SITE_BASE_URL}/projects/{slug}?v={cache_bust}"
+        x_url = f"{SITE_BASE_URL}/en/projects/{slug}?v={cache_bust}"
+        bluesky_url = f"{SITE_BASE_URL}/en/projects/{slug}"
         substack_en_url = f"{SITE_BASE_URL}/en/projects/{slug}"
         substack_ko_url = f"{SITE_BASE_URL}/ko/projects/{slug}"
     else:
-        fb_url = threads_url = neutral_url = x_url = fallback_url
+        fb_url = threads_url = linkedin_url = x_url = bluesky_url = fallback_url
         substack_en_url = substack_ko_url = fallback_url
 
-    # Platform-specific messages
-    ko_fb_text = build_ko_message(project, fb_url)
-    ko_threads_text = build_ko_message(project, threads_url)
-    en_text = build_en_message(project, neutral_url)
-    en_x_text = build_en_message(project, x_url)
+    # Platform-specific messages (post-share 스타일)
+    fb_text = build_facebook_text(project)
+    threads_text = build_threads_text(project)
+    linkedin_text = build_linkedin_text(project)
+    x_text = build_x_text(project, x_url)
+    bluesky_text = build_bluesky_text(project)
 
     print(f"대상 프로젝트: {slug} ({project['title']['en']})")
     print(f"대상 플랫폼: {', '.join(platforms)}")
@@ -154,15 +172,15 @@ def main():
                 continue
 
         if platform == "facebook":
-            ok = ps.publish_facebook(ko_fb_text, fb_url, args.dry_run)
+            ok = ps.publish_facebook(fb_text, fb_url, args.dry_run)
         elif platform == "threads":
-            ok = ps.publish_threads(ko_threads_text, threads_url, args.dry_run)
+            ok = ps.publish_threads(threads_text, threads_url, args.dry_run)
         elif platform == "linkedin":
-            ok = ps.publish_linkedin(en_text, neutral_url, args.dry_run)
+            ok = ps.publish_linkedin(linkedin_text, linkedin_url, args.dry_run)
         elif platform == "x":
-            ok = ps.publish_x(en_x_text, args.dry_run)
+            ok = ps.publish_x(x_text, args.dry_run)
         elif platform == "bluesky":
-            ok = ps.publish_bluesky(en_text, neutral_url, args.dry_run)
+            ok = ps.publish_bluesky(bluesky_text, bluesky_url, args.dry_run)
         else:
             ok = False
 
