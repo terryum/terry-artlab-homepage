@@ -7,6 +7,7 @@ export const SITE_CONFIG = {
     github: 'https://github.com/terryum',
     facebook: 'https://facebook.com/terry.artlab',
     instagram: 'https://instagram.com/terry.artlab',
+    threads: 'https://www.threads.net/@terry.artlab',
     youtube: 'https://www.youtube.com/@TerryTaeWoongUm',
     x: 'https://x.com/TerryUm_ML',
     bluesky: 'https://bsky.app/profile/terryum.bsky.social',
