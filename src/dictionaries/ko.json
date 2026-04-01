@@ -1,7 +1,8 @@
 {
   "nav": {
     "home": "Home",
-    "about": "About"
+    "about": "About",
+    "projects": "Projects"
   },
   "hero": {
     "name": "Terry Taewoong Um",
@@ -77,6 +78,11 @@
     "title": "페이지를 찾을 수 없습니다",
     "description": "요청하신 페이지가 존재하지 않습니다.",
     "back_home": "홈으로 돌아가기"
+  },
+  "projects": {
+    "title": "Projects",
+    "description": "오픈소스 프로젝트와 사이드 프로젝트 모음입니다.",
+    "empty": "아직 프로젝트가 없습니다."
   },
   "footer": {
     "copyright": "Terry Um"

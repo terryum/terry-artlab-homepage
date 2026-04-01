@@ -21,7 +21,7 @@ interface NavItem {
 interface HeaderProps {
   locale: Locale;
   dict: {
-    nav: { home: string; about: string };
+    nav: { home: string; about: string; projects: string };
   };
   navTabs: NavTabItem[];
 }
@@ -40,6 +40,7 @@ function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
     .filter(tab => tab.author === 'terry')
     .map(tab => ({ href: tab.href, label: tab.label, tabSlug: tab.tabSlug, author: tab.author }));
 
+  const projectsItem: NavItem = { href: `/${locale}/projects`, label: dict.nav.projects };
   const aboutItem: NavItem = { href: `/${locale}/about`, label: dict.nav.about };
 
   function isActive(item: NavItem) {
@@ -116,6 +117,7 @@ function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
             <span className="text-[10px] px-1.5 py-0.5 rounded font-medium leading-none nav-tag-terry">Terry</span>
             <div className="flex items-center gap-4 ml-1">
               {terryTabs.map(item => <TabLink key={item.tabSlug || item.href} item={item} />)}
+              <TabLink item={projectsItem} />
               <TabLink item={aboutItem} />
             </div>
 
@@ -160,6 +162,7 @@ function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
             {/* Terry group */}
             <span className="mx-2 mt-0.5 mb-1 inline-block text-[10px] px-1.5 py-0.5 rounded font-medium leading-none nav-tag-terry">Terry</span>
             {terryTabs.map(item => <MobileTabLink key={item.tabSlug || item.href} item={item} />)}
+            <MobileTabLink item={projectsItem} />
             <MobileTabLink item={aboutItem} />
           </nav>
         )}

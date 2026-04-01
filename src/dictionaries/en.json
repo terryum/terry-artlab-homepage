@@ -1,7 +1,8 @@
 {
   "nav": {
     "home": "Home",
-    "about": "About"
+    "about": "About",
+    "projects": "Projects"
   },
   "hero": {
     "name": "Terry Taewoong Um",
@@ -77,6 +78,11 @@
     "title": "Page Not Found",
     "description": "The page you requested does not exist.",
     "back_home": "Back to Home"
+  },
+  "projects": {
+    "title": "Projects",
+    "description": "A collection of open-source and side projects.",
+    "empty": "No projects yet."
   },
   "footer": {
     "copyright": "Terry Um"
