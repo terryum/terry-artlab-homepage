@@ -27,7 +27,7 @@
 |--------|-----------|------|
 | Facebook | 63,206자 | 첫 3줄만 노출, 나머지 "더 보기" |
 | Threads | 500자 | |
-| LinkedIn | 3,000자 | 첫 3줄만 노출, 나머지 "...see more" |
+| LinkedIn | 3,000자 | 줄바꿈도 글자수에 포함됨. 첫 3줄만 노출, 나머지 "...see more" |
 | X (Basic) | 280자 | URL은 t.co로 23자 고정 |
 | X (Premium) | 25,000자 | |
 | Bluesky | 300 grapheme | |
