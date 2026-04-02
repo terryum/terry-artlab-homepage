@@ -27,7 +27,7 @@ const RELATION_LABELS: Record<string, { ko: string; en: string; strong: boolean 
   addresses_task:         { ko: '같은 문제 접근', en: 'Same task',        strong: false },
   uses_dataset:           { ko: '데이터셋 공유',  en: 'Uses dataset',     strong: false },
   inspired_by:            { ko: '아이디어 영감',  en: 'Inspired by',      strong: false },
-  related:                { ko: '관련 논문',      en: 'Related',          strong: false },
+  related:                { ko: '관련 포스트',    en: 'Related',          strong: false },
 };
 
 function RelationBadge({ type, locale }: { type: string; locale: Locale }) {
@@ -49,7 +49,7 @@ function RelationBadge({ type, locale }: { type: string; locale: Locale }) {
 export default function RelatedPapers({ locale, relatedPosts, label }: RelatedPapersProps) {
   if (relatedPosts.length === 0) return null;
 
-  const heading = label ?? (locale === 'ko' ? '관련 논문' : 'Related Papers');
+  const heading = label ?? (locale === 'ko' ? '관련 포스트' : 'Related Posts');
 
   return (
     <section className="mt-10 pt-8 border-t border-line-default">
