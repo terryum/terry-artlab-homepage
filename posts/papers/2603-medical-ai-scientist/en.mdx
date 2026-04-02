@@ -1,0 +1,107 @@
+---
+locale: "en"
+translation_of: "2603-medical-ai-scientist:ko"
+title: "Towards a Medical AI Scientist"
+subtitle: "Automating clinical research from ideation to manuscript"
+summary: "Medical AI Scientist is the first autonomous research framework tailored to clinical medicine. Through clinician-engineer co-reasoning, it generates evidence-grounded ideas and automates experiments and manuscript drafting. Across 171 cases and 19 clinical tasks, it outperforms commercial LLMs in idea quality and produces manuscripts approaching MICCAI-level quality."
+card_summary: "The first clinical medicine-specialized AI scientist framework that automates literature-based idea generation, experiment execution, and manuscript drafting. Outperforms commercial LLMs across 171 cases and generates papers approaching MICCAI quality."
+cover_caption: "Figure 1: a, System workflow: fully-automated multi-agents system for end-to-end scientific discovery in clinical medicine. b, Med-AI Bench: visualization depicting 19 distinct medical research tasks within performance benchmarking. c, Experimental setup. d, Performance benchmarking."
+published_at: "2026-04-03T00:00:00Z"
+source_type: "arxiv"
+source_url: "https://arxiv.org/abs/2603.28589"
+source_date: "2026-03-30T00:00:00Z"
+display_tags: ["AI", "AI Scientist", "Medical AI", "LLM Agent", "Autonomous Research"]
+references:
+  - title: "AI Co-Scientist"
+    author: "Google DeepMind"
+    description: "A domain-agnostic AI scientist system. Unlike Medical AI Scientist, it is not specialized for clinical medicine's unique requirements of medical evidence, ethical policies, and specialized data modalities."
+    arxiv_url: ""
+    scholar_url: "https://scholar.google.com/scholar?q=ai-co-scientist-google"
+    category: "recent"
+  - title: "The AI Scientist: Towards Fully Automated Open-Ended Scientific Discovery"
+    author: "Chris Lu et al."
+    description: "A pioneering LLM-based automated scientific discovery system that automates hypothesis generation, experimentation, and paper writing. Medical AI Scientist extends this concept specifically for clinical medicine."
+    arxiv_url: "https://arxiv.org/abs/2408.06292"
+    scholar_url: "https://scholar.google.com/scholar?q=ai-scientist-fully-automated"
+    category: "foundational"
+  - title: "SciAgents: Automating scientific discovery through multi-agent intelligent graph reasoning"
+    author: "Alireza Ghafarollahi et al."
+    description: "Multi-agent scientific discovery automation. Medical AI Scientist also uses a multi-agent architecture but differentiates through medical domain-specific ethical and clinical requirements."
+    arxiv_url: "https://arxiv.org/abs/2409.05556"
+    scholar_url: "https://scholar.google.com/scholar?q=sciagents-automating-scientific"
+    category: "foundational"
+---
+
+## TL;DR
+
+The first autonomous research framework specialized for clinical medicine, using clinician-engineer co-reasoning to generate evidence-grounded ideas and automating experiments and manuscript drafting, achieving higher idea quality than commercial LLMs and producing MICCAI-level papers.
+
+## Problem
+
+AI Scientist systems that autonomously generate hypotheses, conduct experiments, and write manuscripts have emerged, but existing systems remain domain-agnostic, limiting their applicability to clinical medicine. Medical research requires grounding in medical evidence, handling specialized data modalities (CT, MRI, pathology, etc.), and adherence to ethical policies. This paper asks whether an AI scientist can automate the full clinical research pipeline with evidence-based rigor.
+
+## Key Idea
+
+Medical AI Scientist is a multi-agent framework built on three core design principles:
+
+- **Clinically grounded ideation**: A **clinician-engineer co-reasoning** mechanism transforms extensively surveyed literature into actionable evidence, ensuring traceability of generated research ideas
+- **3 research modes**: (1) Paper-based Reproduction, (2) Literature-inspired Innovation, (3) Task-driven Exploration — each with progressively increasing autonomy
+- **Evidence-grounded manuscript drafting**: Guided by structured medical compositional conventions and ethical policies
+
+The agent architecture comprises **Idea Proposer** (Explorer, Surveyor, Planner, Idea Generator, Assessor), **Experimental Executor** (Coder, Debugger, Analyst), and **Manuscript Composer** (Stylist, Formatter, LaTeX Compiler), leveraging MONAI medical tools, Dockerized Sandbox, and PubMed/IEEE Xplore knowledge bases.
+
+<Figure src="./fig-6.png" caption="Figure 6: The conceptual illustration of the Medical AI Scientist: A comprehensive system of fully-automated agents for end-to-end scientific discovery in clinical medicine. The system offers three user interaction modes: Reproduction (reproducing a specified hypothesis), Innovation (innovating from provided literature) and Exploration (autonomously exploring a given research direction), to streamline the research process from idea generation to execution and manuscript writing." />
+
+<Collapsible title="Detailed Method">
+
+### Idea Proposer
+
+Idea generation involves multi-agent collaboration:
+
+1. **Explorer**: Core challenge analysis and paradigm matching
+2. **Surveyor**: Paper and code download, comprehensive literature review
+3. **Planner**: Detailed idea design and survey review
+4. **Idea Generator**: Final idea generation through collaborative innovation
+5. **Assessor**: Comprehensive review for quality assessment and refinement
+
+The clinician-engineer co-reasoning simultaneously validates medical plausibility and technical feasibility.
+
+### Experimental Executor
+
+- **Coder**: Code generation using medical tools like MONAI
+- **Debugger**: Execution and debugging in Dockerized Sandbox
+- **Analyst**: Experiment result analysis and optimization
+
+Experiments run in isolated Docker containers with a General Implementation Toolkit standardizing medical data preprocessing, model training, and evaluation.
+
+### Manuscript Composer
+
+Reflects structural writing conventions of medical conferences (MICCAI, ISBI, etc.):
+- **Stylist**: Determines paper structure and style
+- **Formatter**: Formats to medical paper standards
+- **LaTeX Compiler**: Final paper compilation
+
+</Collapsible>
+
+## Key Results
+
+- **Idea quality**: Across 19 clinical tasks and 171 cases, **consistently outperforms commercial LLMs** (Gemini 2.5 Pro, GPT-5) in both LLM-based and blinded human expert evaluation, particularly in Novelty, Ethicality, and Generalizability
+- **Execution success**: Significantly higher experimental success rates and implementation completeness compared to commercial LLMs
+- **Paper quality**: Under double-blind evaluation by Stanford Agentic Reviewer and 10 medical experts (PhD/postdoc), generated manuscripts **approach MICCAI-level quality** and **consistently surpass ISBI and BIBM**
+
+<Figure src="./fig-5.png" caption="Figure 5: Anonymized comparison of paper quality on an identical medical task. Manuscripts generated by Medical AI Scientist achieve performance comparable to MICCAI, ISBI, and BIBM under consistent double-blind evaluation across both quantitative and qualitative assessments: a, Stanford Agentic Reviewer automatic evaluation. b, Double-blinded scoring (1–5) by 10 medical experts (PhD/postdoc). c, Qualitative evaluation summary." />
+
+## Achievements and Limitations
+
+### What's New
+- **Clinical-specialized AI Scientist**: First domain-specific autonomous research framework reflecting medical evidence, specialized data modalities, and ethical policies
+- **Progressive autonomy**: Reproduction → Innovation → Exploration design balances reliability and autonomy
+- **MICCAI-level paper generation**: Double-blind evaluation validates that AI-generated papers reach top medical AI conference level
+
+### Limitations
+- **Author-noted**: Current framework focuses on medical imaging, time-series, and text; extension to other medical subdomains (genomics, drug discovery) is untested
+- 🤖 While the evaluation shows papers "approaching MICCAI level," passing actual peer review is a different challenge from automated evaluation scores, and the clinical value and reproducibility of generated ideas require separate long-term validation
+
+## Terry's memo
+
+- *(None)*

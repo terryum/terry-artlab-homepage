@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-02T22:31:19.183Z",
-  "total_posts": 20,
+  "generated_at": "2026-04-02T22:37:18.483Z",
+  "total_posts": 21,
   "posts": [
     {
       "post_number": 1,
@@ -1337,6 +1337,68 @@
       "taxonomy_secondary": [
         "robotics/arm"
       ]
+    },
+    {
+      "post_number": 21,
+      "slug": "2603-medical-ai-scientist",
+      "content_type": "papers",
+      "title_en": "Towards a Medical AI Scientist",
+      "title_ko": "Towards a Medical AI Scientist: 임상 자율 연구를 위한 AI 과학자",
+      "domain": "ai",
+      "subfields": [
+        "medical-ai",
+        "autonomous-research",
+        "multi-agent",
+        "scientific-discovery"
+      ],
+      "key_concepts": [
+        "AI-scientist",
+        "clinician-engineer-co-reasoning",
+        "autonomous-research",
+        "multi-agent-framework",
+        "medical-evidence"
+      ],
+      "methodology": [
+        "multi-agent-system",
+        "LLM-based-evaluation",
+        "double-blind-evaluation"
+      ],
+      "contribution_type": "framework",
+      "tags": [
+        "Papers",
+        "AI",
+        "AI Scientist",
+        "Medical AI",
+        "LLM Agent",
+        "Autonomous Research"
+      ],
+      "source_author": "Hongtao Wu et al.",
+      "source_date": "2026-03-30T00:00:00Z",
+      "published_at": "2026-04-03T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "First autonomous research framework specialized for clinical medicine with clinician-engineer co-reasoning for evidence-grounded ideation and MICCAI-level manuscript generation",
+        "problem": "Existing AI Scientists are domain-agnostic and cannot handle clinical medicine's requirements for medical evidence, specialized data modalities, and ethical policies",
+        "solution": "Multi-agent framework with clinician-engineer co-reasoning, 3 progressive research modes (reproduction/innovation/exploration), medical toolbox (MONAI), and evidence-grounded manuscript composer",
+        "key_result": "Outperforms Gemini 2.5 Pro and GPT-5 in idea quality across 171 cases/19 tasks; generated papers approach MICCAI level in double-blind evaluation",
+        "limitations": [
+          "Focused on medical imaging/time-series/text only",
+          "No genomics or drug discovery evaluation",
+          "Automated evaluation vs actual peer review gap"
+        ]
+      },
+      "relations": [
+        {
+          "target": "2502-ai-co-scientist",
+          "type": "compares_with"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "ai/agent",
+      "taxonomy_secondary": [
+        "ai/llm"
+      ]
     }
   ],
   "knowledge_graph": {
@@ -1555,6 +1617,11 @@
         "from": "2603-roboclaw-agentic-long-horizon",
         "to": "2603-capx-coding-agents-manipulation",
         "type": "compares_with"
+      },
+      {
+        "from": "2603-medical-ai-scientist",
+        "to": "2502-ai-co-scientist",
+        "type": "compares_with"
       }
     ],
     "clusters": [
@@ -1623,6 +1690,18 @@
         ]
       },
       {
+        "id": "ai-agent",
+        "label": "ai/agent",
+        "post_numbers": [
+          11,
+          21
+        ],
+        "core_concepts": [],
+        "taxonomy_nodes": [
+          "ai/agent"
+        ]
+      },
+      {
         "id": "concept-VLA",
         "label": "VLA",
         "post_numbers": [
@@ -1660,7 +1739,6 @@
     ],
     "outlier_papers": [
       3,
-      11,
       19
     ]
   },
@@ -2022,11 +2100,27 @@
     ],
     "policy-orchestration": [
       20
+    ],
+    "AI-scientist": [
+      21
+    ],
+    "clinician-engineer-co-reasoning": [
+      21
+    ],
+    "autonomous-research": [
+      21
+    ],
+    "multi-agent-framework": [
+      21
+    ],
+    "medical-evidence": [
+      21
     ]
   },
   "domain_stats": {
     "robotics": 18,
-    "ml": 2
+    "ml": 2,
+    "ai": 1
   },
   "taxonomy_stats": {
     "robotics/brain/vla": 4,
@@ -2036,13 +2130,14 @@
     "robotics/arm/exoskeleton": 3,
     "robotics/hand:secondary": 1,
     "robotics/hand/dexterous": 2,
-    "ai/agent": 1,
+    "ai/agent": 2,
     "robotics/hand/dexterous:secondary": 4,
     "robotics/arm/exoskeleton:secondary": 1,
     "robotics/brain": 5,
+    "ai/llm:secondary": 1,
     "robotics/arm": 4,
     "robotics/hand": 8,
     "robotics": 17,
-    "ai": 1
+    "ai": 2
   }
 }

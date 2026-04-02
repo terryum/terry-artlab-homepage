@@ -1,0 +1,106 @@
+---
+locale: "ko"
+title: "Towards a Medical AI Scientist: 임상 자율 연구를 위한 AI 과학자"
+subtitle: "아이디어 생성부터 논문 작성까지 자동화하는 의료 AI 연구 프레임워크"
+summary: "임상 의학에 특화된 최초의 자율 연구 프레임워크 Medical AI Scientist를 제안한다. 임상의-엔지니어 공동 추론으로 근거 기반 아이디어를 생성하고, 19개 임상 태스크·171개 케이스에서 상용 LLM 대비 높은 아이디어 품질을 보이며, 생성된 논문이 MICCAI 수준에 근접한다."
+card_summary: "임상 의학 특화 AI 과학자 프레임워크로, 문헌 기반 아이디어 생성부터 실험 실행, 논문 작성까지 자동화한다. 171개 케이스에서 상용 LLM보다 높은 아이디어 품질을 보이고, 생성 논문이 MICCAI 수준에 근접한다."
+cover_caption: "Figure 1: a, System workflow: fully-automated multi-agents system for end-to-end scientific discovery in clinical medicine. b, Med-AI Bench: visualization depicting 19 distinct medical research tasks within performance benchmarking. c, Experimental setup. d, Performance benchmarking."
+published_at: "2026-04-03T00:00:00Z"
+source_type: "arxiv"
+source_url: "https://arxiv.org/abs/2603.28589"
+source_date: "2026-03-30T00:00:00Z"
+display_tags: ["AI", "AI Scientist", "Medical AI", "LLM Agent", "Autonomous Research"]
+references:
+  - title: "AI Co-Scientist"
+    author: "Google DeepMind"
+    description: "범용 AI 과학자 시스템으로, Medical AI Scientist와 달리 도메인에 구애받지 않는 접근법. Medical AI Scientist는 임상 의학의 특수성(의학적 근거, 윤리 정책, 전문 데이터 양식)에 맞춘 특화 프레임워크다."
+    arxiv_url: ""
+    scholar_url: "https://scholar.google.com/scholar?q=ai-co-scientist-google"
+    category: "recent"
+  - title: "The AI Scientist: Towards Fully Automated Open-Ended Scientific Discovery"
+    author: "Chris Lu et al."
+    description: "LLM 기반 자동 과학 발견 시스템의 선구적 연구. 가설 생성, 실험, 논문 작성을 자동화하지만 도메인 비특화. Medical AI Scientist는 이 개념을 임상 의학에 맞춰 확장한다."
+    arxiv_url: "https://arxiv.org/abs/2408.06292"
+    scholar_url: "https://scholar.google.com/scholar?q=ai-scientist-fully-automated"
+    category: "foundational"
+  - title: "SciAgents: Automating scientific discovery through multi-agent intelligent graph reasoning"
+    author: "Alireza Ghafarollahi et al."
+    description: "다중 에이전트 기반 과학 발견 자동화. Medical AI Scientist도 다중 에이전트 아키텍처를 사용하지만, 의료 도메인의 윤리적·임상적 요구사항을 반영한 차별화된 설계를 갖춘다."
+    arxiv_url: "https://arxiv.org/abs/2409.05556"
+    scholar_url: "https://scholar.google.com/scholar?q=sciagents-automating-scientific"
+    category: "foundational"
+---
+
+## TL;DR
+
+임상 의학에 특화된 최초의 자율 연구 프레임워크로, 임상의-엔지니어 공동 추론 메커니즘을 통해 문헌 기반 아이디어를 생성하고, 실험 실행과 논문 작성까지 자동화하여 상용 LLM 대비 월등한 아이디어 품질과 MICCAI 수준의 논문을 생성한다.
+
+## 문제
+
+자율적으로 가설을 생성하고 실험을 수행하며 논문을 작성하는 AI Scientist 시스템이 등장했지만, 기존 시스템들은 도메인에 구애받지 않아 임상 의학에의 적용이 제한적이다. 의학 연구는 의학적 근거에 기반해야 하고, CT/MRI/병리 등 전문 데이터 양식을 다뤄야 하며, 윤리 정책을 준수해야 하는 특수성이 있다. 이 논문은 "AI 과학자가 임상 연구의 전 과정을 근거 기반으로 자동화할 수 있는가?"라는 질문에 답한다.
+
+## 핵심 아이디어
+
+Medical AI Scientist는 세 가지 핵심 설계 원칙으로 구축된 다중 에이전트 프레임워크다:
+
+- **임상 근거 기반 아이디어 생성**: 광범위한 문헌 조사를 실행 가능한 근거로 변환하는 **임상의-엔지니어 공동 추론(co-reasoning)** 메커니즘으로, 생성된 아이디어의 추적 가능성을 보장
+- **3가지 연구 모드**: (1) Paper-based Reproduction — 논문 재현, (2) Literature-inspired Innovation — 문헌 기반 혁신, (3) Task-driven Exploration — 태스크 기반 자율 탐색. 자동화 자율성이 점진적으로 증가
+- **근거 기반 논문 작성**: 의학 논문의 구조적 작성 관례와 윤리 정책을 반영한 Manuscript Composer
+
+에이전트 구성은 **Idea Proposer**(Explorer, Surveyor, Planner, Idea Generator, Assessor), **Experimental Executor**(Coder, Debugger, Analyst), **Manuscript Composer**(Stylist, Formatter, LaTeX Compiler)로 이루어지며, MONAI 의료 도구와 Dockerized Sandbox, PubMed/IEEE Xplore 지식 베이스를 활용한다.
+
+<Figure src="./fig-6.png" caption="Figure 6: Medical AI Scientist의 개념 도해: 임상 의학 자동 과학 발견을 위한 완전 자동 에이전트 시스템. 시스템은 Reproduction(지정 가설 재현), Innovation(제공 문헌 기반 혁신), Exploration(연구 방향 자율 탐색) 세 가지 사용자 상호작용 모드를 제공하여 아이디어 생성부터 실행, 논문 작성까지의 연구 과정을 자동화한다." />
+
+<Collapsible title="구체적 방법">
+
+### Idea Proposer
+
+아이디어 생성 과정은 다중 에이전트의 협업으로 이루어진다:
+
+1. **Explorer**: 핵심 과제 분석 및 패러다임 매칭
+2. **Surveyor**: 논문 및 코드 다운로드, 종합적 문헌 조사
+3. **Planner**: 아이디어 상세 설계 및 설문 검토
+4. **Idea Generator**: 협업적 혁신을 통한 최종 아이디어 생성
+5. **Assessor**: 종합 리뷰를 통한 아이디어 품질 평가 및 개선
+
+임상의-엔지니어 공동 추론은 의학적 타당성과 기술적 실현 가능성을 동시에 검증한다.
+
+### Experimental Executor
+
+- **Coder**: MONAI 등 의학 도구를 사용한 코드 생성
+- **Debugger**: Dockerized Sandbox에서의 실행 및 디버깅
+- **Analyst**: 실험 결과 분석 및 최적화
+
+실험은 Dockerized Sandbox에서 격리 실행되며, General Implementation Toolkit을 통해 의료 데이터 전처리, 모델 학습, 평가를 표준화한다.
+
+### Manuscript Composer
+
+의학 학회(MICCAI, ISBI 등)의 구조적 작성 관례를 반영하여:
+- **Stylist**: 논문 구조 및 스타일 결정
+- **Formatter**: 의학 논문 형식 맞춤
+- **LaTeX Compiler**: 최종 논문 컴파일
+
+</Collapsible>
+
+## 주요 결과
+
+- **아이디어 품질**: 19개 임상 태스크·171개 케이스에서 LLM 기반 + 인간 전문가 블라인드 평가 모두에서 Gemini 2.5 Pro, GPT-5 등 **상용 LLM을 일관되게 상회**. 특히 Novelty, Ethicality, Generalizability에서 우위
+- **실행 성공률**: 생성된 코드의 실험 성공률과 제안-구현 정합성(implementation completeness)에서 상용 LLM 대비 **유의미하게 높은 성공률**
+- **논문 품질**: Stanford Agentic Reviewer와 10명의 의학 전문가(PhD/postdoc) 이중 블라인드 평가에서 생성 논문이 **MICCAI 수준에 근접**, ISBI와 BIBM을 **일관되게 상회**
+
+<Figure src="./fig-5.png" caption="Figure 5: 동일 의학 태스크에서의 익명 논문 품질 비교. Medical AI Scientist가 생성한 논문이 MICCAI, ISBI, BIBM과 비교하여 정량적·정성적 이중 블라인드 평가에서 MICCAI에 근접한 성능을 달성한다. a, Stanford Agentic Reviewer 자동 평가. b, 10명의 의학 전문가에 의한 이중 블라인드 점수(1-5점). c, 정성적 평가 요약." />
+
+## 달성점과 한계점
+
+### 새롭게 달성한 점
+- **임상 특화 AI 과학자**: 의학적 근거, 전문 데이터 양식, 윤리 정책을 반영한 최초의 도메인 특화 자율 연구 프레임워크
+- **3단계 자율성**: 재현 → 혁신 → 탐색으로 자율성이 점진적으로 증가하는 설계로, 신뢰성과 자율성의 균형을 제공
+- **MICCAI 수준 논문 생성**: AI가 생성한 논문이 최상위 의학 AI 학회 수준에 도달함을 이중 블라인드 평가로 검증
+
+### 한계점
+- **저자 언급**: 현재 프레임워크는 의학 영상/시계열/텍스트에 집중하며, 유전체학이나 약물 발견 등 다른 의학 서브도메인으로의 확장은 미검증
+- 🤖 MICCAI "수준에 근접"한다는 평가가 있지만, 실제 peer review를 통과하는 것과 자동 평가 점수는 다른 문제이며, 생성된 아이디어의 실제 임상적 가치나 재현성은 별도의 장기 검증이 필요하다
+
+## Terry's memo
+
+- *(None)*
