@@ -1,32 +1,181 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { getPostsByType } from '@/lib/posts';
 
-export async function GET() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  // Try anon key first, fall back to service role key (both work for public SELECT via RLS)
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+export const runtime = 'nodejs';
 
-  if (!url || !key) {
-    return NextResponse.json(
-      { error: 'Database not configured', debug: { hasUrl: !!url, hasAnon: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, hasService: !!process.env.SUPABASE_SERVICE_ROLE_KEY } },
-      { status: 503 }
-    );
+interface GraphPaper {
+  slug: string;
+  title_en: string;
+  title_ko: string;
+  domain: string | null;
+  taxonomy_primary: string | null;
+  meta_json: Record<string, unknown> | null;
+}
+
+interface GraphEdge {
+  edge_id: string;
+  source_slug: string;
+  target_slug: string;
+  edge_type: string;
+}
+
+interface GraphLayout {
+  slug: string;
+  x: number;
+  y: number;
+}
+
+interface GraphPayload {
+  papers: GraphPaper[];
+  edges: GraphEdge[];
+  layouts: GraphLayout[];
+}
+
+function getSupabaseRuntimeConfig() {
+  const url =
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    process.env.SUPABASE_URL ||
+    process.env.SUPABASE_PROJECT_URL ||
+    '';
+  const key =
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    process.env.SUPABASE_ANON_KEY ||
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    '';
+
+  return { url, key };
+}
+
+function buildFallbackEdges(papers: GraphPaper[]): GraphEdge[] {
+  const validSlugs = new Set(papers.map((paper) => paper.slug));
+  const seen = new Set<string>();
+  const edges: GraphEdge[] = [];
+
+  for (const paper of papers) {
+    const relations = paper.meta_json?.relations;
+    if (!Array.isArray(relations)) continue;
+
+    for (const relation of relations) {
+      if (!relation || typeof relation !== 'object') continue;
+
+      const target = 'target' in relation && typeof relation.target === 'string'
+        ? relation.target
+        : null;
+      const edgeType = 'type' in relation && typeof relation.type === 'string'
+        ? relation.type
+        : 'related';
+
+      if (!target || !validSlugs.has(target)) continue;
+
+      const edgeId = `${paper.slug}__${target}__${edgeType}`;
+      if (seen.has(edgeId)) continue;
+
+      seen.add(edgeId);
+      edges.push({
+        edge_id: edgeId,
+        source_slug: paper.slug,
+        target_slug: target,
+        edge_type: edgeType,
+      });
+    }
   }
 
-  const supabase = createClient(url, key);
+  return edges;
+}
 
-  const [papersRes, edgesRes, layoutsRes] = await Promise.all([
-    supabase.from('papers').select('slug,title_en,title_ko,domain,taxonomy_primary,taxonomy_secondary,key_concepts,source_author,published_at,meta_json').order('slug'),
-    supabase.from('graph_edges').select('edge_id,source_slug,target_slug,edge_type,status').eq('status', 'confirmed'),
-    supabase.from('node_layouts').select('slug,x,y').eq('view_id', 'default'),
+async function loadFallbackGraphData(): Promise<GraphPayload> {
+  const [enPosts, koPosts] = await Promise.all([
+    getPostsByType('en', 'papers'),
+    getPostsByType('ko', 'papers'),
   ]);
 
-  if (papersRes.error || edgesRes.error || layoutsRes.error) {
-    return NextResponse.json({ error: 'Database query failed' }, { status: 500 });
+  const enBySlug = new Map(enPosts.map((post) => [post.slug, post]));
+  const koBySlug = new Map(koPosts.map((post) => [post.slug, post]));
+  const slugs = Array.from(new Set([...enBySlug.keys(), ...koBySlug.keys()])).sort();
+
+  const papers: GraphPaper[] = slugs.map((slug) => {
+    const enPost = enBySlug.get(slug);
+    const koPost = koBySlug.get(slug);
+    const base = enPost ?? koPost;
+
+    return {
+      slug,
+      title_en: enPost?.title ?? koPost?.title ?? slug,
+      title_ko: koPost?.title ?? enPost?.title ?? slug,
+      domain: base?.domain ?? null,
+      taxonomy_primary: base?.taxonomy_primary ?? null,
+      meta_json: (base as Record<string, unknown> | undefined) ?? null,
+    };
+  });
+
+  return {
+    papers,
+    edges: buildFallbackEdges(papers),
+    layouts: [],
+  };
+}
+
+async function loadSupabaseGraphData(): Promise<GraphPayload | null> {
+  const { url, key } = getSupabaseRuntimeConfig();
+  if (!url || !key) {
+    console.warn('[paper-map] Supabase runtime env missing, using filesystem fallback');
+    return null;
   }
 
-  return NextResponse.json(
-    { papers: papersRes.data, edges: edgesRes.data, layouts: layoutsRes.data },
-    { headers: { 'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600' } }
-  );
+  try {
+    const supabase = createClient(url, key);
+
+    const [papersRes, edgesRes, layoutsRes] = await Promise.all([
+      supabase
+        .from('papers')
+        .select('slug,title_en,title_ko,domain,taxonomy_primary,taxonomy_secondary,key_concepts,source_author,published_at,meta_json')
+        .order('slug'),
+      supabase
+        .from('graph_edges')
+        .select('edge_id,source_slug,target_slug,edge_type,status')
+        .eq('status', 'confirmed'),
+      supabase
+        .from('node_layouts')
+        .select('slug,x,y')
+        .eq('view_id', 'default'),
+    ]);
+
+    if (papersRes.error || edgesRes.error || layoutsRes.error) {
+      console.warn(
+        '[paper-map] Supabase query failed, using filesystem fallback',
+        papersRes.error?.message || edgesRes.error?.message || layoutsRes.error?.message
+      );
+      return null;
+    }
+
+    return {
+      papers: papersRes.data,
+      edges: edgesRes.data,
+      layouts: layoutsRes.data,
+    };
+  } catch (error) {
+    console.warn('[paper-map] Supabase request crashed, using filesystem fallback', error);
+    return null;
+  }
+}
+
+export async function GET() {
+  try {
+    const supabaseData = await loadSupabaseGraphData();
+    const data = supabaseData ?? await loadFallbackGraphData();
+
+    return NextResponse.json(
+      data,
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+          'X-Paper-Map-Source': supabaseData ? 'supabase' : 'filesystem',
+        },
+      }
+    );
+  } catch (error) {
+    console.error('[paper-map] Failed to build graph payload', error);
+    return NextResponse.json({ error: 'Failed to load graph data' }, { status: 500 });
+  }
 }

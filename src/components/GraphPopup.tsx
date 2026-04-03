@@ -27,8 +27,15 @@ export default function GraphPopup({ open, onClose, locale }: GraphPopupProps) {
     setError(null);
     try {
       const res = await fetch('/api/public/graph');
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      setData(await res.json());
+      const payload = await res.json().catch(() => null);
+      if (!res.ok) {
+        const detail =
+          payload && typeof payload === 'object' && 'error' in payload && typeof payload.error === 'string'
+            ? `: ${payload.error}`
+            : '';
+        throw new Error(`HTTP ${res.status}${detail}`);
+      }
+      setData(payload as GraphData);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load graph');
     } finally {
