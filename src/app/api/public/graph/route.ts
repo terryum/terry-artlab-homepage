@@ -3,10 +3,14 @@ import { createClient } from '@supabase/supabase-js';
 
 export async function GET() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  // Try anon key first, fall back to service role key (both work for public SELECT via RLS)
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url || !key) {
-    return NextResponse.json({ error: 'Database not configured' }, { status: 503 });
+    return NextResponse.json(
+      { error: 'Database not configured', debug: { hasUrl: !!url, hasAnon: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, hasService: !!process.env.SUPABASE_SERVICE_ROLE_KEY } },
+      { status: 503 }
+    );
   }
 
   const supabase = createClient(url, key);
