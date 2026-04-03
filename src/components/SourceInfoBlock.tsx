@@ -51,7 +51,11 @@ export default function SourceInfoBlock({
   if (!sourceUrl && !sourceTitle) return null;
 
   const dateStr = sourceDate ? formatSourceDate(sourceDate) : null;
-  const scholarUrl = scholarUrlProp || (sourceTitle ? buildScholarUrl(sourceTitle) : null);
+  // Only show Google Scholar for academic sources (arXiv, journals), not blogs
+  const isAcademic = !sourceType || ['arXiv', 'Nature Communications', 'IEEE', 'ACM'].includes(sourceType) || sourceType.startsWith('Nature');
+  const scholarUrl = isAcademic ? (scholarUrlProp || (sourceTitle ? buildScholarUrl(sourceTitle) : null)) : scholarUrlProp;
+  // Hide Project badge if it points to the same URL as source
+  const showProject = sourceProjectUrl && sourceProjectUrl !== sourceUrl;
   const loc = locale || 'en';
 
   return (
@@ -65,7 +69,7 @@ export default function SourceInfoBlock({
         )}
         {sourceUrl && <LinkBadge href={sourceUrl}>{sourceType || 'arXiv'}</LinkBadge>}
         {scholarUrl && <LinkBadge href={scholarUrl}>Google Scholar</LinkBadge>}
-        {sourceProjectUrl && <LinkBadge href={sourceProjectUrl}>Project</LinkBadge>}
+        {showProject && <LinkBadge href={sourceProjectUrl!}>Project</LinkBadge>}
       </div>
 
       {/* Title */}

@@ -93,5 +93,6 @@ MDX에서:
 ```
 
 - `source_project_url`: 프로젝트 페이지가 별도로 있으면 기입
-- `google_scholar_url`: 블로그는 대부분 null
+- `google_scholar_url`: 블로그는 반드시 `null` (학술 소스가 아니므로 Google Scholar 버튼 미표시)
+- `source_project_url`: 블로그 원문 URL과 동일하면 `null` (중복 Project 버튼 방지)
 - PDF 관련 필드 없음 (paper/ 디렉토리 불필요)
