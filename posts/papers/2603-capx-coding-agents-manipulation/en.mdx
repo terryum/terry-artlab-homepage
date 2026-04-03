@@ -117,6 +117,8 @@ Applies Group Relative Policy Optimization with verifiable rewards to Qwen-2.5-C
 
 ## Terry's memo
 
-- VLA is a "skill learned through the body," while CaP is a "skill solved through the mind."
-- If CaP reasons through problems and VLA learns those solutions through embodiment, backed by solid low-level control APIs and capable hardware, we could break through the limits of data scaling and reach the next level.
-- If CaP enables robots to freely roam and operate in open environments, the pace of collecting world model data could accelerate dramatically.
+- CaP is "LLM generates code to call APIs," which is essentially the same as existing LLM planners (SayCan, RoboClaw, etc.) that "decompose tasks to call APIs." Code vs. natural language plan is an implementation detail, not a paradigm shift.
+- CaP's "zero-shot" advantage only works within the range that low-level APIs have already solved. Truly hard physical manipulation (contact, force control) still requires teleoperation data + VLA training. What's achievable zero-shot was already doable with classical motion planning.
+- Comparing CaP against pure VLA (π₀, OpenVLA) is unfair. The fair comparison should be against LLM+VLA (like RoboClaw), which this paper doesn't provide.
+- The real contribution is not a new paradigm but a **benchmark**: systematic evaluation data across 12 models × abstraction levels × interaction modes. It quantitatively measures where LLM-based robot control works and where it fails for the first time.
+- In the robot control stack, LLM handles "planning/reasoning" and VLA handles "execution" — this separation is the same whether you use CaP or LLM+VLA. The real bottleneck is not LLM reasoning capability but the physical manipulation capability of low-level APIs and hardware.
