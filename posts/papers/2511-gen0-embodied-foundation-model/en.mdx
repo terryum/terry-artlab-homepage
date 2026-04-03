@@ -1,0 +1,96 @@
+---
+locale: "en"
+title: "GEN-0: Embodied Foundation Models That Scale with Physical Interaction"
+summary: "Addressing the lack of predictable scaling laws in robotics, GEN-0 is an embodied foundation model trained on 270,000+ hours of real-world manipulation data. It exhibits a phase transition at 7B parameters (ossification threshold) and demonstrates predictable power-law scaling relationships between pretraining data and downstream performance."
+card_summary: "Robotics lacks predictable scaling laws unlike LLMs. GEN-0, an embodied foundation model trained on 270,000+ hours of real-world manipulation data, demonstrates phase transitions at 7B parameters, power-law scaling, and harmonic reasoning for simultaneous thinking and acting."
+terrys_memo: ""
+translation_of: "2511-gen0-embodied-foundation-model:ko"
+translated_to: []
+references:
+  - title: "Scaling Laws for Neural Language Models"
+    author: "Kaplan, McCandlish et al. (2020)"
+    description: "Established scaling laws for neural language models. GEN-0 extends these findings to embodied AI, demonstrating that power-law relationships hold for robotics pretraining as well."
+    arxiv_url: "https://arxiv.org/abs/2001.08361"
+    scholar_url: "https://scholar.google.com/scholar?q=scaling+laws+for+neural+language+models"
+    category: "foundational"
+  - title: "PaLM-E: An Embodied Multimodal Language Model"
+    author: "Driess et al. (2023)"
+    description: "Applied large multimodal language models to robotics. GEN-0 follows this direction but focuses on real-world physical interaction data to validate scaling laws."
+    arxiv_url: "https://arxiv.org/abs/2303.03378"
+    scholar_url: "https://scholar.google.com/scholar?q=PaLM-E+embodied+multimodal+language+model"
+    category: "foundational"
+  - title: "π₀: A Vision-Language-Action Flow Model for General Robot Control"
+    author: "Black et al. (2024)"
+    description: "VLA-based general robot control model. A recent comparable approach to embodied foundation models, referenced as part of the broader landscape GEN-0 operates in."
+    arxiv_url: "https://arxiv.org/abs/2410.24164"
+    scholar_url: "https://scholar.google.com/scholar?q=pi0+vision+language+action+flow+model+general+robot+control"
+    post_slug: "2410-pi0-vla-flow-model"
+    category: "recent"
+---
+
+## TL;DR
+
+Addressing the absence of predictable scaling laws in robotics, GEN-0 is an **embodied foundation model trained on 270,000+ hours of real-world manipulation data**, exhibiting a **phase transition at 7B parameters** and enabling simultaneous thinking and acting through **harmonic reasoning**.
+
+## Problem
+
+Large language models have demonstrated predictable scaling laws with data and compute, but no such laws have been established for robotics. Existing robotics datasets are too small to observe scaling effects, and simulation-dependent approaches suffer from sim-to-real gaps. GEN-0 aims to collect real-world physical interaction data at orders of magnitude greater scale to verify whether scaling phenomena observed in LLMs also emerge in embodied AI.
+
+## Key Idea
+
+GEN-0 is an embodied foundation model designed for multimodal training on high-fidelity physical interaction data. Unlike prior robotics approaches that rely on simulation, it trains on **270,000+ hours of real-world manipulation trajectories** collected from homes, warehouses, factories, bakeries, laundromats, and workplaces worldwide.
+
+Key components:
+
+- **Massive data infrastructure**: Thousands of data collection devices and robots across a global network, dedicated internet lines, multi-cloud contracts, O(10K) cores for multimodal data processing, petabyte-scale compression
+- **Harmonic reasoning**: Learns a "harmonic interplay" between asynchronous, continuous-time sensing and acting token streams — simultaneous thinking and acting without System 1/System 2 separation or inference-time guidance
+- **Phase transition**: 1B models suffer from ossification, 6B shows multi-task capabilities, **7B+ exhibits a phase transition** — continuing to improve with additional pretraining data
+- **Cross-embodiment**: Successfully deployed across 6DoF, 7DoF, and 16+DoF semi-humanoid robots
+
+<Figure src="./fig-1.png" alt="Ossification across model sizes" caption="Figure 1. Scaling GEN-0 model size (different colors) improves performance in terms of next-action validation prediction error (y-axis, lower is better) on a completely-withheld (i.e. zero-shot) long-horizon downstream task." number={1} />
+
+<Collapsible title="Detailed Method">
+
+**Data collection pipeline**: Data is collected from global data foundry partners across different classes. Class 1 is specific task data, Class 2 is intermediate scope, and Class 3 is "do-anything" type data. A key finding is that data quality and diversity matters more than sheer volume.
+
+**Scaling laws**: A power-law relationship between pretraining dataset size $D$ and asymptotic next-action prediction error is established:
+
+$$L(D) = \left(\frac{D_c}{D}\right)^{\alpha_D}$$
+
+This was validated on a clothes handling task (sorting, unscrambling, buttoning, hanging), demonstrating predictable performance scaling up to 1 billion action trajectories.
+
+**Pretraining science**: Eight partner-class dataset combinations were evaluated using validation prediction MSE and reverse KL divergence. Reverse KL was found to better measure mode-seeking behavior, making it a more meaningful metric for imitation learning.
+
+**Post-training**: 16 different task sets were simultaneously evaluated during multi-task post-training. More pretraining data consistently improved both validation loss and next-action prediction error across all task sets.
+
+**Data scale**: The infrastructure can process 6.85 years of real-world manipulation experience per training day, with data currently growing at **10,000 hours/week** (accelerating).
+
+<Figure src="./fig-5.png" alt="Scaling law for clothes handling" caption="Figure 4. Scaling laws provide prediction of asymptotic next action prediction error as a function of pretraining dataset size." number={5} />
+
+</Collapsible>
+
+## Key Results
+
+- **Phase transition**: Beyond 7B parameters, models cross the "ossification threshold" with sharp performance gains, continuing to scale with additional pretraining data
+- **Real-robot success rates**: Even in low-data regimes (5.6 hours task-specific), more pretraining data significantly improves performance, achieving **up to 99% success rates** in certain cases
+- **Power-law scaling**: Predictable power-law relationship confirmed on clothes handling tasks between pretraining data and prediction error, scalable to 1 billion trajectories
+
+<Figure src="./fig-4.png" alt="Real robot success rate scaling" caption="Figure 3. For real-robot evaluations, more pretraining data yields higher downstream average task success rates via closed-loop policy rollouts." number={4} />
+
+## Achievements and Limitations
+
+### What's New
+
+- First demonstration of **predictable power-law scaling relationships** in robotics, analogous to LLM scaling laws
+- Discovery of a **phase transition (ossification threshold) at 7B parameters** — the first documented ossification phenomenon in robotics models
+- Training on 270,000+ hours of real-world data, **orders of magnitude larger** than existing robotics datasets
+
+### Limitations
+
+- **Anonymized data partners**: Data sources are anonymized as Partner A/B/C, making it difficult to verify data composition and quality for reproducibility
+- **Closed model and data**: Neither model weights nor training data are publicly released, precluding independent verification
+- 🤖 **Architecture details undisclosed**: Core techniques like harmonic reasoning lack concrete implementation details, limiting precise evaluation of the technical contributions
+
+## Terry's memo
+
+- *(None)*

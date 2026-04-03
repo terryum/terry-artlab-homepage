@@ -1,0 +1,131 @@
+{
+  "post_id": "2604-harnessing-claude-intelligence",
+  "slug": "2604-harnessing-claude-intelligence",
+  "post_number": 25,
+  "published_at": "2026-04-03T18:00:00Z",
+  "updated_at": "2026-04-03T18:00:00Z",
+  "status": "published",
+  "content_type": "papers",
+  "domain": "ai",
+  "subfields": [
+    "agent-engineering",
+    "llm-application",
+    "harness-design",
+    "context-management"
+  ],
+  "key_concepts": [
+    "agent-harness",
+    "tool-composition",
+    "self-orchestration",
+    "prompt-caching",
+    "progressive-context",
+    "memory-persistence",
+    "declarative-tools",
+    "context-management"
+  ],
+  "methodology": [
+    "benchmark-evaluation",
+    "ablation-study",
+    "design-pattern-analysis"
+  ],
+  "contribution_type": "framework",
+  "relations": [
+    {
+      "target": "2603-meta-harness-optimization",
+      "type": "related"
+    },
+    {
+      "target": "2502-ai-co-scientist",
+      "type": "related"
+    }
+  ],
+  "ai_summary": {
+    "one_liner": "Three architectural patterns for building applications that adapt to Claude's evolving intelligence: use general tools, enable self-orchestration, and set boundaries carefully",
+    "problem": "Agent frameworks encode assumptions about LLM limitations that become outdated as capabilities evolve, creating unnecessary bottlenecks on performance",
+    "solution": "Three design patterns: (1) use general-purpose tools Claude already knows (bash, text editor), (2) let Claude self-orchestrate via code execution, progressive context, and memory persistence, (3) set boundaries through prompt caching, declarative tools, and security layers",
+    "key_result": "Claude 3.5 Sonnet achieved 49% on SWE-bench Verified with just bash + text editor; Opus 4.6 BrowseComp improved from 45.3% to 61.6% with self-orchestration; Opus 4.6 reached 84% on BrowseComp with compaction",
+    "limitations": [
+      "Patterns are prescriptive guidelines rather than empirically validated across diverse domains",
+      "SWE-bench and BrowseComp are specific benchmarks; generalization to other agent tasks is assumed but not shown",
+      "Cost-latency tradeoffs not quantified beyond prompt caching discount"
+    ]
+  },
+  "tags": [
+    "Papers",
+    "AI",
+    "LLM",
+    "Agent",
+    "Claude",
+    "Blog"
+  ],
+  "display_tags": [
+    "Agent Engineering",
+    "Claude",
+    "Harness Design",
+    "Anthropic Blog"
+  ],
+  "cover_image": "./cover.webp",
+  "cover_caption": "Scores on the SWE-bench Verified benchmark across Claude model versions highlight its evolution.",
+  "cover_figure_number": 1,
+  "thumb_source": "./fig-2.png",
+  "thumb_position": "centre",
+  "reading_time_min": 10,
+  "source_url": "https://claude.com/blog/harnessing-claudes-intelligence",
+  "source_date": "2026-04-02",
+  "source_title": "Harnessing Claude's Intelligence",
+  "source_author": "Lance Martin",
+  "source_type": "Anthropic Blog",
+  "google_scholar_url": null,
+  "source_project_url": "https://claude.com/blog/harnessing-claudes-intelligence",
+  "figures": [
+    {
+      "number": 1,
+      "src": "./fig-1.png",
+      "caption": "Scores on the SWE-bench Verified benchmark across Claude model versions highlight its evolution.",
+      "caption_ko": "Claude 모델 버전별 SWE-bench Verified 벤치마크 점수로, Claude의 진화를 보여준다."
+    },
+    {
+      "number": 2,
+      "src": "./fig-2.png",
+      "caption": "Higher-level capabilities such as programmatic tool calling, skills, and memory are compositions of bash and text editor tools.",
+      "caption_ko": "프로그래밍 도구 호출, 스킬, 메모리 등의 고수준 기능은 bash와 텍스트 에디터 도구의 조합으로 구현된다."
+    },
+    {
+      "number": 3,
+      "src": "./fig-3.png",
+      "caption": "Claude's tool execution environment showing how the agent harness mediates between Claude and the external environment.",
+      "caption_ko": "Claude의 도구 실행 환경으로, 에이전트 하네스가 Claude와 외부 환경 사이를 중재하는 방식을 보여준다."
+    },
+    {
+      "number": 4,
+      "src": "./fig-4.png",
+      "caption": "Claude writing code to orchestrate its own tool calls, filtering outputs before loading them into context.",
+      "caption_ko": "Claude가 도구 호출을 직접 코드로 오케스트레이션하여 결과를 컨텍스트에 로드하기 전에 필터링하는 과정."
+    },
+    {
+      "number": 5,
+      "src": "./fig-5.png",
+      "caption": "Skills with progressive disclosure: YAML frontmatter provides brief overviews, and Claude reads full skill content only when needed.",
+      "caption_ko": "점진적 공개 방식의 스킬: YAML 프론트매터가 간략한 개요를 제공하고, Claude는 필요할 때만 전체 스킬 내용을 읽는다."
+    },
+    {
+      "number": 6,
+      "src": "./fig-6.png",
+      "caption": "Claude persisting context to a memory folder for long-horizon task continuity.",
+      "caption_ko": "장기 작업의 연속성을 위해 Claude가 메모리 폴더에 컨텍스트를 저장하는 과정."
+    },
+    {
+      "number": 7,
+      "src": "./fig-7.png",
+      "caption": "Dedicated tools for security, UX, and observability boundaries in the agent harness.",
+      "caption_ko": "에이전트 하네스에서 보안, UX, 관찰가능성 경계를 위한 전용 도구."
+    }
+  ],
+  "tables": [],
+  "newsletter_eligible": false,
+  "featured": false,
+  "taxonomy_primary": "ai/agent",
+  "taxonomy_secondary": [
+    "ai/llm"
+  ]
+}

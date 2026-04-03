@@ -1,0 +1,114 @@
+---
+locale: "en"
+title: "Harnessing Claude's Intelligence: Three Patterns for Agent Harness Design"
+summary: "Lance Martin from Anthropic presents three architectural patterns for building Claude agent applications: (1) leverage general-purpose tools Claude already knows (bash, text editor), (2) expand autonomy through self-orchestration, progressive context, and memory persistence, (3) set boundaries carefully via prompt caching, declarative tools, and security layers. Claude 3.5 Sonnet achieved 49% on SWE-bench Verified with just bash + text editor, and Opus 4.6 improved BrowseComp from 45.3% to 61.6% with self-orchestration."
+card_summary: "Agent frameworks encode assumptions about Claude's limitations that become performance bottlenecks as the model evolves. Anthropic presents three patterns: leverage general-purpose tools, enable self-orchestration, and set boundaries carefully through caching and security layers."
+translation_of: "2604-harnessing-claude-intelligence:ko"
+terrys_memo: "Using Claude Code daily, these patterns resonate deeply. The core question 'what can I stop doing?' is key. If we want to auto-optimize agent harnesses like the Meta-Harness paper, these three patterns define the search space axes. The Pokemon example is striking — Opus 4.6 writes tactical notes while Sonnet 3.5 writes transcripts. Memory quality is directly tied to the model's metacognitive ability."
+references:
+  - title: "Claude Code: Best practices for agentic coding"
+    author: "Anthropic (2025)"
+    description: "Official documentation on best practices for agentic coding with Claude Code. Directly referenced in this blog as the concrete implementation of bash + text editor tool composition, skills system, and memory folder patterns."
+    scholar_url: "https://docs.anthropic.com/en/docs/claude-code/best-practices"
+    category: "foundational"
+  - title: "SWE-bench: Can Language Models Resolve Real-World GitHub Issues?"
+    author: "Jimenez et al. (2024)"
+    description: "Software engineering benchmark evaluating resolution of real GitHub issues. Used as the primary metric for tracking Claude's agentic capability evolution, where Claude 3.5 Sonnet achieved 49% (then SOTA) using only bash and text editor tools."
+    arxiv_url: "https://arxiv.org/abs/2310.06770"
+    scholar_url: "https://scholar.google.com/scholar?q=SWE-bench+Can+Language+Models+Resolve+Real-World+GitHub+Issues"
+    category: "foundational"
+  - title: "BrowseComp: A Simple Yet Challenging Benchmark for Browsing the Web"
+    author: "OpenAI (2025)"
+    description: "Web browsing benchmark requiring complex information retrieval and synthesis. Used in this blog to quantitatively validate self-orchestration (45.3% to 61.6%), subagents (+2.8%), and compaction (Opus 4.6: 84%) patterns."
+    scholar_url: "https://scholar.google.com/scholar?q=BrowseComp+benchmark+browsing+web"
+    category: "foundational"
+  - title: "Meta-Harness: End-to-End Optimization of Model Harnesses"
+    author: "Yoonho Lee et al. (2026)"
+    description: "Outer-loop system that automatically optimizes LLM harness code. Represents the automation direction for the manual design patterns presented in this blog, quantitatively demonstrating how harness design impacts model performance."
+    arxiv_url: "https://arxiv.org/abs/2603.meta-harness"
+    scholar_url: "https://scholar.google.com/scholar?q=Meta-Harness+End-to-End+Optimization+Model+Harnesses"
+    category: "recent"
+---
+
+## TL;DR
+
+Agent frameworks encode assumptions about model limitations that become **performance bottlenecks** as Claude evolves. Anthropic presents three design patterns: leverage general-purpose tools, enable self-orchestration, and set boundaries carefully through caching, declarative tools, and security layers.
+
+## Problem
+
+As Chris Olah observes, generative AI systems like Claude are "grown more than they are built." This poses a fundamental challenge for agent framework design. Developers build harnesses around a model's current limitations, but as models rapidly evolve, previous-generation assumptions become next-generation bottlenecks. For example, the pattern of loading all tool results into the context window was once necessary but becomes wasteful token spending for models capable of code execution. Similarly, pre-loading system prompts with every task-specific instruction depletes the attention budget. This blog presents **three design patterns** for applications that adapt to Claude's evolving intelligence while managing latency and cost.
+
+## Core Idea
+
+While existing agent frameworks build model-specific tools and complex orchestration layers, the core message here is **"use what Claude already knows."**
+
+- **Pattern 1 — Use general-purpose tools**: Claude 3.5 Sonnet achieved 49% on SWE-bench Verified (then SOTA) using only bash and text editor. Compose higher-level capabilities on top of tools Claude deeply understands
+- **Pattern 2 — Expand autonomy**: Ask "what can I stop doing?" to remove unnecessary structure. Self-orchestration, progressive context, memory persistence
+- **Pattern 3 — Set boundaries carefully**: Prompt caching, declarative tools, security/UX/observability boundaries
+
+<Figure src="./fig-2.png" caption="Higher-level capabilities such as programmatic tool calling, skills, and memory are compositions of bash and text editor tools." number={2} />
+
+## Methods
+
+<Collapsible title="Methods in Detail">
+
+### Pattern 1: Use What Claude Knows
+
+Claude deeply understands general-purpose tools like bash and text editors from internet training data. Claude Code achieved 49% on SWE-bench Verified using only these two tools (SOTA in late 2024). The core principle is to **compose** higher-level capabilities on tools Claude already knows well, rather than building specialized interfaces:
+
+- **Programmatic tool calling**: Code execution via bash
+- **Skills**: Task-specific instruction files read via text editor
+- **Memory**: Persistent context files managed via text editor
+
+### Pattern 2: Ask "What Can I Stop Doing?"
+
+Continuously test assumptions encoded in the agent harness and remove structures that have become unnecessary.
+
+**A. Self-orchestration**: The traditional pattern loads all tool results into Claude's context window. But providing a code execution tool (bash/REPL) lets Claude write code to chain tool calls and filter results before loading them into context. On BrowseComp, giving Opus 4.6 this ability improved accuracy from **45.3% to 61.6%**.
+
+**B. Progressive context**: Pre-loading system prompts with all task instructions depletes the attention budget. Instead, provide brief overviews via skill YAML frontmatter and let Claude read full content when needed. Subagents (isolated context windows) also help — Opus 4.6 improved **+2.8%** on BrowseComp over single-agent runs.
+
+**C. Memory persistence**: Long-running agents exceed single context window limits. Two solutions:
+- **Compaction**: Claude summarizes past context to maintain continuity. On BrowseComp, Opus 4.6 achieved **84%**, Opus 4.5 hit 68%, Sonnet 4.5 reached 43%
+- **Memory folder**: Claude writes context to files and reads as needed. On BrowseComp-Plus, Sonnet 4.5 improved from **60.4% to 67.2%**
+
+<Figure src="./fig-4.png" caption="Claude writing code to orchestrate its own tool calls, filtering outputs before loading them into context." number={4} />
+
+### Pattern 3: Set Boundaries Carefully
+
+**A. Maximize cache hits**: The Messages API is stateless, requiring context repackaging at each turn. Prompt caching reduces cached token cost to **10% of base input tokens**. Principles: place static content first and dynamic content last, avoid model switching (caches are model-specific), keep tool definitions stable.
+
+**B. Declarative tools**: Claude doesn't inherently know application security boundaries or UX surfaces. Create dedicated tools for:
+- Actions requiring security boundaries
+- Hard-to-reverse actions (external API calls)
+- Actions needing user confirmation
+- Actions requiring structured logging/tracing/replay
+
+</Collapsible>
+
+## Key Results
+
+- **SWE-bench Verified**: Claude 3.5 Sonnet achieved **49%** with only bash + text editor (late 2024 SOTA)
+- **BrowseComp self-orchestration**: Opus 4.6 improved from **45.3% to 61.6%** (+16.3%p) with tool output filtering
+- **BrowseComp compaction**: Opus 4.6 reached **84%**, Opus 4.5 hit 68%, Sonnet 4.5 reached 43%
+- **BrowseComp-Plus memory folder**: Sonnet 4.5 improved from **60.4% to 67.2%** (+6.8%p) with memory folder access
+- **Subagents**: Opus 4.6 gained **+2.8%** over single-agent runs
+
+<Figure src="./fig-1.png" caption="Scores on the SWE-bench Verified benchmark across Claude model versions highlight its evolution." number={1} />
+
+## Achievements and Limitations
+
+### Achievements
+- Systematized agent harness design into **three architectural patterns** that adapt to model evolution
+- Demonstrated that general-purpose tool composition (bash + text editor) alone can achieve SWE-bench SOTA
+- Quantitatively validated self-orchestration, compaction, and memory folder patterns on BrowseComp benchmarks
+
+### Limitations
+- Blog format limits systematic analysis of each pattern's failure modes and applicability conditions
+- Focused on SWE-bench and BrowseComp; generalization to diverse domains (customer service, data analysis, etc.) is assumed but not validated
+- Beyond the 10% prompt caching discount, the overall cost-latency tradeoffs of applying these three patterns are not quantified, making it difficult to assess production economics
+
+## Terry's memo
+
+- Using Claude Code daily, these patterns resonate deeply. The core question "what can I stop doing?" is key. If we want to auto-optimize agent harnesses like the Meta-Harness paper, these three patterns define the search space axes.
+- The Pokemon example is striking — Opus 4.6 writes tactical notes distilled from failures while Sonnet 3.5 writes near-duplicate transcripts. Memory quality is directly tied to the model's metacognitive ability.

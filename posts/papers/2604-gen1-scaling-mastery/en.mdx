@@ -1,0 +1,102 @@
+---
+locale: "en"
+title: "GEN-1: General-Purpose Physical AI Crosses Commercial Viability"
+summary: "GEN-0's 64% success rate fell short of commercial viability. GEN-1 overcomes this through pretraining on 500K+ hours of human wearable data, a redesigned multimodal architecture, and RL-based post-training, achieving 99% success rates across 6 physical tasks at 3x speed with only 1 hour of robot data per task."
+card_summary: "Robot foundation models at GEN-0's 64% success rate couldn't reach commercial deployment. GEN-1 crosses the viability threshold with human wearable data pretraining and inference optimization, achieving 99% success rates and 3x speed."
+terrys_memo: ""
+translation_of: "2604-gen1-scaling-mastery:ko"
+translated_to: []
+references:
+  - title: "GEN-0: Embodied Foundation Models That Scale with Physical Interaction"
+    author: "Generalist AI Team (2025)"
+    description: "The direct predecessor of GEN-1. Pretrained on 270K+ hours of real-world manipulation data, first proving that scaling laws exist in robotics. GEN-1 scales data, compute, and algorithms on top of this foundation."
+    arxiv_url: null
+    scholar_url: null
+    project_url: "https://generalistai.com/blog/nov-04-2025-GEN-0"
+    post_slug: "2511-gen0-embodied-foundation-model"
+    category: "foundational"
+  - title: "π₀: A Vision-Language-Action Flow Model for General Robot Control"
+    author: "Black et al. (2024)"
+    description: "A key VLA flow model. Directly referenced in GEN-1 as a speed comparison target for box folding (π₀ at 34s vs. GEN-1 at 12.1s)."
+    arxiv_url: "https://arxiv.org/abs/2410.24164"
+    scholar_url: "https://scholar.google.com/scholar?q=pi0+vision+language+action+flow+model+general+robot+control"
+    project_url: "https://physicalintelligence.company/blog/pi0"
+    post_slug: "2410-pi0-vla-flow-model"
+    category: "recent"
+  - title: "PaLM-E: An Embodied Multimodal Language Model"
+    author: "Driess et al. (2023)"
+    description: "Early work applying multimodal language models to robotics. Referenced in GEN-1 as part of the embodied foundation model lineage."
+    arxiv_url: "https://arxiv.org/abs/2303.03378"
+    scholar_url: "https://scholar.google.com/scholar?q=PaLM-E+embodied+multimodal+language+model"
+    project_url: null
+    category: "foundational"
+---
+
+## TL;DR
+
+GEN-0's 64% success rate was not commercially viable. GEN-1 crosses that threshold with **pretraining on 500K+ hours of human wearable data** and inference optimization, achieving **99% success rates at 3x speed** with only 1 hour of robot data per task.
+
+## Problem
+
+The first generation of embodied foundation models, GEN-0 (November 2025), proved that scaling laws exist in robotics, but its average 64% success rate fell far short of commercial deployment requirements. Much like GPT-2 demonstrated the promise of multitask learning but was insufficient for production use, robotics foundation models must simultaneously meet three conditions — high reliability, speed, and adaptability — to achieve "mastery." GEN-1 is the second-generation model that scales data, compute, and algorithms to cross this commercial viability threshold.
+
+## Key Idea
+
+GEN-1 defines **three pillars of mastery** (reliability, speed, improvisational intelligence) and is designed to achieve all three simultaneously. The key differentiator is that pretraining data comes not from teleoperation or simulation, but from **real human activities captured via low-cost wearable devices** (500,000+ hours).
+
+Key components:
+
+- **Wearable-based pretraining**: Pretrained purely on human physical interaction data with no robot data — adapts to robot embodiment and task simultaneously during fine-tuning
+- **Redesigned multimodal architecture**: Distributed training infrastructure built from scratch to handle petabytes of physical interaction data as a first-class citizen
+- **Harmonic Reasoning**: Inference optimization enabling simultaneous thinking and acting — custom kernels and paged attention for real-time inference
+- **RL-based post-training**: Reinforcement learning combined with multimodal human guidance for precise, smooth control
+
+<Figure src="./og-image.png" alt="GEN-1 hero" caption="GEN-1: Scaling Embodied Foundation Models to Mastery — Hero image from the Generalist AI blog announcement." number={1} />
+
+<Collapsible title="Technical Details">
+
+GEN-1's technical stack consists of four stages.
+
+**Stage 1 — Large-scale Pretraining**: The base foundation model is trained on 500,000+ hours of high-fidelity physical interaction data collected from humans wearing low-cost wearable devices. This dataset contains no robot data, serving as an "existence proof that pretraining can lead to high levels of mastery without requiring large teleoperation or simulation datasets."
+
+**Stage 2 — Architecture Redesign**: The multimodal architecture was redesigned from scratch to treat petabytes of physical interaction data as a first-class citizen. Months were invested in distributed training infrastructure and training stability.
+
+**Stage 3 — Inference Optimization (Harmonic Reasoning)**: Custom kernels and paged attention were developed for real-time inference, enabling the model to think and act simultaneously. This maintains precision and reactivity even at higher execution speeds.
+
+**Stage 4 — RL Post-training and Control Systems**: Post-training techniques combining reinforcement learning and multimodal human guidance refine action precision and smoothness. New hardware was deployed across new geographies to validate control systems.
+
+</Collapsible>
+
+## Key Results
+
+- **Average 99% success rate** across 6 physical tasks — up from baseline without pretraining (19%) and GEN-0 (64%)
+- **Up to ~3x speed improvement**: Box folding in 12.1s (2.8x vs. GEN-0/π₀ at 34s), phone packing in 15.5s (2.8x vs. GEN-0 ~43s)
+- **10x less task-specific data**: Achieves comparable or better performance with 1/10th the task-specific data and fine-tuning steps vs. GEN-0
+- **Only 1 hour of robot data per task** needed to reach 99% success rates
+
+| Task | Success Rate | Continuous Runs | Speed vs. Prior SOTA |
+|------|-------------|----------------|---------------------|
+| Kitting Auto Parts | 99% | 1 hour continuous | 1x, fully autonomous |
+| T-Shirt Folding | 99% | 86 consecutive | 1x, fully autonomous |
+| Servicing Robot Vacuums | 99% | 200+ | Up from GEN-0's 50% |
+| Packing Blocks | High reliability | 1,800 consecutive | Improved speed/precision |
+| Folding Boxes | 99% | 200+ | 2.8x (12.1s vs. GEN-0 34s) |
+| Packing Phones | 99% | 100+ | 2.8x (15.5s vs. GEN-0 ~43s) |
+
+<Video src="https://www.youtube.com/embed/SY2xyrmV44Y?si=jqsXQKrQgX2PUO3J" caption="GEN-1 demo: Mastery-level performance across diverse physical tasks" />
+
+## Achievements and Limitations
+
+**Key achievements**:
+- **Commercial viability threshold crossed**: 99% success rates mark a transition analogous to GPT-3 first enabling commercial tasks like ad copywriting in the LLM domain
+- **Pretraining without teleoperation**: First proof that human wearable data alone can enable robot mastery — a fundamental shift in data collection cost and scalability
+- **Improvisational intelligence**: Creative recovery behaviors emerge spontaneously for out-of-distribution scenarios (regrasping washers, recovering deformable objects in unexpected configurations)
+
+**Limitations**:
+- Not all attempted tasks reach mastery-level performance — some tasks fall short of the success rates or speeds needed for practical deployment
+- Emergent improvisation behaviors can be liabilities when misaligned with task objectives — an acknowledged alignment challenge
+- 🤖 The model and dataset are proprietary, making independent reproduction impossible; performance claims rely on self-benchmarks
+
+## Terry's memo
+
+- *(None)*

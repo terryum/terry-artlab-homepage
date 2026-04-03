@@ -1,0 +1,92 @@
+{
+  "post_id": "2604-gen1-scaling-mastery",
+  "slug": "2604-gen1-scaling-mastery",
+  "post_number": 24,
+  "source_date": "2026-04-02T00:00:00Z",
+  "published_at": "2026-04-03T00:00:00Z",
+  "updated_at": "2026-04-03T00:00:00Z",
+  "status": "published",
+  "content_type": "papers",
+  "domain": "robotics",
+  "subfields": [
+    "foundation-model",
+    "scaling",
+    "commercial-deployment"
+  ],
+  "key_concepts": [
+    "embodied-foundation-model",
+    "mastery",
+    "scaling-laws",
+    "wearable-pretraining",
+    "harmonic-reasoning",
+    "VLA"
+  ],
+  "methodology": [
+    "pretraining",
+    "fine-tuning",
+    "reinforcement-learning",
+    "multi-task-learning"
+  ],
+  "contribution_type": "system",
+  "relations": [
+    {
+      "target": "2511-gen0-embodied-foundation-model",
+      "type": "builds_on"
+    },
+    {
+      "target": "2410-pi0-vla-flow-model",
+      "type": "related"
+    },
+    {
+      "target": "2511-pi0-6-recap",
+      "type": "related"
+    }
+  ],
+  "ai_summary": {
+    "one_liner": "Second-generation embodied foundation model achieving 99% task success rates at 3x speed with only 1 hour of task-specific robot data",
+    "problem": "First-gen embodied models like GEN-0 achieved ~64% success rates — not commercially viable for real-world deployment",
+    "solution": "GEN-1: scaled pretraining on 500K+ hours of human wearable data (no robot data), redesigned multimodal architecture, RL-based post-training, and inference-time optimization with harmonic reasoning",
+    "key_result": "99% success rates across 6 tasks (vs. GEN-0's 64%), 3x faster execution, 10x less task-specific fine-tuning data needed",
+    "limitations": [
+      "Not all attempted tasks reach mastery-level performance",
+      "Emergent improvisation behaviors can be liabilities when misaligned with task objectives",
+      "No open-source model or dataset release"
+    ]
+  },
+  "tags": [
+    "Papers",
+    "Robotics",
+    "Foundation Model",
+    "Scaling",
+    "Blog"
+  ],
+  "cover_image": "./cover.webp",
+  "cover_figure_number": 1,
+  "thumb_source": "./og-image.png",
+  "cover_caption": "GEN-1: Scaling Embodied Foundation Models to Mastery — the first general-purpose physical AI crossing commercial viability with 99% success rates.",
+  "reading_time_min": 9,
+  "source_url": "https://generalistai.com/blog/apr-02-2026-GEN-1",
+  "source_title": "GEN-1: Scaling Embodied Foundation Models to Mastery",
+  "source_author": "Generalist AI Team",
+  "source_type": "Generalist AI Blog",
+  "source_project_url": "https://generalistai.com/blog/apr-02-2026-GEN-1",
+  "google_scholar_url": null,
+  "source_authors_full": [
+    "Generalist AI Team"
+  ],
+  "figures": [
+    {
+      "number": 1,
+      "src": "./og-image.png",
+      "caption": "GEN-1: Scaling Embodied Foundation Models to Mastery — Open Graph hero image from the Generalist AI blog announcement.",
+      "caption_ko": "GEN-1: Embodied 파운데이션 모델의 숙련도 스케일링 — Generalist AI 블로그 공개 히어로 이미지."
+    }
+  ],
+  "tables": [],
+  "newsletter_eligible": false,
+  "featured": false,
+  "taxonomy_primary": "robotics/brain/vla",
+  "taxonomy_secondary": [
+    "robotics/arm"
+  ]
+}

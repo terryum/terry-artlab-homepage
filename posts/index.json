@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-03T02:09:09.609Z",
-  "total_posts": 22,
+  "generated_at": "2026-04-03T08:15:56.393Z",
+  "total_posts": 25,
   "posts": [
     {
       "post_number": 1,
@@ -1456,6 +1456,209 @@
       "taxonomy_secondary": [
         "ai/llm"
       ]
+    },
+    {
+      "post_number": 23,
+      "slug": "2511-gen0-embodied-foundation-model",
+      "content_type": "papers",
+      "title_en": "GEN-0: Embodied Foundation Models That Scale with Physical Interaction",
+      "title_ko": "GEN-0: 물리적 상호작용으로 스케일링하는 Embodied Foundation Model",
+      "domain": "robotics",
+      "subfields": [
+        "foundation-model",
+        "scaling-laws",
+        "cross-embodiment"
+      ],
+      "key_concepts": [
+        "embodied-foundation-model",
+        "scaling-laws",
+        "harmonic-reasoning",
+        "cross-embodiment",
+        "VLA"
+      ],
+      "methodology": [
+        "pretraining",
+        "power-law-scaling",
+        "multi-task-learning"
+      ],
+      "contribution_type": "system",
+      "tags": [
+        "Papers",
+        "Robotics",
+        "Foundation Model",
+        "Scaling",
+        "Blog"
+      ],
+      "source_author": "Generalist AI Team",
+      "source_date": "2025-11-04T00:00:00Z",
+      "published_at": "2026-04-03T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "Embodied foundation model trained on 270K+ hours of real-world manipulation data, exhibiting phase transitions at 7B parameters and predictable power-law scaling",
+        "problem": "Robotics lacks foundation models that scale predictably with data and compute, unlike LLMs",
+        "solution": "GEN-0: multimodal pretraining on 270K+ hours of diverse real-world interaction data with harmonic reasoning for simultaneous thinking and acting",
+        "key_result": "Up to 99% real-robot success rates; phase transition at 7B params; power-law scaling enabling performance prediction",
+        "limitations": [
+          "Anonymized data partners make reproducibility difficult",
+          "No open-source model or dataset release",
+          "Limited detail on architecture specifics"
+        ]
+      },
+      "relations": [
+        {
+          "target": "2410-pi0-vla-flow-model",
+          "type": "related"
+        },
+        {
+          "target": "2511-pi0-6-recap",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "robotics/brain/vla",
+      "taxonomy_secondary": [
+        "robotics/arm"
+      ]
+    },
+    {
+      "post_number": 24,
+      "slug": "2604-gen1-scaling-mastery",
+      "content_type": "papers",
+      "title_en": "GEN-1: General-Purpose Physical AI Crosses Commercial Viability",
+      "title_ko": "GEN-1: 범용 Physical AI의 상용화 임계점을 넘다",
+      "domain": "robotics",
+      "subfields": [
+        "foundation-model",
+        "scaling",
+        "commercial-deployment"
+      ],
+      "key_concepts": [
+        "embodied-foundation-model",
+        "mastery",
+        "scaling-laws",
+        "wearable-pretraining",
+        "harmonic-reasoning",
+        "VLA"
+      ],
+      "methodology": [
+        "pretraining",
+        "fine-tuning",
+        "reinforcement-learning",
+        "multi-task-learning"
+      ],
+      "contribution_type": "system",
+      "tags": [
+        "Papers",
+        "Robotics",
+        "Foundation Model",
+        "Scaling",
+        "Blog"
+      ],
+      "source_author": "Generalist AI Team",
+      "source_date": "2026-04-02T00:00:00Z",
+      "published_at": "2026-04-03T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "Second-generation embodied foundation model achieving 99% task success rates at 3x speed with only 1 hour of task-specific robot data",
+        "problem": "First-gen embodied models like GEN-0 achieved ~64% success rates — not commercially viable for real-world deployment",
+        "solution": "GEN-1: scaled pretraining on 500K+ hours of human wearable data (no robot data), redesigned multimodal architecture, RL-based post-training, and inference-time optimization with harmonic reasoning",
+        "key_result": "99% success rates across 6 tasks (vs. GEN-0's 64%), 3x faster execution, 10x less task-specific fine-tuning data needed",
+        "limitations": [
+          "Not all attempted tasks reach mastery-level performance",
+          "Emergent improvisation behaviors can be liabilities when misaligned with task objectives",
+          "No open-source model or dataset release"
+        ]
+      },
+      "relations": [
+        {
+          "target": "2511-gen0-embodied-foundation-model",
+          "type": "builds_on"
+        },
+        {
+          "target": "2410-pi0-vla-flow-model",
+          "type": "related"
+        },
+        {
+          "target": "2511-pi0-6-recap",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "robotics/brain/vla",
+      "taxonomy_secondary": [
+        "robotics/arm"
+      ]
+    },
+    {
+      "post_number": 25,
+      "slug": "2604-harnessing-claude-intelligence",
+      "content_type": "papers",
+      "title_en": "Harnessing Claude's Intelligence: Three Patterns for Agent Harness Design",
+      "title_ko": "Harnessing Claude's Intelligence: 에이전트 하네스 설계의 3가지 패턴",
+      "domain": "ai",
+      "subfields": [
+        "agent-engineering",
+        "llm-application",
+        "harness-design",
+        "context-management"
+      ],
+      "key_concepts": [
+        "agent-harness",
+        "tool-composition",
+        "self-orchestration",
+        "prompt-caching",
+        "progressive-context",
+        "memory-persistence",
+        "declarative-tools",
+        "context-management"
+      ],
+      "methodology": [
+        "benchmark-evaluation",
+        "ablation-study",
+        "design-pattern-analysis"
+      ],
+      "contribution_type": "framework",
+      "tags": [
+        "Papers",
+        "AI",
+        "LLM",
+        "Agent",
+        "Claude",
+        "Blog"
+      ],
+      "source_author": "Lance Martin",
+      "source_date": "2026-04-02",
+      "published_at": "2026-04-03T18:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "Three architectural patterns for building applications that adapt to Claude's evolving intelligence: use general tools, enable self-orchestration, and set boundaries carefully",
+        "problem": "Agent frameworks encode assumptions about LLM limitations that become outdated as capabilities evolve, creating unnecessary bottlenecks on performance",
+        "solution": "Three design patterns: (1) use general-purpose tools Claude already knows (bash, text editor), (2) let Claude self-orchestrate via code execution, progressive context, and memory persistence, (3) set boundaries through prompt caching, declarative tools, and security layers",
+        "key_result": "Claude 3.5 Sonnet achieved 49% on SWE-bench Verified with just bash + text editor; Opus 4.6 BrowseComp improved from 45.3% to 61.6% with self-orchestration; Opus 4.6 reached 84% on BrowseComp with compaction",
+        "limitations": [
+          "Patterns are prescriptive guidelines rather than empirically validated across diverse domains",
+          "SWE-bench and BrowseComp are specific benchmarks; generalization to other agent tasks is assumed but not shown",
+          "Cost-latency tradeoffs not quantified beyond prompt caching discount"
+        ]
+      },
+      "relations": [
+        {
+          "target": "2603-meta-harness-optimization",
+          "type": "related"
+        },
+        {
+          "target": "2502-ai-co-scientist",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "ai/agent",
+      "taxonomy_secondary": [
+        "ai/llm"
+      ]
     }
   ],
   "knowledge_graph": {
@@ -1679,6 +1882,41 @@
         "from": "2603-medical-ai-scientist",
         "to": "2502-ai-co-scientist",
         "type": "compares_with"
+      },
+      {
+        "from": "2511-gen0-embodied-foundation-model",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "related"
+      },
+      {
+        "from": "2511-gen0-embodied-foundation-model",
+        "to": "2511-pi0-6-recap",
+        "type": "related"
+      },
+      {
+        "from": "2604-gen1-scaling-mastery",
+        "to": "2511-gen0-embodied-foundation-model",
+        "type": "builds_on"
+      },
+      {
+        "from": "2604-gen1-scaling-mastery",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "related"
+      },
+      {
+        "from": "2604-gen1-scaling-mastery",
+        "to": "2511-pi0-6-recap",
+        "type": "related"
+      },
+      {
+        "from": "2604-harnessing-claude-intelligence",
+        "to": "2603-meta-harness-optimization",
+        "type": "related"
+      },
+      {
+        "from": "2604-harnessing-claude-intelligence",
+        "to": "2502-ai-co-scientist",
+        "type": "related"
       }
     ],
     "clusters": [
@@ -1689,11 +1927,16 @@
           1,
           2,
           4,
-          20
+          20,
+          23,
+          24
         ],
         "core_concepts": [
           "VLA",
-          "flow-matching"
+          "flow-matching",
+          "embodied-foundation-model",
+          "scaling-laws",
+          "harmonic-reasoning"
         ],
         "taxonomy_nodes": [
           "robotics/brain/vla"
@@ -1752,9 +1995,12 @@
         "post_numbers": [
           11,
           21,
-          22
+          22,
+          25
         ],
-        "core_concepts": [],
+        "core_concepts": [
+          "context-management"
+        ],
         "taxonomy_nodes": [
           "ai/agent"
         ]
@@ -1767,7 +2013,9 @@
           2,
           4,
           15,
-          20
+          20,
+          23,
+          24
         ],
         "core_concepts": [
           "VLA"
@@ -1806,7 +2054,9 @@
       2,
       4,
       15,
-      20
+      20,
+      23,
+      24
     ],
     "flow-matching": [
       1,
@@ -2054,7 +2304,8 @@
       15
     ],
     "cross-embodiment": [
-      15
+      15,
+      23
     ],
     "MANO-UV-mapping": [
       16
@@ -2187,30 +2438,70 @@
       22
     ],
     "context-management": [
-      22
+      22,
+      25
+    ],
+    "embodied-foundation-model": [
+      23,
+      24
+    ],
+    "scaling-laws": [
+      23,
+      24
+    ],
+    "harmonic-reasoning": [
+      23,
+      24
+    ],
+    "mastery": [
+      24
+    ],
+    "wearable-pretraining": [
+      24
+    ],
+    "agent-harness": [
+      25
+    ],
+    "tool-composition": [
+      25
+    ],
+    "self-orchestration": [
+      25
+    ],
+    "prompt-caching": [
+      25
+    ],
+    "progressive-context": [
+      25
+    ],
+    "memory-persistence": [
+      25
+    ],
+    "declarative-tools": [
+      25
     ]
   },
   "domain_stats": {
-    "robotics": 18,
+    "robotics": 20,
     "ml": 2,
-    "ai": 2
+    "ai": 3
   },
   "taxonomy_stats": {
-    "robotics/brain/vla": 4,
-    "robotics/arm:secondary": 5,
+    "robotics/brain/vla": 6,
+    "robotics/arm:secondary": 7,
     "robotics/arm/force-control": 1,
     "robotics/hand/tactile": 6,
     "robotics/arm/exoskeleton": 3,
     "robotics/hand:secondary": 1,
     "robotics/hand/dexterous": 2,
-    "ai/agent": 3,
+    "ai/agent": 4,
     "robotics/hand/dexterous:secondary": 4,
     "robotics/arm/exoskeleton:secondary": 1,
-    "robotics/brain": 5,
-    "ai/llm:secondary": 2,
+    "robotics/brain": 7,
+    "ai/llm:secondary": 3,
     "robotics/arm": 4,
     "robotics/hand": 8,
-    "robotics": 17,
-    "ai": 3
+    "robotics": 19,
+    "ai": 4
   }
 }

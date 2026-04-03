@@ -1,0 +1,97 @@
+---
+locale: "ko"
+title: "GEN-0: 물리적 상호작용으로 스케일링하는 Embodied Foundation Model"
+summary: "로보틱스에 LLM과 같은 예측 가능한 스케일링 법칙이 부재한 문제를, 270,000시간 이상의 실세계 조작 데이터로 학습한 GEN-0 모델로 해결. 7B 파라미터에서 위상 전이(phase transition)를 관찰하고, 데이터 대비 성능의 power-law 스케일링 관계를 로보틱스에서 최초로 입증했다."
+card_summary: "로보틱스에 예측 가능한 스케일링 법칙이 부재한 문제를, 270,000시간 이상의 실세계 조작 데이터로 학습한 embodied foundation model(GEN-0)로 해결. 7B 파라미터에서 위상 전이, power-law 스케일링, harmonic reasoning(사고와 행동의 동시 처리)을 입증했다."
+terrys_memo: ""
+translation_of: null
+translated_to:
+  - "en"
+references:
+  - title: "Scaling Laws for Neural Language Models"
+    author: "Kaplan, McCandlish et al. (2020)"
+    description: "신경 언어 모델의 스케일링 법칙을 정립한 핵심 연구. GEN-0은 이 법칙이 embodied AI에도 적용됨을 보이며, 로보틱스 영역에서의 power-law 관계를 입증하는 기반이 된다."
+    arxiv_url: "https://arxiv.org/abs/2001.08361"
+    scholar_url: "https://scholar.google.com/scholar?q=scaling+laws+for+neural+language+models"
+    category: "foundational"
+  - title: "PaLM-E: An Embodied Multimodal Language Model"
+    author: "Driess et al. (2023)"
+    description: "대규모 멀티모달 언어 모델을 로보틱스에 적용한 선행 연구. GEN-0은 PaLM-E의 방향성을 이어받되, 실세계 물리적 상호작용 데이터에 집중하여 스케일링 법칙을 검증했다."
+    arxiv_url: "https://arxiv.org/abs/2303.03378"
+    scholar_url: "https://scholar.google.com/scholar?q=PaLM-E+embodied+multimodal+language+model"
+    category: "foundational"
+  - title: "π₀: A Vision-Language-Action Flow Model for General Robot Control"
+    author: "Black et al. (2024)"
+    description: "VLA 모델 기반 범용 로봇 제어. GEN-0과 같은 embodied foundation model 접근과 비교되며, 논문에서 참조하는 최근 VLA 연구 중 하나."
+    arxiv_url: "https://arxiv.org/abs/2410.24164"
+    scholar_url: "https://scholar.google.com/scholar?q=pi0+vision+language+action+flow+model+general+robot+control"
+    post_slug: "2410-pi0-vla-flow-model"
+    category: "recent"
+---
+
+## TL;DR
+
+로보틱스에 예측 가능한 스케일링 법칙이 부재한 문제를, **270,000시간 이상의 실세계 조작 데이터**로 학습한 embodied foundation model(GEN-0)로 해결. 7B 파라미터에서 **위상 전이(phase transition)**를 발견하고, **harmonic reasoning**으로 사고와 행동을 동시에 처리한다.
+
+## 문제
+
+대규모 언어 모델(LLM)은 데이터와 컴퓨팅 확장에 따른 예측 가능한 스케일링 법칙을 보여주었으나, 로보틱스 분야에는 이런 법칙이 입증되지 않았다. 기존 로보틱스 데이터셋은 규모가 작아 스케일링 효과를 관찰하기 어려웠고, 시뮬레이션 의존 접근은 sim-to-real gap 문제를 안고 있었다. GEN-0은 실세계 물리적 상호작용 데이터를 수 자릿수 더 대규모로 수집하여, LLM에서 관찰된 스케일링 현상이 embodied AI에서도 나타나는지를 검증한다.
+
+## 핵심 아이디어
+
+GEN-0은 고충실도 실세계 물리적 상호작용 데이터에 대한 멀티모달 학습으로 설계된 embodied foundation model이다. 기존 로보틱스 접근과 달리 시뮬레이션에 의존하지 않고, 전 세계 가정, 창고, 공장, 빵집, 세탁소 등에서 수집한 **270,000시간 이상의 실세계 조작 궤적**으로 학습한다.
+
+핵심 구성 요소:
+
+- **대규모 데이터 인프라**: 전 세계 수천 대의 데이터 수집 장치와 로봇, 전용 인터넷 회선, 멀티클라우드 계약, O(10K) 코어의 멀티모달 데이터 처리, 페타바이트 규모 압축
+- **Harmonic reasoning**: 비동기적, 연속 시간의 감각 및 행동 토큰 스트림 간 "조화로운 상호작용"을 학습 — System 1/System 2 분리나 추론 시간 가이던스 없이 사고와 행동을 동시 처리
+- **위상 전이(Phase transition)**: 1B 모델은 경직화(ossification), 6B은 멀티태스크 능력 출현, **7B 이상에서 위상 전이** 발생 — 추가 사전학습 데이터로 계속 성능 향상
+- **Cross-embodiment**: 6DoF, 7DoF, 16+DoF 반인간형 로봇 등 다양한 형태에 성공적으로 배포
+
+<Figure src="./fig-1.png" alt="Ossification across model sizes" caption="Figure 1. GEN-0 모델 크기를 키우면(다른 색상) 완전히 보류된(즉, 제로샷) 장기 다운스트림 태스크에서 다음 행동 검증 예측 오차(y축, 낮을수록 좋음) 기준 성능이 향상된다." number={1} />
+
+<Collapsible title="구체적 방법">
+
+**데이터 수집 파이프라인**: 전 세계 데이터 수집 파트너("data foundry")로부터 다양한 클래스의 데이터를 수집한다. Class 1은 특정 태스크 데이터, Class 2는 중간 범위, Class 3은 "do-anything" 유형이다. 데이터 품질과 다양성이 단순한 양보다 중요하다는 것을 발견했다.
+
+**스케일링 법칙**: 사전학습 데이터셋 크기 $D$에 대한 점근적 다음 행동 예측 오차의 power-law 관계를 확인했다:
+
+$$L(D) = \left(\frac{D_c}{D}\right)^{\alpha_D}$$
+
+의류 처리(분류, 풀기, 단추 채우기, 걸기) 태스크에서 이 관계를 검증하여, 10억 개의 행동 궤적까지의 성능을 예측 가능함을 보였다.
+
+**사전학습 과학**: 8개 파트너-클래스 조합의 데이터셋을 검증 예측 MSE와 역 KL divergence로 평가했다. 역 KL이 mode-seeking 행동을 더 잘 측정하여, 모방 학습에서 더 의미 있는 지표임을 확인했다.
+
+**후학습(Post-training)**: 16개 다른 태스크 세트를 동시에 멀티태스크 후학습하여 평가. 사전학습 데이터가 많을수록 후학습 검증 손실과 다음 행동 예측 오차가 모두 개선된다.
+
+**데이터 규모**: 학습 하루당 6.85년의 실세계 조작 경험을 처리할 수 있으며, 현재 **주당 10,000시간** 속도로 데이터가 성장 중이다(가속 추세).
+
+<Figure src="./fig-5.png" alt="Scaling law for clothes handling" caption="Figure 4. 스케일링 법칙은 사전학습 데이터셋 크기에 따른 점근적 다음 행동 예측 오차의 예측을 제공한다." number={5} />
+
+</Collapsible>
+
+## 주요 결과
+
+- **위상 전이**: 7B 파라미터 이상에서 "경직화 임계점(ossification threshold)"을 넘어 성능이 급격히 향상되며, 추가 사전학습 데이터에 대해 계속 스케일링
+- **실제 로봇 성공률**: 저데이터 체제(태스크별 5.6시간)에서도 사전학습 데이터 증가에 따라 유의미한 성능 향상, 특정 경우 **최대 99% 성공률** 달성
+- **Power-law 스케일링**: 의류 처리 태스크에서 사전학습 데이터 대비 예측 오차의 예측 가능한 power-law 관계를 확인, 10억 궤적까지 예측 가능
+
+<Figure src="./fig-4.png" alt="Real robot success rate scaling" caption="Figure 3. 실제 로봇 평가에서, 사전학습 데이터가 많을수록 폐루프 정책 롤아웃을 통한 다운스트림 평균 태스크 성공률이 높아진다." number={4} />
+
+## 달성점과 한계점
+
+### 새롭게 달성한 점
+
+- 로보틱스 영역에서 LLM과 유사한 **예측 가능한 power-law 스케일링 관계**를 최초로 입증
+- 7B 파라미터에서의 **위상 전이(ossification threshold)** 발견 — 로보틱스 모델에서 최초로 문서화된 경직화 현상
+- 270,000시간 이상의 실세계 데이터로 기존 로보틱스 데이터셋 대비 **수 자릿수 더 큰 규모**의 학습 달성
+
+### 한계점
+
+- **데이터 파트너 익명화**: 데이터 소스가 Partner A/B/C로 익명화되어 있어 데이터 구성과 품질의 재현성 검증이 어려움
+- **모델/데이터 비공개**: 모델 가중치와 학습 데이터 모두 비공개로, 독립적인 검증이 불가능
+- 🤖 **아키텍처 상세 미공개**: harmonic reasoning 등 핵심 기법의 구체적 구현이 공개되지 않아, 기술적 기여의 정확한 평가가 제한적
+
+## Terry's memo
+
+- *(None)*

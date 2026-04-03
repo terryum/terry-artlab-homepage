@@ -1,0 +1,103 @@
+---
+locale: "ko"
+title: "GEN-1: 범용 Physical AI의 상용화 임계점을 넘다"
+summary: "이전 세대(GEN-0)가 64%의 성공률에 머물러 상용화에 미치지 못했던 한계를, GEN-1이 50만 시간 이상의 인간 웨어러블 데이터 사전학습과 새로운 멀티모달 아키텍처, RL 기반 후학습으로 극복했다. 6가지 물리 태스크에서 99% 성공률, 3배 속도, 태스크당 1시간의 로봇 데이터만으로 달성."
+card_summary: "GEN-0의 64% 성공률로는 상용화가 불가능했던 로봇 파운데이션 모델의 한계를, 인간 웨어러블 데이터 사전학습과 추론 최적화로 99% 성공률·3배 속도를 달성하며 상용 가능성의 임계점을 넘은 GEN-1."
+terrys_memo: ""
+translation_of: null
+translated_to:
+  - "en"
+references:
+  - title: "GEN-0: Embodied Foundation Models That Scale with Physical Interaction"
+    author: "Generalist AI Team (2025)"
+    description: "GEN-1의 직접적인 전 세대 모델. 27만 시간 이상의 실세계 조작 데이터로 사전학습하여 로보틱스에서도 스케일링 법칙이 존재함을 처음 입증. GEN-1은 이 위에 데이터·컴퓨트·알고리즘을 모두 스케일링."
+    arxiv_url: null
+    scholar_url: null
+    project_url: "https://generalistai.com/blog/nov-04-2025-GEN-0"
+    post_slug: "2511-gen0-embodied-foundation-model"
+    category: "foundational"
+  - title: "π₀: A Vision-Language-Action Flow Model for General Robot Control"
+    author: "Black et al. (2024)"
+    description: "VLA flow 모델의 핵심 선행 연구. GEN-1 블로그에서 박스 접기 태스크 속도 비교 대상(π₀ 34초 vs. GEN-1 12.1초)으로 직접 인용."
+    arxiv_url: "https://arxiv.org/abs/2410.24164"
+    scholar_url: "https://scholar.google.com/scholar?q=pi0+vision+language+action+flow+model+general+robot+control"
+    project_url: "https://physicalintelligence.company/blog/pi0"
+    post_slug: "2410-pi0-vla-flow-model"
+    category: "recent"
+  - title: "PaLM-E: An Embodied Multimodal Language Model"
+    author: "Driess et al. (2023)"
+    description: "멀티모달 언어 모델을 로봇에 적용한 초기 연구. GEN-1 블로그에서 embodied foundation model 계보의 맥락으로 참조."
+    arxiv_url: "https://arxiv.org/abs/2303.03378"
+    scholar_url: "https://scholar.google.com/scholar?q=PaLM-E+embodied+multimodal+language+model"
+    project_url: null
+    category: "foundational"
+---
+
+## TL;DR
+
+GEN-0의 64% 성공률로는 상용화가 불가능했던 로봇 파운데이션 모델의 한계를, **50만 시간 이상의 인간 웨어러블 데이터 사전학습**과 추론 최적화로 **99% 성공률 · 3배 속도**를 달성하며 상용 가능성의 임계점을 넘었다.
+
+## 문제
+
+Embodied foundation model의 첫 세대인 GEN-0(2025년 11월)는 로보틱스에도 스케일링 법칙이 존재함을 입증했지만, 평균 성공률 64%는 실제 상용 배포에 크게 미달하는 수준이었다. LLM의 발전 과정에서 GPT-2가 멀티태스크 학습의 가능성을 보여줬지만 상용 배포에는 부족했던 것처럼, 로보틱스 파운데이션 모델도 높은 신뢰성·속도·적응력이라는 세 가지 조건을 동시에 충족해야 비로소 "mastery"에 도달한다. GEN-1은 이 임계점을 넘기 위해 데이터·컴퓨트·알고리즘 모두를 스케일링한 두 번째 세대 모델이다.
+
+## 핵심 아이디어
+
+GEN-1은 **mastery의 세 기둥**(reliability, speed, improvisational intelligence)을 정의하고, 이를 동시에 달성하는 것을 목표로 설계되었다. 핵심 차별점은 사전학습 데이터가 텔레오퍼레이션이나 시뮬레이션이 아닌 **저비용 웨어러블 장치를 착용한 인간의 실제 활동 데이터**(50만 시간 이상)라는 점이다.
+
+핵심 구성 요소:
+
+- **웨어러블 기반 사전학습**: 로봇 데이터 없이 인간의 물리적 상호작용 데이터만으로 사전학습 → 파인튜닝 시 로봇 embodiment와 태스크에 동시 적응
+- **새로운 멀티모달 아키텍처**: 페타바이트급 물리 상호작용 데이터를 처리하도록 처음부터 재설계된 분산 학습 인프라
+- **Harmonic Reasoning**: 사고(thinking)와 행동(acting)을 동시에 수행하는 추론 최적화 — custom kernel, paged attention으로 실시간 추론 달성
+- **RL 기반 후학습**: 강화학습과 멀티모달 인간 가이던스를 결합한 post-training으로 정밀하고 부드러운 제어 달성
+
+<Figure src="./og-image.png" alt="GEN-1 hero" caption="GEN-1: Scaling Embodied Foundation Models to Mastery — Generalist AI 블로그 공개 히어로 이미지." number={1} />
+
+<Collapsible title="구체적 방법">
+
+GEN-1의 기술 스택은 크게 네 단계로 구성된다.
+
+**1단계 — 대규모 사전학습**: 저비용 웨어러블 장치를 인간에게 착용시켜 수집한 50만 시간 이상의 고충실도 물리적 상호작용 데이터로 base foundation model을 학습한다. 이 데이터에는 로봇 데이터가 포함되지 않으며, 텔레오퍼레이션이나 시뮬레이션 데이터셋 없이도 높은 수준의 mastery에 도달할 수 있음을 증명한다.
+
+**2단계 — 아키텍처 재설계**: 페타바이트급 물리적 상호작용 데이터를 first-class citizen으로 처리하기 위해 멀티모달 아키텍처를 처음부터 새로 설계했다. 분산 학습 인프라와 학습 안정성(training stability)에 수개월을 투자했다.
+
+**3단계 — 추론 최적화(Harmonic Reasoning)**: 실시간 추론을 위해 custom kernel과 paged attention을 개발하여, 모델이 생각(thinking)과 행동(acting)을 동시에 수행할 수 있도록 했다. 이를 통해 높은 속도에서도 정밀성과 반응성을 유지한다.
+
+**4단계 — RL 후학습 및 제어 시스템**: 강화학습과 멀티모달 인간 가이던스를 결합한 post-training 기법으로 행동의 정밀도와 부드러움을 높였다. 새로운 하드웨어를 다양한 지역에 배포하여 제어 시스템을 검증했다.
+
+</Collapsible>
+
+## 주요 결과
+
+- **평균 성공률 99%** (6가지 물리 태스크) — 사전학습 없는 baseline(19%), GEN-0(64%) 대비 대폭 향상
+- **최대 약 3배 속도 향상**: 박스 접기 12.1초 (GEN-0/π₀ 34초 대비 2.8배), 폰 패킹 15.5초 (GEN-0 대비 2.8배)
+- **10배 적은 태스크별 데이터**: GEN-0 대비 10분의 1의 태스크별 데이터와 파인튜닝 스텝으로 동등 이상 성능 달성
+- **태스크별 1시간의 로봇 데이터**만으로 99% 성공률에 도달
+
+| 태스크 | 성공률 | 연속 수행 | 속도 비교 |
+|--------|--------|-----------|-----------|
+| 자동차 부품 키팅 | 99% | 1시간 연속 | 1x, 완전 자율 |
+| 티셔츠 접기 | 99% | 86회 연속 | 1x, 완전 자율 |
+| 로봇 청소기 서비스 | 99% | 200회+ | GEN-0(50%) 대비 대폭 향상 |
+| 블록 패킹 | 높은 신뢰성 | 1,800회 연속 | 향상된 속도/정밀도 |
+| 박스 접기 | 99% | 200회+ | 2.8x (12.1초 vs. GEN-0 34초) |
+| 폰 패킹 | 99% | 100회+ | 2.8x (15.5초 vs. GEN-0 ~43초) |
+
+<Video src="https://www.youtube.com/embed/SY2xyrmV44Y?si=jqsXQKrQgX2PUO3J" caption="GEN-1 데모: 다양한 물리 태스크에서의 mastery 수준 수행" />
+
+## 달성점과 한계점
+
+**새롭게 달성한 점**:
+- **상용 임계점 돌파**: 99% 성공률로, LLM 발전에서 GPT-3가 광고 카피 등 상용 태스크를 처음 가능하게 한 것과 유사한 전환점
+- **텔레오퍼레이션 없는 사전학습**: 인간 웨어러블 데이터만으로 로봇 mastery에 도달 가능함을 최초 입증 — 데이터 수집 비용과 확장성의 근본적 변화
+- **즉흥적 지능(Improvisational Intelligence)**: 학습 분포 밖의 예외 상황에서 와셔 재파지, 변형 물체 복구 등 창의적 회복 행동이 자발적으로 출현
+
+**한계점**:
+- 시도한 모든 태스크가 99% 성공률에 도달하지는 못함 — 일부 태스크는 실용에 필요한 성공률이나 속도에 미달
+- 즉흥적 행동이 태스크 목표와 불일치할 경우 오히려 방해가 될 수 있음 — alignment 과제 인정
+- 🤖 모델과 데이터셋이 비공개이므로 독립적 재현이 불가능하며, 성능 주장이 자체 벤치마크에 의존
+
+## Terry's memo
+
+- *(None)*

@@ -1,0 +1,116 @@
+{
+  "post_id": "2511-gen0-embodied-foundation-model",
+  "slug": "2511-gen0-embodied-foundation-model",
+  "post_number": 23,
+  "source_date": "2025-11-04T00:00:00Z",
+  "published_at": "2026-04-03T00:00:00Z",
+  "updated_at": "2026-04-03T00:00:00Z",
+  "status": "published",
+  "content_type": "papers",
+  "domain": "robotics",
+  "subfields": [
+    "foundation-model",
+    "scaling-laws",
+    "cross-embodiment"
+  ],
+  "key_concepts": [
+    "embodied-foundation-model",
+    "scaling-laws",
+    "harmonic-reasoning",
+    "cross-embodiment",
+    "VLA"
+  ],
+  "methodology": [
+    "pretraining",
+    "power-law-scaling",
+    "multi-task-learning"
+  ],
+  "contribution_type": "system",
+  "relations": [
+    {
+      "target": "2410-pi0-vla-flow-model",
+      "type": "related"
+    },
+    {
+      "target": "2511-pi0-6-recap",
+      "type": "related"
+    }
+  ],
+  "ai_summary": {
+    "one_liner": "Embodied foundation model trained on 270K+ hours of real-world manipulation data, exhibiting phase transitions at 7B parameters and predictable power-law scaling",
+    "problem": "Robotics lacks foundation models that scale predictably with data and compute, unlike LLMs",
+    "solution": "GEN-0: multimodal pretraining on 270K+ hours of diverse real-world interaction data with harmonic reasoning for simultaneous thinking and acting",
+    "key_result": "Up to 99% real-robot success rates; phase transition at 7B params; power-law scaling enabling performance prediction",
+    "limitations": [
+      "Anonymized data partners make reproducibility difficult",
+      "No open-source model or dataset release",
+      "Limited detail on architecture specifics"
+    ]
+  },
+  "tags": [
+    "Papers",
+    "Robotics",
+    "Foundation Model",
+    "Scaling",
+    "Blog"
+  ],
+  "cover_image": "./cover.webp",
+  "cover_figure_number": 4,
+  "thumb_source": "./fig-4.png",
+  "cover_caption": "Figure 3. For real-robot evaluations, more pretraining data yields higher downstream average task success rates via closed-loop policy rollouts.",
+  "reading_time_min": 9,
+  "source_url": "https://generalistai.com/blog/nov-04-2025-GEN-0",
+  "source_title": "GEN-0: Embodied Foundation Models That Scale with Physical Interaction",
+  "source_author": "Generalist AI Team",
+  "source_type": "Generalist AI Blog",
+  "source_project_url": "https://generalistai.com/blog/nov-04-2025-GEN-0",
+  "google_scholar_url": null,
+  "source_authors_full": [
+    "Generalist AI Team"
+  ],
+  "figures": [
+    {
+      "number": 1,
+      "src": "./fig-1.png",
+      "caption": "Figure 1. Scaling GEN-0 model size (different colors) improves performance in terms of next-action validation prediction error (y-axis, lower is better) on a completely-withheld (i.e. zero-shot) long-horizon downstream task.",
+      "caption_ko": "Figure 1. GEN-0 모델 크기를 키우면(다른 색상) 완전히 보류된(즉, 제로샷) 장기 다운스트림 태스크에서 다음 행동 검증 예측 오차(y축, 낮을수록 좋음) 기준 성능이 향상된다."
+    },
+    {
+      "number": 2,
+      "src": "./fig-2.png",
+      "caption": "Figure 2. With increasingly more pretraining data (different colors), multi-task model performance during post-training improves in terms of validation loss.",
+      "caption_ko": "Figure 2. 사전학습 데이터가 증가할수록(다른 색상) 후학습 중 멀티태스크 모델의 검증 손실이 개선된다."
+    },
+    {
+      "number": 3,
+      "src": "./fig-3.png",
+      "caption": "Figure 2 (continued). Next action prediction error (4x4 grid) across all 16 task sets, showing improvement with more pretraining data.",
+      "caption_ko": "Figure 2 (계속). 16개 태스크 세트 전체의 다음 행동 예측 오차(4x4 그리드)로, 사전학습 데이터가 많을수록 개선된다."
+    },
+    {
+      "number": 4,
+      "src": "./fig-4.png",
+      "caption": "Figure 3. For real-robot evaluations, more pretraining data yields higher downstream average task success rates via closed-loop policy rollouts.",
+      "caption_ko": "Figure 3. 실제 로봇 평가에서, 사전학습 데이터가 많을수록 폐루프 정책 롤아웃을 통한 다운스트림 평균 태스크 성공률이 높아진다."
+    },
+    {
+      "number": 5,
+      "src": "./fig-5.png",
+      "caption": "Figure 4. Scaling laws provide prediction of asymptotic next action prediction error as a function of pretraining dataset size.",
+      "caption_ko": "Figure 4. 스케일링 법칙은 사전학습 데이터셋 크기에 따른 점근적 다음 행동 예측 오차의 예측을 제공한다."
+    },
+    {
+      "number": 6,
+      "src": "./fig-6.png",
+      "caption": "Figure 5. GEN-0 is trained on orders of magnitude more real-world manipulation data than existing robotics datasets (as of Nov 2025).",
+      "caption_ko": "Figure 5. GEN-0은 기존 로보틱스 데이터셋 대비 수 자릿수 더 많은 실세계 조작 데이터로 학습되었다 (2025년 11월 기준)."
+    }
+  ],
+  "tables": [],
+  "newsletter_eligible": false,
+  "featured": false,
+  "taxonomy_primary": "robotics/brain/vla",
+  "taxonomy_secondary": [
+    "robotics/arm"
+  ]
+}
