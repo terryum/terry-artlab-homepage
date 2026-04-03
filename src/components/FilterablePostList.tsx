@@ -207,21 +207,7 @@ function FilterablePostListInner({
 
   return (
     <div>
-      <div className="flex items-center gap-2">
-        <h1 className="text-2xl font-bold text-text-primary tracking-tight">{currentTitle}</h1>
-        <button
-          onClick={() => setGraphOpen(true)}
-          className="p-1.5 rounded-md text-text-muted hover:text-accent hover:bg-surface-muted transition-colors"
-          title={locale === 'ko' ? '지식 그래프 보기' : 'View Knowledge Graph'}
-        >
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-            <circle cx="5" cy="6" r="2.5" />
-            <circle cx="19" cy="6" r="2.5" />
-            <circle cx="12" cy="18" r="2.5" />
-            <path d="M7.5 7L10.5 16M16.5 7L13.5 16M7.5 6H16.5" />
-          </svg>
-        </button>
-      </div>
+      <h1 className="text-2xl font-bold text-text-primary tracking-tight">{currentTitle}</h1>
       <p className="text-sm text-text-muted mt-2 mb-8">{currentDescription}</p>
 
       <GraphPopup open={graphOpen} onClose={() => setGraphOpen(false)} locale={locale} />
@@ -236,6 +222,18 @@ function FilterablePostListInner({
             style={{ right: 'calc(100% + 1rem)' }}
           >
             <div className="sticky top-24">
+              <button
+                onClick={() => setGraphOpen(true)}
+                className="w-full flex items-center gap-2 px-3 py-2.5 mb-4 rounded-lg border border-accent/30 bg-accent/5 text-accent hover:bg-accent/10 hover:border-accent/50 transition-colors text-sm font-semibold"
+              >
+                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <circle cx="5" cy="6" r="2" />
+                  <circle cx="19" cy="6" r="2" />
+                  <circle cx="12" cy="18" r="2" />
+                  <path d="M7 7l3.5 9M17 7l-3.5 9M7 6h10" />
+                </svg>
+                Paper Map
+              </button>
               <TaxonomyFilter
                 variant="sidebar"
                 locale={locale}
@@ -251,9 +249,21 @@ function FilterablePostListInner({
         {/* Main content: always full Container width */}
         <div>
 
-          {/* Mobile / narrow (< xl): collapsible taxonomy at top */}
+          {/* Mobile / narrow (< xl): Paper Map button + collapsible taxonomy */}
           {hasTaxonomy && (
             <div className="xl:hidden mb-6">
+              <button
+                onClick={() => setGraphOpen(true)}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 mb-3 rounded-lg border border-accent/30 bg-accent/5 text-accent hover:bg-accent/10 hover:border-accent/50 transition-colors text-sm font-semibold"
+              >
+                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <circle cx="5" cy="6" r="2" />
+                  <circle cx="19" cy="6" r="2" />
+                  <circle cx="12" cy="18" r="2" />
+                  <path d="M7 7l3.5 9M17 7l-3.5 9M7 6h10" />
+                </svg>
+                Paper Map
+              </button>
               <div className="border border-line-default rounded-lg overflow-hidden">
                 <button
                   onClick={() => setMobileTaxonomyOpen(v => !v)}

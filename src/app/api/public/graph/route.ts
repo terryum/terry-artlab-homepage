@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { getSupabaseBrowser, isSupabaseConfigured } from '@/lib/supabase';
+import { getSupabaseAdmin, isSupabaseAdminConfigured } from '@/lib/supabase';
 
 export async function GET() {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseAdminConfigured()) {
     return NextResponse.json({ error: 'Database not configured' }, { status: 503 });
   }
 
-  const supabase = getSupabaseBrowser();
+  const supabase = getSupabaseAdmin();
 
   const [papersRes, edgesRes, layoutsRes] = await Promise.all([
     supabase.from('papers').select('slug,title_en,title_ko,domain,taxonomy_primary,taxonomy_secondary,key_concepts,source_author,published_at,meta_json').order('slug'),
