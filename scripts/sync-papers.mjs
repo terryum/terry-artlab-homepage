@@ -268,6 +268,7 @@ async function syncMetaEdges(papers) {
         provenance: 'meta',
         status: 'confirmed',
         weight: 0.7,
+        strength: assignRelationStrength(rel.type),
         detail: `From meta.json relations`,
         updated_at: new Date().toISOString(),
       });
@@ -458,6 +459,138 @@ async function generateLayouts(papers) {
   }
 }
 
+// ── Parse Terry's memo from MDX ──
+function parseTerryMemo(mdxContent) {
+  const memoMatch = mdxContent.match(/## Terry'?s memo\n\n([\s\S]*?)(?=\n##|\n---|\Z|$)/i);
+  if (!memoMatch) return [];
+  const memoBlock = memoMatch[1].trim();
+  if (memoBlock === '- *(None)*' || memoBlock === '*(None)*') return [];
+  const memos = [];
+  for (const line of memoBlock.split('\n')) {
+    const cleaned = line.replace(/^-\s*/, '').trim();
+    if (cleaned && cleaned !== '*(None)*') memos.push(cleaned);
+  }
+  return memos;
+}
+
+// ── Parse research gaps from MDX ──
+function parseResearchGaps(mdxContent) {
+  const gaps = [];
+  const limMatch = mdxContent.match(/\*\*저자 언급\*\*:\s*(.*?)(?=\n-\s*🤖|\n##|\n\n##|$)/s);
+  if (limMatch) {
+    gaps.push({ question: limMatch[1].trim(), source: 'author', relates_to: [] });
+  }
+  const aiMatch = mdxContent.match(/🤖\s*(.*?)(?=\n##|\n\n##|$)/s);
+  if (aiMatch) {
+    gaps.push({ question: aiMatch[1].trim(), source: 'ai_analysis', relates_to: [] });
+  }
+  if (gaps.length === 0) {
+    const limMatchEn = mdxContent.match(/\*\*Author-noted\*\*:\s*(.*?)(?=\n-\s*🤖|\n##|\n\n##|$)/s);
+    if (limMatchEn) {
+      gaps.push({ question: limMatchEn[1].trim(), source: 'author', relates_to: [] });
+    }
+    const aiMatchEn = mdxContent.match(/🤖\s*(.*?)(?=\n##|\n\n##|$)/s);
+    if (aiMatchEn) {
+      gaps.push({ question: aiMatchEn[1].trim(), source: 'ai_analysis', relates_to: [] });
+    }
+  }
+  return gaps;
+}
+
+// ── Extract memo topics ──
+function extractMemoTopics(memos, keyConcepts) {
+  const topics = new Set();
+  const text = memos.join(' ').toLowerCase();
+  for (const c of keyConcepts) {
+    if (text.includes(c.toLowerCase().replace(/-/g, ' ')) || text.includes(c.toLowerCase())) {
+      topics.add(c);
+    }
+  }
+  return [...topics];
+}
+
+// ── Assign relation strength ──
+function assignRelationStrength(type) {
+  if (['builds_on', 'extends', 'uses_method'].includes(type)) return 'foundational';
+  if (['compares_with', 'fills_gap_of', 'addresses_task'].includes(type)) return 'direct';
+  return 'tangential';
+}
+
+// ── Sync Terry's memos ──
+async function syncTerryMemos(papers) {
+  let count = 0;
+  for (const paper of papers) {
+    let koMdx = '';
+    try {
+      koMdx = await fs.readFile(path.join(PAPERS_DIR, paper.slug, 'ko.mdx'), 'utf-8');
+    } catch { continue; }
+
+    const memos = parseTerryMemo(koMdx);
+    if (memos.length === 0) continue;
+
+    const allConcepts = [...(paper.meta_json.key_concepts || []), ...(paper.meta_json.subfields || [])];
+    const topics = extractMemoTopics(memos, allConcepts);
+
+    for (const memo of memos) {
+      const { error } = await supabase
+        .from('terry_memos')
+        .upsert({
+          paper_slug: paper.slug,
+          memo,
+          memo_topics: topics,
+        }, { onConflict: 'paper_slug,memo' });
+
+      if (error) {
+        console.warn(`  ⚠ Failed to upsert memo for ${paper.slug}: ${error.message}`);
+      } else {
+        count++;
+      }
+    }
+  }
+  if (count > 0) console.log(`✓ Upserted ${count} Terry's memos`);
+  return count;
+}
+
+// ── Sync research gaps ──
+async function syncResearchGaps(papers) {
+  let count = 0;
+  for (const paper of papers) {
+    let koMdx = '';
+    try {
+      koMdx = await fs.readFile(path.join(PAPERS_DIR, paper.slug, 'ko.mdx'), 'utf-8');
+    } catch { continue; }
+
+    const gaps = parseResearchGaps(koMdx);
+    if (gaps.length === 0) continue;
+
+    const allConcepts = [...(paper.meta_json.key_concepts || []), ...(paper.meta_json.subfields || [])];
+    for (const gap of gaps) {
+      gap.relates_to = allConcepts.filter(c =>
+        gap.question.toLowerCase().includes(c.toLowerCase().replace(/-/g, ' '))
+      );
+    }
+
+    // Delete old gaps for this paper, then insert fresh
+    await supabase.from('research_gaps').delete().eq('paper_slug', paper.slug);
+
+    const rows = gaps.map(g => ({
+      paper_slug: paper.slug,
+      question: g.question,
+      source: g.source,
+      relates_to: g.relates_to,
+    }));
+
+    const { error } = await supabase.from('research_gaps').insert(rows);
+    if (error) {
+      console.warn(`  ⚠ Failed to insert gaps for ${paper.slug}: ${error.message}`);
+    } else {
+      count += rows.length;
+    }
+  }
+  if (count > 0) console.log(`✓ Inserted ${count} research gaps`);
+  return count;
+}
+
 // ── Main ──
 async function main() {
   console.log('🔄 Syncing papers to Supabase...');
@@ -475,7 +608,7 @@ async function main() {
   // Step 1: Upsert papers
   await upsertPapers(papers);
 
-  // Step 2: Sync meta.json relations as confirmed edges
+  // Step 2: Sync meta.json relations as confirmed edges (with strength)
   const metaEdgeCount = await syncMetaEdges(papers);
 
   // Step 3: Generate auto-suggested edges
@@ -484,11 +617,17 @@ async function main() {
   // Step 4: Generate initial layout coordinates
   await generateLayouts(papers);
 
-  // Step 5: Check top-level taxonomy balance
+  // Step 5: Sync Terry's memos
+  const memoCount = await syncTerryMemos(papers);
+
+  // Step 6: Sync research gaps
+  const gapCount = await syncResearchGaps(papers);
+
+  // Step 7: Check top-level taxonomy balance
   const freshTaxonomy = await loadTaxonomy();
   checkTopLevelBalance(freshTaxonomy);
 
-  console.log(`\n✅ Sync complete: ${papers.length} papers, ${metaEdgeCount} meta edges, ${autoEdgeCount} auto edges`);
+  console.log(`\n✅ Sync complete: ${papers.length} papers, ${metaEdgeCount} meta edges, ${autoEdgeCount} auto edges, ${memoCount} memos, ${gapCount} gaps`);
 }
 
 main().catch(err => {
