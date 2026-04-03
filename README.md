@@ -1,80 +1,67 @@
-# Terry's Art Lab --- terryum.io
+# On the Manifold — Terry's External Brain
 
-Personal homepage and AI-powered knowledge management system for robotics & AI research.
+[한국어](README_ko.md) | **English**
 
-## Overview
+> A personal homepage and AI-operated knowledge management system for robotics & AI research.
 
-This is the source code for [terryum.io](https://terryum.io), a bilingual (Korean/English) research blog and knowledge management platform. It serves as both a public-facing homepage and a private knowledge graph backend, where arXiv papers are automatically summarized, indexed, and connected into a growing web of research insights.
+**Live**: [terry.artlab.ai](https://terry.artlab.ai)
 
-The site currently hosts 22+ research paper summaries with AI-generated insights, tech essays, and an interactive paper relationship graph -- all managed through an AI-powered publishing pipeline.
+## What This Is
+
+This is the source code for [On the Manifold](https://terry.artlab.ai), a bilingual (Korean/English) research blog and knowledge graph. Inspired by [Andrej Karpathy's approach](https://x.com/karpathy/status/1911080111710109960) to personal knowledge management, the entire system is operated by Claude Code as an AI agent — papers are summarized, indexed, connected, and published through natural language commands.
+
+The site hosts 25+ research paper summaries, tech essays, and an interactive paper relationship graph, all managed through an AI-powered pipeline.
 
 ## Architecture
 
 | Layer | Stack |
 |-------|-------|
 | **Frontend** | Next.js 15 (App Router) + TypeScript + Tailwind CSS v4 |
-| **Deployment** | Cloudflare (DNS / CDN) + Vercel |
+| **Deployment** | Cloudflare (DNS/CDN) + Vercel |
 | **Database** | Supabase (paper relationships, knowledge graph) |
-| **Knowledge Base** | Obsidian (local graph frontend) + Claude Code (operating agent) |
-| **Content** | Bilingual (Korean / English) MDX posts |
-| **Image Pipeline** | Sharp (thumbnails) + Gemini 3 (cover generation) + OG image generation |
+| **Knowledge Base** | Obsidian (local graph viewer) + Claude Code (operating agent) |
+| **Content** | Bilingual (Korean/English) MDX posts |
 
-## AI-Powered Workflow
+## Skills (Claude Code Commands)
 
-Inspired by Andrej Karpathy's approach to knowledge management -- treating every paper, memo, and conversation as a node in a personal knowledge graph, operated by an AI agent.
+| Skill | Description | Example |
+|-------|-------------|---------|
+| `/post` | Publish a research post from arXiv, blog, or journal URL | `/post https://arxiv.org/abs/2505.22159` |
+| `/write` | Generate a styled draft from Obsidian memos, or save conversation insights | `/write #-1 #-3 --type=tech` |
+| `/memo` | Create an Obsidian memo with auto-indexed metadata | `/memo AI와 로보틱스의 접점` |
+| `/paper-search` | Recommend Top 10 papers based on knowledge graph + external search | `/paper-search #16 리타게팅 한계를 해결하는 연구` |
+| `/post-share` | Publish a post to social media (Facebook, X, LinkedIn, Bluesky, Substack) | `/post-share #5 facebook,x` |
+| `/project` | Add a project to the gallery | `/project https://github.com/user/repo` |
 
-### `/post` -- Research Paper Pipeline
-An arXiv URL goes in; a fully formatted bilingual summary comes out. The pipeline downloads the PDF, extracts figures, generates structured summaries following editorial rules, builds taxonomy relationships to existing papers, creates cover images, and publishes -- all in a single command.
-
-```
-/post https://arxiv.org/abs/2505.22159 --tags=VLA,robotics --memo="Interesting approach to..."
-```
-
-### `/write` -- Obsidian Memo to Published Draft
-Personal memos written in Obsidian are transformed into styled tech essays or personal essays, following a learned writing style guide that evolves with editorial feedback.
+## How It Works
 
 ```
-/post --type=blog --from="~/Vault/Drafts/my-idea.md" 260403-my-idea
+                    Claude Code (AI Agent)
+                           │
+        ┌──────────────────┼──────────────────┐
+        ▼                  ▼                  ▼
+   /post, /write      /paper-search      /memo, /write
+        │                  │               (insight)
+        ▼                  ▼                  │
+  posts/ (MDX)      Semantic Scholar          ▼
+  meta.json          + arXiv API        Obsidian Vault
+  index.json              │             (From AI/, From
+        │                 ▼              Terry/, Meta/)
+        ├──► Supabase (graph)                 │
+        ├──► Obsidian (sync)                  │
+        └──► Vercel (deploy)                  │
+                                              ▼
+                                     Knowledge Graph
+                                    (wikilinks + Dataview)
 ```
 
-### Knowledge Graph Integration
-- Papers are connected via concept overlap, taxonomy placement, and relationship types (`builds_on`, `extends`, `compares_with`, `fills_gap_of`)
-- Every published post syncs to a private Obsidian vault with Dataview-queryable metadata
-- Conversations and Q&A sessions become knowledge base entries via a unified global index
-- Any document can be referenced by `#number` across the entire system
-
-## Key Features
-
-- **Bilingual Content**: Every post exists in both Korean and English with proper i18n routing
-- **Research Summaries**: Structured paper breakdowns with extracted figures, tables, and editorial memos
-- **Interactive Paper Graph**: Visual exploration of paper relationships powered by React Flow
-- **Automated Publishing**: One-command pipeline from arXiv URL to live post with social media sharing
-- **Obsidian Integration**: Local knowledge graph with bidirectional sync to the homepage
-- **Style Guide Learning**: The system learns from editorial corrections to improve future drafts
-- **Cover Image Generation**: AI-generated covers via Gemini 3 when paper figures are unavailable
-
-## Project Structure
-
-```
-app/                    # Next.js App Router pages & layouts
-posts/
-  papers/               # Research paper summaries (MDX + figures)
-  tech/                 # Tech essays
-  essays/               # Personal essays
-scripts/                # Build & automation scripts
-.claude/
-  skills/               # Claude Code skill definitions (/post, /write, etc.)
-  agents/               # Specialized agent configurations
-docs/                   # Internal documentation & rules
-```
+- **Public posts** are indexed with positive IDs (`#1`, `#2`, ...)
+- **Private memos/drafts** use negative IDs (`#-1`, `#-2`, ...)
+- Any document is referenceable by its `#number` across all commands
 
 ## Note
 
-This repository is Terry's personal project, not a general-purpose template or starter kit.
-
-It requires specific environment variables, API keys, Supabase configurations, and Obsidian vault paths that are not included in this repository. The Claude Code skills and automation pipelines are tailored to a specific workflow and knowledge management philosophy.
-
-Cloning this repo will not produce a working application without the full infrastructure setup. If you find the architecture or workflow ideas interesting, feel free to draw inspiration from the approach -- but please build your own from scratch rather than forking this.
+This is a personal project, not a template or starter kit. It requires environment variables, API keys, and infrastructure configurations not included in the repository. If you find the workflow interesting, feel free to draw inspiration — but please build your own from scratch.
 
 ## License
 
