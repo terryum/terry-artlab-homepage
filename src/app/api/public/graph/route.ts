@@ -1,12 +1,15 @@
 import { NextResponse } from 'next/server';
-import { getSupabaseAdmin, isSupabaseAdminConfigured } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 
 export async function GET() {
-  if (!isSupabaseAdminConfigured()) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!url || !key) {
     return NextResponse.json({ error: 'Database not configured' }, { status: 503 });
   }
 
-  const supabase = getSupabaseAdmin();
+  const supabase = createClient(url, key);
 
   const [papersRes, edgesRes, layoutsRes] = await Promise.all([
     supabase.from('papers').select('slug,title_en,title_ko,domain,taxonomy_primary,taxonomy_secondary,key_concepts,source_author,published_at,meta_json').order('slug'),
