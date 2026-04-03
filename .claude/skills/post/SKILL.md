@@ -121,6 +121,14 @@ git commit -m "feat(post): add <slug> (ko/en)"
 git push
 ```
 
+### Step R12.5) Knowledge Base 업데이트 (Private)
+```bash
+node scripts/export-knowledge.mjs --out=/tmp/terry-research-kb
+cd /tmp/terry-research-kb && git add -A && git commit -m "update: <slug>" && git push && cd -
+```
+- `/tmp/terry-research-kb`가 없으면: `gh repo clone terryum/terry-research-kb /tmp/terry-research-kb`
+- Terry's memo가 있는 포스트만 의미 있는 업데이트
+
 ### Step R13) 예외 발생 시 레슨 기록
 포스팅 과정에서 **예외/우회/실패 후 복구**가 있었다면:
 1. 문제와 해결 방법을 `memory/posting-lessons.md`에 추가 (memory 시스템 사용)
@@ -321,6 +329,9 @@ git add posts/ public/posts/
 git commit -m "feat(post): add <slug> (ko/en)"
 git push
 ```
+
+### Step B10.5) Knowledge Base 업데이트 (Private)
+R12.5와 동일
 
 ### Step B11) 예외 발생 시 레슨 기록
 R13과 동일 — 예외/우회가 있었으면 `memory/posting-lessons.md`에 기록
