@@ -1,7 +1,7 @@
 ---
 name: post
-description: Post 생성 파이프라인. arXiv URL → Research 포스트, --type=blog → Blog 포스트 자동 생성. 커버 이미지 없을 시 /gemini-3-image-generation 사용.
-argument-hint: "<arXiv-URL | --type=blog slug> [--tags=TAG1,TAG2] [--memo=메모] [--featured]"
+description: "Post 생성 파이프라인. arXiv URL → Research 포스트, 블로그/기술문서 URL → Research 포스트(blog 태그), --type=blog → Blog 포스트(essays/tech) 자동 생성. 커버 이미지 없을 시 /gemini-3-image-generation 사용."
+argument-hint: "<URL | --type=blog slug> [--tags=TAG1,TAG2] [--memo=메모] [--featured]"
 ---
 
 # Post 생성 파이프라인
@@ -10,21 +10,31 @@ argument-hint: "<arXiv-URL | --type=blog slug> [--tags=TAG1,TAG2] [--memo=메모
 
 ## Step 0) 타입 자동 감지
 
-- `https://arxiv.org/` 포함 → **Research 경로** (아래 Research 섹션 실행)
-- `--type=blog` 명시 또는 arXiv URL 없음 → **Blog 경로** (아래 Blog 섹션 실행)
+- `https://arxiv.org/` 포함 → **Research 경로 (arXiv)** (아래 Research 섹션 실행)
+- `nature.com`, `ieee.org`, `acm.org` 등 학술 저널 URL → **Research 경로 (학술)** (`docs/POST_LOADING_ETC.md` 참조)
+- 그 외 `http(s)://` URL (블로그 등) → **Research 경로 (블로그)** (아래 Research 섹션, 블로그 분기로 실행)
+- `--type=blog` 명시 또는 URL 없음 → **Blog 경로** (아래 Blog 섹션 실행)
+- `--from=<path>` 명시 → **Blog 경로** (Obsidian 초안에서 발행, `--type` 필수)
 
 ```
-/post https://arxiv.org/abs/2505.22159          → Research 경로
-/post https://arxiv.org/abs/2505.22159 --tags=VLA
-/post --type=blog 260315-rebalancing            → Blog 경로
-/post --type=blog                               → Blog 경로 (slug 확인 후 진행)
+/post https://arxiv.org/abs/2505.22159          → Research (arXiv)
+/post https://generalistai.com/blog/...         → Research (블로그)
+/post https://claude.com/blog/...               → Research (블로그)
+/post --type=blog 260315-rebalancing            → Blog (essays/tech)
+/post --type=blog --from=#24                    → Blog (Obsidian 초안 발행)
 ```
 
 ---
 
-## Research 경로 (arXiv)
+## Research 경로
 
-입력: `https://arxiv.org/abs/<id> [--tags=TAG1,TAG2] [--memo=메모] [--featured]`
+입력: `<URL> [--tags=TAG1,TAG2] [--memo=메모] [--featured]`
+URL 종류에 따라 소스별 분기가 있지만, **MDX 구조와 meta.json 스키마는 동일**.
+
+### 소스별 분기 (Step R4에서 적용)
+- **arXiv**: `docs/POST_LOADING_ARXIV.md` 참조
+- **학술 저널**: `docs/POST_LOADING_ETC.md` 참조
+- **블로그**: `docs/POST_LOADING_BLOG.md` 참조 — PDF 없음, WebFetch로 HTML 수집, Video 임베딩 지원
 
 모든 단계를 권한 요청 없이 완료할 것.
 

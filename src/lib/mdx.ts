@@ -6,6 +6,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import Collapsible from '@/components/Collapsible';
 import Figure from '@/components/Figure';
+import Video from '@/components/Video';
 import { resolvePostAssetPath } from '@/lib/paths';
 import { FIGURE_DIMENSIONS } from '@/lib/site-config';
 
@@ -44,6 +45,7 @@ function createMDXComponents(slug: string) {
       const src = resolvePostAssetPath(props.src, slug);
       return createElement(Figure, { ...props, src });
     },
+    Video,
   };
 }
 
