@@ -54,7 +54,9 @@
   - AI 분석 한계: 1개만, `🤖` 표시 (재현성/범용성/실제적용성/비교공정성 관점)
 
 ### 7. Terry's memo
-- 비어있으면 `- *(None)*` 출력
+- **AI가 절대 작성하지 않는다.** 사용자가 `--memo=` 옵션으로 직접 지시한 경우에만 기입한다.
+- 지시 없으면 frontmatter `terrys_memo: ""` + 본문 `- *(None)*` 출력
+- AI가 Terry의 관점을 추측하여 메모를 생성하는 것은 금지
 
 ### 8-9. (MDX 바깥, 자동 렌더링)
 - **Key References**: frontmatter `references` 기반, `foundational`/`recent` 카테고리 분리
