@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-03T08:15:56.393Z",
-  "total_posts": 25,
+  "generated_at": "2026-04-06T01:38:05.759Z",
+  "total_posts": 26,
   "posts": [
     {
       "post_number": 1,
@@ -241,52 +241,6 @@
       "taxonomy_secondary": []
     },
     {
-      "post_number": 5,
-      "slug": "260310-on-the-manifold-first-post",
-      "content_type": "essays",
-      "title_en": "On the Manifold",
-      "title_ko": "On the Manifold",
-      "domain": "robotics",
-      "subfields": [
-        "research-philosophy"
-      ],
-      "key_concepts": [
-        "manifold",
-        "research-direction",
-        "blog-introduction"
-      ],
-      "methodology": [],
-      "contribution_type": null,
-      "tags": [
-        "Essays",
-        "AI",
-        "Physical AI",
-        "Research Philosophy"
-      ],
-      "source_author": null,
-      "source_date": null,
-      "published_at": "2026-03-10T00:00:00Z",
-      "citation_count": null,
-      "ai_summary": {
-        "one_liner": "First blog post introducing the research manifold concept and blog's purpose",
-        "problem": "Need a space to organize and share research thoughts beyond paper summaries",
-        "solution": "Blog as a manifold connecting research ideas, papers, and personal insights",
-        "key_result": "Establishes the blog's identity and research direction",
-        "limitations": [
-          "Introductory post only",
-          "No technical depth"
-        ]
-      },
-      "relations": [],
-      "idea_status": "exploring",
-      "related_posts": [
-        "2410-pi0-vla-flow-model",
-        "2505-forcevla-force-aware-moe"
-      ],
-      "taxonomy_primary": null,
-      "taxonomy_secondary": []
-    },
-    {
       "post_number": 6,
       "slug": "2407-stretchable-glove-hand-pose",
       "content_type": "papers",
@@ -345,7 +299,7 @@
     {
       "post_number": 7,
       "slug": "260310-brain-augmentation",
-      "content_type": "tech",
+      "content_type": "essays",
       "title_en": "Brain Augmentation",
       "title_ko": "Brain Augmentation",
       "domain": "ml",
@@ -362,7 +316,7 @@
       "methodology": [],
       "contribution_type": null,
       "tags": [
-        "Tech",
+        "Essays",
         "AI",
         "Human-AI Collaboration",
         "AI Scientist"
@@ -1659,6 +1613,188 @@
       "taxonomy_secondary": [
         "ai/llm"
       ]
+    },
+    {
+      "post_number": 26,
+      "slug": "2610-tactile-stretchable-glove-data-engine",
+      "content_type": "papers",
+      "title_en": "TacScale: Scalable Tactile Data Engine via Stretchable Glove for Industrial Dexterous Manipulation",
+      "title_ko": "TacScale: 신축성 촉각 글러브 기반 산업용 손재주 조작을 위한 확장 가능 촉각 데이터 엔진",
+      "domain": "robotics",
+      "subfields": [
+        "tactile-sensing",
+        "wearable-sensing",
+        "human-robot-transfer",
+        "data-collection",
+        "teleoperation"
+      ],
+      "key_concepts": [
+        "stretchable-sensor",
+        "tactile-glove",
+        "data-engine",
+        "cross-embodiment",
+        "human-demonstration",
+        "egocentric-video",
+        "sim-to-real",
+        "isaac-sim",
+        "VR-teleoperation",
+        "cosmetics-manufacturing"
+      ],
+      "methodology": [
+        "co-training",
+        "imitation-learning",
+        "cross-embodiment-retargeting",
+        "domain-randomization"
+      ],
+      "contribution_type": "system",
+      "tags": [
+        "Papers",
+        "Robotics",
+        "Tactile Sensing",
+        "Wearable",
+        "Human-Robot Transfer",
+        "Data Engine",
+        "Virtual Paper"
+      ],
+      "source_author": "Terry T. Um, Yong-Lae Park et al.",
+      "source_date": "2026-10-01T00:00:00Z",
+      "published_at": "2026-04-06T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "Stretchable liquid-metal glove with added tactile sensing as a scalable data engine: large-scale human worker demos (Data B) + sparse VR teleoperation (Data A) co-training for industrial dexterous manipulation",
+        "problem": "Teleoperation alone cannot provide sufficient demonstration data for complex industrial manipulation; human hand data lacks tactile signals and robot-executable action labels",
+        "solution": "Extend Park et al.'s stretchable glove with fingertip/palm tactile arrays, deploy on factory workers with smart glasses for large-scale Data B collection, co-train with sparse Manus+VR+Isaac Sim teleoperation Data A via cross-embodiment retargeting",
+        "key_result": "Hypothetical: Data A+B co-training achieves 78% success on cosmetics assembly vs 45% Data A-only and 52% Data B-only, with log-linear scaling from additional worker hours",
+        "limitations": [
+          "Virtual paper — no experimental validation yet",
+          "Cross-embodiment tactile transfer methodology remains open",
+          "Factory deployment requires durability/washability engineering"
+        ]
+      },
+      "relations": [
+        {
+          "target": "2407-stretchable-glove-hand-pose",
+          "type": "builds_on"
+        },
+        {
+          "target": "2512-osmo-tactile-glove",
+          "type": "compares_with"
+        },
+        {
+          "target": "2505-dexumi",
+          "type": "related"
+        },
+        {
+          "target": "2506-exostart",
+          "type": "related"
+        },
+        {
+          "target": "2509-dexop",
+          "type": "related"
+        },
+        {
+          "target": "2505-forcevla-force-aware-moe",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "robotics/hand/tactile",
+      "taxonomy_secondary": [
+        "robotics/arm/teleoperation",
+        "robotics/learning/imitation"
+      ]
+    },
+    {
+      "post_number": 27,
+      "slug": "2611-tactile-play-cross-embodiment",
+      "content_type": "papers",
+      "title_en": "TacPlay: Teleop-Free Dexterous Manipulation via Shared Tactile Glove and Autonomous Cross-Embodiment Play",
+      "title_ko": "TacPlay: 공유 촉각 글러브와 자율 탐색을 통한 텔레오퍼레이션 없는 손재주 조작",
+      "domain": "robotics",
+      "subfields": [
+        "cross-embodiment",
+        "tactile-sensing",
+        "autonomous-exploration",
+        "human-robot-transfer",
+        "self-supervised-learning"
+      ],
+      "key_concepts": [
+        "shared-tactile-glove",
+        "embodiment-bridge",
+        "autonomous-play",
+        "cross-embodiment-alignment",
+        "tactile-residual",
+        "teleop-free",
+        "self-supervised-exploration",
+        "contact-prior",
+        "sim-to-real",
+        "cosmetics-manufacturing"
+      ],
+      "methodology": [
+        "self-supervised-learning",
+        "reinforcement-learning",
+        "cross-embodiment-retargeting",
+        "residual-policy-learning"
+      ],
+      "contribution_type": "method",
+      "tags": [
+        "Papers",
+        "Robotics",
+        "Tactile Sensing",
+        "Cross-Embodiment",
+        "Self-Supervised",
+        "Autonomous Exploration",
+        "Virtual Paper"
+      ],
+      "source_author": "Terry T. Um, Yong-Lae Park et al.",
+      "source_date": "2026-11-01T00:00:00Z",
+      "published_at": "2026-04-06T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "Shared tactile glove on both human and robot hands enables teleop-free cross-embodiment transfer: robot learns the human-robot gap through autonomous tactile play, eliminating the need for teleoperation",
+        "problem": "Teleoperation is slow and cannot replicate complex dexterous tasks; human hand data alone lacks robot executability due to embodiment gap",
+        "solution": "Same tactile glove worn by human (data collection) and robot (autonomous play); robot self-discovers the kinematic/dynamic gap through tactile-guided exploration, then aligns human demos to its own body without any teleoperation",
+        "key_result": "Hypothetical: Teleop-free pipeline achieves 68% success on cosmetics tasks, matching 200-demo teleoperation baseline while requiring zero operator hours",
+        "limitations": [
+          "Virtual paper — no experimental validation yet",
+          "Autonomous play requires safe exploration constraints in factory settings",
+          "Tactile play convergence time for complex tasks is unknown"
+        ]
+      },
+      "relations": [
+        {
+          "target": "2610-tactile-stretchable-glove-data-engine",
+          "type": "builds_on"
+        },
+        {
+          "target": "2512-osmo-tactile-glove",
+          "type": "builds_on"
+        },
+        {
+          "target": "2407-stretchable-glove-hand-pose",
+          "type": "builds_on"
+        },
+        {
+          "target": "2506-exostart",
+          "type": "compares_with"
+        },
+        {
+          "target": "2509-dexop",
+          "type": "compares_with"
+        },
+        {
+          "target": "2505-dexumi",
+          "type": "compares_with"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "robotics/hand/tactile",
+      "taxonomy_secondary": [
+        "robotics/hand/dexterous",
+        "robotics/learning/imitation"
+      ]
     }
   ],
   "knowledge_graph": {
@@ -1917,6 +2053,66 @@
         "from": "2604-harnessing-claude-intelligence",
         "to": "2502-ai-co-scientist",
         "type": "related"
+      },
+      {
+        "from": "2610-tactile-stretchable-glove-data-engine",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "builds_on"
+      },
+      {
+        "from": "2610-tactile-stretchable-glove-data-engine",
+        "to": "2512-osmo-tactile-glove",
+        "type": "compares_with"
+      },
+      {
+        "from": "2610-tactile-stretchable-glove-data-engine",
+        "to": "2505-dexumi",
+        "type": "related"
+      },
+      {
+        "from": "2610-tactile-stretchable-glove-data-engine",
+        "to": "2506-exostart",
+        "type": "related"
+      },
+      {
+        "from": "2610-tactile-stretchable-glove-data-engine",
+        "to": "2509-dexop",
+        "type": "related"
+      },
+      {
+        "from": "2610-tactile-stretchable-glove-data-engine",
+        "to": "2505-forcevla-force-aware-moe",
+        "type": "related"
+      },
+      {
+        "from": "2611-tactile-play-cross-embodiment",
+        "to": "2610-tactile-stretchable-glove-data-engine",
+        "type": "builds_on"
+      },
+      {
+        "from": "2611-tactile-play-cross-embodiment",
+        "to": "2512-osmo-tactile-glove",
+        "type": "builds_on"
+      },
+      {
+        "from": "2611-tactile-play-cross-embodiment",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "builds_on"
+      },
+      {
+        "from": "2611-tactile-play-cross-embodiment",
+        "to": "2506-exostart",
+        "type": "compares_with"
+      },
+      {
+        "from": "2611-tactile-play-cross-embodiment",
+        "to": "2509-dexop",
+        "type": "compares_with"
+      },
+      {
+        "from": "2611-tactile-play-cross-embodiment",
+        "to": "2505-dexumi",
+        "type": "compares_with"
       }
     ],
     "clusters": [
@@ -1951,12 +2147,18 @@
           13,
           14,
           16,
-          18
+          18,
+          26,
+          27
         ],
         "core_concepts": [
+          "stretchable-sensor",
           "diffusion-policy",
+          "sim-to-real",
           "dexterous-manipulation",
-          "human-to-robot-transfer"
+          "human-to-robot-transfer",
+          "tactile-glove",
+          "cosmetics-manufacturing"
         ],
         "taxonomy_nodes": [
           "robotics/hand/tactile"
@@ -2034,6 +2236,19 @@
           "dexterous-manipulation"
         ],
         "taxonomy_nodes": []
+      },
+      {
+        "id": "concept-cross-embodiment",
+        "label": "cross-embodiment",
+        "post_numbers": [
+          15,
+          23,
+          26
+        ],
+        "core_concepts": [
+          "cross-embodiment"
+        ],
+        "taxonomy_nodes": []
       }
     ],
     "bridge_papers": [
@@ -2041,7 +2256,8 @@
       14,
       15,
       16,
-      18
+      18,
+      27
     ],
     "outlier_papers": [
       3,
@@ -2098,17 +2314,9 @@
     "iterative-improvement": [
       4
     ],
-    "manifold": [
-      5
-    ],
-    "research-direction": [
-      5
-    ],
-    "blog-introduction": [
-      5
-    ],
     "stretchable-sensor": [
-      6
+      6,
+      26
     ],
     "liquid-metal": [
       6
@@ -2254,7 +2462,9 @@
       13
     ],
     "sim-to-real": [
-      13
+      13,
+      26,
+      27
     ],
     "in-hand-translation": [
       13
@@ -2305,7 +2515,8 @@
     ],
     "cross-embodiment": [
       15,
-      23
+      23,
+      26
     ],
     "MANO-UV-mapping": [
       16
@@ -2354,7 +2565,8 @@
       17
     ],
     "tactile-glove": [
-      18
+      18,
+      26
     ],
     "wearable-sensor": [
       18
@@ -2479,10 +2691,53 @@
     ],
     "declarative-tools": [
       25
+    ],
+    "data-engine": [
+      26
+    ],
+    "human-demonstration": [
+      26
+    ],
+    "egocentric-video": [
+      26
+    ],
+    "isaac-sim": [
+      26
+    ],
+    "VR-teleoperation": [
+      26
+    ],
+    "cosmetics-manufacturing": [
+      26,
+      27
+    ],
+    "shared-tactile-glove": [
+      27
+    ],
+    "embodiment-bridge": [
+      27
+    ],
+    "autonomous-play": [
+      27
+    ],
+    "cross-embodiment-alignment": [
+      27
+    ],
+    "tactile-residual": [
+      27
+    ],
+    "teleop-free": [
+      27
+    ],
+    "self-supervised-exploration": [
+      27
+    ],
+    "contact-prior": [
+      27
     ]
   },
   "domain_stats": {
-    "robotics": 20,
+    "robotics": 21,
     "ml": 2,
     "ai": 3
   },
@@ -2490,18 +2745,20 @@
     "robotics/brain/vla": 6,
     "robotics/arm:secondary": 7,
     "robotics/arm/force-control": 1,
-    "robotics/hand/tactile": 6,
+    "robotics/hand/tactile": 8,
     "robotics/arm/exoskeleton": 3,
     "robotics/hand:secondary": 1,
     "robotics/hand/dexterous": 2,
     "ai/agent": 4,
-    "robotics/hand/dexterous:secondary": 4,
+    "robotics/hand/dexterous:secondary": 5,
     "robotics/arm/exoskeleton:secondary": 1,
     "robotics/brain": 7,
     "ai/llm:secondary": 3,
+    "robotics/arm/teleoperation:secondary": 1,
+    "robotics/learning/imitation:secondary": 2,
     "robotics/arm": 4,
-    "robotics/hand": 8,
-    "robotics": 19,
+    "robotics/hand": 10,
+    "robotics": 21,
     "ai": 4
   }
 }
