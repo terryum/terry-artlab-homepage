@@ -90,5 +90,16 @@
   },
   "meta": {
     "site_name": "Terry Um"
+  },
+  "co": {
+    "portal_title": "Portal",
+    "enter_password": "Enter the password to access private content.",
+    "password_placeholder": "Password",
+    "enter_button": "Enter",
+    "verifying": "Verifying...",
+    "logout": "Logout",
+    "no_content": "No content available yet.",
+    "back_to_portal": "Back to portal",
+    "db_not_configured": "Database not configured."
   }
 }

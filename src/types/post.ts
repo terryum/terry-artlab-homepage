@@ -99,6 +99,9 @@ export interface PostMeta {
   // Ideas-specific
   idea_status?: 'hypothesis' | 'exploring' | 'validated' | 'abandoned' | 'incorporated';
   related_posts?: string[];
+  // ACL
+  visibility?: 'public' | 'group';
+  allowed_groups?: string[];
 }
 
 export interface Post {

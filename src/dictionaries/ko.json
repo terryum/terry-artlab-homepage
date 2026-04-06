@@ -90,5 +90,16 @@
   },
   "meta": {
     "site_name": "Terry Um"
+  },
+  "co": {
+    "portal_title": "포털",
+    "enter_password": "비공개 콘텐츠에 접근하려면 비밀번호를 입력하세요.",
+    "password_placeholder": "비밀번호",
+    "enter_button": "입장",
+    "verifying": "확인 중...",
+    "logout": "로그아웃",
+    "no_content": "아직 공개된 콘텐츠가 없습니다.",
+    "back_to_portal": "포털로 돌아가기",
+    "db_not_configured": "데이터베이스가 설정되지 않았습니다."
   }
 }
