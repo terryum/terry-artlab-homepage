@@ -99,7 +99,7 @@ WebFetch: https://export.arxiv.org/api/query?search_query=all:<query>&sortBy=sub
 ### Step 8) QA 파일링 (선택)
 추천 결과를 Obsidian vault에 저장하고 싶으면:
 - `/write 위의 대화 인사이트 저장해줘` 로 이어갈 수 있음을 안내
-- 사용자가 요청하면 `From AI/QA/` 에 검색 결과 파일링
+- 사용자가 요청하면 `From AI/Notes/` 에 검색 결과 파일링
 
 ## 검색 실패 시
 - Semantic Scholar API 실패 → arXiv만으로 진행

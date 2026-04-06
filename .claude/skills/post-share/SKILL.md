@@ -42,11 +42,11 @@ argument-hint: "<post-identifier> [platform-filter]"
 
 ### Step 1.5. content_type 검증
 
-소셜미디어 공유 대상은 Terry가 직접 쓴 글(`essays`, `tech`)이다.
-식별된 포스트의 `content_type`이 `essays` 또는 `tech`가 **아닌** 경우 (예: `papers`), 발행을 즉시 중단하고 사용자에게 확인을 요청한다:
+소셜미디어 공유 대상은 Terry가 직접 쓴 글(`essays`, `memos`)이다.
+식별된 포스트의 `content_type`이 `essays` 또는 `memos`가 **아닌** 경우 (예: `papers`), 발행을 즉시 중단하고 사용자에게 확인을 요청한다:
 
 ```
-⚠️ 이 포스트는 content_type이 "{content_type}"입니다 (소셜 공유 대상: essays, tech).
+⚠️ 이 포스트는 content_type이 "{content_type}"입니다 (소셜 공유 대상: essays, memos).
 정말 공유하시겠습니까?
 ```
 

@@ -1,6 +1,6 @@
 ---
 name: post
-description: "Post 생성 파이프라인. arXiv URL → Research 포스트, 블로그/기술문서 URL → Research 포스트(blog 태그), --type=blog → Blog 포스트(essays/tech) 자동 생성. 커버 이미지 없을 시 /gemini-3-image-generation 사용."
+description: "Post 생성 파이프라인. arXiv URL → Research 포스트, 블로그/기술문서 URL → Research 포스트(blog 태그), --type=blog → Blog 포스트(memos/essays) 자동 생성. 커버 이미지 없을 시 /gemini-3-image-generation 사용."
 argument-hint: "<URL | --type=blog slug> [--tags=TAG1,TAG2] [--memo=메모] [--featured]"
 ---
 
@@ -20,8 +20,8 @@ argument-hint: "<URL | --type=blog slug> [--tags=TAG1,TAG2] [--memo=메모] [--f
 /post https://arxiv.org/abs/2505.22159          → Research (arXiv)
 /post https://generalistai.com/blog/...         → Research (블로그)
 /post https://claude.com/blog/...               → Research (블로그)
-/post --type=blog 260315-rebalancing            → Blog (essays/tech)
-/post --type=blog --from=#-3                    → Blog (Obsidian 초안 발행)
+/post --type=memos 260406-writing-daily         → Blog (memos)
+/post --type=essays --from=#-3                  → Blog (Obsidian 초안 발행)
 ```
 
 ### 인덱싱 규칙 (`docs/INDEXING.md` 참조)
@@ -200,9 +200,9 @@ cd /tmp/terry-research-kb && git add -A && git commit -m "update: <slug>" && git
 
 ---
 
-## Blog 경로 (essays/tech)
+## Blog 경로 (memos/essays)
 
-입력: `--type=blog [<slug>] [--from=<path>] [--type=tech|essays]`
+입력: `--type=blog [<slug>] [--from=<path>] [--type=memos|essays]`
 
 모든 단계를 권한 요청 없이 완료할 것.
 
@@ -220,9 +220,10 @@ cd /tmp/terry-research-kb && git add -A && git commit -m "update: <slug>" && git
 
 ### `--from` 사용 시 content_type 규칙
 
-- `--from` 사용 시 `--type=tech` 또는 `--type=essays` 지정 필요
-  - **tech**: 기술발전, 미래, new normal, 기술 관련 주제
-  - **essays**: 개인적인 삶, 에세이, 기타 주제
+- `--from` 사용 시 `--type=memos` 또는 `--type=essays` 지정 필요
+  - **memos**: 짧은 생각, 일상 관찰, AI 시대 변화 등 가벼운 글
+  - **essays**: 긴 형식의 깊은 사유, AI/Physical AI/미래 변화 등
+- `/draft`로 생성한 초안이면 초안의 `content_type` 필드를 자동 사용
 - 보통 사용자가 명시하지만, 명시하지 않은 경우 원본 내용을 읽고 추론 후 사용자에게 확인
 
 ### Step B1) 타입 + Slug 결정
@@ -231,7 +232,7 @@ cd /tmp/terry-research-kb && git add -A && git commit -m "update: <slug>" && git
 - slug 없으면 현재 작업 컨텍스트에서 포스트 폴더 탐지 또는 사용자에게 확인
 - **content_type 분기**:
   - `posts/essays/<slug>/` → `content_type: "essays"` (긴 형식 에세이)
-  - `posts/tech/<slug>/` → `content_type: "tech"` (기술 글)
+  - `posts/memos/<slug>/` → `content_type: "memos"` (짧은 메모/생각)
 - Slug 규칙: `YYMMDD-<영문-kebab-title>`
 
 ### Step B2) 입력 파일 확인
@@ -282,8 +283,8 @@ sharp('posts/<type>/<slug>/cover_Original.png')
   "published_at": "<ISO 8601>",
   "updated_at": "<ISO 8601>",
   "status": "published",
-  "content_type": "<essays|tech>",
-  "tags": ["<Essays|Tech>", "<주제태그1>", "<주제태그2>"],
+  "content_type": "<essays|memos>",
+  "tags": ["<Essays|Memos>", "<주제태그1>", "<주제태그2>"],
   "cover_image": "./cover.webp",
   "reading_time_min": <N>,
   "domain": "<최상위 분야>",
@@ -307,7 +308,7 @@ sharp('posts/<type>/<slug>/cover_Original.png')
 
 - `post_number`: `posts/index.json` 마지막 번호 + 1
 - `reading_time_min`: 한국어 기준 250자/분으로 계산
-- **태깅 규칙**: 첫 번째 태그는 카테고리 태그 (`"Essays"` 또는 `"Tech"`) — **대문자** 필수
+- **태깅 규칙**: 첫 번째 태그는 카테고리 태그 (`"Essays"` 또는 `"Memos"`) — **대문자** 필수
 
 ### Step B6) MDX 파일 생성
 

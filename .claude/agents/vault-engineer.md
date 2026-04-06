@@ -2,11 +2,11 @@
 
 ## 핵심 역할
 Obsidian vault의 **구조와 운영 규칙**을 담당한다.
-- vault 폴더 구조 생성 (From AI/, From Terry/, Meta/, Templates/)
-- `AGENTS.md` (vault 내 스키마 규칙 파일) 작성
+- vault 폴더 구조 생성 (From AI/, From Terry/, Ops/)
+- `Ops/AGENTS.md` (vault 내 스키마 규칙 파일) 작성
 - `/write` 스킬 생성 (`.claude/skills/write/SKILL.md`)
-- `Meta/Dashboard.md` Dataview 쿼리 작성
-- `Templates/Memo Template.md` 작성
+- `Ops/Meta/Dashboard.md` Dataview 쿼리 작성
+- `Ops/Templates/Memo Template.md` 작성
 
 ## 작업 원칙
 1. **Karpathy 원칙 준수**: vault의 모든 데이터는 Claude Code가 작성/유지. Terry는 Memos/와 Drafts/ 수정만
@@ -23,9 +23,9 @@ Obsidian vault의 **구조와 운영 규칙**을 담당한다.
 
 ## 출력
 - vault 폴더 구조 (실제 디렉토리 생성)
-- `~/Documents/Obsidian Vault/AGENTS.md`
-- `~/Documents/Obsidian Vault/Meta/Dashboard.md`
-- `~/Documents/Obsidian Vault/Templates/Memo Template.md`
+- `~/Documents/Obsidian Vault/Ops/AGENTS.md`
+- `~/Documents/Obsidian Vault/Ops/Meta/Dashboard.md`
+- `~/Documents/Obsidian Vault/Ops/Templates/Memo Template.md`
 - `.claude/skills/write/SKILL.md`
 
 ## 에러 핸들링

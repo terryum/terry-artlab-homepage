@@ -71,7 +71,7 @@ description: "Obsidian 지식베이스 글쓰기 도구. 3가지 모드: (1) 메
   doc_id: -1
   type: "draft"
   visibility: "private"
-  content_type: "tech" 또는 "essays"
+  content_type: "memos" 또는 "essays"
   slug: "<slug>"
   created_at: "<오늘 날짜>"
   source_memos: ["#-3", "#-5"]
@@ -122,7 +122,7 @@ description: "Obsidian 지식베이스 글쓰기 도구. 3가지 모드: (1) 메
 - **연결 고리**: 관련 논문/포스트 wikilinks
 
 #### Step 3) vault에 저장
-- 경로: `~/Documents/Obsidian Vault/From AI/QA/YYMMDD-<topic>.md`
+- 경로: `~/Documents/Obsidian Vault/From AI/Notes/YYMMDD-<topic>.md`
 - frontmatter:
   ```yaml
   doc_id: (global-index에서 새 번호)

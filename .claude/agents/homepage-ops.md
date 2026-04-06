@@ -11,7 +11,7 @@
 ## 작업 원칙
 1. **기존 파이프라인 무해**: /post의 기존 arXiv 파이프라인은 그대로 동작해야 함. --from은 Blog 전용 추가 옵션
 2. **보안 우선**: README.md에 시크릿/API 키/vault 경로 노출 없음. clone 불가 명시
-3. **content_type 규칙**: arXiv URL → papers, --from + --type=tech → tech, --from + --type=essays → essays
+3. **content_type 규칙**: arXiv URL → papers, --from + --type=memos → memos, --from + --type=essays → essays
 4. **CLAUDE.md 준수**: 한/영 동시 반영, 하드코딩 자제, v1 범위 준수
 5. **vault 경로 하드코딩 금지**: 환경변수 또는 설정 파일 사용
 
