@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-07T10:10:16.130Z",
-  "total_posts": 26,
+  "generated_at": "2026-04-07T21:10:08.916Z",
+  "total_posts": 27,
   "posts": [
     {
       "post_number": 1,
@@ -244,6 +244,54 @@
       "idea_status": null,
       "related_posts": null,
       "taxonomy_primary": "robotics/brain/vla",
+      "taxonomy_secondary": [],
+      "visibility": "public",
+      "allowed_groups": []
+    },
+    {
+      "post_number": 5,
+      "slug": "260310-on-the-manifold-first-post",
+      "content_type": "memos",
+      "title_en": "On the Manifold",
+      "title_ko": "On the Manifold",
+      "domain": "robotics",
+      "subfields": [
+        "research-philosophy"
+      ],
+      "key_concepts": [
+        "manifold",
+        "research-direction",
+        "blog-introduction"
+      ],
+      "methodology": [],
+      "contribution_type": null,
+      "tags": [
+        "Memos",
+        "AI",
+        "Physical AI",
+        "Research Philosophy"
+      ],
+      "source_author": null,
+      "source_date": null,
+      "published_at": "2026-03-10T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "First blog post introducing the research manifold concept and blog's purpose",
+        "problem": "Need a space to organize and share research thoughts beyond paper summaries",
+        "solution": "Blog as a manifold connecting research ideas, papers, and personal insights",
+        "key_result": "Establishes the blog's identity and research direction",
+        "limitations": [
+          "Introductory post only",
+          "No technical depth"
+        ]
+      },
+      "relations": [],
+      "idea_status": "exploring",
+      "related_posts": [
+        "2410-pi0-vla-flow-model",
+        "2505-forcevla-force-aware-moe"
+      ],
+      "taxonomy_primary": null,
       "taxonomy_secondary": [],
       "visibility": "public",
       "allowed_groups": []
@@ -2370,6 +2418,15 @@
     "iterative-improvement": [
       4
     ],
+    "manifold": [
+      5
+    ],
+    "research-direction": [
+      5
+    ],
+    "blog-introduction": [
+      5
+    ],
     "stretchable-sensor": [
       6,
       26
@@ -2793,7 +2850,7 @@
     ]
   },
   "domain_stats": {
-    "robotics": 21,
+    "robotics": 22,
     "ml": 2,
     "ai": 3
   },
