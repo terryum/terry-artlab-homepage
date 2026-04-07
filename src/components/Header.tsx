@@ -24,9 +24,38 @@ interface HeaderProps {
     nav: { home: string; about: string; projects: string };
   };
   navTabs: NavTabItem[];
+  sessionLabel?: string | null;
 }
 
-function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
+function SessionBadge({ label }: { label: string }) {
+  const [loading, setLoading] = useState(false);
+
+  async function handleLogout() {
+    setLoading(true);
+    // Logout from both group and admin sessions
+    await Promise.all([
+      fetch('/api/co/logout', { method: 'POST' }),
+      fetch('/api/admin/logout', { method: 'POST' }),
+    ]);
+    window.location.reload();
+  }
+
+  return (
+    <div className="flex items-center gap-1.5 text-xs">
+      <span className="px-1.5 py-0.5 rounded bg-accent/10 text-accent font-medium">{label}</span>
+      <button
+        onClick={handleLogout}
+        disabled={loading}
+        className="text-text-tertiary hover:text-text-primary transition-colors disabled:opacity-50"
+        aria-label="Logout"
+      >
+        {loading ? '...' : 'Logout'}
+      </button>
+    </div>
+  );
+}
+
+function HeaderInner({ locale, dict, navTabs, sessionLabel }: HeaderProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -122,6 +151,7 @@ function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
             </div>
 
             <div className="flex items-center gap-2 ml-4">
+              {sessionLabel && <SessionBadge label={sessionLabel} />}
               <ThemeToggle />
               <LanguageSwitcher locale={locale} />
             </div>
@@ -129,6 +159,7 @@ function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
 
           {/* Mobile: icon buttons + hamburger */}
           <div className="flex items-center gap-2 md:hidden">
+            {sessionLabel && <SessionBadge label={sessionLabel} />}
             <ThemeToggle />
             <LanguageSwitcher locale={locale} />
             <button
