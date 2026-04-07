@@ -45,7 +45,7 @@
 
 스킬은 두 워크스페이스에 분산되어 있습니다:
 
-**이 레포** (사이트 개발 + 콘텐츠 파이프라인):
+**이 레포** (`terry-artlab-homepage`) — 사이트 개발 + 콘텐츠 파이프라인:
 
 | 스킬 | 설명 | 예시 |
 |------|------|------|
@@ -53,9 +53,9 @@
 | `/post-share` | 소셜 미디어 발행 (Facebook, X, LinkedIn, Bluesky) | `/post-share #5 facebook,x` |
 | `/project` | 프로젝트 갤러리에 추가 | `/project https://github.com/user/repo` |
 | `/project-share` | 프로젝트 소셜 미디어 공유 | `/project-share book-robot-hand facebook` |
-| `/acl-build` | 그룹 접근 제어 시스템 빌드 | `/acl-build` |
+| `/paper-search` | 지식 그래프 + 외부 검색으로 논문 추천 | `/paper-search #16 리타게팅 한계` |
 
-**terry-obsidian** (Obsidian 볼트 + 콘텐츠 발행, 이 레포로 심링크):
+**`terry-obsidian`** — Obsidian 볼트 관리 + 콘텐츠 발행:
 
 | 스킬 | 설명 | 예시 |
 |------|------|------|
@@ -63,8 +63,8 @@
 | `/draft` | Obsidian Drafts 폴더에 발행용 초안 생성 | `/draft essays 제목은 이렇게...` |
 | `/memo` | 자동 인덱싱된 Obsidian 메모 생성 | `/memo AI와 로보틱스의 접점` |
 | `/tagging` | 콘텐츠 분석 기반 자동 태깅 | `/tagging` |
-| `/paper-search` | 지식 그래프 + 외부 검색으로 논문 추천 | `/paper-search #16 리타게팅 한계` |
 | `/post` | *(심링크)* 동일 발행 파이프라인, Obsidian 워크스페이스에서 사용 | `/post https://arxiv.org/abs/...` |
+| `/paper-search` | *(심링크)* 지식 그래프 기반 논문 추천 | `/paper-search #16 리타게팅 한계` |
 
 ---
 

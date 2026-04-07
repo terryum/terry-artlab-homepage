@@ -45,7 +45,7 @@ The site hosts 27+ research paper summaries, tech essays, memos, and an interact
 
 Skills are split across two workspaces:
 
-**This repo** (site development + content pipeline):
+**This repo** (`terry-artlab-homepage`) — site development + content pipeline:
 
 | Skill | Description | Example |
 |-------|-------------|---------|
@@ -53,9 +53,9 @@ Skills are split across two workspaces:
 | `/post-share` | Publish to social media (Facebook, X, LinkedIn, Bluesky) | `/post-share #5 facebook,x` |
 | `/project` | Add a project to the gallery | `/project https://github.com/user/repo` |
 | `/project-share` | Share a project to social media | `/project-share book-robot-hand facebook` |
-| `/acl-build` | Build group-based access control system | `/acl-build` |
+| `/paper-search` | Recommend papers via knowledge graph + external search | `/paper-search #16 retargeting limitations` |
 
-**terry-obsidian** (Obsidian vault + content publishing, symlinks back to this repo):
+**`terry-obsidian`** — Obsidian vault management + content publishing:
 
 | Skill | Description | Example |
 |-------|-------------|---------|
@@ -63,8 +63,8 @@ Skills are split across two workspaces:
 | `/draft` | Create a publishable draft in Obsidian Drafts folder | `/draft essays This is the title...` |
 | `/memo` | Create an Obsidian memo with auto-indexed metadata | `/memo AI and robotics intersection` |
 | `/tagging` | Auto-tag posts based on content analysis | `/tagging` |
-| `/paper-search` | Recommend papers via knowledge graph + external search | `/paper-search #16 retargeting limitations` |
 | `/post` | *(symlink)* Same publishing pipeline, usable from Obsidian workspace | `/post https://arxiv.org/abs/...` |
+| `/paper-search` | *(symlink)* Paper recommendations from knowledge graph | `/paper-search #16 retargeting limitations` |
 
 ---
 
