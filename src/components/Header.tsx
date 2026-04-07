@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useState, Suspense } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import LanguageSwitcher from './LanguageSwitcher';
 import ThemeToggle from './ThemeToggle';
 import { Container } from './ui/Container';
@@ -27,12 +27,28 @@ interface HeaderProps {
   sessionLabel?: string | null;
 }
 
-function SessionBadge({ label }: { label: string }) {
+function LoginLogout({ sessionLabel }: { sessionLabel?: string | null }) {
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpen(false);
+        setError('');
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [open]);
 
   async function handleLogout() {
     setLoading(true);
-    // Logout from both group and admin sessions
     await Promise.all([
       fetch('/api/co/logout', { method: 'POST' }),
       fetch('/api/admin/logout', { method: 'POST' }),
@@ -40,17 +56,88 @@ function SessionBadge({ label }: { label: string }) {
     window.location.reload();
   }
 
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+    if (!id.trim() || !password.trim()) return;
+    setError('');
+    setLoading(true);
+    try {
+      const isAdmin = id.trim().toLowerCase() === 'admin';
+      const url = isAdmin ? '/api/admin/login' : '/api/co/login';
+      const body = isAdmin
+        ? { password: password.trim() }
+        : { group: id.trim().toLowerCase(), password: password.trim() };
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.error || 'Login failed');
+        setLoading(false);
+        return;
+      }
+      window.location.reload();
+    } catch {
+      setError('Something went wrong');
+      setLoading(false);
+    }
+  }
+
+  if (sessionLabel) {
+    return (
+      <div className="flex items-center gap-1.5 text-xs">
+        <span className="px-1.5 py-0.5 rounded bg-accent/10 text-accent font-medium">{sessionLabel}</span>
+        <button
+          onClick={handleLogout}
+          disabled={loading}
+          className="text-text-tertiary hover:text-text-primary transition-colors disabled:opacity-50"
+        >
+          {loading ? '...' : 'Logout'}
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex items-center gap-1.5 text-xs">
-      <span className="px-1.5 py-0.5 rounded bg-accent/10 text-accent font-medium">{label}</span>
+    <div className="relative" ref={dropdownRef}>
       <button
-        onClick={handleLogout}
-        disabled={loading}
-        className="text-text-tertiary hover:text-text-primary transition-colors disabled:opacity-50"
-        aria-label="Logout"
+        onClick={() => setOpen(!open)}
+        className="text-xs text-text-tertiary hover:text-text-primary transition-colors"
       >
-        {loading ? '...' : 'Logout'}
+        Login
       </button>
+      {open && (
+        <form
+          onSubmit={handleLogin}
+          className="absolute right-0 top-full mt-2 w-52 p-3 rounded-lg border border-line-default bg-bg-primary shadow-lg z-50 flex flex-col gap-2"
+        >
+          <input
+            type="text"
+            value={id}
+            onChange={(e) => setId(e.target.value)}
+            placeholder="ID (e.g. snu, admin)"
+            autoFocus
+            className="w-full px-2 py-1.5 text-xs border border-line-default rounded bg-bg-primary text-text-primary focus:outline-none focus:ring-1 focus:ring-accent"
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            className="w-full px-2 py-1.5 text-xs border border-line-default rounded bg-bg-primary text-text-primary focus:outline-none focus:ring-1 focus:ring-accent"
+          />
+          {error && <p className="text-red-500 text-[11px]">{error}</p>}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full px-2 py-1.5 text-xs bg-accent text-white rounded hover:opacity-90 disabled:opacity-50 transition-opacity"
+          >
+            {loading ? '...' : 'Enter'}
+          </button>
+        </form>
+      )}
     </div>
   );
 }
@@ -151,7 +238,7 @@ function HeaderInner({ locale, dict, navTabs, sessionLabel }: HeaderProps) {
             </div>
 
             <div className="flex items-center gap-2 ml-4">
-              {sessionLabel && <SessionBadge label={sessionLabel} />}
+              <LoginLogout sessionLabel={sessionLabel} />
               <ThemeToggle />
               <LanguageSwitcher locale={locale} />
             </div>
@@ -159,7 +246,7 @@ function HeaderInner({ locale, dict, navTabs, sessionLabel }: HeaderProps) {
 
           {/* Mobile: icon buttons + hamburger */}
           <div className="flex items-center gap-2 md:hidden">
-            {sessionLabel && <SessionBadge label={sessionLabel} />}
+            <LoginLogout sessionLabel={sessionLabel} />
             <ThemeToggle />
             <LanguageSwitcher locale={locale} />
             <button
