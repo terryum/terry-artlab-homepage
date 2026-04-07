@@ -12,14 +12,14 @@
 
 [On the Manifold](https://terry.artlab.ai) is a bilingual (Korean/English) research blog, knowledge graph, and personal homepage. Inspired by [Andrej Karpathy's approach](https://x.com/karpathy/status/1911080111710109960) to external-brain knowledge management, the entire content pipeline is operated by Claude Code — papers are summarized, indexed, connected, and published through natural language commands.
 
-The site hosts 25+ research paper summaries, tech essays, memos, and an interactive paper relationship graph.
+The site hosts 27+ research paper summaries, tech essays, memos, and an interactive paper relationship graph. The project uses a two-workspace setup: this repo for site development, and a separate `terry-obsidian` workspace for Obsidian vault management and content publishing.
 
 ## Architecture
 
 ```
 ┌───────────────────────────────────────────┐
 │          Claude Code (AI Agent)           │
-│    /post  /write  /memo  /paper-search    │
+│       /post  /project  /post-share        │
 └──────┬──────────────┬──────────────┬──────┘
        v              v              v
   posts/ (MDX)    Supabase     Obsidian Vault
@@ -43,16 +43,28 @@ The site hosts 25+ research paper summaries, tech essays, memos, and an interact
 
 ## Skills (Claude Code Commands)
 
+Skills are split across two workspaces:
+
+**This repo** (site development + content pipeline):
+
 | Skill | Description | Example |
 |-------|-------------|---------|
 | `/post` | Publish a research post from arXiv, blog, or journal URL | `/post https://arxiv.org/abs/2505.22159` |
+| `/post-share` | Publish to social media (Facebook, X, LinkedIn, Bluesky) | `/post-share #5 facebook,x` |
+| `/project` | Add a project to the gallery | `/project https://github.com/user/repo` |
+| `/project-share` | Share a project to social media | `/project-share book-robot-hand facebook` |
+| `/acl-build` | Build group-based access control system | `/acl-build` |
+
+**terry-obsidian** (Obsidian vault + content publishing, symlinks back to this repo):
+
+| Skill | Description | Example |
+|-------|-------------|---------|
 | `/write` | Generate a styled draft from Obsidian memos | `/write #-1 #-3 --type=tech` |
 | `/draft` | Create a publishable draft in Obsidian Drafts folder | `/draft essays This is the title...` |
 | `/memo` | Create an Obsidian memo with auto-indexed metadata | `/memo AI and robotics intersection` |
 | `/tagging` | Auto-tag posts based on content analysis | `/tagging` |
 | `/paper-search` | Recommend papers via knowledge graph + external search | `/paper-search #16 retargeting limitations` |
-| `/post-share` | Publish to social media (Facebook, X, LinkedIn, Bluesky) | `/post-share #5 facebook,x` |
-| `/project` | Add a project to the gallery | `/project https://github.com/user/repo` |
+| `/post` | *(symlink)* Same publishing pipeline, usable from Obsidian workspace | `/post https://arxiv.org/abs/...` |
 
 ---
 
@@ -67,7 +79,7 @@ This is a personal project, not a plug-and-play template. However, since the rep
 - Paper relationship graph UI (React Flow + Supabase)
 - Admin dashboard (stats, graph editor — behind password)
 - Group-based access control for private content (`/co/[group]`)
-- Claude Code harness (`.claude/agents/`, `.claude/skills/`)
+- Claude Code harness (`.claude/agents/`, `.claude/skills/`) — site dev skills; Obsidian skills live in `terry-obsidian`
 - Obsidian sync script (`scripts/sync-obsidian.mjs`)
 - Social media publishing script (`scripts/publish-social.py`)
 - All published post content (MDX + images)
@@ -136,9 +148,7 @@ Tables created:
 
 If you skip this step, the site still works — the Paper Map page will show a fallback message.
 
-Additionally, `002_acl_schema.sql` creates tables for group-based access control:
-- `access_groups` — collaboration group definitions (e.g., `snu`, `kaist`)
-- `private_content` — private posts/projects stored in Supabase (not in Git)
+Additionally, `002_acl_schema.sql` creates tables for legacy group-based access control (deprecated — access control now uses inline `visibility` fields in `meta.json` instead of Supabase).
 
 #### 4. Run Locally
 
@@ -157,37 +167,38 @@ Set the same environment variables in Vercel project settings.
 
 ---
 
-### Access Control (Private Content)
+### Access Control (Inline Visibility)
 
-The site supports group-based access control for sharing private content (unpublished papers, book drafts, etc.) with specific collaborators without making it public.
+The site supports per-post visibility scoping for sharing private content with specific collaborator groups.
 
 ```
-Public content            Private content
-posts/ (filesystem)       Supabase (private_content table)
-SSG at build time         SSR at runtime
-/ko/posts/papers/slug     /co/[group]/posts/slug
-Anyone can access         Group password required
+Public posts              Group-scoped posts
+visibility: "public"      visibility: "group", allowed_groups: ["snu"]
+Visible to everyone       Visible after /co/snu login
+Same posts/ directory     Same posts/ directory
 ```
 
 **How it works:**
 
-1. Each group (e.g., `snu`, `kaist`) has its own password set via environment variable:
+1. Each group has a password set via environment variable:
    ```env
    CO_SNU_PASSWORD=your-password
    CO_KAIST_PASSWORD=another-password
    ```
 
-2. Private content is stored in Supabase, never in Git — so it's invisible in the public repository
+2. Group-scoped posts are stored in Git alongside public posts, with `visibility` and `allowed_groups` fields in `meta.json`
 
-3. Collaborators access `terry.artlab.ai/co/snu`, enter the password, and can view private posts
+3. Collaborators visit `/co/snu`, enter the password, then get redirected to the main site where group-scoped posts become visible
 
-4. Admin session grants access to all groups
+4. Unauthenticated users accessing a group post URL are redirected to the login page
+
+5. Admin session grants access to all groups
 
 **Key features:**
-- HMAC-SHA256 signed session tokens (same pattern as admin auth)
+- HMAC-SHA256 signed session tokens (24-hour validity)
 - Rate limiting (5 attempts per 15 minutes)
-- RLS policies — anonymous Supabase access is fully blocked
-- Groups are isolated — `co-snu` session cannot access `co-kaist` content
+- Group posts excluded from sitemap and marked `noindex`
+- Groups are isolated — `co-snu` session cannot see `co-kaist` content
 
 ---
 

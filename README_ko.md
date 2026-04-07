@@ -12,14 +12,14 @@
 
 [On the Manifold](https://terry.artlab.ai)은 한국어/영어 이중 언어 연구 블로그이자 지식 그래프, 개인 홈페이지입니다. [Andrej Karpathy의 외부 두뇌 방식](https://x.com/karpathy/status/1911080111710109960)에 영감을 받아, Claude Code가 AI 에이전트로서 논문 요약, 인덱싱, 관계 연결, 발행을 자연어 명령으로 수행합니다.
 
-현재 25개 이상의 논문 요약, 테크 에세이, 메모, 인터랙티브 논문 관계 그래프를 AI 파이프라인으로 관리하고 있습니다.
+현재 27개 이상의 논문 요약, 테크 에세이, 메모, 인터랙티브 논문 관계 그래프를 AI 파이프라인으로 관리하고 있습니다. 이 프로젝트는 두 개의 워크스페이스로 운영됩니다: 이 레포는 사이트 개발용, `terry-obsidian`은 Obsidian 볼트 관리와 콘텐츠 발행용입니다.
 
 ## 아키텍처
 
 ```
 ┌───────────────────────────────────────────┐
 │         Claude Code (AI 에이전트)         │
-│    /post  /write  /memo  /paper-search    │
+│       /post  /project  /post-share        │
 └──────┬──────────────┬──────────────┬──────┘
        v              v              v
   posts/ (MDX)    Supabase     Obsidian Vault
@@ -43,16 +43,28 @@
 
 ## 스킬 (Claude Code 명령어)
 
+스킬은 두 워크스페이스에 분산되어 있습니다:
+
+**이 레포** (사이트 개발 + 콘텐츠 파이프라인):
+
 | 스킬 | 설명 | 예시 |
 |------|------|------|
 | `/post` | arXiv, 블로그, 저널 URL로 논문 포스트 발행 | `/post https://arxiv.org/abs/2505.22159` |
+| `/post-share` | 소셜 미디어 발행 (Facebook, X, LinkedIn, Bluesky) | `/post-share #5 facebook,x` |
+| `/project` | 프로젝트 갤러리에 추가 | `/project https://github.com/user/repo` |
+| `/project-share` | 프로젝트 소셜 미디어 공유 | `/project-share book-robot-hand facebook` |
+| `/acl-build` | 그룹 접근 제어 시스템 빌드 | `/acl-build` |
+
+**terry-obsidian** (Obsidian 볼트 + 콘텐츠 발행, 이 레포로 심링크):
+
+| 스킬 | 설명 | 예시 |
+|------|------|------|
 | `/write` | Obsidian 메모를 스타일 가이드 기반 초안으로 변환 | `/write #-1 #-3 --type=tech` |
 | `/draft` | Obsidian Drafts 폴더에 발행용 초안 생성 | `/draft essays 제목은 이렇게...` |
 | `/memo` | 자동 인덱싱된 Obsidian 메모 생성 | `/memo AI와 로보틱스의 접점` |
 | `/tagging` | 콘텐츠 분석 기반 자동 태깅 | `/tagging` |
 | `/paper-search` | 지식 그래프 + 외부 검색으로 논문 추천 | `/paper-search #16 리타게팅 한계` |
-| `/post-share` | 소셜 미디어 발행 (Facebook, X, LinkedIn, Bluesky) | `/post-share #5 facebook,x` |
-| `/project` | 프로젝트 갤러리에 추가 | `/project https://github.com/user/repo` |
+| `/post` | *(심링크)* 동일 발행 파이프라인, Obsidian 워크스페이스에서 사용 | `/post https://arxiv.org/abs/...` |
 
 ---
 
@@ -67,7 +79,7 @@
 - 논문 관계 그래프 UI (React Flow + Supabase)
 - 어드민 대시보드 (통계, 그래프 편집기 — 비밀번호 보호)
 - 그룹별 접근 제어 시스템 (`/co/[group]`)
-- Claude Code 하네스 (`.claude/agents/`, `.claude/skills/`)
+- Claude Code 하네스 (`.claude/agents/`, `.claude/skills/`) — 사이트 개발 스킬; Obsidian 스킬은 `terry-obsidian`에 위치
 - Obsidian 동기화 스크립트 (`scripts/sync-obsidian.mjs`)
 - 소셜 미디어 발행 스크립트 (`scripts/publish-social.py`)
 - 발행된 포스트 전체 콘텐츠 (MDX + 이미지)
@@ -136,9 +148,7 @@ supabase db push
 
 이 단계를 건너뛰어도 사이트 자체는 동작합니다. Paper Map 페이지만 폴백 메시지를 표시합니다.
 
-추가로 `002_acl_schema.sql`이 그룹별 접근 제어 테이블을 생성합니다:
-- `access_groups` — 공동연구 그룹 정의 (예: `snu`, `kaist`)
-- `private_content` — 비공개 포스트/프로젝트 (Git이 아닌 Supabase에 저장)
+추가로 `002_acl_schema.sql`이 레거시 그룹 접근 제어 테이블을 생성합니다 (deprecated — 접근 제어는 현재 `meta.json`의 인라인 `visibility` 필드로 동작).
 
 #### 4. 로컬 실행
 
@@ -157,36 +167,37 @@ Vercel 프로젝트 설정에서 동일한 환경 변수를 설정하세요.
 
 ---
 
-### 접근 제어 (비공개 콘텐츠)
+### 접근 제어 (인라인 Visibility)
 
-비공개 콘텐츠(미발행 논문, 책 초안 등)를 특정 공동연구자와만 공유할 수 있는 그룹별 접근 제어를 지원합니다.
+포스트별 공개 범위 설정으로 특정 공동연구자 그룹에게만 콘텐츠를 공유할 수 있습니다.
 
 ```
-공개 콘텐츠                 비공개 콘텐츠
-posts/ (파일시스템)          Supabase (private_content 테이블)
-빌드 타임 SSG              런타임 SSR
-/ko/posts/papers/slug      /co/[group]/posts/slug
-누구나 접근                 그룹 비밀번호 필요
+공개 포스트                  그룹 전용 포스트
+visibility: "public"        visibility: "group", allowed_groups: ["snu"]
+누구나 열람                  /co/snu 로그인 후 열람
+동일한 posts/ 디렉토리       동일한 posts/ 디렉토리
 ```
 
 **작동 방식:**
 
-1. 각 그룹(예: `snu`, `kaist`)에 환경변수로 비밀번호를 설정합니다:
+1. 각 그룹에 환경변수로 비밀번호를 설정합니다:
    ```env
    CO_SNU_PASSWORD=your-password
    CO_KAIST_PASSWORD=another-password
    ```
 
-2. 비공개 콘텐츠는 Supabase에 저장되므로 Git에는 없습니다 — 공개 레포에서 발견 불가
+2. 그룹 전용 포스트는 공개 포스트와 함께 Git에 저장되며, `meta.json`의 `visibility`와 `allowed_groups` 필드로 구분됩니다
 
-3. 공동연구자가 `terry.artlab.ai/co/snu`에 접속하여 비밀번호를 입력하면 비공개 포스트를 열람할 수 있습니다
+3. 공동연구자가 `/co/snu`에서 비밀번호를 입력하면 메인 사이트로 리다이렉트되고, 그룹 전용 포스트가 함께 표시됩니다
 
-4. Admin 세션은 모든 그룹에 접근 가능
+4. 비인증 사용자가 그룹 포스트 URL에 직접 접근하면 로그인 페이지로 리다이렉트됩니다
+
+5. Admin 세션은 모든 그룹에 접근 가능
 
 **주요 기능:**
-- HMAC-SHA256 서명 세션 토큰 (admin 인증과 동일 패턴)
+- HMAC-SHA256 서명 세션 토큰 (24시간 유효)
 - Rate limiting (15분 5회)
-- RLS 정책 — 익명 Supabase 접근 완전 차단
+- 그룹 포스트는 sitemap 제외 + `noindex` 처리
 - 그룹 간 격리 — co-snu 세션으로 co-kaist 콘텐츠 접근 불가
 
 ---

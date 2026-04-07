@@ -1,5 +1,10 @@
 # CLAUDE.md
 
+## 워크스페이스 역할 분리
+- **이 폴더 (terry-artlab-homepage)**: 홈페이지 코드/기능 개발, 인프라, 지식시스템 코딩
+- **terry-obsidian**: Obsidian 운영 + 콘텐츠 발행 (포스팅/수정). Obsidian 스킬은 그쪽에서 관리
+- 콘텐츠 스킬 (`/post`, `/project` 등)은 이곳에서 유지관리하며, terry-obsidian에서 심링크로 참조
+
 ## 시작 순서
 `CLAUDE.md` → `docs/CURRENT_STATUS.md` → 현재 작업 관련 `docs/*.md`만 읽기
 

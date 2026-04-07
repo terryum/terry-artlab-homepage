@@ -32,7 +32,7 @@
 - vault 미설치 환경에서 sync 실패 시 → 경고만 출력, 포스팅은 정상 완료
 
 ## 팀 통신 프로토콜
-- **data-architect로부터 수신**: global-index.json 스키마, sync-obsidian.mjs 사용법
-- **vault-engineer로부터 수신**: /write 스킬의 Drafts/ 출력 포맷
+- **data-architect** (terry-obsidian 워크스페이스): global-index.json 스키마, sync-obsidian.mjs 사용법
+- **vault-engineer** (terry-obsidian 워크스페이스): /write 스킬의 Drafts/ 출력 포맷
 - **integration-qa에게 전달**: 수정된 파일들 + 테스트 방법
 - **수신**: integration-qa의 호환성 테스트 결과, 보안 리뷰 결과
