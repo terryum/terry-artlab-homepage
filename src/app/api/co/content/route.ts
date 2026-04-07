@@ -3,6 +3,8 @@ import { getGroupFromRequest } from '@/lib/group-auth';
 import { isAdminRequest } from '@/lib/admin-auth';
 import { getSupabaseAdmin, isSupabaseAdminConfigured } from '@/lib/supabase';
 
+export const runtime = 'nodejs';
+
 /** GET /api/co/content?group=snu — List published private content for a group */
 export async function GET(request: NextRequest) {
   const group = request.nextUrl.searchParams.get('group');
