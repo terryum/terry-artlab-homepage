@@ -18,5 +18,18 @@
       "Bash(mkdir:*)",
       "Bash(ls:*)"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$TOOL_INPUT\" | grep -q '.claude/skills/'; then bash scripts/sync-skills.sh; fi"
+          }
+        ]
+      }
+    ]
   }
 }
