@@ -10,9 +10,12 @@ argument-hint: "<GitHub-URL | --type=book --title=... --url=...> [--featured] [-
 
 ## 공개 범위 (visibility) 옵션
 - `--visibility=group --group=snu` → 그룹 전용 프로젝트
-  - projects.json에 `"visibility": "group"`, `"allowed_groups": ["snu"]` 추가
-  - 메인 사이트에서 해당 그룹 로그인 세션이 있어야만 노출됨
-- 기본값: `visibility: "public"` (생략 가능)
+  - **projects.json에 추가하지 않음** — Supabase `private_content` 테이블에 직접 저장
+  - `content_type: 'projects'`, `group_slug`, `meta_json` (전체 ProjectMeta 객체)
+  - 커버 이미지 → Supabase Storage `private-covers/{slug}/cover.webp`
+  - **Git 커밋/푸시 불필요** — 비공개 프로젝트는 Git에 흔적을 남기지 않음
+  - 사이트에서 해당 그룹 로그인 세션이 있어야만 노출됨
+- 기본값: `visibility: "public"` (생략 가능, 기존대로 projects.json에 저장)
 
 ---
 

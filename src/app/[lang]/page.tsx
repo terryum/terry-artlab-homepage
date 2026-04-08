@@ -11,6 +11,8 @@ import LatestSection from '@/components/LatestSection';
 import ProjectCard from '@/components/ProjectCard';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export function generateStaticParams() {
   return [{ lang: 'ko' }, { lang: 'en' }];
 }

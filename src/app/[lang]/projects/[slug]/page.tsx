@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation';
 import { isValidLocale, type Locale } from '@/lib/i18n';
-import { getProject, getAllProjects } from '@/lib/projects';
+import { getProject, loadPublicProjects } from '@/lib/projects';
 import ProjectEmbed from '@/components/ProjectEmbed';
 import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 
 export async function generateStaticParams() {
-  const projects = await getAllProjects();
+  const projects = await loadPublicProjects();
   const params: { lang: string; slug: string }[] = [];
   for (const p of projects) {
     if (p.embed_url) {

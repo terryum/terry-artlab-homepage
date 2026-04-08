@@ -35,10 +35,14 @@ argument-hint: "<URL | --type=blog slug> [--tags=TAG1,TAG2] [--memo=메모] [--f
 
 ### 공개 범위 (visibility) 옵션
 - `--visibility=group --group=snu` → 그룹 전용 포스트
-  - meta.json에 `"visibility": "group"`, `"allowed_groups": ["snu"]` 추가
-  - global-index.json에도 `"visibility": "group"`, `"allowed_groups": ["snu"]` 기록
-  - 메인 사이트에서 해당 그룹 로그인 세션이 있어야만 노출됨
-- 기본값: `visibility: "public"` (생략 가능)
+  - **Git에 파일을 생성하지 않음** — Supabase `private_content` 테이블에 직접 저장
+  - MDX 콘텐츠 → `content_ko`, `content_en` 컬럼
+  - 메타데이터 → `meta_json` 컬럼 (visibility, allowed_groups 포함)
+  - 커버/썸네일/OG 이미지 → Supabase Storage `private-covers/{slug}/` 버킷
+  - global-index.json에 엔트리 추가 (gitignored)
+  - **Git 커밋/푸시 불필요** — 비공개 콘텐츠는 Git에 흔적을 남기지 않음
+  - 사이트에서 해당 그룹 로그인 세션이 있어야만 노출됨
+- 기본값: `visibility: "public"` (생략 가능, 기존대로 Git에 저장)
 
 ### 가상 논문 (Virtual Paper) 경로
 원본 논문이 없는 Research Proposal이나 공동연구 시나리오 포스팅 시:
@@ -48,8 +52,9 @@ argument-hint: "<URL | --type=blog slug> [--tags=TAG1,TAG2] [--memo=메모] [--f
 - **커버 이미지**: `/gemini-3-image-generation` 스킬로 생성 (논문 주제에 맞는 개념적 이미지)
 - `source_type`: `"Virtual Paper (Research Proposal)"` 설정
 - `source_url`: 발행 후 자체 URL (예: `https://terry.artlab.ai/posts/<slug>`)
-- 나머지 단계(Graph Analysis, MDX 생성, meta.json, 빌드 등)는 동일하게 수행
+- 나머지 단계(Graph Analysis, MDX 생성, meta.json 등)는 동일하게 수행하되 결과물을 Supabase에 저장
 - 주로 `--visibility=group --group=<group>` 와 함께 사용
+- 빌드/커밋/푸시 단계 생략 (비공개 콘텐츠는 Supabase에만 존재)
 
 ---
 

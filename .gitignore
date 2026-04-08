@@ -70,3 +70,4 @@ supabase/.temp/
 # Obsidian integration (private paths)
 posts/global-index.json
 _workspace/
+scripts/upload-private-content.mjs

@@ -5,6 +5,8 @@ import type { Post, PostMeta, FigureItem, Reference, PostRelation, AISummary } f
 import { normalizeTagSlug } from '@/lib/tags';
 import { resolvePostAssetPath } from '@/lib/paths';
 import { TAB_CONFIG } from '@/lib/site-config';
+import { getPrivatePosts, getPrivatePost, getAllPrivatePosts } from '@/lib/private-content';
+import { getAuthenticatedGroup, isAdminSession } from '@/lib/group-auth';
 
 const INDEX_PATH = path.join(process.cwd(), 'posts', 'index.json');
 const TAXONOMY_PATH = path.join(process.cwd(), 'posts', 'taxonomy.json');
@@ -197,23 +199,28 @@ function normalizeMeta(
 }
 
 export async function getPost(slug: string, locale: string): Promise<Post | null> {
+  // Try filesystem first (public posts)
   const resolved = await resolvePostPath(slug);
-  if (!resolved) return null;
-  const filePath = path.join(resolved.dir, `${locale}.mdx`);
-  try {
-    const raw = await fs.readFile(filePath, 'utf-8');
-    const { data: frontmatter, content } = matter(raw);
-    const shared = await readMetaJson(resolved.dir);
-    const merged = shared
-      ? { ...shared, ...stripUndefined(frontmatter) }
-      : frontmatter;
-    return {
-      meta: normalizeMeta(merged, slug, resolved.category),
-      content,
-    };
-  } catch {
-    return null;
+  if (resolved) {
+    const filePath = path.join(resolved.dir, `${locale}.mdx`);
+    try {
+      const raw = await fs.readFile(filePath, 'utf-8');
+      const { data: frontmatter, content } = matter(raw);
+      const shared = await readMetaJson(resolved.dir);
+      const merged = shared
+        ? { ...shared, ...stripUndefined(frontmatter) }
+        : frontmatter;
+      return {
+        meta: normalizeMeta(merged, slug, resolved.category),
+        content,
+      };
+    } catch {
+      // fall through to Supabase
+    }
   }
+
+  // Fallback: try Supabase private_content
+  return getPrivatePost(slug, locale);
 }
 
 export async function getPostMeta(slug: string, locale: string): Promise<PostMeta | null> {
@@ -287,6 +294,22 @@ export async function getAllPosts(locale: string): Promise<PostMeta[]> {
   const posts = allMeta.filter(
     (meta): meta is PostMeta => meta !== null && meta.status === 'published'
   );
+
+  // Merge private posts from Supabase if authenticated
+  const [group, admin] = await Promise.all([
+    getAuthenticatedGroup(),
+    isAdminSession(),
+  ]);
+  if (group || admin) {
+    const privatePosts = admin
+      ? await getAllPrivatePosts(locale)
+      : group ? await getPrivatePosts(group, locale) : [];
+    const existingSlugs = new Set(posts.map(p => p.slug));
+    for (const pp of privatePosts) {
+      if (!existingSlugs.has(pp.slug)) posts.push(pp);
+    }
+  }
+
   return posts.sort((a, b) => {
     const dateDiff = new Date(b.published_at).getTime() - new Date(a.published_at).getTime();
     if (dateDiff !== 0) return dateDiff;
@@ -304,7 +327,7 @@ export async function getAllPostsFromIndex(locale: string): Promise<PostMeta[]> 
   const posts = (index as { posts: Array<Record<string, unknown>> }).posts;
   if (!posts) return getAllPosts(locale);
 
-  return posts.map((p) => ({
+  const result: PostMeta[] = posts.map((p) => ({
     post_id: p.slug as string,
     locale,
     title: (locale === 'ko' ? p.title_ko : p.title_en) as string,
@@ -332,7 +355,24 @@ export async function getAllPostsFromIndex(locale: string): Promise<PostMeta[]> 
     source_type: p.source_type as string,
     visibility: (p.visibility as PostMeta['visibility']) || 'public',
     allowed_groups: (p.allowed_groups as string[]) || undefined,
-  })).sort((a, b) => {
+  }));
+
+  // Merge private posts from Supabase if authenticated
+  const [group, admin] = await Promise.all([
+    getAuthenticatedGroup(),
+    isAdminSession(),
+  ]);
+  if (group || admin) {
+    const privatePosts = admin
+      ? await getAllPrivatePosts(locale)
+      : group ? await getPrivatePosts(group, locale) : [];
+    const existingSlugs = new Set(result.map(p => p.slug));
+    for (const pp of privatePosts) {
+      if (!existingSlugs.has(pp.slug)) result.push(pp);
+    }
+  }
+
+  return result.sort((a, b) => {
     const dateDiff = new Date(b.published_at).getTime() - new Date(a.published_at).getTime();
     if (dateDiff !== 0) return dateDiff;
     return (b.post_number ?? 0) - (a.post_number ?? 0);
