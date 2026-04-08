@@ -65,7 +65,7 @@ function SettingsDropdown({ sessionLabel, locale }: { sessionLabel?: string | nu
       fetch('/api/co/logout', { method: 'POST' }),
       fetch('/api/admin/logout', { method: 'POST' }),
     ]);
-    window.location.reload();
+    window.location.href = `/${locale}`;
   }
 
   const menuItemClass = 'w-full px-3 py-2.5 text-xs text-text-secondary hover:bg-bg-surface flex items-center gap-2.5 transition-colors text-left';
