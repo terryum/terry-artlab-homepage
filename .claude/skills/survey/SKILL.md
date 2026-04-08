@@ -46,7 +46,11 @@ argument-hint: "<URL | --title=... --embed=...> [--featured] [--status=active|ar
 ```
 
 - `survey_number`: `surveys.json`의 `next_survey_number` 사용 후 증가
-- `toc`: 사이트/README에서 추출한 목차 배열
+- `toc`: 이중 언어 `{ ko, en }[]` 형식. 사이트/README에서 추출 후 번역
+  - **한글 목차 제목**: 공백 포함 **12자** 이내 (카드 truncation 방지)
+  - **영문 목차 제목**: 공백 포함 **19자** 이내
+  - 초과 시 약어나 짧은 표현으로 조정
+- `description`: 한글/영어 각각 **2-3줄** (카드에서 5-7줄 이내로 보이도록)
 
 ## Step 3) 이미지 생성
 
