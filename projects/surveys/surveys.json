@@ -5,8 +5,8 @@
       "slug": "survey-korea-vla-agentic-robotics",
       "survey_number": 3,
       "title": {
-        "ko": "Toward Agentic Robotics: Physical AI의 미래",
-        "en": "Toward Agentic Robotics: The Future of Physical AI"
+        "ko": "Toward Agentic Robotics",
+        "en": "Toward Agentic Robotics"
       },
       "description": {
         "ko": "LLM 기반 로봇 계획부터 VLA, Code as Policy, 에이전틱 로보틱스까지의 진화를 추적하는 서베이. 에이전틱 코딩과 에이전틱 로보틱스를 7가지 차원에서 비교하여 물리 세계의 근본적 차이를 조명합니다.",
