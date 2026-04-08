@@ -34,7 +34,7 @@ argument-hint: "<번호 | slug | 제목 | URL> [플랫폼 필터]"
 - `페이스북`→facebook, `쓰레드/스레드`→threads, `링크드인`→linkedin, `X/엑스/트위터`→x, `블루스카이`→bluesky, `섭스택/서브스택`→substack
 - `소셜미디어/소셜` → facebook,threads,linkedin,x,bluesky (substack 제외)
 - `~에만`, `~만`, `--platform=a,b` 등
-- 미지정 → 전체: facebook,threads,linkedin,x,bluesky,substack
+- 미지정 → 전체: facebook,threads,linkedin,x,bluesky,substack (특별한 언급 없으면 **항상 Substack 포함**)
 
 식별 완료 후 출력:
 ```
@@ -100,6 +100,17 @@ argument-hint: "<번호 | slug | 제목 | URL> [플랫폼 필터]"
 
 ---
 
+## Step 3.5. 사용자 커스텀 메시지 처리
+
+사용자가 직접 메시지를 제공한 경우:
+1. 한국어 메시지를 `/tmp/share-ko.txt`에, 영어 메시지를 `/tmp/share-en.txt`에 저장
+2. `--message-ko-file` / `--message-en-file` 옵션으로 스크립트에 전달
+3. **전문을 싣는 경우**: 단락 사이에 빈 줄 1개씩 추가 (줄바꿈으로 가독성 확보)
+4. **"(링크는 댓글에)" 등 불필요한 문구**: 삭제
+5. **Threads 500자 제한**: 커스텀 메시지가 500자 초과 시 자동으로 짧은 description으로 fallback
+6. **X 280자, Bluesky 300 grapheme**: 영문 전문이 초과하면 짧은 description으로 fallback
+7. **LinkedIn**: 사용자가 영어 전문 그대로 올려달라고 한 경우 전문 사용 (3,000자 이내)
+
 ## Step 4. 발행
 
 콘텐츠 타입에 따라 적절한 스크립트 사용:
@@ -108,13 +119,18 @@ argument-hint: "<번호 | slug | 제목 | URL> [플랫폼 필터]"
 # Posts
 python scripts/publish-social.py --slug={slug} --platform={platforms}
 
-# Surveys / Projects
+# Surveys / Projects (기본 메시지)
 python scripts/publish-project-social.py --slug={slug} --platform={platforms}
+
+# Surveys / Projects (커스텀 메시지)
+python scripts/publish-project-social.py --slug={slug} --message-ko-file=/tmp/share-ko.txt --message-en-file=/tmp/share-en.txt --platform={platforms}
 ```
 
-Substack이 포함된 경우:
+Substack은 스크립트 내에서 자동 처리됨 (별도 호출 불필요).
+
+**글자수 초과 시 재발행**: 특정 플랫폼이 실패하면 해당 플랫폼만 기본 메시지로 재시도:
 ```bash
-python scripts/publish-substack.py --slug={slug}
+python scripts/publish-project-social.py --slug={slug} --platform=threads
 ```
 
 ---

@@ -47,6 +47,7 @@ spec_sub.loader.exec_module(psub)
 SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "https://terry.artlab.ai")
 FACEBOOK_BASE_URL = os.environ.get("FACEBOOK_BASE_URL", "https://terry-artlab.vercel.app")
 PROJECTS_PATH = REPO_ROOT / "projects" / "gallery" / "projects.json"
+SURVEYS_PATH = REPO_ROOT / "projects" / "surveys" / "surveys.json"
 
 ALL_PLATFORMS = ["facebook", "threads", "linkedin", "x", "bluesky", "substack"]
 
@@ -55,10 +56,20 @@ def load_projects():
     return json.loads(PROJECTS_PATH.read_text())["projects"]
 
 
+def load_surveys():
+    if SURVEYS_PATH.exists():
+        return json.loads(SURVEYS_PATH.read_text())["surveys"]
+    return []
+
+
 def find_project(slug):
+    # Search projects first, then surveys
     for p in load_projects():
         if p["slug"] == slug:
             return p
+    for s in load_surveys():
+        if s["slug"] == slug:
+            return s
     return None
 
 
@@ -111,7 +122,17 @@ def main():
         default=",".join(ALL_PLATFORMS),
         help="플랫폼 (기본: 전체)",
     )
+    parser.add_argument("--message-ko", default=None, help="커스텀 한국어 메시지 (Facebook/Threads용)")
+    parser.add_argument("--message-en", default=None, help="커스텀 영어 메시지 (LinkedIn/X/Bluesky용)")
+    parser.add_argument("--message-ko-file", default=None, help="한국어 메시지 파일 경로")
+    parser.add_argument("--message-en-file", default=None, help="영어 메시지 파일 경로")
     args = parser.parse_args()
+
+    # Load custom messages from files if provided
+    if args.message_ko_file:
+        args.message_ko = Path(args.message_ko_file).read_text().strip()
+    if args.message_en_file:
+        args.message_en = Path(args.message_en_file).read_text().strip()
 
     platforms = [p.strip() for p in args.platform.split(",") if p.strip() in ALL_PLATFORMS]
     if not platforms:
@@ -126,27 +147,40 @@ def main():
     slug = args.slug
     fallback_url = project["links"][0]["url"] if project["links"] else SITE_BASE_URL
 
+    # Detect content type: survey or project
+    url_prefix = "surveys" if project.get("survey_number") is not None else "projects"
+
     # Platform-specific URLs (로캘 포함 — 리다이렉트 없이 OG 크롤러가 직접 접근)
     if project.get("embed_url"):
-        fb_url = f"{FACEBOOK_BASE_URL}/ko/projects/{slug}"
-        threads_url = f"{FACEBOOK_BASE_URL}/ko/projects/{slug}?utm_source=threads&utm_medium=social"
-        linkedin_url = f"{SITE_BASE_URL}/en/projects/{slug}"
+        fb_url = f"{FACEBOOK_BASE_URL}/ko/{url_prefix}/{slug}"
+        threads_url = f"{FACEBOOK_BASE_URL}/ko/{url_prefix}/{slug}?utm_source=threads&utm_medium=social"
+        linkedin_url = f"{SITE_BASE_URL}/en/{url_prefix}/{slug}"
         import time
         cache_bust = str(int(time.time()))
-        x_url = f"{SITE_BASE_URL}/en/projects/{slug}?v={cache_bust}"
-        bluesky_url = f"{SITE_BASE_URL}/en/projects/{slug}"
-        substack_en_url = f"{SITE_BASE_URL}/en/projects/{slug}"
-        substack_ko_url = f"{SITE_BASE_URL}/ko/projects/{slug}"
+        x_url = f"{SITE_BASE_URL}/en/{url_prefix}/{slug}?v={cache_bust}"
+        bluesky_url = f"{SITE_BASE_URL}/en/{url_prefix}/{slug}"
+        substack_en_url = f"{SITE_BASE_URL}/en/{url_prefix}/{slug}"
+        substack_ko_url = f"{SITE_BASE_URL}/ko/{url_prefix}/{slug}"
     else:
         fb_url = threads_url = linkedin_url = x_url = bluesky_url = fallback_url
         substack_en_url = substack_ko_url = fallback_url
 
-    # Platform-specific messages (post-share 스타일)
-    fb_text = build_facebook_text(project)
-    threads_text = build_threads_text(project)
-    linkedin_text = build_linkedin_text(project)
-    x_text = build_x_text(project, x_url)
-    bluesky_text = build_bluesky_text(project)
+    # Platform-specific messages — use custom messages if provided
+    if args.message_ko:
+        fb_text = args.message_ko
+        threads_text = f"{args.message_ko}\n\nRead more \u2193"
+    else:
+        fb_text = build_facebook_text(project)
+        threads_text = build_threads_text(project)
+
+    if args.message_en:
+        linkedin_text = args.message_en
+        x_text = f"{args.message_en}\n\nRead more \u2193\n{x_url}" if len(args.message_en) + 30 <= 280 else build_x_text(project, x_url)
+        bluesky_text = f"{args.message_en}\n\nRead more \u2193" if len(args.message_en) + 15 <= 300 else build_bluesky_text(project)
+    else:
+        linkedin_text = build_linkedin_text(project)
+        x_text = build_x_text(project, x_url)
+        bluesky_text = build_bluesky_text(project)
 
     print(f"대상 프로젝트: {slug} ({project['title']['en']})")
     print(f"대상 플랫폼: {', '.join(platforms)}")
