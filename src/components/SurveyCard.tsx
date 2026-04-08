@@ -42,7 +42,8 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
               alt={title}
               fill
               className="object-cover"
-              sizes="224px"
+              sizes="(min-width: 640px) 224px, 100vw"
+              quality={90}
               unoptimized={survey.cover_image.startsWith('/api/')}
             />
           </div>
