@@ -50,9 +50,10 @@
 | 스킬 | 설명 | 예시 |
 |------|------|------|
 | `/post` | arXiv, 블로그, 저널 URL로 논문 포스트 발행 | `/post https://arxiv.org/abs/2505.22159` |
-| `/post-share` | 소셜 미디어 발행 (Facebook, X, LinkedIn, Bluesky) | `/post-share #5 facebook,x` |
+| `/post virtual` | 가상 논문(Research Proposal) 포스트 생성 | `/post virtual --group=snu 촉각 잔차 학습` |
+| `/share` | 소셜 미디어 발행 (Facebook, X, LinkedIn, Bluesky) | `/share #5 facebook,x` |
 | `/project` | 프로젝트 갤러리에 추가 | `/project https://github.com/user/repo` |
-| `/project-share` | 프로젝트 소셜 미디어 공유 | `/project-share book-robot-hand facebook` |
+| `/survey` | 배포된 서베이 책 사이트 등록 | `/survey https://survey.example.com` |
 | `/paper-search` | 지식 그래프 + 외부 검색으로 논문 추천 | `/paper-search #16 리타게팅 한계` |
 
 **`terry-obsidian`** — Obsidian 볼트 관리 + 콘텐츠 발행:

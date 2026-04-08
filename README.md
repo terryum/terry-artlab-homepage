@@ -50,9 +50,10 @@ Skills are split across two workspaces:
 | Skill | Description | Example |
 |-------|-------------|---------|
 | `/post` | Publish a research post from arXiv, blog, or journal URL | `/post https://arxiv.org/abs/2505.22159` |
-| `/post-share` | Publish to social media (Facebook, X, LinkedIn, Bluesky) | `/post-share #5 facebook,x` |
+| `/post virtual` | Create a virtual paper (research proposal) post | `/post virtual --group=snu tactile residual learning` |
+| `/share` | Share content to social media (Facebook, X, LinkedIn, Bluesky) | `/share #5 facebook,x` |
 | `/project` | Add a project to the gallery | `/project https://github.com/user/repo` |
-| `/project-share` | Share a project to social media | `/project-share book-robot-hand facebook` |
+| `/survey` | Register a deployed survey book site | `/survey https://survey.example.com` |
 | `/paper-search` | Recommend papers via knowledge graph + external search | `/paper-search #16 retargeting limitations` |
 
 **`terry-obsidian`** — Obsidian vault management + content publishing:

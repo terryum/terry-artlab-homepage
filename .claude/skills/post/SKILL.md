@@ -1,7 +1,7 @@
 ---
 name: post
 description: "Post 생성 파이프라인. arXiv URL → Research 포스트, 블로그/기술문서 URL → Research 포스트(blog 태그), --type=blog → Blog 포스트(memos/essays) 자동 생성. 커버 이미지 없을 시 /gemini-3-image-generation 사용."
-argument-hint: "<URL | --type=blog slug> [--tags=TAG1,TAG2] [--memo=메모] [--featured]"
+argument-hint: "<URL | --type=blog slug | virtual 자연어요청> [--tags=TAG1,TAG2] [--memo=메모] [--featured]"
 ---
 
 # Post 생성 파이프라인
@@ -15,6 +15,7 @@ argument-hint: "<URL | --type=blog slug> [--tags=TAG1,TAG2] [--memo=메모] [--f
 - 그 외 `http(s)://` URL (블로그 등) → **Research 경로 (블로그)** (아래 Research 섹션, 블로그 분기로 실행)
 - `--type=blog` 명시 또는 URL 없음 → **Blog 경로** (아래 Blog 섹션 실행)
 - `--from=<path>` 또는 `--from=#-N` 명시 → **Blog 경로** (Obsidian 초안에서 발행, `--type` 필수)
+- `virtual` 키워드로 시작 → **Virtual Paper 경로** (아래 Virtual 섹션 실행)
 
 ```
 /post https://arxiv.org/abs/2505.22159          → Research (arXiv)
@@ -22,6 +23,8 @@ argument-hint: "<URL | --type=blog slug> [--tags=TAG1,TAG2] [--memo=메모] [--f
 /post https://claude.com/blog/...               → Research (블로그)
 /post --type=memos 260406-writing-daily         → Blog (memos)
 /post --type=essays --from=#-3                  → Blog (Obsidian 초안 발행)
+/post virtual --group=snu 촉각 잔차 학습 논문     → Virtual Paper
+/post virtual --from=~/path/to/draft.md         → Virtual Paper (MD 파일 기반)
 ```
 
 ### 인덱싱 규칙 (`docs/INDEXING.md` 참조)
@@ -43,18 +46,6 @@ argument-hint: "<URL | --type=blog slug> [--tags=TAG1,TAG2] [--memo=메모] [--f
   - **Git 커밋/푸시 불필요** — 비공개 콘텐츠는 Git에 흔적을 남기지 않음
   - 사이트에서 해당 그룹 로그인 세션이 있어야만 노출됨
 - 기본값: `visibility: "public"` (생략 가능, 기존대로 Git에 저장)
-
-### 가상 논문 (Virtual Paper) 경로
-원본 논문이 없는 Research Proposal이나 공동연구 시나리오 포스팅 시:
-- URL 없이 직접 콘텐츠를 작성하거나 대화에서 내용을 제공
-- **PDF 다운로드 스킵** (Step R5)
-- **Figure 추출 스킵** (Step R6) — 원본 논문이 없으므로
-- **커버 이미지**: `/gemini-3-image-generation` 스킬로 생성 (논문 주제에 맞는 개념적 이미지)
-- `source_type`: `"Virtual Paper (Research Proposal)"` 설정
-- `source_url`: 발행 후 자체 URL (예: `https://terry.artlab.ai/posts/<slug>`)
-- 나머지 단계(Graph Analysis, MDX 생성, meta.json 등)는 동일하게 수행하되 결과물을 Supabase에 저장
-- 주로 `--visibility=group --group=<group>` 와 함께 사용
-- 빌드/커밋/푸시 단계 생략 (비공개 콘텐츠는 Supabase에만 존재)
 
 ---
 
@@ -416,3 +407,230 @@ R12.5와 동일
 
 ### Step B11) 예외 발생 시 레슨 기록
 R13과 동일 — 예외/우회가 있었으면 `memory/posting-lessons.md`에 기록
+
+---
+
+---
+
+## Virtual Paper 경로 (가상 논문)
+
+입력: `virtual [--group=<group>] [--from=<path>] <자연어 요청>`
+
+원본 논문이 없는 **가상 논문(Research Proposal)** 포스팅. 기존 포스트/arXiv 논문을 종합해 새로운 연구 방향을 제안하거나, 사용자가 제공한 MD 파일을 논문 형식으로 포스팅한다.
+
+```
+/post virtual --group=snu 촉각 잔차 학습 후속 논문
+/post virtual --group=korea --from=~/path/to/draft.md
+/post virtual 공개 가상 논문 제안
+```
+
+### Step V0) 공개 범위 확인
+
+- `--group=<group>` 지정 → 해당 그룹 전용 비공개 포스트 (Supabase에만 저장)
+  - 유효 그룹: `snu`, `korea` 등 (`access_groups` 테이블 기준)
+  - `admin`은 모든 그룹의 콘텐츠를 볼 수 있음 (별도 설정 불필요)
+- **`--group` 미지정 시**: 반드시 사용자에게 확인:
+  > "그룹이 지정되지 않았습니다. 공개로 포스팅하시겠습니까? (공개/snu/korea 등)"
+  - 공개 선택 → `visibility: "public"`, Git에 저장
+  - 그룹 선택 → `visibility: "group"`, Supabase에만 저장
+
+### Step V1) 콘텐츠 소스 결정
+
+두 가지 모드:
+
+**A) MD 파일 제공 (`--from=<path>`)**:
+- 제공된 MD 파일을 읽어 Research 포스트 양식으로 변환
+- 기존 내용을 최대한 보존하되, 섹션 구조를 Research 포스트 형식에 맞춤
+
+**B) 자연어 요청 (기본)**:
+- 사용자의 자연어 설명 + 기존 포스트/arXiv 논문 참조를 기반으로 AI가 논문 요약을 생성
+- 기존 포스트 참조: `posts/index.json` + `posts/index-private.json`에서 관련 포스트 탐색
+- arXiv 참조 시: WebFetch로 초록 수집, 핵심 내용 추출
+- **반드시 실제 문헌 근거 기반으로 작성** — 허구의 실험 결과 수치 생성 금지
+- 가설/예상 결과는 "Hypothetical:" 또는 "가설:" 접두어 사용
+
+### Step V2) 슬러그 + ID 결정
+
+- 슬러그: `YYMM-<short-name>` (가상의 출판 예상 시기 사용)
+- ID: `posts/global-index.json`의 `next_public_id` 사용 (공개/비공개 모두 양수 ID)
+- global-index.json에 엔트리 추가
+
+### Step V3) Graph Analysis
+
+Research 경로 Step R3과 동일:
+- `posts/index.json` + `posts/index-private.json` 로드
+- taxonomy 배치, 관계 후보 생성
+
+### Step V4) MDX 생성 (ko.mdx + en.mdx)
+
+Research 포스트와 **동일한 섹션 구조** (`docs/RESEARCH_SUMMARY_RULES.md` 기준):
+
+1. **TL;DR**
+2. **가상 논문 고지** (TL;DR 바로 아래):
+   ```
+   > **이 포스트는 실제 논문이 아닌 가상 논문(Research Proposal)입니다.** 아래 내용은 연구 방향을 구체화하기 위해 최신 문헌 근거를 기반으로 구성한 연구 시나리오입니다.
+   ```
+3. **문제**
+4. **핵심 아이디어**
+5. **구체적 방법** (`<Collapsible>`)
+6. **가설과 근거** (실제 논문의 "주요 결과" 대신 — 문헌 근거 기반 가설 제시)
+7. **적용 시나리오** (선택)
+8. **달성점과 한계점**
+
+#### frontmatter 차이점
+
+```yaml
+---
+locale: "ko"
+title: "<한국어 제목>"
+summary: "<2-3문장 요약>"
+card_summary: "<카드용 짧은 요약>"
+terrys_memo: ""
+translation_of: null
+translated_to:
+  - "en"
+references:
+  - title: "<참조 논문 제목>"
+    author: "<저자>"
+    description: "<이 논문과의 관계/역할>"
+    arxiv_url: "<있으면>"
+    scholar_url: "<있으면>"
+    project_url: "<있으면>"
+    post_slug: "<사이트 내 포스트 있으면>"
+    category: "foundational|recent"
+---
+```
+
+- `terrys_memo`: **항상 빈 문자열** (AI 작성 금지)
+- `references`: 인용한 실제 논문들의 상세 정보 (부록 '주요 참조 논문' 섹션에 표시됨)
+
+### Step V5) meta.json 생성
+
+Research 포스트와 동일 구조 + Virtual Paper 전용 필드:
+
+```json
+{
+  "post_id": "<slug>",
+  "slug": "<slug>",
+  "post_number": "<next_public_id>",
+  "published_at": "<현재 ISO 날짜>",
+  "updated_at": "<현재 ISO 날짜>",
+  "status": "published",
+  "content_type": "papers",
+  "tags": ["Virtual Paper"],
+  "display_tags": ["Virtual Paper (Research Proposal)"],
+  "source_type": "Virtual Paper (Research Proposal)",
+  "source_title": "<논문 영문 제목>",
+  "source_author": "Anonymous",
+  "source_authors_full": ["Anonymous"],
+  "source_url": "",
+  "source_date": "<published_at과 동일>",
+  "source_project_url": "",
+  "google_scholar_url": "",
+  "first_author_scholar_url": "",
+  "visibility": "group",
+  "allowed_groups": ["<group>"],
+  "domain": "<최상위 분야>",
+  "subfields": [],
+  "key_concepts": [],
+  "methodology": [],
+  "taxonomy_primary": "<taxonomy 경로>",
+  "taxonomy_secondary": [],
+  "relations": [],
+  "ai_summary": {
+    "one_liner": "<한 줄 요약>",
+    "problem": "<문제>",
+    "solution": "<해법>",
+    "key_result": "<핵심 가설/기대 결과>",
+    "limitations": ["실험 검증 없음 (Research Proposal)"]
+  },
+  "figures": [],
+  "tables": [],
+  "references": [],
+  "terrys_memo": "",
+  "featured": false
+}
+```
+
+**주요 차이점**:
+- `tags`: `["Virtual Paper"]`만 사용
+- `display_tags`: `["Virtual Paper (Research Proposal)"]`
+- `source_author`: `"Anonymous"`
+- `source_url`, `google_scholar_url`, `first_author_scholar_url`: **빈 문자열** (클릭 불가하도록)
+- `source_date`: 포스팅 날짜 (가상이므로)
+- `limitations`에 항상 `"실험 검증 없음 (Research Proposal)"` 포함
+
+### Step V6) 커버 이미지 생성
+
+- `/gemini-3-image-generation` 스킬로 논문 주제에 맞는 개념적 커버 이미지 생성
+- 프롬프트: 논문 제목/핵심 주제 반영, 16:9 비율, 텍스트 없이, 추상적 기술 일러스트
+- `cover.webp` + `cover-thumb.webp` + `og.png` 생성
+
+### Step V7) Supabase 업로드 (비공개인 경우)
+
+**`visibility: "group"`일 때** (Git에 저장하지 않음):
+
+```javascript
+// private_content 테이블에 upsert
+{
+  slug: "<slug>",
+  content_type: "papers",
+  group_slug: "<group>",
+  title_ko: "<한국어 제목>",
+  title_en: "<영문 제목>",
+  content_ko: "<ko.mdx 전체 내용>",
+  content_en: "<en.mdx 전체 내용>",
+  meta_json: <meta.json 객체>,
+  cover_image_url: "<slug>/cover.webp",
+  status: "published"
+}
+```
+
+Supabase MCP의 `execute_sql`로 직접 INSERT/UPSERT:
+
+```sql
+INSERT INTO private_content (slug, content_type, group_slug, title_ko, title_en, content_ko, content_en, meta_json, cover_image_url, status)
+VALUES ('<slug>', 'papers', '<group>', '<title_ko>', '<title_en>', '<ko_mdx>', '<en_mdx>', '<meta_json>::jsonb', '<slug>/cover.webp', 'published')
+ON CONFLICT (slug) DO UPDATE SET
+  content_ko = EXCLUDED.content_ko,
+  content_en = EXCLUDED.content_en,
+  title_ko = EXCLUDED.title_ko,
+  title_en = EXCLUDED.title_en,
+  meta_json = EXCLUDED.meta_json,
+  cover_image_url = EXCLUDED.cover_image_url;
+```
+
+커버/썸네일/OG 이미지 → Supabase Storage `private-covers/{slug}/` 버킷 업로드
+(업로드 스크립트: `scripts/upload-private-content.mjs` 참조)
+
+### Step V7-public) Git 저장 (공개인 경우)
+
+**`visibility: "public"`일 때**:
+- Research 경로 Step R9~R12와 동일 (빌드 스크립트 → 검증 → 커밋 → 푸시)
+
+### Step V8) global-index 업데이트
+
+- `posts/global-index.json`에 엔트리 추가 (gitignored)
+- `next_public_id` 증가
+
+### Step V9) Obsidian Vault Sync
+
+```bash
+node scripts/sync-obsidian.mjs --slug=<slug>
+```
+실패 시 경고만 출력, 계속 진행
+
+### Step V10) 예외 발생 시 레슨 기록
+
+R13과 동일
+
+---
+
+## Virtual Paper 주의사항
+
+- **허위 실험 결과 생성 금지**: 가설은 반드시 실제 문헌 근거 기반. "Hypothetical:" 접두어 사용
+- **Google Scholar/저자 링크 비활성화**: 클릭해도 아무 곳으로도 가지 않도록 빈 문자열
+- **가상 논문 고지 필수**: TL;DR 아래에 반드시 blockquote로 "이 포스트는 실제 논문이 아닌 가상 논문" 고지
+- **Terry's memo AI 작성 금지**: 항상 빈 문자열
+- **references 섹션 충실히 작성**: 인용한 모든 실제 논문의 title, author, description, URL, 사이트 내 post_slug 포함
+- **figures 섹션**: 논문 내 주요 다이어그램/표를 직접 생성하여 포함 (GFM 마크다운 테이블 활용, 테이블 앞뒤 빈 줄 필수)

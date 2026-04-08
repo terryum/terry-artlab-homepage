@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { createElement } from 'react';
 import remarkMath from 'remark-math';
+import remarkGfm from 'remark-gfm';
 import rehypeKatex from 'rehype-katex';
 import Collapsible from '@/components/Collapsible';
 import Figure from '@/components/Figure';
@@ -55,7 +56,7 @@ export async function renderMDX(source: string, slug: string) {
     options: {
       parseFrontmatter: true,
       mdxOptions: {
-        remarkPlugins: [remarkMath],
+        remarkPlugins: [remarkGfm, remarkMath],
         rehypePlugins: [rehypeKatex],
       },
     },
