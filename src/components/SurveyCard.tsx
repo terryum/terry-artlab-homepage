@@ -4,6 +4,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { SurveyMeta } from '@/types/survey';
 
+/**
+ * Typography reference (shared across ContentCard, ProjectCard, SurveyCard):
+ *   - Number/ID:    text-xs  text-text-muted
+ *   - Title:        text-base font-semibold (or font-[480])
+ *   - Description:  text-sm  text-text-muted (or text-text-secondary)
+ *   - Meta (date):  text-xs  text-text-muted
+ *   - Tags:         text-[11px] rounded-full bg-bg-surface
+ */
+
 interface SurveyCardProps {
   survey: SurveyMeta;
   locale: string;
@@ -49,26 +58,26 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
               {title}
             </h3>
           </div>
-          <p className="text-xs text-text-secondary leading-relaxed line-clamp-3">{description}</p>
+          <p className="text-sm text-text-muted leading-relaxed line-clamp-3">{description}</p>
           <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-1">
             {survey.tech_stack.map(tag => (
-              <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded-full bg-bg-surface text-text-muted">
+              <span key={tag} className="text-[11px] px-2 py-0.5 rounded-full bg-bg-surface text-text-muted">
                 {tag}
               </span>
             ))}
           </div>
-          <span className="text-[10px] text-text-muted">last updated: {lastUpdated}</span>
+          <span className="text-xs text-text-muted">last updated: {lastUpdated}</span>
         </div>
 
         {/* Col 3: TOC — full height */}
         {survey.toc.length > 0 && (
-          <div className="w-56 flex-shrink-0 border-l border-line-default p-4 text-xs text-text-muted">
-            <span className="font-medium text-text-secondary text-[11px]">
+          <div className="w-64 flex-shrink-0 border-l border-line-default p-4">
+            <span className="text-xs font-medium text-text-secondary">
               {locale === 'ko' ? '목차' : 'Contents'} ({survey.toc.length})
             </span>
-            <ol className="mt-1.5 space-y-px list-decimal list-inside">
+            <ol className="mt-1.5 space-y-0.5 list-decimal list-inside">
               {survey.toc.map((ch, i) => (
-                <li key={i} className="truncate text-[11px] leading-snug">{ch[lang] || ch.en}</li>
+                <li key={i} className="text-sm text-text-muted truncate">{ch[lang] || ch.en}</li>
               ))}
             </ol>
           </div>
@@ -97,20 +106,20 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
               {title}
             </h3>
           </div>
-          <p className="text-sm text-text-secondary leading-relaxed">{description}</p>
-          <span className="text-[10px] text-text-muted">last updated: {lastUpdated}</span>
+          <p className="text-sm text-text-muted leading-relaxed">{description}</p>
+          <span className="text-xs text-text-muted">last updated: {lastUpdated}</span>
 
           {survey.toc.length > 0 && (
-            <div className="text-xs text-text-muted border-t border-line-default pt-2 mt-1">
-              <span className="font-medium text-text-secondary">
+            <div className="border-t border-line-default pt-2 mt-1">
+              <span className="text-xs font-medium text-text-secondary">
                 {locale === 'ko' ? '목차' : 'Contents'} ({survey.toc.length})
               </span>
               <ol className="mt-1 space-y-0.5 list-decimal list-inside">
                 {survey.toc.slice(0, 5).map((ch, i) => (
-                  <li key={i} className="truncate">{ch[lang] || ch.en}</li>
+                  <li key={i} className="text-sm text-text-muted truncate">{ch[lang] || ch.en}</li>
                 ))}
                 {survey.toc.length > 5 && (
-                  <li className="text-text-muted">...+{survey.toc.length - 5} more</li>
+                  <li className="text-sm text-text-muted">...+{survey.toc.length - 5} more</li>
                 )}
               </ol>
             </div>
@@ -118,7 +127,7 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
 
           <div className="flex flex-wrap items-center gap-1.5 pt-1">
             {survey.tech_stack.map(tag => (
-              <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded-full bg-bg-surface text-text-muted">
+              <span key={tag} className="text-[11px] px-2 py-0.5 rounded-full bg-bg-surface text-text-muted">
                 {tag}
               </span>
             ))}
