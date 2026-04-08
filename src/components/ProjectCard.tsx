@@ -85,6 +85,7 @@ export default function ProjectCard({ project, locale }: ProjectCardProps) {
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          unoptimized={project.cover_image.startsWith('/api/')}
         />
         <div className="absolute top-2 right-2">
           <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${badge.className}`}>

@@ -61,6 +61,7 @@ export default function ContentCard({ post, locale, showTabTag, hidePubDate }: C
                 fill
                 className="object-cover"
                 sizes="144px"
+                unoptimized={(post.cover_thumb || post.cover_image).startsWith('/api/')}
               />
             )}
           </div>

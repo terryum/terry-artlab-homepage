@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useState, useEffect, useRef, Suspense } from 'react';
 import LanguageSwitcher from './LanguageSwitcher';
-import ThemeToggle from './ThemeToggle';
 import { Container } from './ui/Container';
 import { SITE_CONFIG } from '@/lib/site-config';
 import type { Locale } from '@/lib/i18n';
@@ -27,18 +26,18 @@ interface HeaderProps {
   sessionLabel?: string | null;
 }
 
-function LoginLogout({ sessionLabel }: { sessionLabel?: string | null }) {
-  const [loading, setLoading] = useState(false);
+function SettingsDropdown({ sessionLabel }: { sessionLabel?: string | null }) {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
     function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
         setOpen(false);
         setError('');
       }
@@ -46,6 +45,14 @@ function LoginLogout({ sessionLabel }: { sessionLabel?: string | null }) {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [open]);
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    document.cookie = `theme=${next};path=/;max-age=${60 * 60 * 24 * 365}`;
+  }
 
   async function handleLogout() {
     setLoading(true);
@@ -85,58 +92,80 @@ function LoginLogout({ sessionLabel }: { sessionLabel?: string | null }) {
     }
   }
 
-  if (sessionLabel) {
-    return (
-      <div className="flex items-center gap-1.5 text-xs">
-        <span className="px-1.5 py-0.5 rounded bg-accent/10 text-accent font-medium">{sessionLabel}</span>
-        <button
-          onClick={handleLogout}
-          disabled={loading}
-          className="text-text-tertiary hover:text-text-primary transition-colors disabled:opacity-50"
-        >
-          {loading ? '...' : 'Logout'}
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative" ref={ref}>
+      {/* Gear icon button */}
       <button
         onClick={() => setOpen(!open)}
-        className="text-xs text-text-tertiary hover:text-text-primary transition-colors"
+        className="w-8 h-8 rounded-full border border-line-default flex items-center justify-center text-text-muted hover:text-accent transition-colors"
+        aria-label="Settings"
       >
-        Login
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
       </button>
+
       {open && (
-        <form
-          onSubmit={handleLogin}
-          className="absolute right-0 top-full mt-2 w-52 p-3 rounded-lg border border-line-default bg-bg-primary shadow-lg z-50 flex flex-col gap-2"
-        >
-          <input
-            type="text"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-            placeholder="ID (e.g. snu, admin)"
-            autoFocus
-            className="w-full px-2 py-1.5 text-xs border border-line-default rounded bg-bg-primary text-text-primary focus:outline-none focus:ring-1 focus:ring-accent"
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            className="w-full px-2 py-1.5 text-xs border border-line-default rounded bg-bg-primary text-text-primary focus:outline-none focus:ring-1 focus:ring-accent"
-          />
-          {error && <p className="text-red-500 text-[11px]">{error}</p>}
+        <div className="absolute right-0 top-full mt-2 w-52 rounded-lg border border-line-default bg-bg-primary shadow-lg z-50 overflow-hidden">
+          {/* Theme toggle */}
           <button
-            type="submit"
-            disabled={loading}
-            className="w-full px-2 py-1.5 text-xs bg-accent text-white rounded hover:opacity-90 disabled:opacity-50 transition-opacity"
+            onClick={toggleTheme}
+            className="w-full px-3 py-2 text-xs text-text-secondary hover:bg-bg-surface flex items-center gap-2 transition-colors"
           >
-            {loading ? '...' : 'Enter'}
+            <svg className="w-3.5 h-3.5 theme-icon-moon" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0112.478 3.68a9.75 9.75 0 109.274 11.322z" />
+            </svg>
+            <svg className="w-3.5 h-3.5 theme-icon-sun" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <circle cx="12" cy="12" r="4" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 2v2m0 16v2m-8-10H2m20 0h-2m-2.05-6.95l-1.41 1.41m-9.19 9.19l-1.41 1.41m0-12.02l1.41 1.41m9.19 9.19l1.41 1.41" />
+            </svg>
+            <span className="theme-icon-moon">Dark mode</span>
+            <span className="theme-icon-sun">Light mode</span>
           </button>
-        </form>
+
+          <div className="h-px bg-line-default" />
+
+          {/* Login / Logout */}
+          {sessionLabel ? (
+            <div className="px-3 py-2 flex items-center justify-between">
+              <span className="text-xs px-1.5 py-0.5 rounded bg-accent/10 text-accent font-medium">{sessionLabel}</span>
+              <button
+                onClick={handleLogout}
+                disabled={loading}
+                className="text-xs text-text-tertiary hover:text-text-primary transition-colors disabled:opacity-50"
+              >
+                {loading ? '...' : 'Logout'}
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleLogin} className="p-3 flex flex-col gap-2">
+              <input
+                type="text"
+                value={id}
+                onChange={(e) => setId(e.target.value)}
+                placeholder="ID (e.g. snu, admin)"
+                autoFocus
+                className="w-full px-2 py-1.5 text-xs border border-line-default rounded bg-bg-primary text-text-primary focus:outline-none focus:ring-1 focus:ring-accent"
+              />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                className="w-full px-2 py-1.5 text-xs border border-line-default rounded bg-bg-primary text-text-primary focus:outline-none focus:ring-1 focus:ring-accent"
+              />
+              {error && <p className="text-red-500 text-[11px]">{error}</p>}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full px-2 py-1.5 text-xs bg-accent text-white rounded hover:opacity-90 disabled:opacity-50 transition-opacity"
+              >
+                {loading ? '...' : 'Login'}
+              </button>
+            </form>
+          )}
+        </div>
       )}
     </div>
   );
@@ -238,17 +267,15 @@ function HeaderInner({ locale, dict, navTabs, sessionLabel }: HeaderProps) {
             </div>
 
             <div className="flex items-center gap-2 ml-4">
-              <LoginLogout sessionLabel={sessionLabel} />
-              <ThemeToggle />
               <LanguageSwitcher locale={locale} />
+              <SettingsDropdown sessionLabel={sessionLabel} />
             </div>
           </nav>
 
           {/* Mobile: icon buttons + hamburger */}
           <div className="flex items-center gap-2 md:hidden">
-            <LoginLogout sessionLabel={sessionLabel} />
-            <ThemeToggle />
             <LanguageSwitcher locale={locale} />
+            <SettingsDropdown sessionLabel={sessionLabel} />
             <button
               className="p-2 text-text-secondary"
               onClick={() => setMobileOpen(!mobileOpen)}

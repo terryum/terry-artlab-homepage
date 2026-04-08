@@ -50,6 +50,7 @@ export default function Figure({ src, caption, alt, number, priority, isCover }:
             className="w-full h-auto max-h-96 object-contain"
             sizes="(max-width: 768px) 100vw, 672px"
             priority={priority ?? isCover}
+            unoptimized={src.startsWith('/api/')}
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/10 transition-colors">
             <svg
