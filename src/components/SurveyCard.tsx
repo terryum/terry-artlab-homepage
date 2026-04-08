@@ -58,7 +58,7 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
               {title}
             </h3>
           </div>
-          <p className="text-sm text-text-muted leading-relaxed line-clamp-3">{description}</p>
+          <p className="text-sm text-text-muted leading-relaxed line-clamp-5">{description}</p>
           <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-1">
             {survey.tech_stack.map(tag => (
               <span key={tag} className="text-[11px] px-2 py-0.5 rounded-full bg-bg-surface text-text-muted">
@@ -77,7 +77,7 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
             </span>
             <ol className="mt-1.5 space-y-0.5 list-decimal list-inside">
               {survey.toc.map((ch, i) => (
-                <li key={i} className="text-sm text-text-muted truncate">{ch[lang] || ch.en}</li>
+                <li key={i} className="text-xs text-text-muted truncate">{ch[lang] || ch.en}</li>
               ))}
             </ol>
           </div>
@@ -116,10 +116,10 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
               </span>
               <ol className="mt-1 space-y-0.5 list-decimal list-inside">
                 {survey.toc.slice(0, 5).map((ch, i) => (
-                  <li key={i} className="text-sm text-text-muted truncate">{ch[lang] || ch.en}</li>
+                  <li key={i} className="text-xs text-text-muted truncate">{ch[lang] || ch.en}</li>
                 ))}
                 {survey.toc.length > 5 && (
-                  <li className="text-sm text-text-muted">...+{survey.toc.length - 5} more</li>
+                  <li className="text-xs text-text-muted">...+{survey.toc.length - 5} more</li>
                 )}
               </ol>
             </div>
