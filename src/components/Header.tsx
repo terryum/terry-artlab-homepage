@@ -121,7 +121,7 @@ function SettingsDropdown({ sessionLabel, locale }: { sessionLabel?: string | nu
             </button>
           ) : (
             <Link
-              href={`/co/snu?redirect=${encodeURIComponent(pathname)}`}
+              href={`/login?redirect=${encodeURIComponent(pathname)}`}
               onClick={() => setOpen(false)}
               className={menuItemClass}
             >

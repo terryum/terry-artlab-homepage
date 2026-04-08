@@ -162,8 +162,7 @@ export async function buildContentDetailProps(
       const group = await getAuthenticatedGroup();
       const allowed = post.meta.allowed_groups || [];
       if (!group || !allowed.includes(group)) {
-        const targetGroup = allowed[0] || 'snu';
-        redirect(`/co/${targetGroup}?redirect=${encodeURIComponent(`/${lang}/posts/${slug}`)}`);
+        redirect(`/login?redirect=${encodeURIComponent(`/${lang}/posts/${slug}`)}`);
       }
     }
   }

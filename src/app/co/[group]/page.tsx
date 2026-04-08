@@ -1,6 +1,4 @@
-import { canAccessGroup, isGroupConfigured } from '@/lib/group-auth';
-import { notFound, redirect } from 'next/navigation';
-import GroupLoginForm from '@/components/co/GroupLoginForm';
+import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,21 +7,9 @@ interface Props {
   searchParams: Promise<{ redirect?: string }>;
 }
 
-export default async function GroupLoginPage({ params, searchParams }: Props) {
-  const { group } = await params;
+// Legacy route — redirect to unified /login page
+export default async function GroupPortalPage({ searchParams }: Props) {
   const { redirect: redirectTo } = await searchParams;
-
-  if (!isGroupConfigured(group)) {
-    notFound();
-  }
-
-  const hasAccess = await canAccessGroup(group);
-
-  if (hasAccess) {
-    // Already authenticated — redirect to target or main posts page
-    const target = redirectTo && redirectTo.startsWith('/') ? redirectTo : '/posts';
-    redirect(target);
-  }
-
-  return <GroupLoginForm group={group} redirectTo={redirectTo} />;
+  const target = redirectTo ? `/login?redirect=${encodeURIComponent(redirectTo)}` : '/login';
+  redirect(target);
 }
