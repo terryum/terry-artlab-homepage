@@ -49,6 +49,7 @@ argument-hint: "<URL | --title=... --embed=...> [--featured] [--status=active|ar
 - `toc`: 이중 언어 `{ ko, en }[]` 형식. 사이트/README에서 추출 후 번역
   - **한글 목차 제목**: 공백 포함 **12자** 이내 (카드 truncation 방지)
   - **영문 목차 제목**: 공백 포함 **19자** 이내
+  - 구분자는 ` — `(em dash) 대신 `: `(colon) 사용 — 폭 절약
   - 초과 시 약어나 짧은 표현으로 조정
 - `description`: 한글/영어 각각 **2-3줄** (카드에서 5-7줄 이내로 보이도록)
 
