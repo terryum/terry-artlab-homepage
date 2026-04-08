@@ -4,15 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { SurveyMeta } from '@/types/survey';
 
-/**
- * Typography reference (shared across ContentCard, ProjectCard, SurveyCard):
- *   - Number/ID:    text-xs  text-text-muted
- *   - Title:        text-base font-semibold (or font-[480])
- *   - Description:  text-sm  text-text-muted (or text-text-secondary)
- *   - Meta (date):  text-xs  text-text-muted
- *   - Tags:         text-[11px] rounded-full bg-bg-surface
- */
-
 interface SurveyCardProps {
   survey: SurveyMeta;
   locale: string;
@@ -26,7 +17,14 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
     ? `/${locale}/surveys/${survey.slug}`
     : survey.links[0]?.url || '#';
   const isExternal = !survey.embed_url;
-  const lastUpdated = new Date(survey.published_at).toISOString().slice(0, 10);
+  const published = new Date(survey.published_at).toISOString().slice(0, 10);
+  const updated = survey.updated_at
+    ? new Date(survey.updated_at).toISOString().slice(0, 10)
+    : published;
+
+  const dateLabel = published === updated
+    ? published
+    : `${published} — updated ${updated}`;
 
   return (
     <Link
@@ -58,7 +56,8 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
               {title}
             </h3>
           </div>
-          <p className="text-sm text-text-muted leading-relaxed line-clamp-5">{description}</p>
+          <p className="text-sm text-text-muted leading-relaxed">{description}</p>
+          <span className="text-xs text-text-muted text-right">{dateLabel}</span>
           <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-1">
             {survey.tech_stack.map(tag => (
               <span key={tag} className="text-[11px] px-2 py-0.5 rounded-full bg-bg-surface text-text-muted">
@@ -66,7 +65,6 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
               </span>
             ))}
           </div>
-          <span className="text-xs text-text-muted">last updated: {lastUpdated}</span>
         </div>
 
         {/* Col 3: TOC — full height */}
@@ -107,7 +105,7 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
             </h3>
           </div>
           <p className="text-sm text-text-muted leading-relaxed">{description}</p>
-          <span className="text-xs text-text-muted">last updated: {lastUpdated}</span>
+          <span className="text-xs text-text-muted text-right">{dateLabel}</span>
 
           {survey.toc.length > 0 && (
             <div className="border-t border-line-default pt-2 mt-1">

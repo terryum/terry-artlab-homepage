@@ -110,6 +110,7 @@ function mapRowToSurveyMeta(row: {
     featured: (m.featured as boolean) || false,
     order: (m.order as number) || 0,
     published_at: (m.published_at as string) || new Date().toISOString(),
+    updated_at: (m.updated_at as string) || undefined,
     visibility: 'group',
     allowed_groups: (m.allowed_groups as string[]) || [],
   };

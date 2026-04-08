@@ -18,6 +18,7 @@ export interface SurveyMeta {
   featured: boolean;
   order: number;
   published_at: string;
+  updated_at?: string;
   // ACL
   visibility?: 'public' | 'group';
   allowed_groups?: string[];
