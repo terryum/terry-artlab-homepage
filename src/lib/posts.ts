@@ -89,9 +89,9 @@ function resolveContentType(
   category?: PostCategory
 ): PostCategory {
   if (category) return CATEGORY_TO_CONTENT_TYPE[category];
-  const ct = (data.content_type as string) || 'memos';
+  const ct = (data.content_type as string) || 'essays';
   if ((CATEGORIES as readonly string[]).includes(ct)) return ct as PostCategory;
-  return 'memos';
+  return 'essays';
 }
 
 function normalizeTags(
@@ -106,7 +106,7 @@ function normalizeTags(
     memos: 'Memos',
     essays: 'Essays',
   };
-  const contentTypeTag = category ? contentTypeTagMap[category] : 'Memos';
+  const contentTypeTag = category ? contentTypeTagMap[category] : 'Essays';
   if (!tagSlugs.includes(normalizeTagSlug(contentTypeTag))) {
     rawTags.unshift(contentTypeTag);
   }
@@ -229,7 +229,7 @@ export async function getPostMeta(slug: string, locale: string): Promise<PostMet
 
 export async function getPostsByType(
   locale: string,
-  contentType: 'papers' | 'notes' | 'memos' | 'essays'
+  contentType: PostCategory
 ): Promise<PostMeta[]> {
   const slugs = await getAllSlugs();
   const allMeta = await Promise.all(slugs.map((slug) => getPostMeta(slug, locale)));
@@ -247,7 +247,7 @@ export async function getPostsByType(
 
 export async function getLatestPosts(
   locale: string,
-  contentType: 'papers' | 'notes' | 'memos' | 'essays',
+  contentType: PostCategory,
   limit: number
 ): Promise<PostMeta[]> {
   const posts = await getPostsByType(locale, contentType);
@@ -426,7 +426,7 @@ export async function getAdjacentPosts(
 }
 
 export async function getPostParamsByType(
-  contentType: 'papers' | 'notes' | 'memos' | 'essays'
+  contentType: PostCategory
 ): Promise<{ lang: string; slug: string }[]> {
   const slugs = await getAllSlugs();
   const checks = slugs.flatMap((slug) =>

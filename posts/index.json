@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-12T05:23:51.912Z",
+  "generated_at": "2026-04-12T05:45:50.925Z",
   "total_posts": 26,
   "posts": [
     {
@@ -259,7 +259,7 @@
     {
       "post_number": 5,
       "slug": "260310-on-the-manifold-first-post",
-      "content_type": "memos",
+      "content_type": "essays",
       "title_en": "On the Manifold",
       "title_ko": "On the Manifold",
       "summary_ko": "AI가 생각하는 인간과 노동하는 인간의 위상을 동시에 흔드는 지금, 변화의 기울기를 따라 다음 세계를 탐구하는 블로그를 시작한다.",
@@ -276,7 +276,7 @@
       "methodology": [],
       "contribution_type": null,
       "tags": [
-        "Memos",
+        "Essays",
         "AI",
         "Physical AI",
         "Research Philosophy"
@@ -1763,7 +1763,7 @@
     {
       "post_number": 26,
       "slug": "260406-writing-daily-by-hand",
-      "content_type": "memos",
+      "content_type": "essays",
       "title_en": "I Decided to Read and Write by Hand, Every Day",
       "title_ko": "매일 가볍게, 내 손으로 글을 쓰기로 했다",
       "summary_ko": "AI 시대에 직접 읽고 쓰는 일의 의미를 묻는다. 요약의 요약은 깊이를 주지 않고, 쓰기는 '생각의 정제 과정'이다.",
@@ -1783,7 +1783,7 @@
       "methodology": [],
       "contribution_type": null,
       "tags": [
-        "Memos",
+        "Essays",
         "Writing",
         "AI",
         "Personal Growth"

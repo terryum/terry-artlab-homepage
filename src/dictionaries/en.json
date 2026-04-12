@@ -24,7 +24,7 @@
     },
     "essays": {
       "title": "Essays",
-      "description": "Terry shares thoughts that arise from the moments of everyday life."
+      "description": "Terry shares quick thoughts on AI, life, and the changing world."
     },
     "papers": {
       "title": "Papers",
@@ -44,7 +44,7 @@
     }
   },
   "home": {
-    "latest_ideas": "Latest Memos",
+    "latest_ideas": "Latest Essays",
     "latest_essays": "Latest Essays",
     "latest_research": "Latest Papers",
     "latest_notes": "Latest Notes",

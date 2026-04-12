@@ -45,7 +45,7 @@ const VAULT_FOLDERS = [
 const TYPE_TO_FOLDER = {
   papers: 'From AI/Papers',
   notes: 'From AI/Notes',
-  memos: 'From Terry/Memos',
+  memos: 'From Terry/Essays',
   essays: 'From Terry/Essays',
 };
 
