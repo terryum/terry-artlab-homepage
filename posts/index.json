@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-08T01:27:13.365Z",
-  "total_posts": 25,
+  "generated_at": "2026-04-12T05:23:51.912Z",
+  "total_posts": 26,
   "posts": [
     {
       "post_number": 1,
@@ -1759,6 +1759,58 @@
       ],
       "visibility": "public",
       "allowed_groups": []
+    },
+    {
+      "post_number": 26,
+      "slug": "260406-writing-daily-by-hand",
+      "content_type": "memos",
+      "title_en": "I Decided to Read and Write by Hand, Every Day",
+      "title_ko": "매일 가볍게, 내 손으로 글을 쓰기로 했다",
+      "summary_ko": "AI 시대에 직접 읽고 쓰는 일의 의미를 묻는다. 요약의 요약은 깊이를 주지 않고, 쓰기는 '생각의 정제 과정'이다.",
+      "summary_en": "Questioning the value of reading and writing in the AI era. Summaries don't build depth; writing is a 'thought refining process.'",
+      "domain": "philosophy",
+      "subfields": [
+        "writing-practice",
+        "ai-era-reflection"
+      ],
+      "key_concepts": [
+        "slow-reading",
+        "handwriting",
+        "thought-refining",
+        "summary-trap",
+        "ai-authorship"
+      ],
+      "methodology": [],
+      "contribution_type": null,
+      "tags": [
+        "Memos",
+        "Writing",
+        "AI",
+        "Personal Growth"
+      ],
+      "source_author": null,
+      "source_date": null,
+      "published_at": "2026-04-06T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "AI 시대에 직접 읽고 쓰는 행위의 의미를 재정의하며 매일 가볍게 읽고 쓰기로 결심한 에세이",
+        "problem": "AI가 생성하는 정보의 폭증으로 읽기 노동이 가중되고, AI 대필의 편의가 오히려 더 많은 읽기/쓰기를 요구하는 역설",
+        "solution": "요약의 요약이 아닌 깊이 있는 읽기, AI 대필이 아닌 직접 쓰기를 통한 '생각의 정제 과정' 회복",
+        "key_result": "매일 가볍게 읽고 쓰는 습관을 통해 두뇌의 주체성을 지키겠다는 선언",
+        "limitations": [
+          "개인적 에세이로 실증적 근거 없음",
+          "AI 활용의 긍정적 측면에 대한 균형적 논의 부재"
+        ]
+      },
+      "relations": [],
+      "idea_status": "exploring",
+      "related_posts": [
+        "260310-on-the-manifold-first-post"
+      ],
+      "taxonomy_primary": null,
+      "taxonomy_secondary": [],
+      "visibility": "public",
+      "allowed_groups": []
     }
   ],
   "knowledge_graph": {
@@ -2579,12 +2631,28 @@
     ],
     "declarative-tools": [
       25
+    ],
+    "slow-reading": [
+      26
+    ],
+    "handwriting": [
+      26
+    ],
+    "thought-refining": [
+      26
+    ],
+    "summary-trap": [
+      26
+    ],
+    "ai-authorship": [
+      26
     ]
   },
   "domain_stats": {
     "robotics": 20,
     "ml": 2,
-    "ai": 3
+    "ai": 3,
+    "philosophy": 1
   },
   "taxonomy_stats": {
     "robotics/brain/vla": 6,
