@@ -4,12 +4,13 @@
  *
  * Run: node scripts/copy-post-images.mjs
  */
-import { readdir, copyFile, mkdir, stat } from 'fs/promises';
+import { readdir, copyFile, mkdir, stat, readFile } from 'fs/promises';
 import { join, extname } from 'path';
 
 const POSTS_DIR = join(process.cwd(), 'posts');
 const PUBLIC_POSTS_DIR = join(process.cwd(), 'public', 'posts');
-const CATEGORIES = ['papers', 'notes', 'tech', 'essays', 'memos'];
+const contentConfig = JSON.parse(await readFile(join(process.cwd(), 'content.config.json'), 'utf-8'));
+const CATEGORIES = contentConfig.allContentDirs;
 
 const IMAGE_EXTENSIONS = new Set(['.webp', '.png', '.jpg', '.jpeg', '.gif', '.svg']);
 

@@ -19,7 +19,8 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const POSTS_DIR = path.join(ROOT, 'posts');
-const CATEGORIES = ['papers', 'notes', 'tech', 'essays', 'memos'];
+const contentConfig = JSON.parse(await fs.readFile(path.join(ROOT, 'content.config.json'), 'utf-8'));
+const CATEGORIES = contentConfig.allContentDirs;
 
 // ── CLI args ──
 const args = process.argv.slice(2);

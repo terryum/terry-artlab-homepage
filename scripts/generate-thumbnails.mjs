@@ -19,7 +19,8 @@ import sharp from 'sharp';
 const POSTS_DIR = join(process.cwd(), 'posts');
 const PUBLIC_POSTS_DIR = join(process.cwd(), 'public', 'posts');
 const SIZE = 288; // 2x retina for 144px display
-const CONTENT_DIRS = ['papers', 'essays', 'tech', 'memos'];
+const contentConfig = JSON.parse(await readFile(join(process.cwd(), 'content.config.json'), 'utf-8'));
+const CONTENT_DIRS = contentConfig.allContentDirs;
 
 /** Read thumbnail config from meta.json */
 async function getThumbConfig(postDir) {

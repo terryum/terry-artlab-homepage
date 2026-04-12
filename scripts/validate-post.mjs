@@ -20,7 +20,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const POSTS_DIR = path.join(ROOT, 'posts');
 const PUBLIC_POSTS_DIR = path.join(ROOT, 'public', 'posts');
-const CATEGORIES = ['papers', 'notes', 'tech', 'essays', 'memos'];
+const contentConfig = JSON.parse(await fs.readFile(path.join(ROOT, 'content.config.json'), 'utf-8'));
+const CATEGORIES = contentConfig.allContentDirs;
 
 // ── Required fields by content type ──────────────────────────────────
 

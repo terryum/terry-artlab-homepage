@@ -1,0 +1,5 @@
+{
+  "allContentDirs": ["papers", "notes", "tech", "essays", "memos"],
+  "activeTabs": ["papers", "notes", "memos", "essays"],
+  "publishableTypes": ["essays", "memos"]
+}

@@ -31,7 +31,8 @@ except ImportError:
 REPO_ROOT = Path(__file__).parent.parent
 POSTS_DIR = REPO_ROOT / "posts"
 INDEX_PATH = POSTS_DIR / "index.json"
-PUBLISHABLE_TYPES = {"essays", "tech", "memos"}
+_content_config = json.loads((REPO_ROOT / "content.config.json").read_text())
+PUBLISHABLE_TYPES = set(_content_config["publishableTypes"])
 
 
 # ─── 공유 유틸 ───────────────────────────────────────────────────────────────

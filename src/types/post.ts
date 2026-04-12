@@ -1,3 +1,6 @@
+import contentConfig from '../../content.config.json';
+export type ContentType = (typeof contentConfig.activeTabs)[number];
+
 export interface FigureItem {
   src: string;
   caption: string;
@@ -50,7 +53,7 @@ export interface PostMeta {
   published_at: string;
   updated_at: string;
   status: 'draft' | 'published';
-  content_type: 'papers' | 'notes' | 'memos' | 'essays';
+  content_type: ContentType;
   tags: string[];
   display_tags?: string[];
   cover_image: string;

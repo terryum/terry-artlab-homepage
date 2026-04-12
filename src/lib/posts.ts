@@ -28,8 +28,10 @@ export async function loadTaxonomyJson(): Promise<Record<string, unknown>> {
   return _taxonomyCache;
 }
 
+import contentConfig from '../../content.config.json';
+
 const POSTS_DIR = path.join(process.cwd(), 'posts');
-const CATEGORIES = ['papers', 'notes', 'memos', 'essays'] as const;
+const CATEGORIES = contentConfig.activeTabs;
 
 async function readMetaJson(postDir: string): Promise<Record<string, unknown> | null> {
   try {
@@ -49,12 +51,9 @@ function stripUndefined(obj: Record<string, unknown>): Record<string, unknown> {
 }
 type PostCategory = (typeof CATEGORIES)[number];
 
-const CATEGORY_TO_CONTENT_TYPE: Record<PostCategory, 'papers' | 'notes' | 'memos' | 'essays'> = {
-  papers: 'papers',
-  notes: 'notes',
-  memos: 'memos',
-  essays: 'essays',
-};
+const CATEGORY_TO_CONTENT_TYPE = Object.fromEntries(
+  CATEGORIES.map(c => [c, c])
+) as Record<PostCategory, PostCategory>;
 
 async function resolvePostPath(
   slug: string
@@ -88,10 +87,10 @@ export async function getAllSlugs(): Promise<string[]> {
 function resolveContentType(
   data: Record<string, unknown>,
   category?: PostCategory
-): 'papers' | 'notes' | 'memos' | 'essays' {
+): PostCategory {
   if (category) return CATEGORY_TO_CONTENT_TYPE[category];
   const ct = (data.content_type as string) || 'memos';
-  if (ct === 'papers' || ct === 'notes' || ct === 'memos' || ct === 'essays') return ct;
+  if ((CATEGORIES as readonly string[]).includes(ct)) return ct as PostCategory;
   return 'memos';
 }
 
