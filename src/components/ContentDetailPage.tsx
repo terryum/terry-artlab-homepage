@@ -102,10 +102,10 @@ export default function ContentDetailPage({
         <h1 className="text-2xl md:text-3xl font-bold text-text-primary tracking-tight leading-snug">
           {meta.title}
         </h1>
-        <div className="flex items-center gap-3 mt-3 flex-wrap">
+        <div className="flex items-center gap-3 mt-3">
           <time className="text-sm text-text-muted">{dateStr}</time>
           {meta.reading_time_min && (
-            <span className="text-sm text-text-muted">
+            <span className="text-sm text-text-muted whitespace-nowrap">
               {meta.reading_time_min} min read
             </span>
           )}

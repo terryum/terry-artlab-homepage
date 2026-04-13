@@ -95,7 +95,7 @@ function SettingsDropdown({ locale }: { locale: Locale }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-44 rounded-lg border border-line-default bg-bg-primary shadow-lg z-50 py-1">
+        <div className="absolute right-0 top-full mt-2 w-36 rounded-lg border border-line-default bg-bg-surface shadow-lg backdrop-blur-sm z-50 py-1">
           {/* Theme */}
           <button onClick={toggleTheme} className={menuItemClass}>
             <svg className="w-3.5 h-3.5 theme-icon-moon" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
