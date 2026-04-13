@@ -51,7 +51,11 @@ export default function ContentDetailPage({
 }: ContentDetailPageProps) {
   const tabSlug = meta.content_type;
   const section = `posts?tab=${tabSlug}`;
-  const dateStr = formatPostDate(meta.published_at, locale);
+  const dateStr = formatPostDate(meta.published_at, locale,
+    locale === 'ko'
+      ? { year: 'numeric', month: 'numeric', day: 'numeric' }
+      : { year: 'numeric', month: 'short', day: 'numeric' }
+  );
 
   const localizedFigures = localizeGalleryItems(meta.figures, locale);
   const localizedTables = localizeGalleryItems(meta.tables, locale);
@@ -103,7 +107,7 @@ export default function ContentDetailPage({
           {meta.title}
         </h1>
         <div className="flex items-center gap-3 mt-3">
-          <time className="text-sm text-text-muted">{dateStr}</time>
+          <time className="text-sm text-text-muted whitespace-nowrap">{dateStr}</time>
           {meta.reading_time_min && (
             <span className="text-sm text-text-muted whitespace-nowrap">
               {meta.reading_time_min} min read
