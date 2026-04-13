@@ -1,38 +1,60 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Children } from 'react';
 import Link from 'next/link';
 import ContentCard from './ContentCard';
 import type { PostMeta } from '@/types/post';
 
 const PAGE_SIZE = 3;
 
-interface LatestSectionProps {
+/* ── Common props ── */
+interface BaseProps {
   title: string;
   viewAllHref: string;
   viewAllText: string;
-  posts: PostMeta[];
-  locale: string;
   showMoreText?: string;
   emptyText?: string;
-  showTabTag?: boolean;
-  hidePubDate?: boolean;
+  initialCount?: number;
 }
 
-export default function LatestSection({
-  title,
-  viewAllHref,
-  viewAllText,
-  posts,
-  locale,
-  showMoreText,
-  emptyText,
-  showTabTag,
-  hidePubDate,
-}: LatestSectionProps) {
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const visiblePosts = posts.slice(0, visibleCount);
-  const hasMore = visibleCount < posts.length;
+/* ── Posts mode (backward-compatible) ── */
+interface PostsProps extends BaseProps {
+  posts: PostMeta[];
+  locale: string;
+  showTabTag?: boolean;
+  hidePubDate?: boolean;
+  children?: never;
+}
+
+/* ── Children mode (generic) ── */
+interface ChildrenProps extends BaseProps {
+  children: React.ReactNode;
+  posts?: never;
+  locale?: never;
+  showTabTag?: never;
+  hidePubDate?: never;
+}
+
+type LatestSectionProps = PostsProps | ChildrenProps;
+
+export default function LatestSection(props: LatestSectionProps) {
+  const {
+    title,
+    viewAllHref,
+    viewAllText,
+    showMoreText,
+    emptyText,
+    initialCount,
+  } = props;
+
+  const pageSize = initialCount ?? PAGE_SIZE;
+
+  // Determine items for counting and slicing
+  const childArray = props.children ? Children.toArray(props.children) : null;
+  const totalCount = childArray ? childArray.length : (props.posts?.length ?? 0);
+
+  const [visibleCount, setVisibleCount] = useState(pageSize);
+  const hasMore = visibleCount < totalCount;
 
   return (
     <section className="py-8">
@@ -48,19 +70,28 @@ export default function LatestSection({
         </Link>
       </div>
 
-      {posts.length === 0 ? (
+      {totalCount === 0 ? (
         <p className="text-text-muted text-sm py-4">{emptyText ?? 'No posts yet.'}</p>
       ) : (
         <div>
-          {visiblePosts.map((post) => (
-            <ContentCard key={post.post_id} post={post} locale={locale} showTabTag={showTabTag} hidePubDate={hidePubDate} />
-          ))}
+          {childArray
+            ? childArray.slice(0, visibleCount)
+            : props.posts!.slice(0, visibleCount).map((post) => (
+                <ContentCard
+                  key={post.post_id}
+                  post={post}
+                  locale={props.locale!}
+                  showTabTag={props.showTabTag}
+                  hidePubDate={props.hidePubDate}
+                />
+              ))
+          }
           {hasMore && (
             <button
-              onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+              onClick={() => setVisibleCount((c) => c + pageSize)}
               className="mt-4 w-full py-2 text-sm text-text-muted hover:text-accent transition-colors border border-line-default rounded-md"
             >
-              {showMoreText ?? `+${Math.min(PAGE_SIZE, posts.length - visibleCount)} more`}
+              {showMoreText ?? `+${Math.min(pageSize, totalCount - visibleCount)} more`}
             </button>
           )}
         </div>

@@ -37,20 +37,18 @@ export default function ContentCard({ post, locale, showTabTag, hidePubDate }: C
 
   return (
     <Link href={href} className="block group py-4 first:pt-0">
-      <article className="flex gap-6">
+      <article className="flex gap-4 sm:gap-6">
         {/* Thumbnail */}
         {(post.cover_thumb || post.cover_image) && (
-          <div className="hidden sm:block flex-shrink-0 w-36 h-36 relative rounded overflow-hidden bg-bg-surface">
+          <div className="flex-shrink-0 w-20 h-20 sm:w-36 sm:h-36 relative rounded overflow-hidden bg-bg-surface">
             {post.thumb_fit === 'contain' ? (
-              // absolute inset-3 creates a CSS containing block for the fill Image,
-              // so bg-bg-surface shows in the 12px gap — no image transparency needed
-              <div className="absolute inset-3 bg-bg-surface">
+              <div className="absolute inset-1 sm:inset-3 bg-bg-surface">
                 <Image
                   src={post.cover_thumb || post.cover_image}
                   alt={post.title}
                   fill
                   className="object-contain"
-                  sizes="120px"
+                  sizes="(min-width: 640px) 120px, 72px"
                   unoptimized
                 />
               </div>
@@ -60,7 +58,7 @@ export default function ContentCard({ post, locale, showTabTag, hidePubDate }: C
                 alt={post.title}
                 fill
                 className="object-cover"
-                sizes="144px"
+                sizes="(min-width: 640px) 144px, 80px"
                 unoptimized={(post.cover_thumb || post.cover_image).startsWith('/api/')}
               />
             )}

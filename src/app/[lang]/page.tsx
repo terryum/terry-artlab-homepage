@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { isValidLocale, type Locale } from '@/lib/i18n';
 import { getDictionary } from '@/lib/dictionaries';
 import { getAllPostsFromIndex } from '@/lib/posts';
@@ -9,11 +8,10 @@ import { TAB_CONFIG } from '@/lib/site-config';
 import { normalizeTagSlug } from '@/lib/tags';
 import HeroSection from '@/components/HeroSection';
 import LatestSection from '@/components/LatestSection';
-import SurveyCard from '@/components/SurveyCard';
-import ProjectCard from '@/components/ProjectCard';
+import CompactCard from '@/components/CompactCard';
 import type { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export function generateStaticParams() {
   return [{ lang: 'ko' }, { lang: 'en' }];
@@ -50,6 +48,7 @@ export default async function HomePage({
     getAllSurveys(),
   ]);
 
+  const l = lang as 'ko' | 'en';
   const aiPosts = allPosts.filter(p => p.tags.some(tag => aiMatchTags.has(normalizeTagSlug(tag))));
   const terryPosts = allPosts.filter(p => p.tags.some(tag => terryMatchTags.has(normalizeTagSlug(tag))));
 
@@ -81,46 +80,65 @@ export default async function HomePage({
 
       {/* Latest Surveys */}
       {surveys.length > 0 && (
-        <section className="py-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-[540] text-text-primary tracking-tight">
-              {dict.home.latest_surveys}
-            </h2>
-            <Link
-              href={`/${lang}/surveys`}
-              className="text-sm text-text-muted hover:text-accent transition-colors"
-            >
-              {dict.home.view_all} &rarr;
-            </Link>
-          </div>
-          <div className="flex flex-col gap-6">
-            {surveys.map((survey) => (
-              <SurveyCard key={survey.slug} survey={survey} locale={lang} />
-            ))}
-          </div>
-        </section>
+        <LatestSection
+          title={dict.home.latest_surveys}
+          viewAllHref={`/${lang}/surveys`}
+          viewAllText={dict.home.view_all}
+          showMoreText={dict.home.show_more}
+          emptyText={dict.home.no_posts_yet}
+        >
+          {surveys.map((survey) => {
+            const href = survey.embed_url
+              ? `/${lang}/surveys/${survey.slug}`
+              : survey.links[0]?.url || '#';
+            const thumb = survey.cover_image?.replace('-cover.webp', '-thumb.webp');
+            return (
+              <CompactCard
+                key={survey.slug}
+                href={href}
+                image={thumb || survey.cover_image}
+                title={survey.title[l] || survey.title.en}
+                description={survey.description[l] || survey.description.en}
+                number={`S${survey.survey_number}`}
+                date={new Date(survey.updated_at || survey.published_at).toISOString().slice(0, 10)}
+                tags={survey.tech_stack.slice(0, 3)}
+                external={!survey.embed_url}
+              />
+            );
+          })}
+        </LatestSection>
       )}
 
       {/* Latest Projects */}
       {projects.length > 0 && (
-        <section className="py-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-[540] text-text-primary tracking-tight">
-              {dict.home.latest_projects}
-            </h2>
-            <Link
-              href={`/${lang}/projects`}
-              className="text-sm text-text-muted hover:text-accent transition-colors"
-            >
-              {dict.home.view_all} &rarr;
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {projects.map((project) => (
-              <ProjectCard key={project.slug} project={project} locale={lang} />
-            ))}
-          </div>
-        </section>
+        <LatestSection
+          title={dict.home.latest_projects}
+          viewAllHref={`/${lang}/projects`}
+          viewAllText={dict.home.view_all}
+          showMoreText={dict.home.show_more}
+          emptyText={dict.home.no_posts_yet}
+        >
+          {projects.map((project) => {
+            const primaryLink = project.links[0]?.url;
+            const href = project.embed_url
+              ? `/${lang}/projects/${project.slug}`
+              : primaryLink || '#';
+            const thumb = project.cover_image?.replace('-cover.webp', '-thumb.webp');
+            return (
+              <CompactCard
+                key={project.slug}
+                href={href}
+                image={thumb || project.cover_image}
+                title={project.title[l] || project.title.en}
+                description={project.description[l] || project.description.en}
+                number={project.project_number != null ? `P${project.project_number}` : undefined}
+                date={new Date(project.published_at).toLocaleDateString(lang === 'ko' ? 'ko-KR' : 'en-US', { year: 'numeric', month: 'short' })}
+                tags={project.tech_stack.slice(0, 3)}
+                external={!project.embed_url}
+              />
+            );
+          })}
+        </LatestSection>
       )}
     </div>
   );

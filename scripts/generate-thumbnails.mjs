@@ -115,10 +115,62 @@ async function generateThumbnails() {
     }
   }
 
-  console.log(`Thumbnails: ${generated} generated, ${skipped} up-to-date.`);
+  console.log(`Post thumbnails: ${generated} generated, ${skipped} up-to-date.`);
 }
 
-generateThumbnails().catch((err) => {
+/**
+ * Generate thumbnails for project/survey cover images in public/images/projects/.
+ * Produces 288×288 square thumbs (*-thumb.webp) from *-cover.webp sources.
+ */
+async function generateProjectThumbnails() {
+  const srcDir = join(process.cwd(), 'public', 'images', 'projects');
+  let files;
+  try {
+    files = await readdir(srcDir);
+  } catch {
+    return;
+  }
+
+  const coverFiles = files.filter(f => f.endsWith('-cover.webp'));
+  let generated = 0;
+  let skipped = 0;
+
+  for (const coverFile of coverFiles) {
+    const srcPath = join(srcDir, coverFile);
+    const thumbName = coverFile.replace('-cover.webp', '-thumb.webp');
+    const thumbPath = join(srcDir, thumbName);
+
+    const srcStat = await stat(srcPath);
+    try {
+      const ts = await stat(thumbPath);
+      if (ts.mtimeMs >= srcStat.mtimeMs) {
+        skipped++;
+        continue;
+      }
+    } catch {
+      /* thumb doesn't exist yet */
+    }
+
+    try {
+      await sharp(srcPath)
+        .resize(SIZE, SIZE, { fit: 'cover', position: 'centre' })
+        .webp({ quality: 80 })
+        .toFile(thumbPath);
+      generated++;
+    } catch (err) {
+      console.warn(`Failed project thumb: ${coverFile}:`, err.message);
+    }
+  }
+
+  if (generated > 0 || skipped > 0) {
+    console.log(`Project thumbnails: ${generated} generated, ${skipped} up-to-date.`);
+  }
+}
+
+Promise.all([
+  generateThumbnails(),
+  generateProjectThumbnails(),
+]).catch((err) => {
   console.error('Thumbnail generation failed:', err);
   process.exit(1);
 });
