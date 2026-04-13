@@ -1,11 +1,12 @@
 'use client';
 
 import { useRef } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import type { Locale } from '@/lib/i18n';
 
 export default function LanguageSwitcher({ locale }: { locale: Locale }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const navigatingRef = useRef(false);
 
@@ -20,9 +21,10 @@ export default function LanguageSwitcher({ locale }: { locale: Locale }) {
     localStorage.setItem('preferred-lang', altLocale);
     document.cookie = `preferred-lang=${altLocale};path=/;max-age=${60 * 60 * 24 * 365}`;
 
-    // Navigate to same path with new locale
+    // Navigate to same path with new locale, preserving query params
     const newPath = pathname.replace(`/${locale}`, `/${altLocale}`);
-    router.push(newPath);
+    const qs = searchParams.toString();
+    router.push(qs ? `${newPath}?${qs}` : newPath);
 
     // Release guard after navigation settles
     setTimeout(() => {
