@@ -23,15 +23,22 @@ interface HeaderProps {
     nav: { home: string; about: string; projects: string; surveys: string };
   };
   navTabs: NavTabItem[];
-  sessionLabel?: string | null;
 }
 
-function SettingsDropdown({ sessionLabel, locale }: { sessionLabel?: string | null; locale: Locale }) {
+function SettingsDropdown({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [sessionLabel, setSessionLabel] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
+
+  useEffect(() => {
+    fetch('/api/session')
+      .then(r => r.json())
+      .then(d => setSessionLabel(d.sessionLabel))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -51,11 +58,15 @@ function SettingsDropdown({ sessionLabel, locale }: { sessionLabel?: string | nu
     setOpen(false);
   }
 
+  const searchParams = useSearchParams();
+
   function switchLanguage() {
     const altLocale = locale === 'ko' ? 'en' : 'ko';
     localStorage.setItem('preferred-lang', altLocale);
     document.cookie = `preferred-lang=${altLocale};path=/;max-age=${60 * 60 * 24 * 365}`;
-    router.push(pathname.replace(`/${locale}`, `/${altLocale}`));
+    const newPath = pathname.replace(`/${locale}`, `/${altLocale}`);
+    const qs = searchParams.toString();
+    router.push(qs ? `${newPath}?${qs}` : newPath);
     setOpen(false);
   }
 
@@ -137,7 +148,7 @@ function SettingsDropdown({ sessionLabel, locale }: { sessionLabel?: string | nu
   );
 }
 
-function HeaderInner({ locale, dict, navTabs, sessionLabel }: HeaderProps) {
+function HeaderInner({ locale, dict, navTabs }: HeaderProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -236,14 +247,14 @@ function HeaderInner({ locale, dict, navTabs, sessionLabel }: HeaderProps) {
 
             <div className="flex items-center gap-2 ml-4">
               <LanguageSwitcher locale={locale} />
-              <SettingsDropdown sessionLabel={sessionLabel} locale={locale} />
+              <SettingsDropdown locale={locale} />
             </div>
           </nav>
 
           {/* Mobile: icon buttons + hamburger */}
           <div className="flex items-center gap-2 md:hidden">
             <LanguageSwitcher locale={locale} />
-            <SettingsDropdown sessionLabel={sessionLabel} locale={locale} />
+            <SettingsDropdown locale={locale} />
             <button
               className="p-2 text-text-secondary"
               onClick={() => setMobileOpen(!mobileOpen)}

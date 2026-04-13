@@ -5,7 +5,7 @@ import { Container } from '@/components/ui/Container';
 import ProjectCard from '@/components/ProjectCard';
 import type { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export function generateStaticParams() {
   return [{ lang: 'ko' }, { lang: 'en' }];

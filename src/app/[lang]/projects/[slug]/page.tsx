@@ -4,7 +4,7 @@ import { getProject, loadPublicProjects } from '@/lib/projects';
 import ProjectEmbed from '@/components/ProjectEmbed';
 import type { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export async function generateStaticParams() {
   const projects = await loadPublicProjects();

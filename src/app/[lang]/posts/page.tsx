@@ -4,7 +4,7 @@ import { buildContentIndexProps } from '@/lib/content-page-helpers';
 import ContentIndexPage from '@/components/ContentIndexPage';
 import type { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export function generateStaticParams() {
   return [{ lang: 'ko' }, { lang: 'en' }];
