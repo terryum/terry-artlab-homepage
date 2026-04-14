@@ -1,0 +1,104 @@
+---
+locale: "en"
+translation_of: "2604-self-driving-labs:ko"
+title: "Self-Driving Labs: When AI Robots Run Scientific Experiments Autonomously"
+subtitle: "From hypothesis to experiment — labs that run without humans"
+summary: "Self-driving labs combining AI and robotics are beginning to autonomously perform the full loop of scientific experimentation — from hypothesis generation to experiment design, execution, and analysis. Systems like Eve, Coscientist, and AISF are implementing the scientific method inside machines, with some already showing 'superhuman' experiment design in certain domains."
+card_summary: "Self-driving labs combining AI and robotics are beginning to autonomously perform the full loop of scientific experimentation — from hypothesis generation to experiment design, execution, and analysis. Systems like Eve, Coscientist, and AISF are implementing the scientific method inside machines, with some already showing 'superhuman' experiment design in certain domains."
+cover_caption: "The robot scientist Eve at Chalmers University of Technology. A 5m×5m×3m autonomous experimental platform that automates early-stage drug design."
+published_at: "2026-04-15T00:00:00Z"
+source_type: "Nature"
+source_url: "https://www.nature.com/articles/d41586-026-00974-2"
+source_date: "2026-04-02T00:00:00Z"
+display_tags:
+  - "AI Agent"
+  - "Autonomous Lab"
+  - "Scientific Discovery"
+  - "Robotics"
+terrys_memo: ""
+references:
+  - title: "Coscientist: Autonomous chemical research with large language models"
+    author: "Daniil A. Boiko et al."
+    description: "GPT-4-based LLM system that interprets scientific problems, designs experiments, and interfaces with robotic hardware for autonomous chemical research. Demonstrated optimization of palladium-catalyzed organic reactions and featured as a next-generation self-driving lab example in the article."
+    arxiv_url: ""
+    scholar_url: ""
+    project_url: "https://www.nature.com/articles/s41586-023-06792-0"
+    category: "foundational"
+  - title: "AI Co-scientist"
+    author: "Google"
+    description: "Multi-agent LLM system for autonomous scientific hypothesis generation. Complementary to self-driving labs — while self-driving labs automate physical experiments, AI Co-scientist automates the hypothesis generation stage."
+    arxiv_url: ""
+    scholar_url: ""
+    project_url: ""
+    post_slug: "2502-ai-co-scientist"
+    category: "recent"
+  - title: "Automated Alignment Researchers"
+    author: "Anthropic"
+    description: "AI agents delegated full research loops. Self-driving labs automate physical experiments while AAR automates ML experiments — same paradigm, different domains."
+    arxiv_url: ""
+    scholar_url: ""
+    project_url: "https://www.anthropic.com/research/automated-alignment-researchers"
+    post_slug: "2604-automated-alignment-researchers"
+    category: "recent"
+translated_to: []
+---
+
+## TL;DR
+
+Self-driving labs combining AI and robotics are beginning to autonomously run the full scientific method loop — from hypothesis generation to experiment execution to result analysis. Drug design (Eve), LLM-based chemical synthesis (Coscientist), and materials discovery (AISF) are already showing experiment design capabilities beyond human level.
+
+## Problem
+
+The core loop of scientific research — literature review, hypothesis generation, experiment design, execution, data analysis, and deciding the next hypothesis — is mostly done manually. As Ross King puts it, **"a lot of biology is done like craft work"**: a lab with a PI, postdocs, and students operates much like an artisan with apprentices. Automated liquid handling and sample analysis have existed since the 1980s, but systems that autonomously design and execute the entire experimental cycle are still in their infancy.
+
+## Key Idea
+
+Self-driving labs integrate AI, robotics, and automated instrumentation to **design and perform experiments with minimal human input**. Key systems featured in the article:
+
+- **Eve** (Chalmers University): A 5m×5m robotic platform that autonomously screened 1,600 compounds to discover antimalarial drug candidates. Successor **Genesis** targets 10,000 mass spectrometry measurements per day at 1/5 the footprint and 10× cost efficiency
+- **Coscientist** (CMU): GPT-4-powered system that takes natural language instructions → interprets scientific problems → designs experiments → controls robotic hardware. Demonstrated palladium-catalyzed organic reaction optimization
+- **AISF** (Caltech/Google DeepMind): AI-Integrated Scientific Facility. Improved non-precious-metal catalyst performance to rival precious metals, autonomously adopting "completely foreign" material combinations
+
+<Figure src="./fig-1.jpeg" caption="The robot scientist Eve at Chalmers University of Technology. A 5m×5m×3m autonomous experimental platform where AI formulates hypotheses and robotic arms execute experiments." />
+
+<Collapsible title="Detailed Methods">
+
+### Bayesian Optimization vs LLM-guided Optimization
+
+Traditional self-driving labs primarily use **Bayesian optimization** — probabilistic modeling to select experiments most likely to improve current results. Coscientist's LLM-guided optimization is pretrained with chemical knowledge, giving it an edge over conventional Bayesian approaches. It demonstrated synthesis optimization in approximately 20 iterative experimental cycles.
+
+### Accessibility Expansion
+
+Lila Sciences aims to provide autonomous lab services to organizations without their own automation infrastructure. Periodic Labs, founded by former Google DeepMind researcher Ekin Dogus Cubuk, takes a cloud-based approach enabling institutions without chemistry labs to perform autonomous experiments remotely.
+
+### Safety Controls
+
+Aspuru-Guzik and Bernales are developing a custom AI agent using quantum chemical modeling to predict safety issues for experiments with unknown reagent reactivity. Computer vision enables real-time problem detection and response.
+
+</Collapsible>
+
+## Key Results
+
+- **Eve**: Discovered triclosan's antimalarial activity (autonomous screening of 1,600 compounds)
+- **Genesis**: Targets 1/5 footprint, 10× cost efficiency vs Eve; 10,000 mass spectrometry measurements per day
+- **Coscientist**: Optimized palladium-catalyzed synthesis in ~20 iterative experimental cycles
+- **AISF**: Improved non-precious-metal catalyst performance to precious-metal levels, autonomously adopting experiment designs "completely foreign" to human researchers
+
+<Figure src="./fig-2.jpeg" caption="Lila Sciences' autonomous research facility, aiming to provide autonomous experimental platforms as a service to research-intensive organizations." />
+
+## Achievements and Limitations
+
+**Key achievements**
+- **Full scientific method loop implemented in machines** — hypothesis → design → execution → analysis — "science will be done differently, like in a factory" (King)
+- **Superhuman experiment design** reached in some domains — "It's been beautiful to see the departure from human-like design to, I believe, superhuman" (Gregoire)
+- LLM integration enables **natural language instruction-based** autonomous research (Coscientist, ORGANA)
+
+**Limitations**
+- "Don't understand the big picture" — whether AI can achieve true conceptual breakthroughs remains uncertain (King)
+- Safety control frameworks still incomplete — "There are a lot of pieces missing, especially in terms of safety" (Bernales)
+- Researcher resistance — "My lab is my kingdom and you shall not trespass" (Gomes)
+- 🤖 Most achievements are confined to narrow optimization domains (drug screening, catalyst discovery); no evidence yet of genuine hypothesis generation or conceptual innovation
+
+## Terry's Memo
+
+- *(None)*

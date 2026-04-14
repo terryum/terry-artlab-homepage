@@ -1,0 +1,104 @@
+---
+locale: "ko"
+title: "Self-Driving Labs: AI 로봇이 과학 실험을 자율 수행하는 시대"
+subtitle: "가설 수립부터 실험 수행까지, 인간 없이 돌아가는 연구실"
+summary: "AI와 로보틱스를 결합한 'self-driving lab'이 약물 설계, 재료 탐색, 화학 합성 등 과학 실험의 전체 루프를 자율적으로 수행하기 시작했다. Eve, Coscientist, AISF 등의 시스템이 가설 수립→실험 설계→수행→분석→반복의 과학적 방법을 기계 안에 구현하며, 일부 영역에서는 이미 인간 수준을 넘어선 '초인적' 실험 설계를 보이고 있다."
+card_summary: "AI와 로보틱스를 결합한 'self-driving lab'이 약물 설계, 재료 탐색, 화학 합성 등 과학 실험의 전체 루프를 자율적으로 수행하기 시작했다. Eve, Coscientist, AISF 등의 시스템이 가설 수립→실험 설계→수행→분석→반복의 과학적 방법을 기계 안에 구현하며, 일부 영역에서는 이미 인간 수준을 넘어선 '초인적' 실험 설계를 보이고 있다."
+cover_caption: "Chalmers University of Technology의 로봇 과학자 Eve. 5m×5m×3m 크기의 자율 실험 플랫폼으로, 초기 약물 설계 과정을 자동화한다."
+published_at: "2026-04-15T00:00:00Z"
+source_type: "Nature"
+source_url: "https://www.nature.com/articles/d41586-026-00974-2"
+source_date: "2026-04-02T00:00:00Z"
+display_tags:
+  - "AI Agent"
+  - "Autonomous Lab"
+  - "Scientific Discovery"
+  - "Robotics"
+terrys_memo: ""
+references:
+  - title: "Coscientist: Autonomous chemical research with large language models"
+    author: "Daniil A. Boiko et al."
+    description: "GPT-4 기반 LLM이 과학 문제를 해석하고 실험을 설계·수행하는 자율 화학 연구 시스템. 팔라듐 촉매 유기 반응 최적화를 시연했으며, 기사에서 차세대 self-driving lab의 대표 사례로 소개된다."
+    arxiv_url: ""
+    scholar_url: ""
+    project_url: "https://www.nature.com/articles/s41586-023-06792-0"
+    category: "foundational"
+  - title: "AI Co-scientist"
+    author: "Google"
+    description: "멀티에이전트 LLM이 자율적으로 과학 가설을 생성·토론·진화시키는 시스템. self-driving lab이 물리적 실험을 자동화한다면, AI Co-scientist는 가설 생성 단계를 자동화한다는 점에서 상호보완적이다."
+    arxiv_url: ""
+    scholar_url: ""
+    project_url: ""
+    post_slug: "2502-ai-co-scientist"
+    category: "recent"
+  - title: "Automated Alignment Researchers"
+    author: "Anthropic"
+    description: "AI 에이전트에게 연구 루프 전체를 위임하는 접근. self-driving lab이 물리 실험을, AAR이 ML 실험을 자동화한다는 점에서 같은 패러다임의 다른 영역 적용이다."
+    arxiv_url: ""
+    scholar_url: ""
+    project_url: "https://www.anthropic.com/research/automated-alignment-researchers"
+    post_slug: "2604-automated-alignment-researchers"
+    category: "recent"
+translated_to:
+  - "en"
+---
+
+## TL;DR
+
+AI와 로보틱스를 결합한 "self-driving lab"이 가설 수립부터 실험 수행, 결과 분석까지 과학적 방법의 전체 루프를 자율적으로 돌리기 시작했다. 약물 설계(Eve), LLM 기반 화학 합성(Coscientist), 재료 탐색(AISF) 등에서 이미 인간을 넘어서는 실험 설계 능력을 보이고 있다.
+
+## 문제
+
+과학 연구의 핵심 루프—문헌 조사, 가설 수립, 실험 설계, 수행, 데이터 분석, 다음 가설 결정—는 대부분 수동으로 이루어진다. Ross King의 표현대로, **"많은 생물학이 수공예처럼 이루어진다"**: PI, 포닥, 학생이 장인과 도제처럼 일한다. 자동화된 액체 처리와 샘플 분석은 1980년대부터 존재했지만, 실험의 전체 사이클을 자율적으로 설계하고 수행하는 시스템은 아직 초기 단계다.
+
+## 핵심 아이디어
+
+Self-driving lab은 AI, 로보틱스, 자동화된 계측을 통합하여 **최소한의 인간 개입으로 실험을 설계하고 수행**하는 플랫폼이다. 기사에서 소개된 주요 시스템들:
+
+- **Eve** (Chalmers University): 5m×5m의 로봇 플랫폼. 1,600개 화합물을 자율 스크리닝하여 항말라리아 약물 후보 발견. 후속 시스템 **Genesis**는 하루 10,000개 질량분석 측정 가능, Eve의 1/5 공간에 최소 10배 비용 효율 목표
+- **Coscientist** (CMU): GPT-4 기반으로 자연어 지시를 받아 과학 문제 해석 → 정보 수집 → 실험 설계 → 로봇 하드웨어 제어까지 수행. 팔라듐 촉매 유기 반응 최적화 시연
+- **AISF** (Caltech/Google DeepMind): AI-Integrated Scientific Facility. 비귀금속 촉매를 귀금속 수준으로 개선. 인간 실험 설계에서 벗어나 "완전히 낯선" 재료 조합 탐색
+
+<Figure src="./fig-1.jpeg" caption="Chalmers University of Technology의 로봇 과학자 Eve. 5m×5m×3m 크기의 자율 실험 플랫폼으로, AI가 가설을 수립하고 로봇 팔이 실험을 수행한다." />
+
+<Collapsible title="구체적 방법">
+
+### Bayesian Optimization vs LLM-guided Optimization
+
+기존 self-driving lab은 주로 **Bayesian optimization**을 사용한다—확률적 모델링으로 현재 결과를 개선할 가능성이 가장 높은 실험과 조건을 선택하는 방식. Coscientist의 LLM 기반 최적화는 화학 지식으로 사전학습되어 있어 기존 Bayesian 접근보다 유리할 수 있다. 약 20회의 반복 실험 사이클로 합성을 최적화하는 것을 시연했다.
+
+### 접근 가능성 확대
+
+Lila Sciences는 자체 자동화 인프라 없이도 생물학 연구를 수행할 수 있는 서비스형 자율 연구실을 목표로 한다. Google DeepMind 출신 Ekin Dogus Cubuk이 설립한 Periodic Labs는 클라우드 기반 접근으로, 화학 실험실이 없는 연구기관도 원격으로 자율 실험을 수행할 수 있게 한다.
+
+### 안전 제어
+
+Aspuru-Guzik와 Bernales는 양자화학 모델링을 사용하여 시약 반응성이 알려지지 않은 실험의 안전 문제를 예측하는 맞춤형 AI 에이전트를 개발 중이다. 컴퓨터 비전으로 실시간 문제 감지 및 대응도 구현하고 있다.
+
+</Collapsible>
+
+## 주요 결과
+
+- **Eve**: 항말라리아 활성을 가진 triclosan 발견 (1,600개 화합물 자율 스크리닝)
+- **Genesis**: Eve 대비 1/5 공간, 최소 10배 비용 효율 목표. 하루 10,000개 질량분석 측정
+- **Coscientist**: ~20회 반복 실험 사이클로 팔라듐 촉매 합성 최적화 달성
+- **AISF**: 비귀금속 촉매 성능을 귀금속 수준으로 개선. 인간과 "완전히 다른" 실험 설계 전략을 자율적으로 채택
+
+<Figure src="./fig-2.jpeg" caption="Lila Sciences의 자율 연구실. 연구 집약적 기관에 서비스형 자율 실험 플랫폼을 제공하는 것을 목표로 한다." />
+
+## 달성점과 한계점
+
+**새롭게 달성한 점**
+- 가설 수립→실험 설계→수행→분석의 **과학적 방법 전체 루프를 기계 안에 구현** — "과학이 공장처럼 이루어질 것" (King)
+- 일부 영역에서 **초인적 실험 설계** 도달 — "1년 전의 인간적 실험 설계에서 초인적 수준으로의 이탈이 아름다웠다" (Gregoire)
+- LLM 통합으로 **자연어 지시 기반** 자율 연구가 가능해짐 (Coscientist, ORGANA)
+
+**한계점**
+- "큰 그림을 이해하지 못한다" — 진정한 개념적 돌파구를 AI가 만들 수 있을지는 미지수 (King)
+- 안전 제어 체계가 아직 불완전 — "특히 안전 면에서 빠진 조각이 많다" (Bernales)
+- 기존 연구자들의 저항 — "내 실험실은 내 왕국이고 너는 침범하지 말라" (Gomes)
+- 🤖 대부분의 성과가 좁은 최적화 영역(약물 스크리닝, 촉매 탐색)에 국한되며, 진정한 가설 생성·개념 혁신에 대한 증거는 아직 없음
+
+## Terry's Memo
+
+- *(None)*

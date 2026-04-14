@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-14T23:09:51.801Z",
-  "total_posts": 30,
+  "generated_at": "2026-04-14T23:19:57.817Z",
+  "total_posts": 31,
   "posts": [
     {
       "post_number": 1,
@@ -2075,6 +2075,77 @@
       ],
       "visibility": "public",
       "allowed_groups": []
+    },
+    {
+      "post_number": 31,
+      "slug": "2604-self-driving-labs",
+      "content_type": "papers",
+      "title_en": "Self-Driving Labs: When AI Robots Run Scientific Experiments Autonomously",
+      "title_ko": "Self-Driving Labs: AI 로봇이 과학 실험을 자율 수행하는 시대",
+      "summary_ko": "AI와 로보틱스를 결합한 'self-driving lab'이 약물 설계, 재료 탐색, 화학 합성 등 과학 실험의 전체 루프를 자율적으로 수행하기 시작했다. Eve, Coscientist, AISF 등의 시스템이 가설 수립→실험 설계→수행→분석→반복의 과학적 방법을 기계 안에 구현하며, 일부 영역에서는 이미 인간 수준을 넘어선 '초인적' 실험 설계를 보이고 있다.",
+      "summary_en": "Self-driving labs combining AI and robotics are beginning to autonomously perform the full loop of scientific experimentation — from hypothesis generation to experiment design, execution, and analysis. Systems like Eve, Coscientist, and AISF are implementing the scientific method inside machines, with some already showing 'superhuman' experiment design in certain domains.",
+      "domain": "ai",
+      "subfields": [
+        "autonomous-lab",
+        "scientific-discovery",
+        "ai-robotics"
+      ],
+      "key_concepts": [
+        "self-driving-lab",
+        "autonomous-experimentation",
+        "bayesian-optimization",
+        "llm-guided-research",
+        "robot-scientist"
+      ],
+      "methodology": [
+        "autonomous-agent",
+        "bayesian-optimization",
+        "llm-integration",
+        "robotic-automation"
+      ],
+      "contribution_type": "survey",
+      "tags": [
+        "Papers",
+        "AI Agent",
+        "Autonomous Lab",
+        "Scientific Discovery",
+        "Robotics"
+      ],
+      "source_author": "Rachel Brazil",
+      "source_date": "2026-04-02T00:00:00Z",
+      "published_at": "2026-04-15T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "Nature survey on self-driving labs: AI+robotics platforms autonomously running the full scientific experimentation loop",
+        "problem": "Scientific experimentation is mostly manual craft work — humans are the bottleneck in the experiment-evaluate-iterate loop",
+        "solution": "Self-driving labs integrating AI, robotics, and automated instrumentation to design and perform experiments with minimal human input",
+        "key_result": "Eve discovered antimalarial compounds from 1,600 candidates; Coscientist optimized synthesis in ~20 cycles; AISF achieved superhuman experiment design in catalyst discovery",
+        "limitations": [
+          "Cannot understand the big picture or achieve conceptual breakthroughs",
+          "Safety control frameworks incomplete",
+          "Researcher resistance to automation"
+        ]
+      },
+      "relations": [
+        {
+          "slug": "2502-ai-co-scientist",
+          "type": "related"
+        },
+        {
+          "slug": "2604-automated-alignment-researchers",
+          "type": "related"
+        },
+        {
+          "slug": "2603-autoresearch-autonomous-ml",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "ai/agent",
+      "taxonomy_secondary": [],
+      "visibility": "public",
+      "allowed_groups": []
     }
   ],
   "knowledge_graph": {
@@ -2361,6 +2432,18 @@
       {
         "from": "2603-autoresearch-autonomous-ml",
         "type": "related"
+      },
+      {
+        "from": "2604-self-driving-labs",
+        "type": "related"
+      },
+      {
+        "from": "2604-self-driving-labs",
+        "type": "related"
+      },
+      {
+        "from": "2604-self-driving-labs",
+        "type": "related"
       }
     ],
     "clusters": [
@@ -2442,7 +2525,8 @@
           22,
           25,
           28,
-          30
+          30,
+          31
         ],
         "core_concepts": [
           "autonomous-research",
@@ -3013,12 +3097,27 @@
     ],
     "validation-loss": [
       30
+    ],
+    "self-driving-lab": [
+      31
+    ],
+    "autonomous-experimentation": [
+      31
+    ],
+    "bayesian-optimization": [
+      31
+    ],
+    "llm-guided-research": [
+      31
+    ],
+    "robot-scientist": [
+      31
     ]
   },
   "domain_stats": {
     "robotics": 21,
     "ml": 2,
-    "ai": 5,
+    "ai": 6,
     "philosophy": 2
   },
   "taxonomy_stats": {
@@ -3029,7 +3128,7 @@
     "robotics/arm/exoskeleton": 3,
     "robotics/hand:secondary": 1,
     "robotics/hand/dexterous": 2,
-    "ai/agent": 6,
+    "ai/agent": 7,
     "robotics/hand/dexterous:secondary": 4,
     "robotics/arm/exoskeleton:secondary": 1,
     "robotics/brain": 8,
@@ -3037,6 +3136,6 @@
     "robotics/arm": 4,
     "robotics/hand": 8,
     "robotics": 20,
-    "ai": 6
+    "ai": 7
   }
 }

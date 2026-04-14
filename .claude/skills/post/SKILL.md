@@ -29,6 +29,15 @@ argument-hint: "<URL | --type=blog slug | virtual 자연어요청 | synthesis UR
 /post synthesis https://github.com/user/repo https://x.com/user/status/123  → Synthesis
 ```
 
+### PDF Fallback 규칙 (URL 접근 불가 시)
+- URL이 접근 불가(403/402/303 등)이고 사용자가 `--pdf=<path>` 또는 별도 PDF 파일 경로를 제공한 경우:
+  1. WebFetch 먼저 시도 → 실패 시 PDF로 fallback
+  2. PDF에서 `pymupdf`로 텍스트 추출 + 이미지 추출
+  3. 추출된 텍스트로 메타데이터(제목, 저자, 날짜) 파악
+  4. 추출된 이미지에서 cover 후보 선택
+  5. 나머지 파이프라인은 해당 소스 경로(학술/블로그)와 동일하게 진행
+- PDF 파일은 `posts/papers/<slug>/paper/<slug>.pdf`에 복사
+
 ### 인덱싱 규칙 (`docs/INDEXING.md` 참조)
 - 공개 포스트: 양수 ID (global-index.json의 `next_public_id` 사용)
 - `--from`으로 Draft에서 발행 시:
