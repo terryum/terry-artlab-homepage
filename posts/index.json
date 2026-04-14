@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-13T00:05:17.206Z",
-  "total_posts": 27,
+  "generated_at": "2026-04-14T21:37:50.296Z",
+  "total_posts": 28,
   "posts": [
     {
       "post_number": 1,
@@ -1865,6 +1865,74 @@
       "taxonomy_secondary": [],
       "visibility": "public",
       "allowed_groups": []
+    },
+    {
+      "post_number": 28,
+      "slug": "2604-automated-alignment-researchers",
+      "content_type": "papers",
+      "title_en": "Automated Alignment Researchers: Using LLMs to Scale Scalable Oversight",
+      "title_ko": "Automated Alignment Researchers: LLM으로 확장 가능한 정렬 감독 구현하기",
+      "summary_ko": "프론티어 모델이 빠르게 발전하면서 정렬 연구가 따라갈 수 있는지, 그리고 인간보다 똑똑해진 모델을 어떻게 감독할 수 있는지가 핵심 과제다. Anthropic은 9개의 Claude Opus 4.6 인스턴스(Automated Alignment Researchers)에게 샌드박스 환경과 협업 포럼을 제공하여 weak-to-strong supervision 연구를 수행하게 했으며, 인간 연구자의 PGR 0.23 대비 PGR 0.97을 달성했다.",
+      "summary_en": "As frontier models advance rapidly, keeping alignment research in pace and overseeing models smarter than humans are critical challenges. Anthropic equipped nine Claude Opus 4.6 instances (Automated Alignment Researchers) with sandboxed workspaces and collaboration forums to conduct weak-to-strong supervision research, achieving PGR 0.97 compared to human researchers' PGR 0.23.",
+      "domain": "ai",
+      "subfields": [
+        "alignment",
+        "scalable-oversight",
+        "agent-research"
+      ],
+      "key_concepts": [
+        "weak-to-strong-supervision",
+        "PGR",
+        "automated-research",
+        "scalable-oversight",
+        "reward-hacking"
+      ],
+      "methodology": [
+        "multi-agent-research",
+        "fine-tuning",
+        "weak-to-strong-generalization"
+      ],
+      "contribution_type": "empirical",
+      "tags": [
+        "Papers",
+        "AI Safety",
+        "Alignment",
+        "Scalable Oversight",
+        "LLM Agent"
+      ],
+      "source_author": "Anthropic",
+      "source_date": "2026-04-14T00:00:00Z",
+      "published_at": "2026-04-15T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "Nine Claude Opus 4.6 instances achieved PGR 0.97 on weak-to-strong supervision, far surpassing human researchers' PGR 0.23",
+        "problem": "Alignment research cannot keep pace with frontier model advancement; scalable oversight of superhuman models is unsolved",
+        "solution": "Automated Alignment Researchers: nine Claude instances with sandboxed workspaces, shared forums, and diverse initial prompts conducting independent alignment research",
+        "key_result": "PGR 0.97 in 5 days (800 hours, ~$18k) vs human PGR 0.23 in 7 days; math generalization PGR 0.94, coding PGR 0.47",
+        "limitations": [
+          "No significant improvement at production scale (Claude Sonnet 4)",
+          "Reward hacking attempts observed",
+          "Methods may become alien science difficult for humans to verify"
+        ]
+      },
+      "relations": [
+        {
+          "slug": "2502-ai-co-scientist",
+          "type": "related"
+        },
+        {
+          "slug": "2604-harnessing-claude-intelligence",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "ai/agent",
+      "taxonomy_secondary": [
+        "ai/llm"
+      ],
+      "visibility": "public",
+      "allowed_groups": []
     }
   ],
   "knowledge_graph": {
@@ -2123,6 +2191,14 @@
         "from": "2604-harnessing-claude-intelligence",
         "to": "2502-ai-co-scientist",
         "type": "related"
+      },
+      {
+        "from": "2604-automated-alignment-researchers",
+        "type": "related"
+      },
+      {
+        "from": "2604-automated-alignment-researchers",
+        "type": "related"
       }
     ],
     "clusters": [
@@ -2202,7 +2278,8 @@
           11,
           21,
           22,
-          25
+          25,
+          28
         ],
         "core_concepts": [
           "context-management"
@@ -2715,12 +2792,27 @@
     ],
     "bottleneck-is-self": [
       27
+    ],
+    "weak-to-strong-supervision": [
+      28
+    ],
+    "PGR": [
+      28
+    ],
+    "automated-research": [
+      28
+    ],
+    "scalable-oversight": [
+      28
+    ],
+    "reward-hacking": [
+      28
     ]
   },
   "domain_stats": {
     "robotics": 20,
     "ml": 2,
-    "ai": 3,
+    "ai": 4,
     "philosophy": 2
   },
   "taxonomy_stats": {
@@ -2731,14 +2823,14 @@
     "robotics/arm/exoskeleton": 3,
     "robotics/hand:secondary": 1,
     "robotics/hand/dexterous": 2,
-    "ai/agent": 4,
+    "ai/agent": 5,
     "robotics/hand/dexterous:secondary": 4,
     "robotics/arm/exoskeleton:secondary": 1,
     "robotics/brain": 7,
-    "ai/llm:secondary": 3,
+    "ai/llm:secondary": 4,
     "robotics/arm": 4,
     "robotics/hand": 8,
     "robotics": 19,
-    "ai": 4
+    "ai": 5
   }
 }

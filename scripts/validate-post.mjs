@@ -111,7 +111,10 @@ async function validatePost(category, slug) {
 
   // Papers-specific required fields
   if (category === 'papers') {
+    const isBlogSource = meta.source_type && meta.source_type !== 'arXiv';
     for (const field of META_REQUIRED_PAPERS) {
+      // google_scholar_url is N/A for blog-sourced posts — null is acceptable
+      if (field === 'google_scholar_url' && isBlogSource && meta[field] === null) continue;
       if (meta[field] === undefined || meta[field] === null || meta[field] === '') {
         err(`meta.json missing papers-required field: ${field}`);
       }
