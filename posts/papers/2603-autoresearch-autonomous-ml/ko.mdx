@@ -1,0 +1,111 @@
+---
+locale: "ko"
+title: "autoresearch: AI 에이전트가 밤새 ML 실험을 돌리는 시대"
+subtitle: "Karpathy의 자율 ML 연구 프레임워크, 700개 실험으로 GPT-2 학습 11% 단축"
+summary: "ML 연구의 반복적 실험-평가-개선 루프를 AI 에이전트에게 위임할 수 있을까? Karpathy의 autoresearch는 단일 train.py를 AI 에이전트가 자율적으로 수정·실험·평가하는 프레임워크로, 2일간 700개 실험을 자율 수행하여 GPT-2 학습 시간을 2.02시간에서 1.80시간으로 11% 단축했다."
+card_summary: "ML 연구의 반복적 실험-평가-개선 루프를 AI 에이전트에게 위임할 수 있을까? Karpathy의 autoresearch는 단일 train.py를 AI 에이전트가 자율적으로 수정·실험·평가하는 프레임워크로, 2일간 700개 실험을 자율 수행하여 GPT-2 학습 시간을 2.02시간에서 1.80시간으로 11% 단축했다."
+cover_caption: "Autotune Progress: 276 Experiments, 29 Kept Improvements — validation BPB가 실험이 진행됨에 따라 지속적으로 하락하는 모습"
+published_at: "2026-04-15T00:00:00Z"
+source_type: "GitHub"
+source_url: "https://github.com/karpathy/autoresearch"
+source_date: "2026-03-26T00:00:00Z"
+display_tags:
+  - "AI Agent"
+  - "Autonomous Research"
+  - "LLM"
+  - "ML Optimization"
+terrys_memo: ""
+references:
+  - title: "nanochat"
+    author: "Andrej Karpathy"
+    description: "autoresearch가 최적화하는 대상 프로젝트. 단일 8×H100 노드에서 GPT-2 수준 모델을 학습하는 경량 코드베이스로, autoresearch의 에이전트가 이 프로젝트의 train.py를 자율적으로 수정하며 성능을 개선한다."
+    arxiv_url: ""
+    scholar_url: ""
+    project_url: "https://github.com/karpathy/nanochat"
+    category: "foundational"
+  - title: "autoresearch 첫 공개 트윗"
+    author: "Andrej Karpathy"
+    description: "AI 에이전트가 12시간 동안 nanochat에 110개 변경을 자동으로 시도하며 validation loss를 0.862415에서 0.858039로 낮춘 첫 실험 결과를 공유한 트윗."
+    arxiv_url: ""
+    scholar_url: ""
+    project_url: "https://x.com/karpathy/status/2029701092347630069"
+    category: "foundational"
+  - title: "autoresearch Round 1 결과 트윗"
+    author: "Andrej Karpathy"
+    description: "2일간 ~700개 실험 자율 수행 후 GPT-2 학습 시간이 2.02h→1.80h (11%)로 단축된 결과와 에이전트가 발견한 구체적 개선 사항들을 공유한 트윗."
+    arxiv_url: ""
+    scholar_url: ""
+    project_url: "https://x.com/karpathy/status/2031135152349524125"
+    category: "recent"
+  - title: "AI Co-scientist"
+    author: "Google"
+    description: "멀티에이전트 LLM이 자율적으로 과학적 가설을 생성·토론·진화시키는 시스템. autoresearch와 유사하게 AI에게 연구를 위임하지만, 범용 과학 발견이 아닌 ML 학습 최적화라는 좁은 영역에 집중한다는 점에서 대비된다."
+    arxiv_url: ""
+    scholar_url: ""
+    project_url: ""
+    post_slug: "2502-ai-co-scientist"
+    category: "recent"
+  - title: "Automated Alignment Researchers"
+    author: "Anthropic"
+    description: "9개의 Claude 인스턴스가 정렬 연구를 자율 수행하여 인간 연구자를 크게 능가한 실험. autoresearch와 마찬가지로 AI 에이전트에게 연구 루프를 위임하는 접근이지만, 정렬이라는 더 개방적인 문제를 다룬다."
+    arxiv_url: ""
+    scholar_url: ""
+    project_url: "https://www.anthropic.com/research/automated-alignment-researchers"
+    post_slug: "2604-automated-alignment-researchers"
+    category: "recent"
+translated_to:
+  - "en"
+---
+
+## TL;DR
+
+ML 연구자가 20년간 수동으로 해온 "실험 → 결과 확인 → 아이디어 수정 → 반복" 루프를 AI 에이전트에게 통째로 위임할 수 있을까? Karpathy의 autoresearch는 이를 현실로 만들었다. AI 에이전트가 train.py 하나를 자율적으로 수정·실험·평가하며, 2일간 약 700개 실험을 수행하여 GPT-2 학습 시간을 11% 단축하고 인간이 놓친 실제 버그와 최적화를 발견했다.
+
+## 문제
+
+ML 연구의 핵심 루프는 본질적으로 반복적이다: 아이디어를 떠올리고, 코드를 수정하고, 실험을 돌리고, validation loss를 확인하고, 다시 새 아이디어를 떠올린다. 이 과정을 Karpathy는 20년간 수동으로 해왔다. 문제는 **인간이 병목**이라는 것이다—실험이 돌아가는 동안 기다려야 하고, 한 번에 하나의 가설만 검증할 수 있으며, 잠을 자야 한다. GPU는 충분히 빠른데, 인간의 판단 루프가 따라가지 못한다.
+
+## 핵심 아이디어
+
+autoresearch의 설계는 극도로 단순하다:
+
+- **3개 파일**: `prepare.py`(고정 상수·데이터), `train.py`(에이전트가 수정하는 유일한 파일), `program.md`(인간이 작성하는 연구 지시서)
+- **고정 5분 시간 예산**: 모든 실험이 동일한 wall clock 시간으로 실행되어, 아키텍처/배치 크기/모델 크기 변경과 무관하게 공정 비교 가능
+- **단일 메트릭**: `val_bpb`(validation bits per byte) — 낮을수록 좋으며, 어휘 크기 독립적
+- **에이전트의 역할**: 실험 결과 시퀀스를 보고 다음 실험을 계획, train.py를 수정, 실험 실행, 결과 확인, 개선이면 merge, 아니면 discard
+
+> "I now have AI Agents iterating on nanochat automatically, so I'll just leave this running for a while, go relax a bit and enjoy the feeling of post-agi :)" — [@karpathy](https://x.com/karpathy/status/2029701092347630069)
+
+<Figure src="./fig-1.jpeg" caption="autoresearch의 첫 실행 로그. 12시간 동안 AI 에이전트가 110개의 변경을 시도하며 d12 모델의 validation loss를 0.862415에서 0.858039로 낮추었다. DISCARDED/KEPT 판정이 자동으로 이루어진다." />
+
+## 주요 결과
+
+- **Round 1 (2일, ~700개 실험)**: GPT-2 학습 시간 **2.02시간 → 1.80시간** (11% 단축)
+- 에이전트가 발견한 ~20개 개선이 모두 **additive**하고 더 큰 모델(depth=24)로도 **전이**됨
+- 에이전트가 발견한 구체적 버그/최적화:
+  - QKnorm에 scaler multiplier 누락 → attention이 지나치게 diffuse
+  - Value Embeddings에 정규화 미적용
+  - Banded attention 윈도우가 지나치게 보수적 (튜닝 누락)
+  - AdamW betas 설정 오류
+  - Weight decay 스케줄 및 네트워크 초기화 최적화
+
+> "Seeing the agent do this entire workflow end-to-end and all by itself as it worked through approx. 700 changes autonomously is wild." — [@karpathy](https://x.com/karpathy/status/2031135152349524125)
+
+<Figure src="./fig-2.jpeg" caption="Autotune Progress: 276 Experiments, 29 Kept Improvements. 에이전트가 자율적으로 실험을 수행하며 validation BPB를 지속적으로 낮추는 과정. 회색 점은 discard된 실험, 녹색 점은 keep된 개선이다." />
+
+## 달성점과 한계점
+
+**새롭게 달성한 점**
+- **즉시 사용 가능한 오픈소스 프레임워크**로 자율 ML 연구를 누구나 재현 가능 (MacOS, Windows, AMD 등 커뮤니티 포크 활발)
+- 20년 경력의 전문가가 이미 충분히 튜닝한 프로젝트에서도 **첫 시도에 11% 개선**을 달성 — 인간이 놓친 실제 버그 발견
+- 에이전트 발견이 **더 큰 모델로 전이**되는 것을 확인 — 작은 모델에서 발견한 최적화가 실용적 가치를 가짐
+
+**한계점**
+- 현재 **단일 파일(train.py) + 단일 GPU** 제약 — 실제 프론티어 모델 학습의 복잡성(다중 파일, 분산 학습)과 큰 차이
+- 에이전트가 "novel, ground-breaking research"이 아닌 **하이퍼파라미터 튜닝과 버그 수정** 수준에 머무름
+- 고정 5분 시간 예산이 실제 대규모 학습의 피드백 루프와 매우 다름
+- 🤖 멀티에이전트 협업과 대규모 스케일링은 언급만 되었고 구현/검증되지 않음 — "just engineering"이라는 주장은 아직 증명되지 않음
+
+## Terry's Memo
+
+- *(None)*

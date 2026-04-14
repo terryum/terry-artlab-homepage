@@ -1,0 +1,111 @@
+---
+locale: "en"
+translation_of: "2603-autoresearch-autonomous-ml:ko"
+title: "autoresearch: AI Agents Running ML Experiments Overnight"
+subtitle: "Karpathy's autonomous ML research framework — 700 experiments, 11% faster GPT-2 training"
+summary: "Can the iterative experiment-evaluate-improve loop of ML research be delegated to AI agents? Karpathy's autoresearch lets AI agents autonomously modify train.py, run experiments, and evaluate results. In 2 days and ~700 experiments, it reduced GPT-2 training time from 2.02h to 1.80h (11%) while finding real bugs that a 20-year expert had missed."
+card_summary: "Can the iterative experiment-evaluate-improve loop of ML research be delegated to AI agents? Karpathy's autoresearch lets AI agents autonomously modify train.py, run experiments, and evaluate results. In 2 days and ~700 experiments, it reduced GPT-2 training time from 2.02h to 1.80h (11%) while finding real bugs that a 20-year expert had missed."
+cover_caption: "Autotune Progress: 276 Experiments, 29 Kept Improvements — validation BPB steadily decreasing as experiments progress"
+published_at: "2026-04-15T00:00:00Z"
+source_type: "GitHub"
+source_url: "https://github.com/karpathy/autoresearch"
+source_date: "2026-03-26T00:00:00Z"
+display_tags:
+  - "AI Agent"
+  - "Autonomous Research"
+  - "LLM"
+  - "ML Optimization"
+terrys_memo: ""
+references:
+  - title: "nanochat"
+    author: "Andrej Karpathy"
+    description: "The target project that autoresearch optimizes. A lightweight codebase for training GPT-2 level models on a single 8×H100 node, whose train.py is autonomously modified by the autoresearch agent."
+    arxiv_url: ""
+    scholar_url: ""
+    project_url: "https://github.com/karpathy/nanochat"
+    category: "foundational"
+  - title: "autoresearch initial announcement tweet"
+    author: "Andrej Karpathy"
+    description: "Tweet sharing the first experiment results where an AI agent made 110 changes over 12 hours, reducing validation loss from 0.862415 to 0.858039 on the d12 model."
+    arxiv_url: ""
+    scholar_url: ""
+    project_url: "https://x.com/karpathy/status/2029701092347630069"
+    category: "foundational"
+  - title: "autoresearch Round 1 results tweet"
+    author: "Andrej Karpathy"
+    description: "Tweet sharing results after 2 days and ~700 autonomous experiments: GPT-2 training time reduced from 2.02h to 1.80h (11%), with specific improvements the agent discovered including QKnorm oversight and missing regularization."
+    arxiv_url: ""
+    scholar_url: ""
+    project_url: "https://x.com/karpathy/status/2031135152349524125"
+    category: "recent"
+  - title: "AI Co-scientist"
+    author: "Google"
+    description: "Multi-agent LLM system for autonomous scientific discovery. Similar to autoresearch in delegating research to AI, but targets general scientific hypothesis generation rather than ML training optimization."
+    arxiv_url: ""
+    scholar_url: ""
+    project_url: ""
+    post_slug: "2502-ai-co-scientist"
+    category: "recent"
+  - title: "Automated Alignment Researchers"
+    author: "Anthropic"
+    description: "Nine Claude instances conducting autonomous alignment research, dramatically outperforming human researchers. Like autoresearch, delegates the research loop to AI agents, but addresses the more open-ended problem of AI alignment."
+    arxiv_url: ""
+    scholar_url: ""
+    project_url: "https://www.anthropic.com/research/automated-alignment-researchers"
+    post_slug: "2604-automated-alignment-researchers"
+    category: "recent"
+translated_to: []
+---
+
+## TL;DR
+
+Can the "experiment → check results → revise idea → repeat" loop that ML researchers have done manually for 20 years be delegated wholesale to AI agents? Karpathy's autoresearch makes this real. An AI agent autonomously modifies train.py, runs experiments, and evaluates results — in 2 days it ran ~700 experiments, reducing GPT-2 training time by 11% and discovering real bugs that a veteran researcher had missed.
+
+## Problem
+
+The core loop of ML research is inherently iterative: come up with an idea, modify code, run an experiment, check validation loss, come up with new ideas based on results. Karpathy has done this manually for 20 years. The problem is that **the human is the bottleneck** — waiting while experiments run, testing only one hypothesis at a time, needing sleep. GPUs are fast enough; the human judgment loop can't keep up.
+
+## Key Idea
+
+autoresearch's design is radically simple:
+
+- **3 files**: `prepare.py` (fixed constants/data), `train.py` (the only file the agent modifies), `program.md` (human-written research instructions)
+- **Fixed 5-minute time budget**: Every experiment runs for the same wall clock time, enabling fair comparison regardless of architecture/batch size/model size changes
+- **Single metric**: `val_bpb` (validation bits per byte) — lower is better, vocabulary-size independent
+- **Agent's role**: Review the sequence of experiment results, plan the next experiment, modify train.py, run it, evaluate — merge if improved, discard if not
+
+> "I now have AI Agents iterating on nanochat automatically, so I'll just leave this running for a while, go relax a bit and enjoy the feeling of post-agi :)" — [@karpathy](https://x.com/karpathy/status/2029701092347630069)
+
+<Figure src="./fig-1.jpeg" caption="autoresearch's initial run log. Over 12 hours, the AI agent tried 110 changes, reducing the d12 model's validation loss from 0.862415 to 0.858039. DISCARDED/KEPT decisions are made automatically." />
+
+## Key Results
+
+- **Round 1 (2 days, ~700 experiments)**: GPT-2 training time **2.02h → 1.80h** (11% reduction)
+- All ~20 agent-discovered improvements were **additive** and **transferred** to larger models (depth=24)
+- Specific bugs/optimizations the agent found:
+  - Missing scaler multiplier on QKnorm → attention was too diffuse
+  - No regularization applied to Value Embeddings
+  - Banded attention window too conservative (tuning oversight)
+  - Misconfigured AdamW betas
+  - Optimized weight decay schedule and network initialization
+
+> "Seeing the agent do this entire workflow end-to-end and all by itself as it worked through approx. 700 changes autonomously is wild." — [@karpathy](https://x.com/karpathy/status/2031135152349524125)
+
+<Figure src="./fig-2.jpeg" caption="Autotune Progress: 276 Experiments, 29 Kept Improvements. The agent autonomously runs experiments, steadily reducing validation BPB. Gray dots are discarded experiments; green dots are kept improvements." />
+
+## Achievements and Limitations
+
+**Key achievements**
+- **Immediately usable open-source framework** enabling anyone to reproduce autonomous ML research (active community forks for MacOS, Windows, AMD)
+- **11% improvement on first attempt** on a project already well-tuned by a 20-year veteran — discovering real bugs the expert had missed
+- Agent discoveries **transfer to larger models** — optimizations found on small models have practical value at scale
+
+**Limitations**
+- Current constraint of **single file (train.py) + single GPU** — far from the complexity of frontier model training (multi-file, distributed)
+- Agent stays at the level of **hyperparameter tuning and bug fixing**, not "novel, ground-breaking research"
+- Fixed 5-minute time budget differs significantly from real large-scale training feedback loops
+- 🤖 Multi-agent collaboration and large-scale scaling are only mentioned, not implemented — the claim that this is "just engineering" remains unproven
+
+## Terry's Memo
+
+- *(None)*

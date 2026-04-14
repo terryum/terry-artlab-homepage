@@ -1,7 +1,7 @@
 ---
 name: post
-description: "Post 생성 파이프라인. arXiv URL → Research 포스트, 블로그/기술문서 URL → Research 포스트(blog 태그), --type=blog → Blog 포스트(memos/essays) 자동 생성. 커버 이미지 없을 시 /gemini-3-image-generation 사용."
-argument-hint: "<URL | --type=blog slug | virtual 자연어요청> [--tags=TAG1,TAG2] [--memo=메모] [--featured]"
+description: "Post 생성 파이프라인. arXiv URL → Research 포스트, 블로그/기술문서 URL → Research 포스트(blog 태그), --type=blog → Blog 포스트(memos/essays), synthesis → 다중 소스 종합 Research 포스트 자동 생성. 커버 이미지 없을 시 /gemini-3-image-generation 사용."
+argument-hint: "<URL | --type=blog slug | virtual 자연어요청 | synthesis URL1 URL2 ...> [--tags=TAG1,TAG2] [--memo=메모] [--featured]"
 ---
 
 # Post 생성 파이프라인
@@ -16,6 +16,7 @@ argument-hint: "<URL | --type=blog slug | virtual 자연어요청> [--tags=TAG1,
 - `--type=blog` 명시 또는 URL 없음 → **Blog 경로** (아래 Blog 섹션 실행)
 - `--from=<path>` 또는 `--from=#-N` 명시 → **Blog 경로** (Obsidian 초안에서 발행, `--type` 필수)
 - `virtual` 키워드로 시작 → **Virtual Paper 경로** (아래 Virtual 섹션 실행)
+- `synthesis` 키워드로 시작 → **Synthesis 경로** (아래 Synthesis 섹션 실행)
 
 ```
 /post https://arxiv.org/abs/2505.22159          → Research (arXiv)
@@ -25,6 +26,7 @@ argument-hint: "<URL | --type=blog slug | virtual 자연어요청> [--tags=TAG1,
 /post --type=essays --from=#-3                  → Blog (Obsidian 초안 발행)
 /post virtual --group=snu 촉각 잔차 학습 논문     → Virtual Paper
 /post virtual --from=~/path/to/draft.md         → Virtual Paper (MD 파일 기반)
+/post synthesis https://github.com/user/repo https://x.com/user/status/123  → Synthesis
 ```
 
 ### 인덱싱 규칙 (`docs/INDEXING.md` 참조)
@@ -402,7 +404,7 @@ R12.5와 동일
 
 ### Step B10.7) Style Guide Learning (optional, when --from was used)
 - Compare the original draft (--from file) with the final published MDX
-- If significant structural/tonal changes were made, update `posts/terry_writing_style_guide.md`
+- If significant structural/tonal changes were made, update `~/Documents/Obsidian Vault/terry_writing_style_guide.md`
 - Merge new patterns with existing rules; don't let the guide grow too long
 
 ### Step B11) 예외 발생 시 레슨 기록
@@ -634,3 +636,68 @@ R13과 동일
 - **Terry's memo AI 작성 금지**: 항상 빈 문자열
 - **references 섹션 충실히 작성**: 인용한 모든 실제 논문의 title, author, description, URL, 사이트 내 post_slug 포함
 - **figures 섹션**: 논문 내 주요 다이어그램/표를 직접 생성하여 포함 (GFM 마크다운 테이블 활용, 테이블 앞뒤 빈 줄 필수)
+
+---
+
+## Synthesis 경로 (다중 소스 종합)
+
+입력: `synthesis URL1 [URL2 ...] [--tags=TAG1,TAG2] [--memo=메모] [--featured]`
+
+여러 소스(GitHub, 블로그, 트윗, 논문 등)를 종합하여 **Research-style paper 요약 포스트**를 생성한다. Virtual Paper와 달리 실제 콘텐츠 기반이므로 가상 논문 고지가 불필요하다.
+
+```
+/post synthesis https://github.com/user/repo https://x.com/user/status/123
+/post synthesis https://blog.example.com/post https://arxiv.org/abs/2505.12345 --tags=AI,Agent
+```
+
+### Step SY1) 소스 수집
+
+- 각 URL에 대해 WebFetch로 내용 수집
+- **접근 불가 소스** (트윗 등 HTTP 402/403): 사용자에게 텍스트 복사 요청
+- **사용자 제공 이미지**: 대화에서 공유된 이미지를 figure로 활용
+- GitHub URL → README 기반 메타데이터 + 프로젝트 설명
+- 트윗 → blockquote로 본문에 인용, 출처 링크 명시
+
+### Step SY2) Slug + 메타데이터 결정
+
+- **slug**: `YYMM-<short-name>` (주 소스의 날짜 기준)
+- **source_type**: 주 소스 사이트명 (예: `"GitHub"`, `"Blog + Twitter"`)
+- **source_url**: 가장 대표적인 URL (보통 첫 번째)
+- **source_author**: 주 저자
+- **google_scholar_url**: `null` (블로그 소스와 동일 취급)
+
+### Step SY3) Graph Analysis
+
+Research 경로 Step R3과 동일
+
+### Step SY4) MDX 생성
+
+Research 포스트와 **동일한 섹션 구조** (`docs/RESEARCH_SUMMARY_RULES.md` 기준):
+- TL;DR, 문제, 핵심 아이디어, 주요 결과, 달성점/한계점, Terry's Memo
+- **가상 논문 고지 불필요** — 실제 콘텐츠 기반
+- 트윗/소셜 미디어 인용은 blockquote로:
+  ```
+  > "인용 텍스트" — [@username](https://x.com/user/status/ID)
+  ```
+- 구체적 방법 섹션: 기술 디테일이 있을 때만 (Collapsible)
+
+### Step SY5) meta.json 생성
+
+Research 포스트와 동일 구조. 차이점:
+- `source_type`: 주 소스 사이트명
+- `google_scholar_url`: `null`
+- `source_project_url`: GitHub URL 등 (있으면)
+
+### Step SY6) references (MDX frontmatter)
+
+- **모든 소스를 references에 등록** — 빈 URL 금지
+- 트윗: `project_url` 필드에 트윗 URL
+- GitHub: `project_url` 필드에 repo URL
+- arXiv: `arxiv_url` 필드
+- 사이트 내 관련 포스트: `post_slug` 필드
+- `description`: 각 소스가 이 포스트에서 어떤 맥락으로 사용되었는지
+
+### Step SY7~SY12) 빌드 → 검증 → 커밋 → 푸시
+
+Research 경로 Step R9~R13과 동일:
+빌드 스크립트 → validate-post → npm run build → git commit + push → KB 업데이트 → Obsidian sync → 예외 레슨 기록

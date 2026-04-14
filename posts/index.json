@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-14T22:47:01.108Z",
-  "total_posts": 29,
+  "generated_at": "2026-04-14T23:09:51.801Z",
+  "total_posts": 30,
   "posts": [
     {
       "post_number": 1,
@@ -2007,6 +2007,74 @@
       ],
       "visibility": "public",
       "allowed_groups": []
+    },
+    {
+      "post_number": 30,
+      "slug": "2603-autoresearch-autonomous-ml",
+      "content_type": "papers",
+      "title_en": "autoresearch: AI Agents Running ML Experiments Overnight",
+      "title_ko": "autoresearch: AI 에이전트가 밤새 ML 실험을 돌리는 시대",
+      "summary_ko": "ML 연구의 반복적 실험-평가-개선 루프를 AI 에이전트에게 위임할 수 있을까? Karpathy의 autoresearch는 단일 train.py를 AI 에이전트가 자율적으로 수정·실험·평가하는 프레임워크로, 2일간 700개 실험을 자율 수행하여 GPT-2 학습 시간을 2.02시간에서 1.80시간으로 11% 단축했다.",
+      "summary_en": "Can the iterative experiment-evaluate-improve loop of ML research be delegated to AI agents? Karpathy's autoresearch lets AI agents autonomously modify train.py, run experiments, and evaluate results. In 2 days and ~700 experiments, it reduced GPT-2 training time from 2.02h to 1.80h (11%) while finding real bugs that a 20-year expert had missed.",
+      "domain": "ai",
+      "subfields": [
+        "autonomous-research",
+        "ml-optimization",
+        "agent-systems"
+      ],
+      "key_concepts": [
+        "autonomous-research",
+        "ml-optimization",
+        "agent-experimentation",
+        "hyperparameter-tuning",
+        "validation-loss"
+      ],
+      "methodology": [
+        "autonomous-agent",
+        "iterative-optimization",
+        "automated-experimentation"
+      ],
+      "contribution_type": "system",
+      "tags": [
+        "Papers",
+        "AI Agent",
+        "Autonomous Research",
+        "LLM",
+        "ML Optimization"
+      ],
+      "source_author": "Andrej Karpathy",
+      "source_date": "2026-03-26T00:00:00Z",
+      "published_at": "2026-04-15T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "Open-source framework for AI agents to autonomously iterate on ML training — 700 experiments in 2 days, 11% faster GPT-2",
+        "problem": "Human researcher is the bottleneck in the iterative ML experiment loop — can only test one hypothesis at a time",
+        "solution": "autoresearch: 3-file framework (prepare.py, train.py, program.md) with fixed 5-min time budget and single val_bpb metric, letting AI agents autonomously modify and evaluate",
+        "key_result": "GPT-2 training time 2.02h → 1.80h (11% reduction) in ~700 autonomous experiments over 2 days; found real bugs (QKnorm, missing regularization) that transferred to larger models",
+        "limitations": [
+          "Single file + single GPU constraint",
+          "Hyperparameter tuning level, not novel research",
+          "Multi-agent scaling unimplemented"
+        ]
+      },
+      "relations": [
+        {
+          "slug": "2502-ai-co-scientist",
+          "type": "related"
+        },
+        {
+          "slug": "2604-automated-alignment-researchers",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "ai/agent",
+      "taxonomy_secondary": [
+        "ai/llm"
+      ],
+      "visibility": "public",
+      "allowed_groups": []
     }
   ],
   "knowledge_graph": {
@@ -2285,6 +2353,14 @@
       {
         "from": "2511-act1-robot-foundation-model",
         "type": "related"
+      },
+      {
+        "from": "2603-autoresearch-autonomous-ml",
+        "type": "related"
+      },
+      {
+        "from": "2603-autoresearch-autonomous-ml",
+        "type": "related"
       }
     ],
     "clusters": [
@@ -2365,9 +2441,11 @@
           21,
           22,
           25,
-          28
+          28,
+          30
         ],
         "core_concepts": [
+          "autonomous-research",
           "context-management"
         ],
         "taxonomy_nodes": [
@@ -2797,7 +2875,8 @@
       21
     ],
     "autonomous-research": [
-      21
+      21,
+      30
     ],
     "multi-agent-framework": [
       21
@@ -2922,12 +3001,24 @@
     ],
     "foundation-model": [
       29
+    ],
+    "ml-optimization": [
+      30
+    ],
+    "agent-experimentation": [
+      30
+    ],
+    "hyperparameter-tuning": [
+      30
+    ],
+    "validation-loss": [
+      30
     ]
   },
   "domain_stats": {
     "robotics": 21,
     "ml": 2,
-    "ai": 4,
+    "ai": 5,
     "philosophy": 2
   },
   "taxonomy_stats": {
@@ -2938,14 +3029,14 @@
     "robotics/arm/exoskeleton": 3,
     "robotics/hand:secondary": 1,
     "robotics/hand/dexterous": 2,
-    "ai/agent": 5,
+    "ai/agent": 6,
     "robotics/hand/dexterous:secondary": 4,
     "robotics/arm/exoskeleton:secondary": 1,
     "robotics/brain": 8,
-    "ai/llm:secondary": 4,
+    "ai/llm:secondary": 5,
     "robotics/arm": 4,
     "robotics/hand": 8,
     "robotics": 20,
-    "ai": 5
+    "ai": 6
   }
 }
