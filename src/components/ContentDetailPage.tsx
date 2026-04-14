@@ -180,8 +180,22 @@ export default function ContentDetailPage({
         <SubstackSubscribe locale={locale} variant="article" />
       )}
 
-      {/* Bottom navigation: prev / back-to-list / next */}
-      <div className="mt-12 pt-6 border-t border-line-default">
+      {/* Bottom navigation */}
+      <div className="mt-12 pt-6 border-t border-line-default flex flex-col gap-4">
+        {/* 목록으로 (separate row) */}
+        <div>
+          <Link
+            href={`/${locale}/${section}`}
+            className="text-sm text-text-muted hover:text-accent transition-colors inline-flex items-center gap-1"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            {labels.back_to_list}
+          </Link>
+        </div>
+
+        {/* prev / next */}
         <div className="flex items-start justify-between gap-4">
           {/* 이전 글 (older post) */}
           <div className="flex-1 min-w-0">
@@ -203,19 +217,6 @@ export default function ContentDetailPage({
             ) : (
               <div />
             )}
-          </div>
-
-          {/* 목록으로 */}
-          <div className="shrink-0 pt-0.5">
-            <Link
-              href={`/${locale}/${section}`}
-              className="text-sm text-text-muted hover:text-accent transition-colors inline-flex items-center gap-1 whitespace-nowrap"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-              {labels.back_to_list}
-            </Link>
           </div>
 
           {/* 다음 글 (newer post) */}
