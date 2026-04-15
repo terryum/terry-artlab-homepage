@@ -76,6 +76,12 @@
     "show_less": "Show less",
     "no_results": "No posts match the selected tags."
   },
+  "search": {
+    "placeholder": "Search posts...",
+    "searching": "Searching...",
+    "no_results": "No matching posts found.",
+    "clear": "Clear"
+  },
   "fallback_banner": "The English version of this article is not available yet.",
   "not_found": {
     "title": "Page Not Found",

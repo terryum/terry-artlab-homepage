@@ -12,6 +12,12 @@ interface FilterDict {
   no_results: string;
 }
 
+interface SearchDict {
+  placeholder: string;
+  searching: string;
+  no_results: string;
+}
+
 interface TabTitleEntry {
   title: string;
   description: string;
@@ -25,6 +31,7 @@ interface ContentIndexPageProps {
   allTags?: TagItem[];
   initialSelectedTags?: string[];
   filterDict?: FilterDict;
+  searchDict?: SearchDict;
   tabTitles?: Record<string, TabTitleEntry>;
   taxonomyNodes?: Record<string, TaxonomyNodeData>;
   taxonomyStats?: Record<string, number>;
@@ -38,6 +45,7 @@ export default function ContentIndexPage({
   allTags,
   initialSelectedTags,
   filterDict,
+  searchDict,
   tabTitles,
   taxonomyNodes,
   taxonomyStats,
@@ -58,6 +66,9 @@ export default function ContentIndexPage({
           tabTitles={tabTitles}
           taxonomyNodes={taxonomyNodes}
           taxonomyStats={taxonomyStats}
+          searchPlaceholder={searchDict?.placeholder}
+          searchingLabel={searchDict?.searching}
+          searchNoResultsLabel={searchDict?.no_results}
         />
       ) : (
         <>

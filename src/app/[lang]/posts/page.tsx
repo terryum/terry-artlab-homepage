@@ -41,6 +41,7 @@ export default async function PostsPage({
       allTags={props.allTags}
       initialSelectedTags={props.initialSelectedTags}
       filterDict={props.filterDict}
+      searchDict={props.searchDict}
       tabTitles={props.tabTitles}
       taxonomyNodes={props.taxonomyNodes}
       taxonomyStats={props.taxonomyStats}

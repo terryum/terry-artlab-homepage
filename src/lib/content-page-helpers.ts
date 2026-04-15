@@ -28,6 +28,7 @@ export interface ContentIndexProps {
   allTags: TagItem[];
   initialSelectedTags: string[];
   filterDict: Dictionary['filter'];
+  searchDict?: { placeholder: string; searching: string; no_results: string };
   tabTitles: Record<string, TabTitleEntry>;
   taxonomyNodes: Record<string, TaxonomyNodeData>;
   taxonomyStats: Record<string, number>;
@@ -103,6 +104,7 @@ export async function buildContentIndexProps(
     allTags,
     initialSelectedTags: [],
     filterDict: dict.filter,
+    searchDict: (dict as Record<string, unknown>).search as ContentIndexProps['searchDict'],
     tabTitles,
     taxonomyNodes,
     taxonomyStats,

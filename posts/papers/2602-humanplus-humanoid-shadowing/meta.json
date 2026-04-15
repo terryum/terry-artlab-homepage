@@ -45,7 +45,8 @@
     { "number": 5, "src": "./fig-5.png", "caption": "Scaling behavior analysis. (Left) Training curves for 1K-20K hour datasets. (Center) Optimal convergence loss showing log-linear relationship (R²=0.9983). (Right) Downstream robot performance improving with data scale.", "caption_ko": "스케일링 행동 분석. (왼쪽) 1K~20K 시간 데이터셋의 학습 곡선. (중앙) 최적 수렴 loss의 로그-선형 관계 (R²=0.9983). (오른쪽) 데이터 규모 증가에 따른 로봇 성능 향상." }
   ],
   "tables": [],
-  "thumb_source": "./fig-9.png",
+  "thumb_source": "./fig-2.png",
+  "thumb_extract": {"left": 0, "top": 0, "width": 565, "height": 565},
   "terrys_memo": "",
   "newsletter_eligible": false,
   "featured": false

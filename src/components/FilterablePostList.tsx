@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import TagFilterBar from './TagFilterBar';
 import ContentCard from './ContentCard';
+import SearchBar from './SearchBar';
 
 const TaxonomyFilter = dynamic(() => import('./TaxonomyFilter'), { ssr: false });
 const GraphPopup = dynamic(() => import('./GraphPopup'), { ssr: false });
@@ -35,6 +36,9 @@ interface FilterablePostListProps {
   tabTitles?: Record<string, TabTitleEntry>;
   taxonomyNodes?: Record<string, TaxonomyNodeData>;
   taxonomyStats?: Record<string, number>;
+  searchPlaceholder?: string;
+  searchingLabel?: string;
+  searchNoResultsLabel?: string;
 }
 
 const PAGE_SIZE = 10;
@@ -52,6 +56,9 @@ function FilterablePostListInner({
   tabTitles,
   taxonomyNodes = {},
   taxonomyStats = {},
+  searchPlaceholder,
+  searchingLabel,
+  searchNoResultsLabel,
 }: FilterablePostListProps) {
   const searchParams = useSearchParams();
   const selectedTab = searchParams.get('tab');
@@ -81,6 +88,7 @@ function FilterablePostListInner({
 
   // Mobile/narrow: taxonomy panel collapsed by default
   const [mobileTaxonomyOpen, setMobileTaxonomyOpen] = useState(false);
+  const [searchActive, setSearchActive] = useState(false);
 
   // Reset tags, starred, and taxonomy when tab or author changes
   const currentScope = selectedTab || selectedAuthor;
@@ -307,6 +315,18 @@ function FilterablePostListInner({
             </div>
           )}
 
+          {searchPlaceholder && (
+            <SearchBar
+              locale={locale}
+              posts={posts}
+              placeholder={searchPlaceholder}
+              searchingLabel={searchingLabel || ''}
+              noResultsLabel={searchNoResultsLabel || ''}
+              onSearchActive={setSearchActive}
+            />
+          )}
+
+          {!searchActive && (
           <TagFilterBar
             availableTags={availableTags}
             selectedSlugs={selectedTags}
@@ -314,8 +334,9 @@ function FilterablePostListInner({
             showMoreLabel={showMoreLabel}
             showLessLabel={showLessLabel}
           />
+          )}
 
-          {finalPosts.length === 0 ? (
+          {searchActive ? null : finalPosts.length === 0 ? (
             <p className="text-text-muted py-8 text-center">{noResultsLabel}</p>
           ) : (
             <div ref={listRef}>

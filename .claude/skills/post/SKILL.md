@@ -131,6 +131,12 @@ f. meta.json 생성 전에 아래를 출력:
 - `--featured` 시 `featured: true`
 - `display_tags`: `--tags=` 값, `terrys_memo`: `--memo=` 값
 - **Graph Analysis 결과 포함**: `taxonomy_primary`, `taxonomy_secondary`, `relations`
+- **`thumb_source` 선택** — 추출된 figure 중 아래 우선순위로 선택:
+  1. **실물 로봇/하드웨어/실험 장면 사진** (실사 이미지 최우선)
+  2. **Overview 개념도/시스템 스키마** (아키텍처 전체 흐름)
+  3. cover.webp fallback (미지정 시 자동)
+  - 그래프/차트/표는 썸네일로 부적절 → 선택하지 않음
+  - 선택한 figure를 `"thumb_source": "./fig-N.png"`으로 기록
 - **필수 메타데이터 필드**:
   - `source_title`: arXiv 원문 제목
   - `source_author`: "1저자 et al." 형식
@@ -141,13 +147,16 @@ f. meta.json 생성 전에 아래를 출력:
 
 ### Step R9) 빌드 스크립트 실행
 ```bash
-node scripts/upload-to-r2.mjs --slug=<slug>
+node scripts/generate-thumbnails.mjs
 node scripts/generate-index.mjs
 node scripts/generate-og-image.mjs
+node scripts/upload-to-r2.mjs --slug=<slug>
 node scripts/sync-references.mjs --slug=<slug>
+node scripts/generate-embeddings.mjs --slug=<slug>
 ```
-- `upload-to-r2.mjs`: 이미지를 Cloudflare R2에 업로드 (cover, thumb, figures)
-- `copy-post-images.mjs`, `generate-thumbnails.mjs`는 R2 이전으로 불필요 (로컬 dev 전용 `build:full`에만 사용)
+- `generate-thumbnails.mjs`: `cover.webp`에서 288×288 `cover-thumb.webp`를 `public/posts/<slug>/`에 생성 (리스트 카드 썸네일용)
+- `upload-to-r2.mjs`: 이미지를 Cloudflare R2에 업로드 (cover, **cover-thumb**, figures, OG)
+- **썸네일 생성 → R2 업로드 순서 필수**: `upload-to-r2.mjs`는 `public/posts/<slug>/cover-thumb.webp`가 있어야 업로드함
 - OG 이미지는 `public/posts/<slug>/og.png`에 생성 (Vercel에서 서빙, R2 아님)
 
 ### Step R10) 포스트 검증
@@ -395,9 +404,11 @@ terrys_memo: ""
 ### Step B7) 빌드 스크립트 실행
 
 ```bash
-node scripts/upload-to-r2.mjs --slug=<slug>
+node scripts/generate-thumbnails.mjs
 node scripts/generate-index.mjs
 node scripts/generate-og-image.mjs
+node scripts/upload-to-r2.mjs --slug=<slug>
+node scripts/generate-embeddings.mjs --slug=<slug>
 ```
 
 ### Step B8) 포스트 검증
