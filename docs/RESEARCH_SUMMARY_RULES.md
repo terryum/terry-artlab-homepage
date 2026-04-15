@@ -157,6 +157,13 @@
 - **Bold + 따옴표 조합**: `**"텍스트"**`는 MDX 파서에서 깨질 수 있다. 따옴표를 bold 바깥으로 빼서 `"**텍스트**"`로 작성할 것
 - 예시: ~~`**"alien science"**`~~ → `"**alien science**"`
 
+## YAML Frontmatter 작성 규칙
+
+- **`matter.stringify()` 사용 금지**: gray-matter의 stringify는 YAML 포맷을 임의로 변경한다 (작은따옴표 추가, `>-` block scalar 변환). MDX frontmatter 수정 시 원본 파일을 읽어서 해당 섹션만 문자열 치환으로 수정할 것
+- **콜론(`:`) 포함 제목은 반드시 큰따옴표(`"`)로 감싸기**: `title: "MANO: 관절형 손 모델"` — 따옴표 없으면 YAML 파서가 콜론을 키-값 구분자로 오해
+- **작은따옴표(`'`) 사용 금지**: YAML 값에 작은따옴표 대신 항상 큰따옴표 사용. 작은따옴표는 gray-matter 오염의 징후
+- **gray-matter는 읽기(parse) 전용**: frontmatter를 파싱할 때만 사용하고, 쓰기는 직접 문자열로 생성
+
 ---
 
 ## 수식 작성 원칙
