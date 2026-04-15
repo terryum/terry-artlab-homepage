@@ -12,7 +12,14 @@
 
 [On the Manifold](https://terry.artlab.ai) is a bilingual (Korean/English) research blog, knowledge graph, and personal homepage. Inspired by [Andrej Karpathy's approach](https://x.com/karpathy/status/1911080111710109960) to external-brain knowledge management, the entire content pipeline is operated by Claude Code — papers are summarized, indexed, connected, and published through natural language commands.
 
-The site hosts 27+ research paper summaries, tech essays, memos, and an interactive paper relationship graph. The project uses a two-workspace setup: this repo for site development, and a separate `terry-obsidian` workspace for Obsidian vault management and content publishing.
+The site hosts 35+ research paper summaries, tech essays, memos, and an interactive paper relationship graph. The project uses a multi-workspace setup:
+
+| Workspace | Role | Repository |
+|-----------|------|------------|
+| **terry-artlab-homepage** (this repo) | Site code + infrastructure | [terryum/terry-artlab-homepage](https://github.com/terryum/terry-artlab-homepage) |
+| **terry-papers** | Paper posting + knowledge graph | [terryum/terry-papers](https://github.com/terryum/terry-papers) |
+| **terry-surveys** | Survey book creation + management | [terryum/terry-surveys](https://github.com/terryum/terry-surveys) |
+| **terry-obsidian** | Obsidian vault + content publishing | (private) |
 
 ## Architecture
 
@@ -36,7 +43,8 @@ The site hosts 27+ research paper summaries, tech essays, memos, and an interact
 |-------|-------|
 | **Frontend** | Next.js 15 (App Router) + TypeScript + Tailwind CSS v4 |
 | **Content** | Bilingual MDX (ko.mdx / en.mdx) + frontmatter metadata |
-| **Deployment** | Cloudflare (DNS/CDN) + Vercel |
+| **Images** | Cloudflare R2 CDN (all post images served globally) |
+| **Deployment** | Cloudflare (DNS/CDN/R2) + Vercel |
 | **Database** | Supabase (paper relationships, knowledge graph, private content) |
 | **Access Control** | Group-based password auth (`/co/[group]`) + Admin |
 | **Knowledge Base** | Obsidian (local) + sync script + Claude Code |
