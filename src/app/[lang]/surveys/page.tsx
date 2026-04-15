@@ -1,11 +1,11 @@
 import { isValidLocale, type Locale } from '@/lib/i18n';
 import { getDictionary } from '@/lib/dictionaries';
-import { loadPublicSurveys } from '@/lib/surveys';
+import { getAllSurveys } from '@/lib/surveys';
 import { Container } from '@/components/ui/Container';
 import SurveyCard from '@/components/SurveyCard';
 import type { Metadata } from 'next';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export function generateStaticParams() {
   return [{ lang: 'ko' }, { lang: 'en' }];
@@ -33,7 +33,7 @@ export default async function SurveysPage({
   if (!isValidLocale(lang)) return null;
 
   const dict = await getDictionary(lang);
-  const surveys = await loadPublicSurveys();
+  const surveys = await getAllSurveys();
 
   return (
     <Container className="py-10">
