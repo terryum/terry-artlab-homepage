@@ -76,3 +76,13 @@ posts/global-index.json
 _workspace/
 scripts/upload-private-content.mjs
 posts/index-private.json
+
+# Post source images (served from R2 CDN, kept locally for dev only)
+posts/papers/*/fig-*
+posts/papers/*/tab-*
+posts/papers/*/cover.webp
+posts/papers/*/cover-thumb.webp
+posts/essays/*/cover.webp
+posts/essays/*/cover-thumb.webp
+posts/essays/*/cover.png
+posts/memos/*/cover.webp
