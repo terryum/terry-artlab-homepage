@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { isUnoptimizedImage } from '@/lib/card-utils';
 
 interface CompactCardProps {
   href: string;
@@ -33,7 +34,7 @@ export default function CompactCard({
             fill
             className="object-cover"
             sizes="(min-width: 640px) 144px, 80px"
-            unoptimized={image.startsWith('/api/')}
+            unoptimized={isUnoptimizedImage(image)}
           />
         </div>
       )}

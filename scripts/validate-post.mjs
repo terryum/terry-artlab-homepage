@@ -14,14 +14,9 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { POSTS_DIR, PUBLIC_POSTS_DIR, getContentDirs } from './lib/paths.mjs';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, '..');
-const POSTS_DIR = path.join(ROOT, 'posts');
-const PUBLIC_POSTS_DIR = path.join(ROOT, 'public', 'posts');
-const contentConfig = JSON.parse(await fs.readFile(path.join(ROOT, 'content.config.json'), 'utf-8'));
-const CATEGORIES = contentConfig.allContentDirs;
+const CATEGORIES = await getContentDirs();
 
 // ── Required fields by content type ──────────────────────────────────
 
@@ -149,11 +144,11 @@ async function validatePost(category, slug) {
       if (!fig.caption) err(`Figure ${fig.number ?? '?'} missing "caption"`);
       if (!fig.caption_ko) err(`Figure ${fig.number ?? '?'} missing "caption_ko"`);
 
-      // Check file exists
+      // Check file exists (local or R2 — warn only since images may be on R2 CDN)
       if (fig.src) {
         const figPath = path.join(postDir, fig.src.replace('./', ''));
         if (!(await fileExists(figPath))) {
-          err(`Figure file not found: ${fig.src}`);
+          warn(`Figure file not found locally: ${fig.src} (may be on R2 CDN)`);
         }
       }
     }
@@ -161,28 +156,11 @@ async function validatePost(category, slug) {
     warn('meta.json has no figures array');
   }
 
-  // ── 4. Public assets check ─────────────────────────────────────
+  // ── 4. Public assets check (OG image only — other images served from R2 CDN) ──
 
-  if (!(await fileExists(publicDir))) {
-    err(`public/posts/${slug}/ directory missing — images won't load`);
-  } else {
-    // Check cover-thumb exists
-    const thumbPath = path.join(publicDir, 'cover-thumb.webp');
-    if (!(await fileExists(thumbPath))) {
-      warn(`cover-thumb.webp missing in public/posts/${slug}/ — run generate-thumbnails.mjs`);
-    }
-
-    // Check figure images exist in public
-    if (Array.isArray(meta.figures)) {
-      for (const fig of meta.figures) {
-        if (!fig.src) continue;
-        const fname = fig.src.replace('./', '');
-        const publicFigPath = path.join(publicDir, fname);
-        if (!(await fileExists(publicFigPath))) {
-          err(`Figure not in public: public/posts/${slug}/${fname}`);
-        }
-      }
-    }
+  const ogPath = path.join(publicDir, 'og.png');
+  if (!(await fileExists(ogPath))) {
+    warn(`og.png missing in public/posts/${slug}/ — run generate-og-image.mjs`);
   }
 
   // ── 5. MDX frontmatter validation ──────────────────────────────

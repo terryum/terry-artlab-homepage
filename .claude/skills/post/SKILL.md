@@ -141,12 +141,14 @@ f. meta.json 생성 전에 아래를 출력:
 
 ### Step R9) 빌드 스크립트 실행
 ```bash
-node scripts/copy-post-images.mjs
-node scripts/generate-thumbnails.mjs
+node scripts/upload-to-r2.mjs --slug=<slug>
 node scripts/generate-index.mjs
 node scripts/generate-og-image.mjs
 node scripts/sync-references.mjs --slug=<slug>
 ```
+- `upload-to-r2.mjs`: 이미지를 Cloudflare R2에 업로드 (cover, thumb, figures)
+- `copy-post-images.mjs`, `generate-thumbnails.mjs`는 R2 이전으로 불필요 (로컬 dev 전용 `build:full`에만 사용)
+- OG 이미지는 `public/posts/<slug>/og.png`에 생성 (Vercel에서 서빙, R2 아님)
 
 ### Step R10) 포스트 검증
 ```bash
@@ -392,8 +394,7 @@ terrys_memo: ""
 ### Step B7) 빌드 스크립트 실행
 
 ```bash
-node scripts/copy-post-images.mjs
-node scripts/generate-thumbnails.mjs
+node scripts/upload-to-r2.mjs --slug=<slug>
 node scripts/generate-index.mjs
 node scripts/generate-og-image.mjs
 ```

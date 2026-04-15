@@ -4,6 +4,7 @@ import TagChip from './TagChip';
 import { normalizeTagSlug } from '@/lib/tags';
 import { TAB_TAG_SLUGS } from '@/lib/site-config';
 import { getDisplayTags, formatPostDate } from '@/lib/display';
+import { isUnoptimizedImage } from '@/lib/card-utils';
 import tagsData from '@/data/tags.json';
 import type { PostMeta } from '@/types/post';
 
@@ -59,7 +60,7 @@ export default function ContentCard({ post, locale, showTabTag, hidePubDate }: C
                 fill
                 className="object-cover"
                 sizes="(min-width: 640px) 144px, 80px"
-                unoptimized={(post.cover_thumb || post.cover_image).startsWith('/api/')}
+                unoptimized={isUnoptimizedImage(post.cover_thumb || post.cover_image)}
               />
             )}
           </div>

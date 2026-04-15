@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { trackEvent } from '@/lib/analytics';
+import { formatCardDate, isUnoptimizedImage } from '@/lib/card-utils';
 import type { ProjectMeta } from '@/types/project';
 
 const STATUS_BADGE: Record<string, { label: string; className: string }> = {
@@ -85,7 +86,7 @@ export default function ProjectCard({ project, locale }: ProjectCardProps) {
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          unoptimized={project.cover_image.startsWith('/api/')}
+          unoptimized={isUnoptimizedImage(project.cover_image)}
         />
         <div className="absolute top-2 right-2">
           <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${badge.className}`}>
@@ -102,7 +103,7 @@ export default function ProjectCard({ project, locale }: ProjectCardProps) {
             {title}
           </h3>
           <time className="text-xs text-text-muted whitespace-nowrap flex-shrink-0">
-            {new Date(project.published_at).toLocaleDateString(locale === 'ko' ? 'ko-KR' : 'en-US', { year: 'numeric', month: 'short' })}
+            {formatCardDate(project.published_at, locale)}
           </time>
         </div>
         <p className="text-sm text-text-muted mt-1.5 line-clamp-2">

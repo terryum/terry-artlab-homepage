@@ -14,27 +14,15 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import matter from 'gray-matter';
-import { createClient } from '@supabase/supabase-js';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, '..');
-const POSTS_DIR = path.join(ROOT, 'posts');
+import { POSTS_DIR, getContentDirs } from './lib/paths.mjs';
+import { getSupabase } from './lib/supabase.mjs';
 
 // Content type directories to scan
-const CONTENT_DIRS = ['papers', 'essays', 'memos'];
+const CONTENT_DIRS = await getContentDirs();
 
 // ── Supabase client ──
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!url || !serviceKey) {
-  console.error('❌ NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set');
-  process.exit(1);
-}
-
-const supabase = createClient(url, serviceKey);
+const supabase = getSupabase();
 
 // ── CLI args ──
 const args = process.argv.slice(2);

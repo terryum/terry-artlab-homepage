@@ -14,13 +14,10 @@ import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
-import { fileURLToPath } from 'url';
+import { POSTS_DIR, getContentDirs } from './lib/paths.mjs';
+import { isSupabaseConfigured, getSupabase } from './lib/supabase.mjs';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, '..');
-const POSTS_DIR = path.join(ROOT, 'posts');
-const contentConfig = JSON.parse(await fs.readFile(path.join(ROOT, 'content.config.json'), 'utf-8'));
-const CATEGORIES = contentConfig.allContentDirs;
+const CATEGORIES = await getContentDirs();
 
 // ── CLI args ──
 const args = process.argv.slice(2);
@@ -461,12 +458,9 @@ async function main() {
 
   // Load Supabase client for private post content
   let supabase = null;
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (supabaseUrl && serviceKey) {
+  if (isSupabaseConfigured()) {
     try {
-      const { createClient } = await import('@supabase/supabase-js');
-      supabase = createClient(supabaseUrl, serviceKey);
+      supabase = getSupabase();
     } catch { /* Supabase not available */ }
   }
 

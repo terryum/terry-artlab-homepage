@@ -10,11 +10,8 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { POSTS_DIR } from './lib/paths.mjs';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, '..');
-const POSTS_DIR = path.join(ROOT, 'posts');
 const PAPERS_DIR = path.join(POSTS_DIR, 'papers');
 
 const args = process.argv.slice(2);

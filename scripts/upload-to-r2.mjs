@@ -12,26 +12,11 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import { S3Client, PutObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
+import { POSTS_DIR, PUBLIC_POSTS_DIR, getContentDirs } from './lib/paths.mjs';
+import { loadEnv } from './lib/env.mjs';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, '..');
-
-// Load .env.local manually (no dotenv dependency)
-const envPath = path.join(ROOT, '.env.local');
-try {
-  const envContent = await fs.readFile(envPath, 'utf8');
-  for (const line of envContent.split('\n')) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) continue;
-    const eqIdx = trimmed.indexOf('=');
-    if (eqIdx === -1) continue;
-    const key = trimmed.slice(0, eqIdx).trim();
-    const val = trimmed.slice(eqIdx + 1).trim();
-    if (!process.env[key]) process.env[key] = val;
-  }
-} catch { /* .env.local not found, use existing env */ }
+await loadEnv();
 
 const {
   R2_ACCOUNT_ID,
@@ -62,10 +47,8 @@ const dryRun = args.includes('--dry-run');
 const force = args.includes('--force');
 
 // Content directories to scan
-const CONTENT_DIRS = ['papers', 'essays', 'memos'];
+const CONTENT_DIRS = await getContentDirs();
 const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg']);
-const POSTS_DIR = path.join(ROOT, 'posts');
-const PUBLIC_POSTS_DIR = path.join(ROOT, 'public', 'posts');
 
 // MIME types
 const MIME_TYPES = {

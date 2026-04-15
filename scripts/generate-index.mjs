@@ -10,13 +10,10 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { POSTS_DIR, getContentDirs } from './lib/paths.mjs';
+import { isSupabaseConfigured, getSupabase } from './lib/supabase.mjs';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, '..');
-const POSTS_DIR = path.join(ROOT, 'posts');
-const contentConfig = JSON.parse(await fs.readFile(path.join(ROOT, 'content.config.json'), 'utf-8'));
-const CATEGORIES = contentConfig.allContentDirs;
+const CATEGORIES = await getContentDirs();
 
 async function readFrontmatter(filePath) {
   try {
@@ -112,12 +109,9 @@ async function buildKnowledgeGraph(posts) {
   }
 
   // Merge confirmed edges from Supabase (if configured)
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (supabaseUrl && serviceKey) {
+  if (isSupabaseConfigured()) {
     try {
-      const { createClient } = await import('@supabase/supabase-js');
-      const supabase = createClient(supabaseUrl, serviceKey);
+      const supabase = getSupabase();
       const { data: dbEdges } = await supabase
         .from('graph_edges')
         .select('source_slug, target_slug, edge_type')
@@ -342,13 +336,10 @@ async function buildTaxonomyStats(posts) {
 }
 
 async function collectPrivatePosts() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!supabaseUrl || !serviceKey) return [];
+  if (!isSupabaseConfigured()) return [];
 
   try {
-    const { createClient } = await import('@supabase/supabase-js');
-    const sb = createClient(supabaseUrl, serviceKey);
+    const sb = getSupabase();
     const { data, error } = await sb
       .from('private_content')
       .select('slug, title_ko, title_en, meta_json')
