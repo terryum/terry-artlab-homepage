@@ -14,6 +14,8 @@ coverage/
 
 # --- Paper PDFs (large files) ---
 paper/
+*.pdf
+posts/papers/*/paper/
 
 # --- Post images (served from Cloudflare R2 CDN) ---
 # OG images (public/posts/<slug>/og.png) are kept for social crawlers

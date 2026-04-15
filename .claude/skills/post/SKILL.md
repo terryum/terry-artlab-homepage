@@ -102,22 +102,25 @@ f. meta.json 생성 전에 아래를 출력:
 ### Step R4) 메타데이터 수집
 `https://export.arxiv.org/abs/<id>` API → 제목, 저자, 초록, v1 제출일
 
-### Step R5) PDF 다운로드
-`posts/papers/<slug>/paper/<slug>.pdf` 로 저장
-URL: `https://arxiv.org/pdf/<id>`
+### Step R5) PDF (저장하지 않음)
+- **PDF 원본은 Git에 저장하지 않는다** — arXiv 링크로 원문 접근
+- Figure 추출이 필요할 때만 임시 다운로드 후 추출 완료 시 삭제
 
-### Step R6) Figure 추출
+### Step R6) Figure 추출 + R2 업로드
 - `GET https://arxiv.org/html/<id>v1/` → 200이면 img src 전수 추출 + 다운로드
   - 다운로드 완료 후 투명배경 변환: `python scripts/flatten-transparent-figures.py posts/papers/<slug>/`
-- **404이면 즉시 PDF fallback** (Semantic Scholar 등 외부 사이트 탐색 금지):
-  a. `python scripts/extract-paper-pdf.py posts/papers/<slug>/paper/<slug>.pdf posts/papers/<slug>/`
-     (PDF fallback은 extract-paper-pdf.py 내부에서 자동으로 flatten 처리됨)
-  b. `extraction_report.json` 읽기 → figures/captions 자동 적용
-  c. `suggested_cover`를 `cover.webp`로 PIL 변환
+- **404이면 PDF fallback** (Semantic Scholar 등 외부 사이트 탐색 금지):
+  a. PDF를 임시 다운로드: `curl -sL https://arxiv.org/pdf/<id> -o /tmp/<slug>.pdf`
+  b. `python scripts/extract-paper-pdf.py /tmp/<slug>.pdf posts/papers/<slug>/`
+  c. `extraction_report.json` 읽기 → figures/captions 자동 적용
+  d. `suggested_cover`를 `cover.webp`로 PIL 변환
+  e. 임시 PDF 삭제: `rm /tmp/<slug>.pdf`
 - **figure 추출 실패 또는 cover 후보 없음** → `/gemini-3-image-generation` 스킬로 커버 이미지 생성
   - 프롬프트: 논문 제목/핵심 주제를 반영한 추상적 기술 일러스트, 16:9 비율, 텍스트 없이
   - 생성된 이미지를 `posts/papers/<slug>/cover.webp`로 저장
   - API 키가 없거나 생성 실패 시 → 커버 없이 진행 + 경고 출력
+- **추출된 이미지는 R2에 업로드**: `node scripts/upload-to-r2.mjs --slug=<slug>`
+- 로컬 이미지 파일은 Git에 추가하지 않음 (.gitignore로 제외됨)
 
 ### Step R7) MDX 생성
 `docs/RESEARCH_SUMMARY_RULES.md` 기준으로 `ko.mdx` + `en.mdx` 생성
