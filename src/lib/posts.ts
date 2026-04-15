@@ -3,7 +3,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import type { Post, PostMeta, FigureItem, Reference, PostRelation, AISummary } from '@/types/post';
 import { normalizeTagSlug } from '@/lib/tags';
-import { resolvePostAssetPath } from '@/lib/paths';
+import { resolvePostAssetPath, resolvePostCdnPath } from '@/lib/paths';
 import { TAB_CONFIG } from '@/lib/site-config';
 // Dynamic imports for auth/private — avoids pulling cookies() into static render path
 // import { getPrivatePosts, getPrivatePost, getAllPrivatePosts } from '@/lib/private-content';
@@ -344,8 +344,8 @@ export async function getAllPostsFromIndex(locale: string): Promise<PostMeta[]> 
       status: 'published' as const,
       content_type: p.content_type as PostMeta['content_type'],
       tags: (p.tags as string[]) ?? [],
-      cover_image: `/posts/${p.slug}/cover.webp`,
-      cover_thumb: `/posts/${p.slug}/cover-thumb.webp`,
+      cover_image: resolvePostCdnPath(p.slug as string, 'cover.webp'),
+      cover_thumb: resolvePostCdnPath(p.slug as string, 'cover-thumb.webp'),
       post_number: p.post_number as number,
       domain: p.domain as string,
       subfields: (p.subfields as string[]) ?? [],

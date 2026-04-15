@@ -15,6 +15,13 @@ coverage/
 # --- Paper PDFs (large files) ---
 paper/
 
+# --- Post images (served from Cloudflare R2 CDN) ---
+# OG images (public/posts/<slug>/og.png) are kept for social crawlers
+public/posts/*/cover.webp
+public/posts/*/cover-thumb.webp
+public/posts/*/fig-*
+public/posts/*/tab-*
+
 # --- Publish caches ---
 .substack-published.json
 .social-published.json
