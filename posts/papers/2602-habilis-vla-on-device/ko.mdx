@@ -1,0 +1,110 @@
+---
+locale: "ko"
+title: "Habilis-β: 빠르고 오래가는 온디바이스 VLA 모델"
+subtitle: "시간당 생산성(TPH)과 평균 개입 간격(MTBI)으로 측정하는 실전 로봇 배포"
+summary: "기존 VLA 모델은 단일 시행 성공률만 측정하여 실제 배포 성능을 반영하지 못한다. Habilis-β는 Play 데이터 사전학습 + 순환 과제 후학습 + Rectified Flow 증류의 3단계 학습과 ESPADA 동작 압축으로, 시뮬레이션에서 TPH 572.6(π0.5 대비 4.75×), 실환경에서 TPH 124(π0.5 대비 6.53×)를 달성하며 온디바이스 실시간 제어를 실현했다."
+card_summary: "기존 VLA 모델은 단일 시행 성공률만 측정하여 실제 배포 성능을 반영하지 못한다. Habilis-β는 Play 데이터 사전학습 + 순환 과제 후학습 + Rectified Flow 증류의 3단계 학습과 ESPADA 동작 압축으로, 시뮬레이션에서 TPH 572.6(π0.5 대비 4.75×), 실환경에서 TPH 124(π0.5 대비 6.53×)를 달성하며 온디바이스 실시간 제어를 실현했다."
+cover_caption: "Habilis-β Overview. (Left) Training Pipeline: 3단계 학습으로 Fast-Motion과 Long-Lasting 능력을 달성. (Right) Inference Pipeline: 사전학습된 VLM prefix가 멀티모달 관측을 융합하여 증류된 action expert를 조건화."
+published_at: "2026-04-15T00:00:00Z"
+source_type: "arXiv"
+source_url: "https://arxiv.org/abs/2602.18813"
+source_date: "2026-02-21T00:00:00Z"
+display_tags:
+  - "Robotics"
+  - "VLA"
+  - "On-Device"
+  - "Deployment"
+terrys_memo: ""
+references:
+  - title: "π₀: A Vision-Language-Action Flow Model for General Robot Control"
+    author: "Kevin Black et al."
+    description: "범용 로봇 제어를 위한 VLA 플로우 모델. Habilis-β가 직접 비교하는 주요 baseline(π0.5)의 기반이 되는 모델로, flow matching 기반 action generation의 토대를 제공한다."
+    arxiv_url: "https://arxiv.org/abs/2410.24164"
+    scholar_url: "https://scholar.google.com/scholar?q=pi0+vision-language-action+flow+model"
+    post_slug: "2410-pi0-vla-flow-model"
+    category: "foundational"
+  - title: "π₀.₆: A VLA that Learns from Its Own Experience"
+    author: "Physical Intelligence"
+    description: "경험에서 자기 학습하는 VLA. Habilis-β가 baseline으로 사용하는 π0.5의 후속 연구로, 반복 개선 학습의 맥락에서 대비된다."
+    arxiv_url: "https://arxiv.org/abs/2504.16927"
+    scholar_url: "https://scholar.google.com/scholar?q=pi0.6+VLA+learns+own+experience"
+    post_slug: "2511-pi0-6-recap"
+    category: "foundational"
+  - title: "GR00T N1: An Open Foundation Model for Generalist Humanoid Robots"
+    author: "NVIDIA"
+    description: "휴머노이드 로봇을 위한 범용 파운데이션 모델. Habilis-β의 두 번째 주요 baseline으로, 실환경 연속 실행에서 Habilis-β와 직접 비교된다."
+    arxiv_url: "https://arxiv.org/abs/2503.14734"
+    scholar_url: "https://scholar.google.com/scholar?q=GR00T+N1+open+foundation+model+humanoid"
+    category: "recent"
+translated_to:
+  - "en"
+---
+
+## TL;DR
+
+VLA 모델의 실전 배포 성능을 어떻게 측정할 것인가? Habilis-β는 기존의 단일 시행 성공률 대신 시간당 생산성(TPH)과 평균 개입 간격(MTBI)이라는 연속 운영 지표를 제안하고, 3단계 학습 + ESPADA 동작 압축으로 시뮬레이션 TPH 572.6, 실환경 TPH 124를 달성했다.
+
+## 문제
+
+기존 VLA 모델 평가는 개별 에피소드의 성공률에 집중하지만, 이는 실제 배포에서 가장 중요한 **지속적 운영 성능**을 반영하지 못한다. 로봇이 공장에서 1시간 동안 몇 개의 작업을 완수할 수 있는지(생산성), 그리고 얼마나 오래 개입 없이 작동하는지(신뢰성)가 실전에서는 훨씬 중요하다. 또한 대부분의 VLA 모델은 클라우드 GPU 의존적이어서 실시간 제어와 배포 비용 면에서 한계가 있다.
+
+## 핵심 아이디어
+
+Habilis-β의 핵심은 **Fast-Motion(빠른 동작)**과 **Long-Lasting(장기 지속)**을 동시에 달성하는 것이다:
+
+- **3단계 학습**: (1) Play 데이터 사전학습으로 과제 무관 상호작용 사전지식 습득, (2) 순환 과제 시연으로 후학습 + ESPADA로 자유 공간 동작 압축, (3) Rectified Flow 증류로 10+step 교사 → 2-step 학생 모델로 추론 가속
+- **ESPADA**: VLM-LLM 파이프라인으로 궤적을 "캐주얼"과 "정밀" 구간으로 분류하고, 캐주얼 구간만 선택적 가속하여 기하학적 일관성을 유지하면서 처리량 극대화
+- **Prefix-Suffix 아키텍처**: 사전학습된 VLM prefix가 멀티모달 입력을 처리하고, suffix action expert가 연속 action chunk를 생성
+- **Classifier-Free Guidance (CFG)**: 배포 시 지시 준수도와 학습된 사전지식 사이의 균형을 동적으로 조절하는 노브
+
+<Figure src="./fig-1.png" caption="Habilis-β Overview. (Left) Training Pipeline: The model is trained in three stages to achieve Fast-Motion and Long-Lasting capabilities. Stage 1 learns a robust, task-agnostic interaction prior via play data pre-training. Stage 2 post-trains on cyclic task demonstrations, utilizing Spatially Aware Downsampling (ESPADA) to compress casual free-space motions. Stage 3 distills the multi-step flow matching action expert into an efficient rectified flow model. (Right) Inference Pipeline: To enable On-Device operation, a pre-trained VLM prefix fuses multimodal observations to condition the distilled action expert." />
+
+<Collapsible title="구체적 방법">
+
+### Flow Matching Action Expert
+
+속도 필드 $v_\theta(o, x_\tau, \tau)$를 학습하여 목표 속도 $u_\tau = \epsilon - a$에 매칭한다. $x_\tau = \tau\epsilon + (1-\tau)a$는 시연 action과 가우시안 노이즈 사이의 선형 보간이다.
+
+학습 손실: $\mathcal{L}_{FM}(\theta) = \mathbb{E}\left[\frac{1}{Hd} \|v_\theta(\tilde{o}, x_\tau, \tau) - u_\tau\|^2_2\right]$
+
+### Rectified Flow 증류
+
+10+step 교사를 2-step 학생으로 압축:
+
+$$\mathcal{L}_{distill}(\phi) = \mathbb{E}\left[\|v_\phi(o_t, x_\tau, \tau) - \frac{x_1 - x_\tau}{1-\tau}\|^2\right]$$
+
+### ESPADA (Spatially Aware Downsampling)
+
+VLM-LLM 파이프라인으로 궤적을 의미적으로 분할하여 "캐주얼"과 "정밀" 구간을 식별하고, 캐주얼 구간만 선택적으로 가속한다. 기하학적 일관성 보장: $\sum\|\Delta x'_{t+h}\| \approx \sum\|\Delta x_{t+h}\|$
+
+### Classifier-Free Guidance
+
+$v_{cfg} = v_{uncond} + w \cdot (v_{cond} - v_{uncond})$로 지시 준수도를 조절하며, rescaling으로 안정화: $v_{rescaled} = v_{cfg} \cdot \|v_{cond}\| / (\|v_{cfg}\| + \varepsilon)$
+
+</Collapsible>
+
+## 주요 결과
+
+- **시뮬레이션 연속 실행 (1시간)**: Habilis-β TPH **572.6**, 성공률 **78.5%** (vs π0.5: TPH 120.5, 성공률 47.8% — **4.75× 생산성**)
+- **실환경 (RB-Y1 휴머노이드, Dual-Bin Conveyor Packing)**: TPH **124**, MTBI **137.4초**, 성공률 **82.7%** (vs π0.5: TPH 19, MTBI 46.1초 — **6.53× 생산성, 2.98× 신뢰성**)
+- **ESPADA 효과**: TPH를 250.5 → 572.6으로 증가시키지만 MTBI는 72.4 → 39.2로 감소 — 명확한 **생산성-신뢰성 트레이드오프**
+- **RoboTwin 2.0 벤치마크**: 표준 단일 시행에서도 발표 시점 최고 성능 달성
+
+<Figure src="./fig-5.png" caption="Simulation Productivity-Reliability Plane. We plot the deployment performance of different methods in simulation. Habilis-β (w/o ESPADA) achieves the highest reliability (MTBI), while the full Habilis-β dramatically increases throughput (TPH), offering a configurable trade-off for different operational needs." />
+
+## 달성점과 한계점
+
+**새롭게 달성한 점**
+- **TPH + MTBI 평가 프레임워크** 제안 — 실전 배포에 적합한 연속 운영 지표로 단일 시행 성공률의 한계를 넘어섬
+- 2-step Rectified Flow 증류로 **온디바이스 실시간 제어** 실현 — 클라우드 의존성 제거
+- ESPADA의 의미 기반 동작 압축으로 성공률 유지하면서 **처리량 4.75× 향상** (시뮬레이션)
+
+**한계점**
+- "전체적인 일반화는 여전히 제한적이며 인간 수준의 과제 정확도에 도달하지 못했다" — 저자 인정
+- ESPADA가 LLM 기반이라 동일 시연에서도 다른 결과가 나올 수 있어 **재현성에 문제**
+- CFG의 최적 guidance scale이 과제마다 다르며, 현재 로봇 데이터 규모에서는 instruction-unconditioned prior 학습이 어려움
+- 🤖 Dual-Bin Conveyor Packing이라는 단일 실환경 과제에서만 검증되어, 다양한 조작 시나리오에서의 일반화 가능성은 미검증
+
+## Terry's Memo
+
+- *(None)*

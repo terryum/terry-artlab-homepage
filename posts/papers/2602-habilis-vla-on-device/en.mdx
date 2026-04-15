@@ -1,0 +1,110 @@
+---
+locale: "en"
+translation_of: "2602-habilis-vla-on-device:ko"
+title: "Habilis-β: A Fast-Motion and Long-Lasting On-Device VLA Model"
+subtitle: "Measuring real deployment with Tasks per Hour (TPH) and Mean Time Between Intervention (MTBI)"
+summary: "Existing VLA models are evaluated by single-trial success rates that fail to capture real deployment performance. Habilis-β proposes continuous operation metrics (TPH, MTBI) and achieves 572.6 TPH in simulation (4.75× vs π0.5) and 124 TPH in real-world (6.53× vs π0.5) through 3-stage training with play data pre-training, cyclic post-training, rectified flow distillation, and ESPADA motion compression — all running on-device."
+card_summary: "Existing VLA models are evaluated by single-trial success rates that fail to capture real deployment performance. Habilis-β proposes continuous operation metrics (TPH, MTBI) and achieves 572.6 TPH in simulation (4.75× vs π0.5) and 124 TPH in real-world (6.53× vs π0.5) through 3-stage training with play data pre-training, cyclic post-training, rectified flow distillation, and ESPADA motion compression — all running on-device."
+cover_caption: "Habilis-β Overview. (Left) Training Pipeline: 3-stage training for Fast-Motion and Long-Lasting capabilities. (Right) Inference Pipeline: Pre-trained VLM prefix fuses multimodal observations to condition the distilled action expert."
+published_at: "2026-04-15T00:00:00Z"
+source_type: "arXiv"
+source_url: "https://arxiv.org/abs/2602.18813"
+source_date: "2026-02-21T00:00:00Z"
+display_tags:
+  - "Robotics"
+  - "VLA"
+  - "On-Device"
+  - "Deployment"
+terrys_memo: ""
+references:
+  - title: "π₀: A Vision-Language-Action Flow Model for General Robot Control"
+    author: "Kevin Black et al."
+    description: "VLA flow model for general robot control. Provides the foundation for π0.5, the primary baseline that Habilis-β directly compares against in both simulation and real-world deployment."
+    arxiv_url: "https://arxiv.org/abs/2410.24164"
+    scholar_url: "https://scholar.google.com/scholar?q=pi0+vision-language-action+flow+model"
+    post_slug: "2410-pi0-vla-flow-model"
+    category: "foundational"
+  - title: "π₀.₆: A VLA that Learns from Its Own Experience"
+    author: "Physical Intelligence"
+    description: "VLA that learns from its own experience through iterative improvement. Follow-up to π0.5 used as Habilis-β's primary baseline, contrasting in its approach to self-improvement learning."
+    arxiv_url: "https://arxiv.org/abs/2504.16927"
+    scholar_url: "https://scholar.google.com/scholar?q=pi0.6+VLA+learns+own+experience"
+    post_slug: "2511-pi0-6-recap"
+    category: "foundational"
+  - title: "GR00T N1: An Open Foundation Model for Generalist Humanoid Robots"
+    author: "NVIDIA"
+    description: "Open foundation model for humanoid robots. The second major baseline in Habilis-β's evaluation, directly compared in real-world continuous execution experiments."
+    arxiv_url: "https://arxiv.org/abs/2503.14734"
+    scholar_url: "https://scholar.google.com/scholar?q=GR00T+N1+open+foundation+model+humanoid"
+    category: "recent"
+translated_to: []
+---
+
+## TL;DR
+
+How should we measure VLA model performance for real deployment? Habilis-β proposes Tasks per Hour (TPH) and Mean Time Between Intervention (MTBI) as continuous operation metrics, and achieves 572.6 TPH in simulation and 124 TPH in real-world through 3-stage training + ESPADA motion compression — all running on-device.
+
+## Problem
+
+Existing VLA model evaluation focuses on per-episode success rates, which fail to capture **continuous operation performance** — what matters most in real deployment. How many tasks can a robot complete per hour in a factory (productivity), and how long can it operate without intervention (reliability) are far more critical in practice. Additionally, most VLA models depend on cloud GPUs, creating latency and cost barriers for real-time control.
+
+## Key Idea
+
+Habilis-β simultaneously achieves **Fast-Motion** and **Long-Lasting** operation:
+
+- **3-stage training**: (1) Play data pre-training for task-agnostic interaction priors, (2) Cyclic task post-training with ESPADA to compress free-space motions, (3) Rectified flow distillation from 10+ step teacher to 2-step student
+- **ESPADA**: VLM-LLM pipeline semantically segments trajectories into "casual" and "precision" phases, selectively accelerating casual phases while preserving geometric consistency
+- **Prefix-Suffix architecture**: Pre-trained VLM prefix processes multimodal inputs, suffix action expert generates continuous action chunks
+- **Classifier-Free Guidance (CFG)**: Deployment-time knob to dynamically balance instruction adherence and learned interaction priors
+
+<Figure src="./fig-1.png" caption="Habilis-β Overview. (Left) Training Pipeline: The model is trained in three stages to achieve Fast-Motion and Long-Lasting capabilities. Stage 1 learns a robust, task-agnostic interaction prior via play data pre-training. Stage 2 post-trains on cyclic task demonstrations, utilizing Spatially Aware Downsampling (ESPADA) to compress casual free-space motions. Stage 3 distills the multi-step flow matching action expert into an efficient rectified flow model. (Right) Inference Pipeline: To enable On-Device operation, a pre-trained VLM prefix fuses multimodal observations to condition the distilled action expert." />
+
+<Collapsible title="Detailed Methods">
+
+### Flow Matching Action Expert
+
+Learns velocity field $v_\theta(o, x_\tau, \tau)$ to match target velocity $u_\tau = \epsilon - a$, where $x_\tau = \tau\epsilon + (1-\tau)a$ is linear interpolation between demonstrated action and Gaussian noise.
+
+Training loss: $\mathcal{L}_{FM}(\theta) = \mathbb{E}\left[\frac{1}{Hd} \|v_\theta(\tilde{o}, x_\tau, \tau) - u_\tau\|^2_2\right]$
+
+### Rectified Flow Distillation
+
+Compresses 10+ step teacher to 2-step student:
+
+$$\mathcal{L}_{distill}(\phi) = \mathbb{E}\left[\|v_\phi(o_t, x_\tau, \tau) - \frac{x_1 - x_\tau}{1-\tau}\|^2\right]$$
+
+### ESPADA (Spatially Aware Downsampling)
+
+VLM-LLM pipeline semantically segments trajectories into "casual" and "precision" phases, selectively accelerating casual phases. Geometric consistency guarantee: $\sum\|\Delta x'_{t+h}\| \approx \sum\|\Delta x_{t+h}\|$
+
+### Classifier-Free Guidance
+
+$v_{cfg} = v_{uncond} + w \cdot (v_{cond} - v_{uncond})$ with rescaling: $v_{rescaled} = v_{cfg} \cdot \|v_{cond}\| / (\|v_{cfg}\| + \varepsilon)$
+
+</Collapsible>
+
+## Key Results
+
+- **Simulation continuous run (1 hour)**: Habilis-β TPH **572.6**, success rate **78.5%** (vs π0.5: TPH 120.5, success rate 47.8% — **4.75× productivity**)
+- **Real-world (RB-Y1 humanoid, Dual-Bin Conveyor Packing)**: TPH **124**, MTBI **137.4s**, success rate **82.7%** (vs π0.5: TPH 19, MTBI 46.1s — **6.53× productivity, 2.98× reliability**)
+- **ESPADA effect**: Increases TPH from 250.5 → 572.6 but decreases MTBI from 72.4 → 39.2 — clear **productivity-reliability trade-off**
+- **RoboTwin 2.0 benchmark**: Highest reported performance at time of release on standard single-trial evaluation
+
+<Figure src="./fig-5.png" caption="Simulation Productivity-Reliability Plane. We plot the deployment performance of different methods in simulation. Habilis-β (w/o ESPADA) achieves the highest reliability (MTBI), while the full Habilis-β dramatically increases throughput (TPH), offering a configurable trade-off for different operational needs." />
+
+## Achievements and Limitations
+
+**Key achievements**
+- Proposed **TPH + MTBI evaluation framework** for continuous operation — moving beyond single-trial success rates for real deployment assessment
+- 2-step rectified flow distillation enables **on-device real-time control** — eliminating cloud dependency
+- ESPADA's semantic motion compression achieves **4.75× throughput improvement** while maintaining success rates (simulation)
+
+**Limitations**
+- "Overall generalization remains limited and has not yet reached human-level task accuracy" — acknowledged by authors
+- ESPADA's LLM-based segmentation may produce different results from the same demonstration, **compromising reproducibility**
+- Optimal CFG guidance scale varies across tasks; learning instruction-unconditioned priors remains challenging with current robot dataset scales
+- 🤖 Only validated on Dual-Bin Conveyor Packing as a single real-world task — generalization to diverse manipulation scenarios remains unverified
+
+## Terry's Memo
+
+- *(None)*

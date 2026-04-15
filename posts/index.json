@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-15T00:19:55.078Z",
-  "total_posts": 32,
+  "generated_at": "2026-04-15T03:06:18.644Z",
+  "total_posts": 33,
   "posts": [
     {
       "post_number": 1,
@@ -2223,6 +2223,83 @@
       ],
       "visibility": "public",
       "allowed_groups": []
+    },
+    {
+      "post_number": 33,
+      "slug": "2602-habilis-vla-on-device",
+      "content_type": "papers",
+      "title_en": "Habilis-β: A Fast-Motion and Long-Lasting On-Device VLA Model",
+      "title_ko": "Habilis-β: 빠르고 오래가는 온디바이스 VLA 모델",
+      "summary_ko": "기존 VLA 모델은 단일 시행 성공률만 측정하여 실제 배포 성능을 반영하지 못한다. Habilis-β는 Play 데이터 사전학습 + 순환 과제 후학습 + Rectified Flow 증류의 3단계 학습과 ESPADA 동작 압축으로, 시뮬레이션에서 TPH 572.6(π0.5 대비 4.75×), 실환경에서 TPH 124(π0.5 대비 6.53×)를 달성하며 온디바이스 실시간 제어를 실현했다.",
+      "summary_en": "Existing VLA models are evaluated by single-trial success rates that fail to capture real deployment performance. Habilis-β proposes continuous operation metrics (TPH, MTBI) and achieves 572.6 TPH in simulation (4.75× vs π0.5) and 124 TPH in real-world (6.53× vs π0.5) through 3-stage training with play data pre-training, cyclic post-training, rectified flow distillation, and ESPADA motion compression — all running on-device.",
+      "domain": "robotics",
+      "subfields": [
+        "vla",
+        "on-device-inference",
+        "deployment",
+        "manipulation"
+      ],
+      "key_concepts": [
+        "VLA",
+        "on-device-inference",
+        "tasks-per-hour",
+        "MTBI",
+        "rectified-flow-distillation",
+        "ESPADA",
+        "classifier-free-guidance",
+        "play-data-pretraining"
+      ],
+      "methodology": [
+        "flow-matching",
+        "knowledge-distillation",
+        "imitation-learning",
+        "continuous-evaluation"
+      ],
+      "contribution_type": "method",
+      "tags": [
+        "Papers",
+        "Robotics",
+        "VLA",
+        "On-Device",
+        "Deployment"
+      ],
+      "source_author": "Jesoon Kang et al.",
+      "source_date": "2026-02-21T00:00:00Z",
+      "published_at": "2026-04-15T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "On-device VLA model achieving 572.6 TPH in simulation and 124 TPH in real-world via 3-stage training + ESPADA motion compression",
+        "problem": "Single-trial success rates don't capture real deployment performance; cloud-dependent VLA models have latency/cost barriers",
+        "solution": "3-stage training (play pre-train → cyclic post-train → rectified flow distillation) + ESPADA semantic motion compression + CFG deployment knob",
+        "key_result": "Simulation: TPH 572.6 (4.75× vs π0.5); Real-world: TPH 124, MTBI 137.4s, 82.7% success (6.53× productivity vs π0.5)",
+        "limitations": [
+          "Limited generalization, not human-level accuracy",
+          "ESPADA LLM-based segmentation introduces variance",
+          "Single real-world task validation only"
+        ]
+      },
+      "relations": [
+        {
+          "slug": "2410-pi0-vla-flow-model",
+          "type": "builds_on"
+        },
+        {
+          "slug": "2511-pi0-6-recap",
+          "type": "compares_with"
+        },
+        {
+          "slug": "2505-forcevla-force-aware-moe",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "robotics/brain/vla",
+      "taxonomy_secondary": [
+        "robotics/arm"
+      ],
+      "visibility": "public",
+      "allowed_groups": []
     }
   ],
   "knowledge_graph": {
@@ -2546,6 +2623,18 @@
         "from": "260415-democratization-of-research",
         "to": "2604-self-driving-labs",
         "type": "related"
+      },
+      {
+        "from": "2602-habilis-vla-on-device",
+        "type": "builds_on"
+      },
+      {
+        "from": "2602-habilis-vla-on-device",
+        "type": "compares_with"
+      },
+      {
+        "from": "2602-habilis-vla-on-device",
+        "type": "related"
       }
     ],
     "clusters": [
@@ -2558,7 +2647,8 @@
           4,
           20,
           23,
-          24
+          24,
+          33
         ],
         "core_concepts": [
           "VLA",
@@ -2660,7 +2750,8 @@
           15,
           20,
           23,
-          24
+          24,
+          33
         ],
         "core_concepts": [
           "VLA"
@@ -2701,7 +2792,8 @@
       15,
       20,
       23,
-      24
+      24,
+      33
     ],
     "flow-matching": [
       1,
@@ -3230,18 +3322,39 @@
     ],
     "physical AI": [
       32
+    ],
+    "on-device-inference": [
+      33
+    ],
+    "tasks-per-hour": [
+      33
+    ],
+    "MTBI": [
+      33
+    ],
+    "rectified-flow-distillation": [
+      33
+    ],
+    "ESPADA": [
+      33
+    ],
+    "classifier-free-guidance": [
+      33
+    ],
+    "play-data-pretraining": [
+      33
     ]
   },
   "domain_stats": {
-    "robotics": 21,
+    "robotics": 22,
     "ml": 2,
     "ai": 6,
     "philosophy": 2,
     "AI & Society": 1
   },
   "taxonomy_stats": {
-    "robotics/brain/vla": 6,
-    "robotics/arm:secondary": 8,
+    "robotics/brain/vla": 7,
+    "robotics/arm:secondary": 9,
     "robotics/arm/force-control": 1,
     "robotics/hand/tactile": 6,
     "robotics/arm/exoskeleton": 3,
@@ -3250,14 +3363,14 @@
     "ai/agent": 7,
     "robotics/hand/dexterous:secondary": 4,
     "robotics/arm/exoskeleton:secondary": 1,
-    "robotics/brain": 8,
+    "robotics/brain": 9,
     "ai/llm:secondary": 5,
     "ai/society": 1,
     "ai/agents:secondary": 1,
     "robotics/brain:secondary": 1,
     "robotics/arm": 4,
     "robotics/hand": 8,
-    "robotics": 20,
+    "robotics": 21,
     "ai": 8
   }
 }
