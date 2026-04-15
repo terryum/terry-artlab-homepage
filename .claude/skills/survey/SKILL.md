@@ -80,7 +80,10 @@ npm run build
 ## Step 6) Git 커밋 + 푸시 (public만)
 
 ```bash
+git pull --rebase origin main
 git add projects/surveys/ public/images/projects/
 git commit -m "feat(survey): add {slug}"
 git push
 ```
+- **`git pull --rebase` 필수**: terry-surveys 등 다른 워크스페이스에서 동시에 push했을 수 있으므로, 커밋 전 최신 상태를 먼저 가져온다
+- push 실패 시 `git pull --rebase` 후 재시도

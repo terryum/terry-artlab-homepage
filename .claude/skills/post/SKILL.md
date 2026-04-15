@@ -166,6 +166,7 @@ npm run build
 
 ### Step R12) Git 커밋 + 푸시
 ```bash
+git pull --rebase origin main
 git add posts/ public/posts/
 git commit -m "feat(post): add <slug> (ko/en)"
 git push
@@ -416,6 +417,7 @@ npm run build
 ### Step B10) Git 커밋 + 푸시
 
 ```bash
+git pull --rebase origin main
 git add posts/ public/posts/
 git commit -m "feat(post): add <slug> (ko/en)"
 git push
