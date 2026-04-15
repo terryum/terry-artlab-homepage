@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "node scripts/clean-next.mjs && next dev --turbopack -p 3040",
-    "build": "node scripts/clean-next.mjs && node scripts/copy-post-images.mjs && node scripts/generate-thumbnails.mjs && next build",
+    "build": "node scripts/clean-next.mjs && next build",
+    "build:full": "node scripts/clean-next.mjs && node scripts/copy-post-images.mjs && node scripts/generate-thumbnails.mjs && next build",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
@@ -17,6 +18,7 @@
     "sync-obsidian:init": "node scripts/sync-obsidian.mjs --init"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1030.0",
     "@google-analytics/data": "^5.2.1",
     "@supabase/supabase-js": "^2.99.2",
     "@vercel/analytics": "^2.0.1",
