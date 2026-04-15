@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-15T03:27:59.212Z",
-  "total_posts": 35,
+  "generated_at": "2026-04-15T03:37:32.151Z",
+  "total_posts": 36,
   "posts": [
     {
       "post_number": 1,
@@ -2452,6 +2452,85 @@
       ],
       "visibility": "public",
       "allowed_groups": []
+    },
+    {
+      "post_number": 36,
+      "slug": "2601-umi-ft-compliant-manipulation",
+      "content_type": "papers",
+      "title_en": "UMI-FT: In-the-Wild Compliant Manipulation with Per-Finger Force Sensing",
+      "title_ko": "UMI-FT: 야외 시연에서 배우는 힘 인식 컴플라이언트 조작",
+      "summary_ko": "접촉이 많은 조작에서 힘 조절은 필수적이지만, 상용 F/T 센서는 비싸고 크고 깨지기 쉽다. UMI-FT는 UMI 핸드헬드 그리퍼에 2g 크기의 CoinFT 6축 센서를 손가락마다 장착하여, RGB·깊이·자세와 함께 손가락별 렌치 데이터를 수집한다. 적응형 컴플라이언스 정책(ACP)은 위치 목표, 파지력, 강성을 동시에 예측하여, 화이트보드 닦기 92%, 호박 꼬치 꽂기 80%, 전구 삽입 95% 성공률을 달성했다.",
+      "summary_en": "Force modulation is essential for contact-rich manipulation, but commercial F/T sensors are expensive, bulky, and fragile. UMI-FT mounts 2g CoinFT 6-axis sensors on each finger of a UMI hand-held gripper, capturing per-finger wrench alongside RGB, depth, and pose. The Adaptive Compliance Policy (ACP) simultaneously predicts position targets, grasp force, and stiffness, achieving 92% on whiteboard wiping, 80% on zucchini skewering, and 95% on lightbulb insertion.",
+      "domain": "robotics",
+      "subfields": [
+        "force-control",
+        "compliant-manipulation",
+        "imitation-learning",
+        "data-collection"
+      ],
+      "key_concepts": [
+        "CoinFT",
+        "adaptive-compliance-policy",
+        "force-torque-sensing",
+        "admittance-control",
+        "in-the-wild-demonstration",
+        "UMI"
+      ],
+      "methodology": [
+        "imitation-learning",
+        "diffusion-model",
+        "admittance-control",
+        "compliance-control"
+      ],
+      "contribution_type": "system",
+      "tags": [
+        "Papers",
+        "Robotics",
+        "Force Control",
+        "Imitation Learning",
+        "Compliant Manipulation"
+      ],
+      "source_author": "Hojung Choi et al.",
+      "source_date": "2026-01-15T00:00:00Z",
+      "published_at": "2026-04-15T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "UMI + 2g CoinFT 6-axis sensors on each finger for in-the-wild force-aware compliant manipulation learning",
+        "problem": "Contact-rich manipulation requires force modulation but commercial F/T sensors are too expensive/bulky for in-the-wild data collection",
+        "solution": "CoinFT per-finger sensors + Adaptive Compliance Policy predicting position, grasp force, and stiffness simultaneously via 3 parallel control loops",
+        "key_result": "Whiteboard wiping 92%, zucchini skewering 80% (in-the-wild: 100%), lightbulb insertion 95% — overwhelming advantage over force-unaware baselines",
+        "limitations": [
+          "Tethered via USB-serial",
+          "CoinFT delamination risk",
+          "3 single-arm tasks only"
+        ]
+      },
+      "relations": [
+        {
+          "slug": "2402-umi-universal-manipulation-interface",
+          "type": "builds_on"
+        },
+        {
+          "slug": "2303-diffusion-policy",
+          "type": "uses_method"
+        },
+        {
+          "slug": "2501-dexforce-force-informed-actions",
+          "type": "related"
+        },
+        {
+          "slug": "2505-forcevla-force-aware-moe",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "robotics/arm/force-control",
+      "taxonomy_secondary": [
+        "robotics/brain"
+      ],
+      "visibility": "public",
+      "allowed_groups": []
     }
   ],
   "knowledge_graph": {
@@ -2811,6 +2890,22 @@
       {
         "from": "2402-umi-universal-manipulation-interface",
         "type": "related"
+      },
+      {
+        "from": "2601-umi-ft-compliant-manipulation",
+        "type": "builds_on"
+      },
+      {
+        "from": "2601-umi-ft-compliant-manipulation",
+        "type": "uses_method"
+      },
+      {
+        "from": "2601-umi-ft-compliant-manipulation",
+        "type": "related"
+      },
+      {
+        "from": "2601-umi-ft-compliant-manipulation",
+        "type": "related"
       }
     ],
     "clusters": [
@@ -2835,6 +2930,18 @@
         ],
         "taxonomy_nodes": [
           "robotics/brain/vla"
+        ]
+      },
+      {
+        "id": "robotics-arm/force-control",
+        "label": "robotics/arm/force-control",
+        "post_numbers": [
+          3,
+          36
+        ],
+        "core_concepts": [],
+        "taxonomy_nodes": [
+          "robotics/arm/force-control"
         ]
       },
       {
@@ -2973,11 +3080,10 @@
       15,
       16,
       18,
-      32
+      32,
+      36
     ],
-    "outlier_papers": [
-      3
-    ]
+    "outlier_papers": []
   },
   "concept_index": {
     "VLA": [
@@ -2998,7 +3104,8 @@
       1
     ],
     "force-torque-sensing": [
-      1
+      1,
+      36
     ],
     "pre-training": [
       2
@@ -3561,7 +3668,8 @@
       35
     ],
     "in-the-wild-demonstration": [
-      35
+      35,
+      36
     ],
     "fisheye-camera": [
       35
@@ -3574,10 +3682,22 @@
     ],
     "latency-matching": [
       35
+    ],
+    "CoinFT": [
+      36
+    ],
+    "adaptive-compliance-policy": [
+      36
+    ],
+    "admittance-control": [
+      36
+    ],
+    "UMI": [
+      36
     ]
   },
   "domain_stats": {
-    "robotics": 24,
+    "robotics": 25,
     "ml": 2,
     "ai": 6,
     "philosophy": 2,
@@ -3586,7 +3706,7 @@
   "taxonomy_stats": {
     "robotics/brain/vla": 7,
     "robotics/arm:secondary": 11,
-    "robotics/arm/force-control": 1,
+    "robotics/arm/force-control": 2,
     "robotics/hand/tactile": 6,
     "robotics/arm/exoskeleton": 3,
     "robotics/hand:secondary": 1,
@@ -3598,10 +3718,10 @@
     "ai/llm:secondary": 5,
     "ai/society": 1,
     "ai/agents:secondary": 1,
-    "robotics/brain:secondary": 1,
-    "robotics/arm": 4,
+    "robotics/brain:secondary": 2,
+    "robotics/arm": 5,
     "robotics/hand": 8,
-    "robotics": 23,
+    "robotics": 24,
     "ai": 8
   }
 }

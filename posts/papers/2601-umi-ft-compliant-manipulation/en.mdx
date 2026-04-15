@@ -1,0 +1,104 @@
+---
+locale: "en"
+translation_of: "2601-umi-ft-compliant-manipulation:ko"
+title: "UMI-FT: In-the-Wild Compliant Manipulation with Per-Finger Force Sensing"
+subtitle: "6-axis F/T sensors on each finger enable contact-rich policy learning"
+summary: "Force modulation is essential for contact-rich manipulation, but commercial F/T sensors are expensive, bulky, and fragile. UMI-FT mounts 2g CoinFT 6-axis sensors on each finger of a UMI hand-held gripper, capturing per-finger wrench alongside RGB, depth, and pose. The Adaptive Compliance Policy (ACP) simultaneously predicts position targets, grasp force, and stiffness, achieving 92% on whiteboard wiping, 80% on zucchini skewering, and 95% on lightbulb insertion."
+card_summary: "Force modulation is essential for contact-rich manipulation, but commercial F/T sensors are expensive, bulky, and fragile. UMI-FT mounts 2g CoinFT 6-axis sensors on each finger of a UMI hand-held gripper, capturing per-finger wrench alongside RGB, depth, and pose. The Adaptive Compliance Policy (ACP) simultaneously predicts position targets, grasp force, and stiffness, achieving 92% on whiteboard wiping, 80% on zucchini skewering, and 95% on lightbulb insertion."
+cover_caption: "Controller structure of UMI-FT and the flow of information. Sensor modalities flow to three parallel control loops: learned policy, wrist compliance, and grasp force control."
+published_at: "2026-04-15T00:00:00Z"
+source_type: "arXiv"
+source_url: "https://arxiv.org/abs/2601.09988"
+source_date: "2026-01-15T00:00:00Z"
+display_tags:
+  - "Robotics"
+  - "Force Control"
+  - "Imitation Learning"
+  - "Compliant Manipulation"
+terrys_memo: ""
+references:
+  - title: "Universal Manipulation Interface: In-The-Wild Robot Teaching Without In-The-Wild Robots"
+    author: "Cheng Chi et al."
+    description: "The original UMI framework that UMI-FT extends. Provides the hand-held gripper and GoPro-based in-the-wild data collection system, to which UMI-FT adds 6-axis force/torque sensors and compliance control."
+    arxiv_url: "https://arxiv.org/abs/2402.10329"
+    scholar_url: "https://scholar.google.com/scholar?q=universal-manipulation-interface-in-the-wild"
+    post_slug: "2402-umi-universal-manipulation-interface"
+    category: "foundational"
+  - title: "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion"
+    author: "Cheng Chi et al."
+    description: "The diffusion-based action generation framework used for UMI-FT's policy learning. ACP extends this architecture by adding force/stiffness outputs."
+    arxiv_url: "https://arxiv.org/abs/2303.04137"
+    scholar_url: "https://scholar.google.com/scholar?q=diffusion-policy-visuomotor-policy-learning"
+    post_slug: "2303-diffusion-policy"
+    category: "foundational"
+  - title: "DexForce: Force-Informed Actions for Dexterous Manipulation"
+    author: "Courtney McBeth et al."
+    description: "Similar approach of collecting force information from demonstrations for manipulation policies. Contrasts with UMI-FT's 2-DOF gripper by targeting dexterous hands."
+    arxiv_url: "https://arxiv.org/abs/2501.08696"
+    scholar_url: "https://scholar.google.com/scholar?q=DexForce+force+informed+actions"
+    post_slug: "2501-dexforce-force-informed-actions"
+    category: "recent"
+translated_to: []
+---
+
+## TL;DR
+
+Force modulation is essential for contact-rich manipulation, but commercial F/T sensors are too expensive and bulky for in-the-wild data collection. UMI-FT integrates 2g CoinFT 6-axis sensors into UMI gripper fingers and learns an Adaptive Compliance Policy (ACP) that simultaneously controls position, grasp force, and stiffness.
+
+## Problem
+
+Contact-rich tasks like whiteboard wiping, lightbulb insertion, and food skewering require **precise force modulation** — insufficient force causes task failure, excessive force causes damage. However, commercial 6-axis F/T sensors (ATI Gamma etc.) are **expensive, bulky, and fragile**, making them unsuitable for large-scale data collection. UMI's in-the-wild framework captures only position and visual information, missing force data entirely.
+
+## Key Idea
+
+UMI-FT solves this with two innovations:
+
+- **CoinFT Sensor Integration**: 2g, 20mm diameter, 3mm thick capacitive 6-axis F/T sensors on each finger. Captures external contact forces and internal grasp forces at 360Hz. MLP calibration (Fz error 0.58N)
+- **Adaptive Compliance Policy (ACP)**: Extends Diffusion Policy to produce 21-dimensional output — reference pose (9D), virtual target pose (9D), stiffness scalar, gripper width, grasp force target. Executed through 3 parallel control loops: (1) learned policy, (2) 6D wrist admittance control, (3) grasp force admittance control
+
+<Figure src="./fig-2.png" caption="Controller structure of UMI-FT and the flow of information. Sensor modalities are listed on the left, with proprioception omitted for clarity. They flow to three controller loops in the middle, where the learned policy runs the slowest and generates reference targets to the other two model-based controllers." />
+
+<Collapsible title="Detailed Methods">
+
+### CoinFT Sensor Calibration
+
+Redesigned CoinFT with oval-cross-section pillars (4mm × 0.5mm). Raw capacitance mapped to 6-axis F/T via 5-layer MLP (128-64-36-24-12, ReLU). Trained with randomized force/torque combinations (25N normal, 20N shear, 500mNm moment) using ATI Gamma as reference.
+
+### Triple Control Loop
+
+1. **Visuomotor policy**: CLIP ViT-B/32 for RGB, depth as grayscale, 32-timestep F/T via causal convolution. Slowest loop generating reference targets
+2. **Wrist compliance**: Summed wrench from both finger sensors for 6D task-space admittance control
+3. **Grasp force**: Velocity-resolved admittance regulating average CoinFT readings across fingers
+
+### Adaptive Stiffness
+
+Policy predicts stiffness scalar to dynamically adjust compliance level per task phase. Low stiffness (compliant) during contact approach, high stiffness (rigid) during precision insertion.
+
+</Collapsible>
+
+## Key Results
+
+- **Whiteboard Wiping**: ACP **92%** (vs DP w/ Force: 28%, DP: 16%, DP w/ Compliance: 0%)
+- **Zucchini Skewering (in-lab)**: ACP **80%** (vs DP w/ Force: 70%, DP: 30%)
+- **Zucchini Skewering (in-the-wild)**: With in-the-wild data **20/20 (100%)**, lab-only data 4/20 (20%)
+- **Lightbulb Insertion**: ACP **95%** (vs DP w/ Force: 60%, DP: 0%, DP w/ Compliance: 20%)
+- **Overwhelming performance gap** over baselines lacking compliance or force sensing
+
+<Figure src="./fig-7.png" caption="Lightbulb Insertion policy rollout, test scenarios, and representative baseline failures." />
+
+## Achievements and Limitations
+
+**Key achievements**
+- First integration of **2g miniature CoinFT** into UMI for in-the-wild per-finger 6-axis force/torque collection
+- **Single policy simultaneously predicting** position, grasp force, and stiffness via Adaptive Compliance Policy
+- Demonstrated that in-the-wild data is critical for contact-rich task generalization (lab-only: 20% vs in-the-wild: 100%)
+
+**Limitations**
+- System **tethered via USB-serial** bridge — limits portability
+- Only main camera (~80° FoV) utilized; ultrawide camera unused
+- CoinFT **susceptible to delamination** under excessive tensile forces
+- 🤖 Validated on only 3 relatively simple single-arm contact tasks; extension to bimanual coordination or complex deformable manipulation untested
+
+## Terry's Memo
+
+- *(None)*

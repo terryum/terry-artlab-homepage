@@ -1,0 +1,104 @@
+---
+locale: "ko"
+title: "UMI-FT: 야외 시연에서 배우는 힘 인식 컴플라이언트 조작"
+subtitle: "손가락별 6축 힘/토크 센서로 접촉 풍부한 조작 정책 학습"
+summary: "접촉이 많은 조작에서 힘 조절은 필수적이지만, 상용 F/T 센서는 비싸고 크고 깨지기 쉽다. UMI-FT는 UMI 핸드헬드 그리퍼에 2g 크기의 CoinFT 6축 센서를 손가락마다 장착하여, RGB·깊이·자세와 함께 손가락별 렌치 데이터를 수집한다. 적응형 컴플라이언스 정책(ACP)은 위치 목표, 파지력, 강성을 동시에 예측하여, 화이트보드 닦기 92%, 호박 꼬치 꽂기 80%, 전구 삽입 95% 성공률을 달성했다."
+card_summary: "접촉이 많은 조작에서 힘 조절은 필수적이지만, 상용 F/T 센서는 비싸고 크고 깨지기 쉽다. UMI-FT는 UMI 핸드헬드 그리퍼에 2g 크기의 CoinFT 6축 센서를 손가락마다 장착하여, RGB·깊이·자세와 함께 손가락별 렌치 데이터를 수집한다. 적응형 컴플라이언스 정책(ACP)은 위치 목표, 파지력, 강성을 동시에 예측하여, 화이트보드 닦기 92%, 호박 꼬치 꽂기 80%, 전구 삽입 95% 성공률을 달성했다."
+cover_caption: "UMI-FT의 제어 구조와 정보 흐름. 센서 모달리티(왼쪽)에서 학습된 정책, 손목 컴플라이언스, 파지력 제어 3개 루프(가운데)로 흐른다."
+published_at: "2026-04-15T00:00:00Z"
+source_type: "arXiv"
+source_url: "https://arxiv.org/abs/2601.09988"
+source_date: "2026-01-15T00:00:00Z"
+display_tags:
+  - "Robotics"
+  - "Force Control"
+  - "Imitation Learning"
+  - "Compliant Manipulation"
+terrys_memo: ""
+references:
+  - title: "Universal Manipulation Interface: In-The-Wild Robot Teaching Without In-The-Wild Robots"
+    author: "Cheng Chi et al."
+    description: "UMI-FT가 확장하는 원본 UMI 프레임워크. 핸드헬드 그리퍼와 GoPro 기반 야외 데이터 수집 시스템을 제공하며, UMI-FT는 여기에 6축 힘/토크 센서와 컴플라이언스 제어를 추가한다."
+    arxiv_url: "https://arxiv.org/abs/2402.10329"
+    scholar_url: "https://scholar.google.com/scholar?q=universal-manipulation-interface-in-the-wild"
+    post_slug: "2402-umi-universal-manipulation-interface"
+    category: "foundational"
+  - title: "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion"
+    author: "Cheng Chi et al."
+    description: "UMI-FT의 정책 학습에 사용되는 확산 기반 행동 생성 프레임워크. ACP(적응형 컴플라이언스 정책)는 이 Diffusion Policy 아키텍처를 확장하여 힘/강성 출력을 추가한다."
+    arxiv_url: "https://arxiv.org/abs/2303.04137"
+    scholar_url: "https://scholar.google.com/scholar?q=diffusion-policy-visuomotor-policy-learning"
+    post_slug: "2303-diffusion-policy"
+    category: "foundational"
+  - title: "DexForce: 인간 시연에서 접촉력을 학습하는 다지 조작"
+    author: "Courtney McBeth et al."
+    description: "UMI-FT와 유사하게 시연에서 힘 정보를 수집하여 조작 정책에 활용하는 연구. 다지 손에서의 힘 인식 조작이라는 점에서 UMI-FT의 2-DoF 그리퍼 접근과 대비된다."
+    arxiv_url: "https://arxiv.org/abs/2501.08696"
+    scholar_url: "https://scholar.google.com/scholar?q=DexForce+force+informed+actions"
+    post_slug: "2501-dexforce-force-informed-actions"
+    category: "recent"
+translated_to:
+  - "en"
+---
+
+## TL;DR
+
+접촉이 풍부한 조작에서 힘 조절은 필수적이지만, 기존 F/T 센서는 비싸고 크다. UMI-FT는 2g CoinFT 6축 센서를 UMI 그리퍼 손가락에 장착하여 야외에서 힘 데이터를 수집하고, 적응형 컴플라이언스 정책(ACP)으로 위치·파지력·강성을 동시에 제어한다.
+
+## 문제
+
+화이트보드 닦기, 전구 삽입, 식재료 꼬치 꽂기 등 접촉이 풍부한 조작 과제에서는 **힘의 정밀한 조절**이 핵심이다—힘이 부족하면 과제가 실패하고, 과도하면 물체가 파손된다. 그러나 상용 6축 F/T 센서(ATI Gamma 등)는 **비싸고, 크고, 깨지기 쉬워** 대규모 데이터 수집에 부적합하다. UMI의 야외 데이터 수집 프레임워크는 위치와 시각 정보만 캡처할 뿐 힘 정보는 수집하지 못한다.
+
+## 핵심 아이디어
+
+UMI-FT는 두 가지 핵심 혁신으로 이 문제를 해결한다:
+
+- **CoinFT 센서 통합**: 2g, 직경 20mm, 두께 3mm의 초소형 정전용량 기반 6축 F/T 센서를 각 손가락에 장착. 360Hz로 외부 접촉력과 내부 파지력을 동시에 측정. MLP로 캘리브레이션 (Fz 오차 0.58N)
+- **적응형 컴플라이언스 정책(ACP)**: Diffusion Policy를 확장하여 21차원 출력을 생성 — 참조 자세(9D), 가상 목표 자세(9D), 강성 스칼라, 그리퍼 폭, 파지력 목표. 3개 병렬 제어 루프로 실행: (1) 학습된 정책, (2) 6D 손목 어드미턴스 제어, (3) 파지력 어드미턴스 제어
+
+<Figure src="./fig-2.png" caption="Controller structure of UMI-FT and the flow of information. Sensor modalities are listed on the left, with proprioception omitted for clarity. They flow to three controller loops in the middle, where the learned policy runs the slowest and generates reference targets to the other two model-based controllers." />
+
+<Collapsible title="구체적 방법">
+
+### CoinFT 센서 캘리브레이션
+
+타원 단면 기둥(4mm × 0.5mm)으로 재설계된 CoinFT의 원시 정전용량 데이터를 5층 MLP(128-64-36-24-12, ReLU)로 6축 F/T에 매핑. ATI Gamma를 참조 센서로 사용하여 무작위 힘/토크 조합(법선 25N, 전단 20N, 모멘트 500mNm)으로 학습.
+
+### 3중 제어 루프
+
+1. **시각-운동 정책**: CLIP ViT-B/32로 RGB 인코딩, 깊이를 그레이스케일로 처리, 32 타임스텝 F/T 데이터를 인과 합성곱으로 처리. 가장 느린 루프에서 참조 목표 생성
+2. **손목 컴플라이언스**: 양 손가락 센서의 렌치를 합산하여 6D task-space 어드미턴스 제어
+3. **파지력 제어**: 양 손가락 CoinFT 평균으로 velocity-resolved 어드미턴스 파지력 조절
+
+### 적응형 강성
+
+정책이 강성 스칼라를 예측하여 과제 단계에 따라 동적으로 컴플라이언스 수준을 조절. 접촉 접근 시 낮은 강성(유연하게), 정밀 삽입 시 높은 강성(단단하게).
+
+</Collapsible>
+
+## 주요 결과
+
+- **화이트보드 닦기**: ACP **92%** (vs DP w/ Force: 28%, DP: 16%, DP w/ Compliance: 0%)
+- **호박 꼬치 꽂기 (실험실)**: ACP **80%** (vs DP w/ Force: 70%, DP: 30%)
+- **호박 꼬치 꽂기 (야외)**: 야외 데이터로 학습 시 **20/20 (100%)**, 실험실 데이터만으로는 4/20 (20%)
+- **전구 삽입**: ACP **95%** (vs DP w/ Force: 60%, DP: 0%, DP w/ Compliance: 20%)
+- 힘 센싱과 컴플라이언스가 모두 필요한 과제에서 baseline 대비 **압도적 성능 차이**
+
+<Figure src="./fig-7.png" caption="Lightbulb Insertion policy rollout, test scenarios, and representative baseline failures." />
+
+## 달성점과 한계점
+
+**새롭게 달성한 점**
+- **$2g 초소형 CoinFT**를 UMI에 통합하여 야외에서 손가락별 6축 힘/토크 수집을 최초로 실현
+- 위치·파지력·강성을 **단일 정책으로 동시에 예측**하는 적응형 컴플라이언스 정책
+- 야외 데이터가 접촉 풍부한 과제의 일반화에 결정적임을 실증 (실험실만: 20% vs 야외: 100%)
+
+**한계점**
+- USB-시리얼 브리지로 인해 시스템이 **유선 연결에 종속** — 이동성 제한
+- 메인 카메라(~80° FoV)만 사용, 광각 카메라 미활용
+- CoinFT가 과도한 인장력에서 **박리(delamination) 취약**
+- 🤖 3개의 비교적 단순한 1팔 접촉 과제에서만 검증되었으며, 양팔 협응이나 변형체 조작의 복합 과제로의 확장은 미검증
+
+## Terry's Memo
+
+- *(None)*
