@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-15T03:14:04.354Z",
-  "total_posts": 34,
+  "generated_at": "2026-04-15T03:27:59.212Z",
+  "total_posts": 35,
   "posts": [
     {
       "post_number": 1,
@@ -2375,6 +2375,83 @@
       ],
       "visibility": "public",
       "allowed_groups": []
+    },
+    {
+      "post_number": 35,
+      "slug": "2402-umi-universal-manipulation-interface",
+      "content_type": "papers",
+      "title_en": "UMI: Universal Manipulation Interface for In-The-Wild Robot Teaching",
+      "title_ko": "UMI: 야외 인간 시연을 로봇 정책으로 직접 전이하는 범용 조작 인터페이스",
+      "summary_ko": "로봇 조작 데이터 수집은 비용이 높고 환경이 제한적이다. UMI는 핸드헬드 그리퍼 + GoPro 피쉬아이 카메라 + 사이드 미러로 야외(in-the-wild) 인간 시연 데이터를 수집하고, 레이턴시 매칭과 상대 궤적 표현을 통해 하드웨어 무관 로봇 정책을 학습한다. 컵 정리 100%, 동적 던지기 87.5%, 양손 옷 접기 70%, 설거지 70% 성공률과 처음 본 환경에서의 제로샷 일반화를 달성했다.",
+      "summary_en": "Robot manipulation data collection is expensive and environment-limited. UMI uses hand-held grippers with GoPro fisheye cameras and side mirrors to collect in-the-wild human demonstrations, then learns hardware-agnostic robot policies via latency matching and relative trajectory representations. Achieved 100% on cup arrangement, 87.5% on dynamic tossing, 70% on bimanual cloth folding, 70% on dish washing, and zero-shot generalization to unseen environments.",
+      "domain": "robotics",
+      "subfields": [
+        "manipulation",
+        "imitation-learning",
+        "data-collection",
+        "visuomotor-policy"
+      ],
+      "key_concepts": [
+        "hand-held-gripper",
+        "in-the-wild-demonstration",
+        "fisheye-camera",
+        "side-mirror-stereo",
+        "relative-trajectory",
+        "latency-matching",
+        "diffusion-policy",
+        "zero-shot-generalization"
+      ],
+      "methodology": [
+        "imitation-learning",
+        "diffusion-model",
+        "SLAM",
+        "data-collection-interface"
+      ],
+      "contribution_type": "system",
+      "tags": [
+        "Papers",
+        "Robotics",
+        "Imitation Learning",
+        "Data Collection",
+        "Manipulation"
+      ],
+      "source_author": "Cheng Chi et al.",
+      "source_date": "2024-02-15T00:00:00Z",
+      "published_at": "2026-04-15T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "$371 hand-held gripper + GoPro for in-the-wild robot teaching — zero-shot deployment across multiple robot platforms",
+        "problem": "Teleoperation-based data collection is expensive, environment-limited, and cannot demonstrate dynamic/bimanual tasks",
+        "solution": "Hand-held gripper with fisheye camera + side mirrors + IMU-SLAM for in-the-wild data, Diffusion Policy with latency matching and relative trajectory for hardware-agnostic deployment",
+        "key_result": "Cup arrangement 100%, dynamic tossing 87.5%, bimanual cloth folding 70%, dish washing 70%; zero-shot generalization to unseen environments (71.7% vs 0% with lab data)",
+        "limitations": [
+          "Relies on data filtering for kinematic feasibility",
+          "SLAM fails in texture-poor environments",
+          "2-DOF gripper only"
+        ]
+      },
+      "relations": [
+        {
+          "slug": "2303-diffusion-policy",
+          "type": "builds_on"
+        },
+        {
+          "slug": "2505-dexumi",
+          "type": "related"
+        },
+        {
+          "slug": "2602-robopaint",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "robotics/brain",
+      "taxonomy_secondary": [
+        "robotics/arm"
+      ],
+      "visibility": "public",
+      "allowed_groups": []
     }
   ],
   "knowledge_graph": {
@@ -2722,6 +2799,18 @@
       {
         "from": "2303-diffusion-policy",
         "type": "related"
+      },
+      {
+        "from": "2402-umi-universal-manipulation-interface",
+        "type": "builds_on"
+      },
+      {
+        "from": "2402-umi-universal-manipulation-interface",
+        "type": "related"
+      },
+      {
+        "from": "2402-umi-universal-manipulation-interface",
+        "type": "related"
       }
     ],
     "clusters": [
@@ -2821,9 +2910,13 @@
         "post_numbers": [
           19,
           29,
-          34
+          34,
+          35
         ],
-        "core_concepts": [],
+        "core_concepts": [
+          "zero-shot-generalization",
+          "diffusion-policy"
+        ],
         "taxonomy_nodes": [
           "robotics/brain"
         ]
@@ -2852,7 +2945,8 @@
         "post_numbers": [
           12,
           14,
-          34
+          34,
+          35
         ],
         "core_concepts": [
           "diffusion-policy"
@@ -3075,7 +3169,8 @@
     "diffusion-policy": [
       12,
       14,
-      34
+      34,
+      35
     ],
     "force-control": [
       12
@@ -3375,7 +3470,8 @@
       29
     ],
     "zero-shot-generalization": [
-      29
+      29,
+      35
     ],
     "long-horizon-manipulation": [
       29
@@ -3460,10 +3556,28 @@
     ],
     "multimodal-action-distribution": [
       34
+    ],
+    "hand-held-gripper": [
+      35
+    ],
+    "in-the-wild-demonstration": [
+      35
+    ],
+    "fisheye-camera": [
+      35
+    ],
+    "side-mirror-stereo": [
+      35
+    ],
+    "relative-trajectory": [
+      35
+    ],
+    "latency-matching": [
+      35
     ]
   },
   "domain_stats": {
-    "robotics": 23,
+    "robotics": 24,
     "ml": 2,
     "ai": 6,
     "philosophy": 2,
@@ -3471,7 +3585,7 @@
   },
   "taxonomy_stats": {
     "robotics/brain/vla": 7,
-    "robotics/arm:secondary": 10,
+    "robotics/arm:secondary": 11,
     "robotics/arm/force-control": 1,
     "robotics/hand/tactile": 6,
     "robotics/arm/exoskeleton": 3,
@@ -3480,14 +3594,14 @@
     "ai/agent": 7,
     "robotics/hand/dexterous:secondary": 4,
     "robotics/arm/exoskeleton:secondary": 1,
-    "robotics/brain": 10,
+    "robotics/brain": 11,
     "ai/llm:secondary": 5,
     "ai/society": 1,
     "ai/agents:secondary": 1,
     "robotics/brain:secondary": 1,
     "robotics/arm": 4,
     "robotics/hand": 8,
-    "robotics": 22,
+    "robotics": 23,
     "ai": 8
   }
 }

@@ -1,0 +1,110 @@
+---
+locale: "ko"
+title: "UMI: 야외 인간 시연을 로봇 정책으로 직접 전이하는 범용 조작 인터페이스"
+subtitle: "핸드헬드 그리퍼와 Diffusion Policy로 제로샷 일반화를 달성하다"
+summary: "로봇 조작 데이터 수집은 비용이 높고 환경이 제한적이다. UMI는 핸드헬드 그리퍼 + GoPro 피쉬아이 카메라 + 사이드 미러로 야외(in-the-wild) 인간 시연 데이터를 수집하고, 레이턴시 매칭과 상대 궤적 표현을 통해 하드웨어 무관 로봇 정책을 학습한다. 컵 정리 100%, 동적 던지기 87.5%, 양손 옷 접기 70%, 설거지 70% 성공률과 처음 본 환경에서의 제로샷 일반화를 달성했다."
+card_summary: "로봇 조작 데이터 수집은 비용이 높고 환경이 제한적이다. UMI는 핸드헬드 그리퍼 + GoPro 피쉬아이 카메라 + 사이드 미러로 야외(in-the-wild) 인간 시연 데이터를 수집하고, 레이턴시 매칭과 상대 궤적 표현을 통해 하드웨어 무관 로봇 정책을 학습한다. 컵 정리 100%, 동적 던지기 87.5%, 양손 옷 접기 70%, 설거지 70% 성공률과 처음 본 환경에서의 제로샷 일반화를 달성했다."
+cover_caption: "Universal Manipulation Interface (UMI)는 이동 가능하고 직관적이며 저비용의 데이터 수집 및 정책 학습 프레임워크로, 다양한 인간 시연을 효과적인 시각-운동 정책으로 전환한다."
+published_at: "2026-04-15T00:00:00Z"
+source_type: "arXiv"
+source_url: "https://arxiv.org/abs/2402.10329"
+source_date: "2024-02-15T00:00:00Z"
+display_tags:
+  - "Robotics"
+  - "Imitation Learning"
+  - "Data Collection"
+  - "Manipulation"
+terrys_memo: ""
+references:
+  - title: "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion"
+    author: "Cheng Chi et al."
+    description: "UMI가 정책 학습에 사용하는 핵심 프레임워크. 동일 저자 그룹의 선행 연구로, 확산 모델 기반 행동 생성의 토대를 제공한다. UMI는 이 프레임워크 위에 야외 데이터 수집과 하드웨어 무관 배포를 추가한다."
+    arxiv_url: "https://arxiv.org/abs/2303.04137"
+    scholar_url: "https://scholar.google.com/scholar?q=diffusion-policy-visuomotor-policy-learning"
+    post_slug: "2303-diffusion-policy"
+    category: "foundational"
+  - title: "DexUMI: 인간 손을 다지 로봇 조작의 범용 인터페이스로"
+    author: "Cheng Chi et al."
+    description: "UMI를 다지(dexterous) 로봇 손으로 확장한 후속 연구. 핸드헬드 그리퍼 대신 장갑 기반 인터페이스로 인간 손 동작을 캡처한다."
+    arxiv_url: "https://arxiv.org/abs/2505.15809"
+    scholar_url: "https://scholar.google.com/scholar?q=DexUMI+dexterous+universal+manipulation"
+    post_slug: "2505-dexumi"
+    category: "recent"
+translated_to:
+  - "en"
+---
+
+## TL;DR
+
+로봇 조작 데이터를 로봇 없이 야외에서 수집할 수 있을까? UMI는 $371 핸드헬드 그리퍼 + GoPro로 인간 시연을 수집하고, Diffusion Policy와 레이턴시 매칭·상대 궤적 표현을 결합하여 다양한 로봇 플랫폼에 제로샷 배포 가능한 정책을 학습한다.
+
+## 문제
+
+기존 로봇 학습 데이터 수집은 두 가지 한계가 있다. 첫째, **텔레오퍼레이션은 로봇이 있어야** 하므로 데이터 수집 환경이 실험실로 제한되고, 비용이 높다. 둘째, 실험실에서 수집한 데이터로 학습한 정책은 **처음 본 환경에 일반화되지 못한다**. 동적 던지기나 양손 협응 같은 복잡한 과제는 텔레오퍼레이션으로 시연 자체가 불가능하다.
+
+## 핵심 아이디어
+
+UMI의 핵심은 **시연 인터페이스(Demonstration Interface)**와 **정책 인터페이스(Policy Interface)**의 이중 설계다:
+
+**시연 인터페이스** — 야외에서 인간이 직접 핸드헬드 그리퍼를 사용하여 시연:
+- **155° 피쉬아이 GoPro**: 유일한 센서. 넓은 시야각으로 중심부 해상도를 보존하면서 주변 정보 포함
+- **사이드 미러**: 피쉬아이 카메라의 주변부에 물리적 미러를 배치하여 **암묵적 스테레오 깊이** 정보 제공
+- **IMU 기반 SLAM 추적**: GoPro 내장 IMU + ORB-SLAM3로 6-DOF 자세 추적 (평균 오차 6.1mm, 3.5°)
+
+**정책 인터페이스** — 수집된 데이터를 로봇에 배포:
+- **레이턴시 매칭**: 관측(카메라, 자세, 그리퍼)과 행동의 시간 동기화, 실행 지연 보상
+- **상대 궤적 행동 표현**: 현재 end-effector 자세 기준 상대적 SE(3) 변환으로, delta나 absolute 표현보다 로봇 간 전이에 강건
+
+<Figure src="./fig-2.png" caption="UMI Demonstration Interface Design. Left: Hand-held grippers for data collection, with a GoPro as the only sensor and recording device. Middle: Image from the GoPro's 155° Fisheye view. Note the physical side mirrors highlighted in green which provide implicit stereo information. Right: UMI-compatible robot gripper and camera setup make observation similar to hand-held gripper view." />
+
+<Collapsible title="구체적 방법">
+
+### 상대 궤적 vs Delta vs Absolute 행동 표현
+
+- **상대 궤적 (UMI)**: 추론 시작 시점의 EE 자세 기준 전체 행동 시퀀스를 상대적으로 표현. 추적 오류와 카메라 변위에 강건
+- **Delta**: 각 행동이 직전 행동 기준 상대적 → 오류 누적
+- **Absolute**: 전역 좌표계 필요 → 야외 데이터 수집에 부적합
+
+### 피쉬아이 렌즈 vs 핀홀 보정
+
+155° FoV의 피쉬아이 이미지를 핀홀 모델로 보정하면 주변부가 심하게 늘어나고 중심부(가장 중요한 정보)가 작은 영역으로 압축된다. UMI는 원시 피쉬아이 이미지를 정책 입력으로 직접 사용.
+
+### 사이드 미러 디지털 반사
+
+거울에 비친 영상을 디지털로 반사(좌우 반전)하면, 거울 뷰의 방향이 메인 카메라와 일관되어 정책 학습에 효과적. 반사 없이 사용하면 85%, 반사 적용 시 100% 성공률.
+
+### 레이턴시 매칭
+
+1. 각 관측 스트림(RGB, EE 자세, 그리퍼 폭)의 레이턴시를 물리적으로 측정
+2. 가장 높은 레이턴시(보통 카메라)에 맞춰 정렬
+3. 행동 명령을 실행 레이턴시만큼 미리 전송
+
+</Collapsible>
+
+## 주요 결과
+
+- **컵 정리**: 20/20 (**100%**), 크로스-로봇(Franka FR2) 18/20 (90%)
+- **동적 던지기**: 105/120 (**87.5%**) — 레이턴시 매칭 없으면 57.5%
+- **양손 옷 접기**: 14/20 (**70%**) — 그리퍼 간 proprioception 없으면 30%
+- **설거지**: 14/20 (**70%**) — 장기 과제(다수 강체/변형체/관절체 물체)
+- **야외 일반화**: 30곳에서 1,400개 시연으로 학습 → 처음 본 환경에서 71.7% 성공 (실험실 데이터만으로는 0%)
+- **데이터 수집 속도**: 텔레오퍼레이션 대비 **3배 빠름**, 동적 던지기는 텔레오퍼레이션으로 수행 불가
+
+<Figure src="./fig-7.png" caption="Policy Rollouts. We test UMI on a variety of challenging real-world tasks. Cup arrangement tests UMI's ability to learn both prehensile and non-prehensile actions, and to capture multi-modal action distribution (clockwise and counter-clockwise rotation). This task is evaluated in both narrow-domain and unseen environments as well as two robot embodiments. Dynamic tossing tests UMI's ability to capture and transfer rapid human motions as well as precise hand-eye coordination. Bimanual cloth folding tests UMI's ability to synchronize two-arm coordination. Dish washing tests UMI's ability to handle long-horizon tasks that involve multiple rigid, deformable, and articulated objects." />
+
+## 달성점과 한계점
+
+**새롭게 달성한 점**
+- **$371 핸드헬드 그리퍼**로 로봇 없이 야외 데이터 수집 → 텔레오퍼레이션의 환경·비용 제약 제거
+- 동적 던지기, 양손 협응 등 **텔레오퍼레이션으로 불가능한 과제**의 시연·학습 가능
+- 상대 궤적 + 레이턴시 매칭으로 **다중 로봇 플랫폼에 제로샷 배포** (UR5e, Franka FR2)
+
+**한계점**
+- 하류 로봇의 기구학적 한계를 데이터 수집 시점에 알 수 없어 **데이터 필터링에 의존** — 하드웨어 인식 정책 학습 필요
+- 시각 SLAM이 **텍스처 부족 환경**(순백 벽 등)에서 추적 실패 가능
+- UMI 그리퍼(780g)가 인간 손보다 무겁고 부피가 커서 **시연 효율이 맨손의 48~64%** 수준
+- 🤖 2-DoF 그리퍼만 지원하므로 다지 손의 풍부한 조작 능력을 활용할 수 없으며, 이는 후속 연구 DexUMI에서 부분적으로 해결됨
+
+## Terry's Memo
+
+- *(None)*

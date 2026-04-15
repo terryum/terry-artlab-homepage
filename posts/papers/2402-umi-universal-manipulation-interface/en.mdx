@@ -1,0 +1,110 @@
+---
+locale: "en"
+translation_of: "2402-umi-universal-manipulation-interface:ko"
+title: "UMI: Universal Manipulation Interface for In-The-Wild Robot Teaching"
+subtitle: "Hand-held grippers + Diffusion Policy for zero-shot generalization"
+summary: "Robot manipulation data collection is expensive and environment-limited. UMI uses hand-held grippers with GoPro fisheye cameras and side mirrors to collect in-the-wild human demonstrations, then learns hardware-agnostic robot policies via latency matching and relative trajectory representations. Achieved 100% on cup arrangement, 87.5% on dynamic tossing, 70% on bimanual cloth folding, 70% on dish washing, and zero-shot generalization to unseen environments."
+card_summary: "Robot manipulation data collection is expensive and environment-limited. UMI uses hand-held grippers with GoPro fisheye cameras and side mirrors to collect in-the-wild human demonstrations, then learns hardware-agnostic robot policies via latency matching and relative trajectory representations. Achieved 100% on cup arrangement, 87.5% on dynamic tossing, 70% on bimanual cloth folding, 70% on dish washing, and zero-shot generalization to unseen environments."
+cover_caption: "Universal Manipulation Interface (UMI) is a portable, intuitive, low-cost data collection and policy learning framework that transfers diverse human demonstrations to effective visuomotor policies."
+published_at: "2026-04-15T00:00:00Z"
+source_type: "arXiv"
+source_url: "https://arxiv.org/abs/2402.10329"
+source_date: "2024-02-15T00:00:00Z"
+display_tags:
+  - "Robotics"
+  - "Imitation Learning"
+  - "Data Collection"
+  - "Manipulation"
+terrys_memo: ""
+references:
+  - title: "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion"
+    author: "Cheng Chi et al."
+    description: "The core policy learning framework used by UMI. Prior work by the same author group providing the foundation for diffusion-based action generation. UMI adds in-the-wild data collection and hardware-agnostic deployment on top."
+    arxiv_url: "https://arxiv.org/abs/2303.04137"
+    scholar_url: "https://scholar.google.com/scholar?q=diffusion-policy-visuomotor-policy-learning"
+    post_slug: "2303-diffusion-policy"
+    category: "foundational"
+  - title: "DexUMI: Giving a Robot Hand to Everyone"
+    author: "Cheng Chi et al."
+    description: "Follow-up extending UMI to dexterous robot hands. Uses glove-based interface instead of hand-held grippers to capture human hand motions for dexterous manipulation."
+    arxiv_url: "https://arxiv.org/abs/2505.15809"
+    scholar_url: "https://scholar.google.com/scholar?q=DexUMI+dexterous+universal+manipulation"
+    post_slug: "2505-dexumi"
+    category: "recent"
+translated_to: []
+---
+
+## TL;DR
+
+Can robot manipulation data be collected in-the-wild without robots? UMI uses $371 hand-held grippers + GoPro to collect human demonstrations, combining Diffusion Policy with latency matching and relative trajectory representations to learn policies deployable zero-shot across multiple robot platforms.
+
+## Problem
+
+Existing robot learning data collection faces two key limitations. First, **teleoperation requires robots**, confining data collection to labs and making it expensive. Second, lab-collected data produces policies that **fail to generalize to unseen environments**. Complex tasks like dynamic tossing or bimanual coordination are often impossible to demonstrate via teleoperation entirely.
+
+## Key Idea
+
+UMI's core is a dual design of **Demonstration Interface** and **Policy Interface**:
+
+**Demonstration Interface** — humans use hand-held grippers in the wild:
+- **155° Fisheye GoPro**: The only sensor, preserving center resolution while capturing peripheral information
+- **Side Mirrors**: Physical mirrors in the fisheye periphery providing **implicit stereo depth** information
+- **IMU-aware SLAM**: GoPro built-in IMU + ORB-SLAM3 for 6-DOF tracking (mean error 6.1mm, 3.5°)
+
+**Policy Interface** — deploying collected data to robots:
+- **Latency Matching**: Time synchronization across observation streams (camera, pose, gripper) with execution delay compensation
+- **Relative Trajectory Action**: SE(3) transforms relative to current EE pose, more robust to tracking errors and camera displacements than delta or absolute representations
+
+<Figure src="./fig-2.png" caption="UMI Demonstration Interface Design. Left: Hand-held grippers for data collection, with a GoPro as the only sensor and recording device. Middle: Image from the GoPro's 155° Fisheye view. Note the physical side mirrors highlighted in green which provide implicit stereo information. Right: UMI-compatible robot gripper and camera setup make observation similar to hand-held gripper view." />
+
+<Collapsible title="Detailed Methods">
+
+### Relative Trajectory vs Delta vs Absolute Action
+
+- **Relative Trajectory (UMI)**: Entire action sequence relative to EE pose at inference start. Robust against tracking errors and camera displacements
+- **Delta**: Each action relative to immediately previous → error accumulates
+- **Absolute**: Requires global coordinate frame → infeasible for in-the-wild data
+
+### Fisheye vs Pinhole Rectification
+
+Rectifying a 155° FoV fisheye image to pinhole model severely stretches peripheral views while compressing central information. UMI uses raw fisheye images as direct policy input.
+
+### Side Mirror Digital Reflection
+
+Digitally reflecting (flipping) mirror crops makes mirror view orientations consistent with main camera, improving policy learning. Without reflection: 85%, with reflection: 100% success rate.
+
+### Latency Matching
+
+1. Physically measure latency for each observation stream (RGB, EE pose, gripper width)
+2. Align to stream with highest latency (usually camera)
+3. Send action commands ahead of time to compensate for execution latency
+
+</Collapsible>
+
+## Key Results
+
+- **Cup Arrangement**: 20/20 (**100%**), cross-robot (Franka FR2) 18/20 (90%)
+- **Dynamic Tossing**: 105/120 (**87.5%**) — without latency matching: 57.5%
+- **Bimanual Cloth Folding**: 14/20 (**70%**) — without inter-gripper proprioception: 30%
+- **Dish Washing**: 14/20 (**70%**) — long-horizon (multiple rigid/deformable/articulated objects)
+- **In-the-wild Generalization**: 1,400 demos from 30 locations → 71.7% success in unseen environments (narrow-domain data: 0%)
+- **Data Collection Speed**: **3× faster** than teleoperation; dynamic tossing impossible with teleoperation
+
+<Figure src="./fig-7.png" caption="Policy Rollouts. We test UMI on a variety of challenging real-world tasks. Cup arrangement tests UMI's ability to learn both prehensile and non-prehensile actions, and to capture multi-modal action distribution (clockwise and counter-clockwise rotation). This task is evaluated in both narrow-domain and unseen environments as well as two robot embodiments. Dynamic tossing tests UMI's ability to capture and transfer rapid human motions as well as precise hand-eye coordination. Bimanual cloth folding tests UMI's ability to synchronize two-arm coordination. Dish washing tests UMI's ability to handle long-horizon tasks that involve multiple rigid, deformable, and articulated objects." />
+
+## Achievements and Limitations
+
+**Key achievements**
+- **$371 hand-held gripper** enables in-the-wild data collection without robots — removes teleoperation's environment/cost constraints
+- Enables demonstration and learning of **tasks impossible via teleoperation** (dynamic tossing, bimanual coordination)
+- Relative trajectory + latency matching enables **zero-shot deployment across multiple robot platforms** (UR5e, Franka FR2)
+
+**Limitations**
+- Cannot know downstream robot kinematics at collection time, **relying on data filtering** — hardware-aware policy learning needed
+- Visual SLAM **fails in texture-poor environments** (pure white walls)
+- UMI gripper (780g) is heavier and bulkier than bare hands — **demonstration efficiency is 48-64%** of bare-hand speed
+- 🤖 Supports only 2-DOF grippers, cannot leverage rich dexterous manipulation; partially addressed by follow-up DexUMI
+
+## Terry's Memo
+
+- *(None)*
