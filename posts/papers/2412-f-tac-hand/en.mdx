@@ -1,0 +1,143 @@
+---
+locale: "en"
+translation_of: "2412-f-tac-hand:ko"
+title: "F-TAC Hand: Embedding High-Resolution Touch Across Robotic Hands for Adaptive Human-like Grasping"
+subtitle: "70% tactile coverage delivers 100% success on multi-object grasping"
+summary: "Robotic hands have long lacked the dense tactile feedback that humans rely on for adaptive grasping. F-TAC Hand integrates 17 vision-based tactile sensors (0.1 mm resolution) across 70% of a 15-DoF biomimetic hand, paired with ADELM probabilistic grasp generation and context-sensitive motor control. Across 600 multi-object grasping trials, the tactile-enabled system achieves 100% success vs 53.5% without tactile — a statistically overwhelming gap."
+card_summary: "F-TAC Hand embeds 17 vision-based tactile sensors (0.1 mm resolution) across 70% of a 15-DoF biomimetic hand. Combined with ADELM grasp generation and context-sensitive motor control, it reaches 100% success on 600 multi-object grasping trials vs 53.5% without tactile."
+cover_caption: "Overview of F-TAC Hand. 17 high-resolution tactile sensors covering 70% of the hand surface enable human-level adaptive grasping."
+published_at: "2026-04-17T00:00:00Z"
+source_type: "arXiv"
+source_url: "https://arxiv.org/abs/2412.14482"
+source_date: "2024-12-19T00:00:00Z"
+display_tags:
+  - "Robotics"
+  - "Tactile Sensing"
+  - "Dexterous Manipulation"
+  - "Palm"
+terrys_memo: ""
+references:
+  - title: "MANO: Embodied Hands - Modeling and Capturing Hands and Bodies Together"
+    author: "Javier Romero et al."
+    description: "Statistical hand model MANO. F-TAC Hand uses MANO as the canonical pose representation when generating human-like grasps."
+    arxiv_url: "https://arxiv.org/abs/2201.02610"
+    scholar_url: "https://scholar.google.com/scholar?q=MANO+embodied+hands"
+    post_slug: "2201-mano-hand-model"
+    category: "foundational"
+  - title: "Learning In-Hand Translation Using Tactile Skin With Shear and Normal Force Sensing"
+    author: "Jessica Yin et al."
+    description: "Distributed tactile skin used to learn an RL policy for in-hand translation. F-TAC Hand shares the distributed-tactile vision but obtains adaptivity from analytic grasp generation and closed-loop motor control rather than learning."
+    arxiv_url: "https://arxiv.org/abs/2407.07885"
+    scholar_url: "https://scholar.google.com/scholar?q=tactile+skin+in-hand+translation"
+    post_slug: "2407-tactile-skin-inhand-translation"
+    category: "related"
+  - title: "Canonical Representation and Force-Based Pretraining of 3D Tactile for Dexterous Visuo-Tactile Policy Learning"
+    author: "Tianhao Wu et al."
+    description: "3D tactile canonical representation with force-based pretraining for visuotactile policy learning. Same lineage of tactile representation as F-TAC Hand's normal-map reconstruction, but uses learned policies instead of explicit grasp generation."
+    arxiv_url: "https://arxiv.org/abs/2409.17549"
+    scholar_url: "https://scholar.google.com/scholar?q=canonical+3D+tactile+visuo-tactile+policy"
+    post_slug: "2409-3dtactile-dex"
+    category: "related"
+  - title: "PP-Tac: Paper Picking Using Tactile Feedback in Dexterous Robotic Hands"
+    author: "Pei Lin et al."
+    description: "System that picks thin deformables (paper-like objects) via tactile feedback + diffusion policy. F-TAC Hand differs by avoiding learned policies and focusing on simultaneous multi-object grasping."
+    arxiv_url: "https://arxiv.org/abs/2504.16649"
+    scholar_url: "https://scholar.google.com/scholar?q=PP-Tac+paper+picking+tactile"
+    post_slug: "2504-pp-tac"
+    category: "related"
+  - title: "OSMO: Open-Source Tactile Glove for Human-to-Robot Skill Transfer"
+    author: "Jessica Yin et al."
+    description: "Tactile glove worn by both humans and robots to transfer demonstration data directly. F-TAC Hand pursues the same goal (human-level tactile) but via embedded sensors in the hand itself rather than a wearable glove."
+    arxiv_url: "https://arxiv.org/abs/2512.08920"
+    scholar_url: "https://scholar.google.com/scholar?q=OSMO+tactile+glove+human-to-robot"
+    post_slug: "2512-osmo-tactile-glove"
+    category: "related"
+translated_to: []
+---
+
+## TL;DR
+
+Why can't robotic hands grasp diverse objects as naturally as humans? The bottleneck is **insufficient tactile feedback**. F-TAC Hand integrates 17 vision-based tactile sensors (0.1 mm resolution) across 70% of the hand surface while preserving a 15-DoF biomimetic skeleton, and combines ADELM-based probabilistic grasp generation with context-sensitive motor control. Across 600 multi-object grasping trials, the tactile-enabled system reaches **100% success** (vs 53.5% without tactile, $p < 0.0001$).
+
+## Problem
+
+Human hands' extraordinary adaptivity arises from rich tactile feedback delivered by **mechanoreceptors densely distributed across the palm and fingers**. Existing robotic hands struggle to overcome the following limitations simultaneously:
+
+- **Limited tactile resolution**: Most rely on low-resolution pressure sensors at the fingertips only — humans have mm-scale resolution distributed across the entire palm and fingers
+- **Mechanical-vs-sensor trade-off**: Adding sensors compromises mobility; wires and cables interfere with actuation
+- **Lack of grasp diversity**: Learning-based policies are confined to demonstrated poses and fail to reproduce all 33 human daily grasp types
+- **No multi-object simultaneous grasping**: Adaptive behaviors humans perform effortlessly (e.g., transporting several items in one hand) are rarely attempted by robots
+
+Solving all of these jointly is required for human-level adaptive grasping.
+
+## Key Idea
+
+F-TAC Hand co-designs **hardware + algorithm + closed-loop control**:
+
+- **Full-coverage high-resolution tactile**: 17 GelSight-inspired vision-based tactile sensors integrated in 6 configurations across the palm and fingers. 0.1 mm pixel resolution and 70% surface coverage while preserving 15 DoF and adult-hand dimensions
+- **Probabilistic grasp generation (ADELM)**: Models human grasp poses as a latent energy function; **Adversarial Disconnectivity Energy Landscape Mapping** efficiently explores diverse modes. Generates 1,800 grasps for 23 objects, reproducing all 19 common human grasp types
+- **Context-sensitive motor control**: Tactile signals are fed to a closed-loop controller that switches grasp strategies within ~100 ms. During multi-object grasping, real-time interactions with subsequent objects trigger immediate alternative-strategy adoption
+
+<Figure src="./fig-2.png" caption="Hardware of F-TAC Hand. a, Seamless integration of 17 vision-based sensors in 6 configurations, maintaining 15 DoF and adult hand dimensions. Each sensor includes a streamlined camera module for efficient tactile data acquisition in confined space. b, F-TAC Hand demonstrates its strength by holding a 2.5 kg dumbbell; each phalanx contributes to a total grasping force of 10.3 N. c, Schematic of a finger, with K_n, θ_n, and F denoting joint stiffness, rotation angle, and cable force. d, Top-down view comparison of F-TAC Hand and human finger flexion. e, Despite the numerous sensors, F-TAC Hand retains its mobility, as evidenced by a successful Kapandji test." />
+
+<Collapsible title="Detailed Methods">
+
+### Vision-Based Tactile Sensor Design
+
+Each sensor consists of an **OV2640 image sensor + 160° wide-angle lens + Lambertian membrane**. A spherical membrane air-brushed with 1 μm aluminum powder is illuminated by RGB+white LEDs (LUMILEDS LUXEON 2835); membrane deformation is captured by the camera as color-pattern changes. A neural network reconstructs the surface normal map from a 240×240 px buffer at 0.1 mm resolution. The camera module is slimmed down using a single FFC (flexible flat cable) so it fits inside narrow finger phalanges.
+
+### Hand Kinematics & Actuation
+
+15 DoF: 4 fingers (index, middle, ring, little), each with 3 joints (MCP, PIP, DIP, all 0–90°) + a thumb carpometacarpal joint (90° range, 45° offset). Each finger is driven by a single Dynamixel XC330-T288-T servo via 5 slim cables, with aluminum shafts, deep-groove ball bearings, and torsion springs at each joint. The result performs all 33 human grasp types while supporting a 2.5 kg dumbbell.
+
+### Neural Normal-Map Reconstruction
+
+A neural network is trained on simulation data generated by a physics-based image formation model. It maps raw RGB images to surface normal maps, extracting precise contact-region geometry. The sim-to-real gap is minimized through consistent LED layout and the standard GelSight-family calibration procedure.
+
+### ADELM Grasp Generation
+
+Probabilistic grasp generation is formulated as discovering diverse grasp modes in a latent energy landscape. The **ADELM (Adversarial Disconnectivity Energy Landscape Mapping)** algorithm efficiently explores disconnected basins (local minima), automatically generating diverse grasp poses that match human daily-use patterns for any given object. The hand-pose space is represented in MANO coordinates.
+
+### Context-Sensitive Motor Control
+
+The low-level motor controller uses tactile feedback as closed-loop input. Two stages:
+1. **Planning**: From the diverse grasp candidates produced by ADELM, select a pose that fits the current context (object, environment, items already held)
+2. **Execution**: When tactile sensors detect disturbance or slip, switch to an alternative strategy within ~100 ms
+
+</Collapsible>
+
+## Key Results
+
+- **Multi-object grasping (60 object combinations × 10 trials = 600 trials)**:
+  - With tactile: mean success rate **M=1.000, SD=0.000** (every trial succeeded)
+  - Without tactile: mean success rate **M=0.535, SD=0.306**
+  - Statistical test: $t(59) = 11.8$, $p = 2.1 \times 10^{-17}$
+- **Real-world collision rate**: With tactile, mean 0.000 (matches theoretical lower bound); without, mean 0.465
+- **Grasp diversity**: 1,800 grasps generated for 23 objects → reproduces all **19 common human grasp types**
+- **Validation against human standards**:
+  - **All 33 Feix grasp types achievable** (every grasp humans can perform)
+  - **All 10 Kapandji thumb gestures completed** (clinical hand-function test)
+- **Physical capability**: Holds 2.5 kg dumbbell, 10.3 N total grasping force, hand length 194 mm (adult average)
+- **Response time**: ~**100 ms** for strategy switching upon disturbance detection
+
+<Figure src="./fig-4.png" caption="Comprehensive tactile sensing capabilities. a, Raw tactile sensor readings from the configuration shown in Figure 1a are processed by neural networks (b) to reconstruct contact site geometries (c), visualized as normal maps. The neural networks, trained on simulated data (d) generated by a physics-based image formation model, enable efficient and precise mapping of extensive raw data to geometric information at the contact interface. When grasping an object (e), F-TAC Hand captures detailed contact information through its advanced tactile sensing capabilities (f). g, This rich tactile feedback enables F-TAC Hand to accurately perceive and interpret object characteristics, as demonstrated by its precise estimation of in-hand object poses." />
+
+<Figure src="./fig-6.png" caption="F-TAC Hand's adaptive behaviors in physical world. a, F-TAC Hand tackles the challenge presented in prior work, specifically its ability to grasp multiple objects simultaneously in a manner that mimics human capabilities. b, Despite execution noise, F-TAC Hand can optimize object transport through multi-object grasping. This offers a more adaptable solution to the enduring challenge. c, While the initial strategy is effective in optimal conditions, real-world disturbances can complicate interactions with subsequent objects, making continuous monitoring through tactile embodiment essential. d, Tactile embodiment facilitates the adoption of alternative strategies. This capability, underpinned by human-like diverse grasping strategies, significantly enhances the success rate of grasping the second object compared to systems lacking these attributes." />
+
+## Achievements and Limitations
+
+**Key achievements**
+- **Paradigm shift in tactile coverage**: From fingertip-only to **palm + fingers covering 70%** — first practical realization of human-like distributed tactile sensing
+- **Co-design of hardware-algorithm-control**: Adds 17 sensors while preserving 15 DoF and adult hand dimensions (validated by passing the Kapandji test)
+- **Quantitative validation of multi-object grasping**: A grasp class "easy for humans, hard for robots" demonstrated statistically across 600 trials with an overwhelming effect size of $p < 10^{-16}$
+
+**Limitations**
+- Cable-driven actuation limits force vs direct drive — 2.5 kg payload is below human capability
+- Vision-based tactile demands high bandwidth/compute (17 × 240×240 px) — burdensome for embedded mobile robots
+- Force estimation only at the phalanx level; joint torque is not inferable — limits fine force control
+- 100 ms strategy switching is slower than human reflexes (20–50 ms) — limited under fast disturbances
+- 🤖 ADELM is strong at static grasp generation, but dynamic in-hand re-orientation (e.g., finger-driven object rotation) likely needs separate policy learning
+
+## Terry's Memo
+
+- *(None)*

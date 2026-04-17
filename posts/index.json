@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-15T06:38:43.058Z",
-  "total_posts": 38,
+  "generated_at": "2026-04-17T01:59:43.963Z",
+  "total_posts": 39,
   "posts": [
     {
       "post_number": 1,
@@ -2685,6 +2685,96 @@
       ],
       "visibility": "public",
       "allowed_groups": []
+    },
+    {
+      "post_number": 39,
+      "slug": "2412-f-tac-hand",
+      "content_type": "papers",
+      "title_en": "F-TAC Hand: Embedding High-Resolution Touch Across Robotic Hands for Adaptive Human-like Grasping",
+      "title_ko": "F-TAC Hand: 손 전면에 고해상도 촉각을 심어 적응형 인간 유사 파지 실현",
+      "summary_ko": "0.1 mm 해상도 시각 기반 촉각 센서 17개를 손 표면 70%에 통합한 F-TAC Hand. 15 DoF 인간형 구조에 ADELM 파지 생성과 맥락 기반 제어를 결합해 600회 다중 물체 파지 실험에서 촉각 사용 시 100%, 미사용 시 53.5% 성공률을 달성했다.",
+      "summary_en": "F-TAC Hand embeds 17 vision-based tactile sensors (0.1 mm resolution) across 70% of a 15-DoF biomimetic hand. Combined with ADELM grasp generation and context-sensitive motor control, it reaches 100% success on 600 multi-object grasping trials vs 53.5% without tactile.",
+      "domain": "robotics",
+      "subfields": [
+        "tactile-sensing",
+        "dexterous-manipulation",
+        "robotic-hand"
+      ],
+      "key_concepts": [
+        "high-resolution-tactile",
+        "vision-based-tactile-sensor",
+        "biomimetic-hand",
+        "multi-object-grasping",
+        "human-like-grasp-generation",
+        "adaptive-control",
+        "GelSight",
+        "palm-tactile"
+      ],
+      "methodology": [
+        "mechatronic-design",
+        "probabilistic-grasp-generation",
+        "ADELM-energy-landscape",
+        "context-sensitive-motor-control",
+        "tactile-feedback-control"
+      ],
+      "contribution_type": "system",
+      "tags": [
+        "Papers",
+        "Robotics",
+        "Tactile Sensing",
+        "Dexterous Manipulation",
+        "Palm"
+      ],
+      "source_author": "Zihang Zhao et al.",
+      "source_date": "2024-12-19T00:00:00Z",
+      "published_at": "2026-04-17T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "17 vision-based tactile sensors covering 70% of a 15-DoF biomimetic hand enable 100% success on multi-object adaptive grasping (vs 53.5% without tactile, p<0.0001)",
+        "problem": "Robotic hands lack the dense, high-resolution tactile feedback that humans rely on for adaptive dexterous grasping in dynamic real-world conditions",
+        "solution": "F-TAC Hand integrates 17 GelSight-inspired vision-based tactile sensors (0.1 mm resolution) across 70% of the hand surface while preserving 15 DoF, paired with probabilistic grasp generation (ADELM) and context-sensitive motor control",
+        "key_result": "100% success (M=1.0) on 600 multi-object grasping trials with tactile vs 53.5% (M=0.535) without; p=2.1×10⁻¹⁷; covers all 33 human grasp types and 19 common grasp types in 1,800 generated grasps",
+        "limitations": [
+          "Cable-driven actuation limits force compared to direct-drive",
+          "Vision-based tactile increases bandwidth/compute requirements vs sparse sensors",
+          "Fingertip-only force estimation, no joint-level torque",
+          "Strategy switching ~100 ms — slower than human reflexive corrections"
+        ]
+      },
+      "relations": [
+        {
+          "slug": "2201-mano-hand-model",
+          "type": "related"
+        },
+        {
+          "slug": "2407-tactile-skin-inhand-translation",
+          "type": "related"
+        },
+        {
+          "slug": "2409-3dtactile-dex",
+          "type": "related"
+        },
+        {
+          "slug": "2504-pp-tac",
+          "type": "compares_with"
+        },
+        {
+          "slug": "2511-equitac-tactile-equivariance",
+          "type": "related"
+        },
+        {
+          "slug": "2512-osmo-tactile-glove",
+          "type": "compares_with"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "robotics/hand/tactile",
+      "taxonomy_secondary": [
+        "robotics/hand/dexterous"
+      ],
+      "visibility": "public",
+      "allowed_groups": []
     }
   ],
   "knowledge_graph": {
@@ -3088,6 +3178,30 @@
       {
         "from": "2602-humanplus-humanoid-shadowing",
         "type": "compares_with"
+      },
+      {
+        "from": "2412-f-tac-hand",
+        "type": "related"
+      },
+      {
+        "from": "2412-f-tac-hand",
+        "type": "related"
+      },
+      {
+        "from": "2412-f-tac-hand",
+        "type": "related"
+      },
+      {
+        "from": "2412-f-tac-hand",
+        "type": "compares_with"
+      },
+      {
+        "from": "2412-f-tac-hand",
+        "type": "related"
+      },
+      {
+        "from": "2412-f-tac-hand",
+        "type": "compares_with"
       }
     ],
     "clusters": [
@@ -3136,7 +3250,8 @@
           14,
           16,
           18,
-          37
+          37,
+          39
         ],
         "core_concepts": [
           "diffusion-policy",
@@ -3296,7 +3411,8 @@
       32,
       36,
       37,
-      38
+      38,
+      39
     ],
     "outlier_papers": []
   },
@@ -3936,10 +4052,34 @@
     ],
     "scaling-law": [
       38
+    ],
+    "high-resolution-tactile": [
+      39
+    ],
+    "vision-based-tactile-sensor": [
+      39
+    ],
+    "biomimetic-hand": [
+      39
+    ],
+    "multi-object-grasping": [
+      39
+    ],
+    "human-like-grasp-generation": [
+      39
+    ],
+    "adaptive-control": [
+      39
+    ],
+    "GelSight": [
+      39
+    ],
+    "palm-tactile": [
+      39
     ]
   },
   "domain_stats": {
-    "robotics": 27,
+    "robotics": 28,
     "ml": 2,
     "ai": 6,
     "philosophy": 2,
@@ -3949,12 +4089,12 @@
     "robotics/brain/vla": 7,
     "robotics/arm:secondary": 11,
     "robotics/arm/force-control": 2,
-    "robotics/hand/tactile": 7,
+    "robotics/hand/tactile": 8,
     "robotics/arm/exoskeleton": 3,
     "robotics/hand:secondary": 1,
     "robotics/hand/dexterous": 3,
     "ai/agent": 7,
-    "robotics/hand/dexterous:secondary": 5,
+    "robotics/hand/dexterous:secondary": 6,
     "robotics/arm/exoskeleton:secondary": 1,
     "robotics/brain": 11,
     "ai/llm:secondary": 5,
@@ -3963,8 +4103,8 @@
     "robotics/brain:secondary": 2,
     "robotics/brain/vla:secondary": 1,
     "robotics/arm": 5,
-    "robotics/hand": 10,
-    "robotics": 26,
+    "robotics/hand": 11,
+    "robotics": 27,
     "ai": 8
   }
 }

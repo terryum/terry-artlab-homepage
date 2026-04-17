@@ -1,0 +1,143 @@
+---
+locale: "ko"
+title: "F-TAC Hand: 손 전면에 고해상도 촉각을 심어 적응형 인간 유사 파지 실현"
+subtitle: "70% 촉각 커버리지로 다중 물체 파지 100% 성공"
+summary: "로봇 손은 인간 손의 조밀한 촉각 피드백을 재현하지 못해 동적 환경에서 적응형 파지가 어려웠다. F-TAC Hand는 0.1 mm 해상도의 시각 기반 촉각 센서 17개를 손 표면 70%에 통합하면서 15 DoF 인간형 구조를 유지하고, ADELM 기반 확률적 파지 생성과 맥락 기반 모터 제어를 결합한다. 600회 다중 물체 파지 실험에서 촉각 사용 시 100% 성공, 미사용 시 53.5%로 통계적으로 유의미한 격차를 보였다."
+card_summary: "0.1 mm 해상도 시각 기반 촉각 센서 17개를 손 표면 70%에 통합한 F-TAC Hand. 15 DoF 인간형 구조에 ADELM 파지 생성과 맥락 기반 제어를 결합해 600회 다중 물체 파지 실험에서 촉각 사용 시 100%, 미사용 시 53.5% 성공률을 달성했다."
+cover_caption: "F-TAC Hand 개요. 손 표면 70%를 덮는 17개 고해상도 촉각 센서로 인간 수준의 적응형 파지를 구현한다."
+published_at: "2026-04-17T00:00:00Z"
+source_type: "arXiv"
+source_url: "https://arxiv.org/abs/2412.14482"
+source_date: "2024-12-19T00:00:00Z"
+display_tags:
+  - "Robotics"
+  - "Tactile Sensing"
+  - "Dexterous Manipulation"
+  - "Palm"
+terrys_memo: ""
+references:
+  - title: "MANO: Embodied Hands - Modeling and Capturing Hands and Bodies Together"
+    author: "Javier Romero et al."
+    description: "통계적 손 모델 MANO. F-TAC Hand가 인간 유사 파지 생성 시 손 자세 표현의 기준 좌표계로 활용한다."
+    arxiv_url: "https://arxiv.org/abs/2201.02610"
+    scholar_url: "https://scholar.google.com/scholar?q=MANO+embodied+hands"
+    post_slug: "2201-mano-hand-model"
+    category: "foundational"
+  - title: "Learning In-Hand Translation Using Tactile Skin With Shear and Normal Force Sensing"
+    author: "Jessica Yin et al."
+    description: "분포형 촉각 피부로 RL 정책을 학습해 인핸드 이동을 수행하는 접근. F-TAC Hand는 동일한 분포형 촉각 비전을 공유하지만, 학습이 아닌 분석적 파지 생성과 폐루프 모터 제어로 적응성을 달성한다."
+    arxiv_url: "https://arxiv.org/abs/2407.07885"
+    scholar_url: "https://scholar.google.com/scholar?q=tactile+skin+in-hand+translation"
+    post_slug: "2407-tactile-skin-inhand-translation"
+    category: "related"
+  - title: "Canonical Representation and Force-Based Pretraining of 3D Tactile for Dexterous Visuo-Tactile Policy Learning"
+    author: "Tianhao Wu et al."
+    description: "3D 촉각의 정규 좌표계 표현과 힘 기반 사전학습으로 시각-촉각 정책을 학습. F-TAC Hand의 법선맵 재구성과 유사한 촉각 표현 계열이지만, 학습 정책 대신 명시적 파지 생성을 사용한다."
+    arxiv_url: "https://arxiv.org/abs/2409.17549"
+    scholar_url: "https://scholar.google.com/scholar?q=canonical+3D+tactile+visuo-tactile+policy"
+    post_slug: "2409-3dtactile-dex"
+    category: "related"
+  - title: "PP-Tac: Paper Picking Using Tactile Feedback in Dexterous Robotic Hands"
+    author: "Pei Lin et al."
+    description: "촉각 피드백 + diffusion policy로 종이 같은 박형 변형체를 집는 시스템. F-TAC Hand는 학습 정책 없이 다중 물체 동시 파지에 초점을 맞춘다는 점에서 대비된다."
+    arxiv_url: "https://arxiv.org/abs/2504.16649"
+    scholar_url: "https://scholar.google.com/scholar?q=PP-Tac+paper+picking+tactile"
+    post_slug: "2504-pp-tac"
+    category: "related"
+  - title: "OSMO: Open-Source Tactile Glove for Human-to-Robot Skill Transfer"
+    author: "Jessica Yin et al."
+    description: "촉각 글러브를 인간과 로봇 모두에 장착해 시연 데이터를 직접 전이하는 접근. F-TAC Hand는 외장 글러브가 아닌 손 자체 임베디드 센서로 동일 목표(인간 수준 촉각)를 추구한다."
+    arxiv_url: "https://arxiv.org/abs/2512.08920"
+    scholar_url: "https://scholar.google.com/scholar?q=OSMO+tactile+glove+human-to-robot"
+    post_slug: "2512-osmo-tactile-glove"
+    category: "related"
+translated_to:
+  - "en"
+---
+
+## TL;DR
+
+로봇 손은 왜 인간처럼 자연스럽게 다양한 물체를 잡지 못할까? **촉각 피드백의 부족**이 핵심 병목이다. F-TAC Hand는 0.1 mm 해상도의 시각 기반 촉각 센서 17개를 손 표면 70%에 통합하면서 15 DoF 인간형 골격을 유지하고, ADELM 기반 확률적 파지 생성과 맥락 기반 모터 제어를 결합한다. 600회 다중 물체 파지 실험에서 촉각 사용 시 **100% 성공** (촉각 미사용 시 53.5%, $p < 0.0001$)을 달성했다.
+
+## 문제
+
+인간 손의 비범한 적응성은 손바닥과 손가락 전면에 분포한 **수많은 기계수용기**의 풍부한 촉각 피드백에서 비롯된다. 그러나 기존 로봇 손은 다음 한계를 동시에 극복하기 어렵다:
+
+- **촉각 해상도 한계**: 손끝 일부에만 저해상도 압력 센서를 부착하는 경우가 대부분 — 인간 손은 손바닥·손가락 전면에 mm 단위 해상도의 촉각 분포
+- **기계 설계와 센서 통합의 trade-off**: 센서를 늘리면 가동성이 손상되고 전선/케이블이 작동을 방해
+- **파지 생성의 다양성 부족**: 학습 기반 정책은 시연한 자세에 갇혀 다양한 일상 파지 유형 33가지를 모두 재현하지 못함
+- **다중 물체 동시 파지 능력 부재**: 인간이 손쉽게 하는 "여러 개를 한 손에 옮기기" 같은 적응 행동을 로봇은 거의 시도하지 못함
+
+이 모두를 한꺼번에 풀어야 인간 수준 적응형 파지가 가능하다.
+
+## 핵심 아이디어
+
+F-TAC Hand는 **하드웨어 + 알고리즘 + 폐루프 제어**의 세 축을 동시에 설계한다:
+
+- **고해상도 촉각의 전면 임베딩**: 17개 GelSight 계열 시각 기반 촉각 센서를 6가지 형태로 손바닥·손가락 전면에 통합. 0.1 mm 픽셀 해상도, 손 표면 70% 커버리지를 유지하면서 15 DoF와 성인 손 크기 보존
+- **확률적 파지 생성 (ADELM)**: 인간 파지 자세를 잠재 에너지 함수로 모델링하고, Adversarial Disconnectivity Energy Landscape Mapping으로 다양한 모드를 탐색. 23개 물체에서 1,800개 파지를 생성해 인간 파지 19종을 모두 재현
+- **맥락 기반 모터 제어**: 촉각 신호를 폐루프 입력으로 받아 ~100 ms 안에 파지 전략을 전환. 다중 물체 파지 시 후속 물체와의 상호작용을 실시간 감지하여 대안 전략으로 즉시 변경
+
+<Figure src="./fig-2.png" caption="F-TAC Hand의 하드웨어. a, 17개 시각 기반 센서를 6가지 형태로 통합하면서 15 DoF와 성인 손 크기를 유지. 각 센서는 좁은 공간에서 효율적인 촉각 데이터 수집을 위한 슬림형 카메라 모듈을 포함. b, 2.5 kg 덤벨을 들어 강도를 입증; 각 지절이 총 10.3 N의 파지력에 기여. c, 손가락 모식도 (K_n: 관절 강성, θ_n: 회전각, F: 케이블 장력). d, F-TAC Hand와 인간 손가락 굴곡의 위에서 본 비교. e, 많은 센서에도 불구하고 Kapandji 테스트를 성공적으로 통과하여 가동성 유지." />
+
+<Collapsible title="구체적 방법">
+
+### 시각 기반 촉각 센서 설계
+
+각 센서는 **OV2640 이미지 센서 + 160° 광각 렌즈 + Lambertian 막**으로 구성된다. 알루미늄 분말 1 μm을 에어브러시로 코팅한 구형 막에 RGB+백색 LED(LUMILEDS LUXEON 2835)가 비치면, 막 변형이 색상 패턴 변화로 카메라에 잡힌다. 240×240 px 버퍼에서 신경망이 표면 법선맵을 복원해 0.1 mm 해상도를 달성한다. 카메라 모듈은 단일 FFC(flexible flat cable)로 슬림화되어 좁은 손가락 내부에 들어간다.
+
+### 손 기구학과 액추에이션
+
+15 DoF 구조: 4개 손가락(검지·중지·약지·소지) 각 3 관절(MCP, PIP, DIP, 모두 0–90°) + 엄지 손목손허리 관절(90° 가동, 45° 오프셋). 각 손가락은 단일 Dynamixel XC330-T288-T 서보가 5개 슬림 케이블로 구동하고, 알루미늄 축과 깊은 홈 볼 베어링, 토션 스프링이 각 관절에 들어간다. 결과적으로 인간 33종 파지를 모두 수행하면서 2.5 kg 덤벨을 지탱한다.
+
+### 신경망 기반 법선맵 복원
+
+물리 기반 이미지 형성 모델로 생성한 시뮬레이션 데이터로 신경망을 학습. 원시 RGB 이미지 → 표면 법선맵 변환을 수행하여 접촉 영역의 정밀한 기하 정보를 추출한다. 시뮬레이션-실제 데이터 갭은 일관된 LED 분포와 GelSight 계열의 표준 캘리브레이션 절차로 최소화한다.
+
+### ADELM 파지 생성
+
+확률적 파지 생성은 잠재 에너지 풍경(landscape)에서 다양한 파지 모드를 발견하는 문제로 정식화된다. **ADELM(Adversarial Disconnectivity Energy Landscape Mapping)** 알고리즘은 비연결 영역(local minima)을 효율적으로 탐색해, 단일 물체에 대해 인간 일상 사용에 부합하는 다양한 파지 자세를 자동 생성한다. 손 자세 공간은 MANO 좌표계로 표현된다.
+
+### 맥락 기반 모터 제어
+
+저수준 모터 제어기는 촉각 피드백을 폐루프 입력으로 사용한다. 두 단계 전략:
+1. **계획 단계**: ADELM이 생성한 다양한 파지 후보 중 현재 맥락(물체, 환경, 이미 잡고 있는 물체)에 맞는 자세 선택
+2. **실행 단계**: 촉각 센서가 외란이나 미끄러짐을 감지하면 ~100 ms 내에 대안 전략으로 즉시 전환
+
+</Collapsible>
+
+## 주요 결과
+
+- **다중 물체 파지 (60개 물체 조합 × 10회 = 600회)**:
+  - 촉각 사용: 평균 성공률 **M=1.000, SD=0.000** (모든 시도 성공)
+  - 촉각 미사용: 평균 성공률 **M=0.535, SD=0.306**
+  - 통계 검정: $t(59) = 11.8$, $p = 2.1 \times 10^{-17}$
+- **충돌률 (실세계 실행)**: 촉각 사용 시 평균 0.000 (이론적 한계 도달), 미사용 시 평균 0.465
+- **파지 다양성**: 23개 물체에서 1,800개 파지 생성 → 인간 파지 분류 체계의 **19종 일반 파지 모두 재현**
+- **인간 표준 능력 검증**:
+  - **Feix 33종 파지 모두 수행 가능** (인간 손이 할 수 있는 모든 파지)
+  - **Kapandji 10가지 엄지 동작 모두 수행** (임상 손 기능 표준 검사)
+- **물리적 능력**: 2.5 kg 덤벨 파지, 총 파지력 10.3 N, 손 길이 194 mm (성인 평균)
+- **응답 속도**: 외란 감지 후 전략 전환에 약 **100 ms**
+
+<Figure src="./fig-4.png" caption="포괄적인 촉각 감지 능력. a, Figure 1a 구성에서 얻은 원시 촉각 센서 데이터를 신경망(b)으로 처리하여 접촉 영역 형상(c)을 법선맵으로 복원. 신경망은 물리 기반 이미지 형성 모델로 생성한 시뮬레이션 데이터(d)로 학습되어, 방대한 원시 데이터를 접촉 인터페이스의 기하 정보로 효율적이고 정밀하게 매핑한다. 물체를 잡을 때(e) F-TAC Hand는 고도화된 촉각 감지 능력으로 상세한 접촉 정보를 포착(f)한다. g, 이 풍부한 촉각 피드백 덕분에 F-TAC Hand는 인핸드 물체 자세 추정과 같이 물체 특성을 정확히 인지하고 해석할 수 있다." />
+
+<Figure src="./fig-6.png" caption="실세계에서의 F-TAC Hand 적응 행동. a, 선행 연구가 제기한 도전 과제 — 인간처럼 여러 물체를 동시에 잡는 능력을 다룸. b, 실행 노이즈에도 불구하고 다중 물체 파지로 운반을 최적화. 지속적인 도전 과제에 더 적응적인 해법 제공. c, 초기 전략은 최적 조건에서 효과적이지만 실세계 외란은 후속 물체와의 상호작용을 복잡하게 만들어 촉각 임베딩을 통한 지속 감시가 필수적. d, 촉각 임베딩은 대안 전략 채택을 가능하게 함. 인간 유사 다양 파지 전략에 기반한 이 능력은 두 번째 물체 파지 성공률을 비촉각 시스템 대비 크게 향상시킴." />
+
+## 달성점과 한계점
+
+**새롭게 달성한 점**
+- **촉각 커버리지의 패러다임 전환**: 손끝 중심에서 **손바닥+손가락 전면 70%**로 — 인간형 분포를 처음으로 양산 가능한 형태로 구현
+- **하드웨어-알고리즘-제어의 동시 설계**: 17개 센서를 추가하면서도 15 DoF와 인간 손 크기를 유지 (Kapandji 테스트 통과로 검증)
+- **다중 물체 동시 파지의 정량적 검증**: "인간이 쉽게 하지만 로봇은 어려운" 파지를 600회 통계적으로 입증, $p < 10^{-16}$의 압도적 효과 크기
+
+**한계점**
+- 케이블 구동 방식은 직접 구동 대비 파지력에 한계 — 2.5 kg 페이로드는 인간 손 대비 낮음
+- 시각 기반 촉각은 17×240×240 px의 높은 대역폭/연산을 요구 — 임베디드 모바일 로봇 통합에 부담
+- 손가락 끝 단위 파지력만 추정, 관절 토크는 추론 불가 — 미세 힘 제어 한계
+- 전략 전환 100 ms는 인간 반사(20–50 ms)보다 느림 — 빠른 외란에서는 한계
+- 🤖 ADELM은 정적 파지 생성에 강하지만, 동적 인핸드 재배치(예: 손가락으로 물체 회전)는 별도 정책 학습이 필요할 가능성
+
+## Terry's Memo
+
+- *(None)*
