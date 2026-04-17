@@ -3,20 +3,28 @@
 /**
  * export-knowledge.mjs
  * Extracts Terry's memos, research gaps, and enriched relations from posts
- * and exports them to a private knowledge base (terry-research-kb).
+ * and writes them as paper-level JSON + an aggregated index into the
+ * terry-papers repo (top-level `papers/` and `knowledge-index.json`).
  *
- * Usage: node scripts/export-knowledge.mjs [--out=/path/to/terry-research-kb]
+ * Usage: node scripts/export-knowledge.mjs [--out=/path/to/repo]
+ *
+ * Default output path resolution:
+ *   1. --out=<path> CLI flag
+ *   2. RESEARCH_KB_PATH env var
+ *   3. ~/Codes/personal/terry-papers
  */
 
 import fs from 'fs/promises';
 import path from 'path';
+import os from 'os';
 import { POSTS_DIR } from './lib/paths.mjs';
 
 const PAPERS_DIR = path.join(POSTS_DIR, 'papers');
 
 const args = process.argv.slice(2);
 const outDir = args.find(a => a.startsWith('--out='))?.split('=')[1]
-  || '/tmp/terry-research-kb';
+  || process.env.RESEARCH_KB_PATH
+  || path.join(os.homedir(), 'Codes', 'personal', 'terry-papers');
 
 // ── Parse Terry's memo from MDX ──
 function parseTerryMemo(mdxContent) {

@@ -181,13 +181,14 @@ git commit -m "feat(post): add <slug> (ko/en)"
 git push
 ```
 
-### Step R12.5) Knowledge Base 업데이트 (Private)
+### Step R12.5) Knowledge Base 업데이트 (terry-papers)
 ```bash
-node scripts/export-knowledge.mjs --out=/tmp/terry-research-kb
-cd /tmp/terry-research-kb && git add -A && git commit -m "update: <slug>" && git push && cd -
+node scripts/export-knowledge.mjs   # 기본 출력: ~/Codes/personal/terry-papers
+cd ~/Codes/personal/terry-papers && git add papers/ knowledge-index.json \
+  && git commit -m "kb: <slug>" && git push && cd -
 ```
-- `/tmp/terry-research-kb`가 없으면: `gh repo clone terryum/terry-research-kb /tmp/terry-research-kb`
-- Terry's memo가 있는 포스트만 의미 있는 업데이트
+- 별도 KB 레포는 없다 — `papers/<slug>.json`과 `knowledge-index.json`은 `terry-papers` 레포에 직접 커밋된다
+- Terry's memo가 있는 포스트만 의미 있는 변경이 생기지만, 매 /post마다 갱신해서 인덱스를 최신 상태로 유지
 
 ### Step R12.6) Obsidian Vault Sync
 - Run: `node scripts/sync-obsidian.mjs --slug=<slug>`

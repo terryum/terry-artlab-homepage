@@ -176,17 +176,15 @@ grep -rl "[[<slug>]]" "$HOME/Documents/Obsidian Vault/" 2>/dev/null
 
 ---
 
-## Step D6) Knowledge Base 업데이트
+## Step D6) Knowledge Base 업데이트 (terry-papers)
 
 ```bash
-# KB 레포가 있으면 업데이트
-if [ -d /tmp/terry-research-kb ]; then
-  node scripts/export-knowledge.mjs --out=/tmp/terry-research-kb
-  cd /tmp/terry-research-kb && git add -A && git commit -m "remove: <slug>" && git push && cd -
-fi
+node scripts/export-knowledge.mjs   # 기본 출력: ~/Codes/personal/terry-papers
+cd ~/Codes/personal/terry-papers && git add papers/ knowledge-index.json \
+  && git commit -m "kb: remove <slug>" && git push && cd -
 ```
 
-실패 시 경고만 출력, 계속 진행.
+별도 KB 레포는 없다 — `papers/<slug>.json`과 `knowledge-index.json`은 `terry-papers` 레포에 직접 커밋된다. 실패 시 경고만 출력하고 계속 진행.
 
 ---
 
