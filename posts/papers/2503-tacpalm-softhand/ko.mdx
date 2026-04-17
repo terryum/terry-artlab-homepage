@@ -1,0 +1,139 @@
+---
+locale: "ko"
+title: "TacPalm SoftHand: 고밀도 촉각 손바닥과 소프트 손가락의 협조"
+subtitle: "손바닥 181,000 unit/cm² + 2세그먼트 공압 손가락"
+summary: "소프트 로봇 손은 손가락에만 촉각을 다는 경향이 강해 손바닥의 풍부한 접촉 정보를 활용하지 못했다. TacPalm SoftHand는 GelSight 계열 시각-촉각 손바닥(밀도 181,000 unit/cm², 1 kPa 응답, 5000회 이상 내구)을 3개의 2세그먼트 섬유 강화 공압 소프트 손가락과 결합하고, 손바닥-손가락 협조 전략으로 안정 파지·표면 재구성·물체 분류·동적 자세 보정을 모두 구현한다. 컵 뚜껑 집기 100%, 직물 분류 97%, 블라인드 백 식별 88%를 달성했다."
+card_summary: "GelSight 계열 시각-촉각 손바닥(181,000 unit/cm²)과 3개의 2세그먼트 공압 소프트 손가락을 결합한 TacPalm SoftHand. 손바닥-손가락 협조로 컵 뚜껑 집기 100%, 직물 분류 97%, 블라인드 백 식별 88%, 동적 차주전자 자세 보정을 구현한다."
+cover_caption: "TacPalm SoftHand 개념도. 고밀도 시각-촉각 손바닥과 2-세그먼트 공압 소프트 손가락의 협조로 정밀한 파지·인식·조작을 구현한다."
+published_at: "2026-04-17T00:00:00Z"
+source_type: "Nature Communications"
+source_url: "https://www.nature.com/articles/s41467-025-57741-6"
+source_date: "2025-03-10T00:00:00Z"
+display_tags:
+  - "Robotics"
+  - "Tactile Sensing"
+  - "Soft Robotics"
+  - "Palm"
+terrys_memo: ""
+references:
+  - title: "F-TAC Hand: Embedding High-Resolution Touch Across Robotic Hands for Adaptive Human-like Grasping"
+    author: "Zihang Zhao et al."
+    description: "강체 인간형 골격에 17개 시각-촉각 센서를 임베딩한 동시기 연구. TacPalm SoftHand가 소프트 공압 손가락+단일 손바닥 센서 통합으로 같은 비전(전면 고해상도 촉각)을 다른 액추에이션 패러다임으로 추구한다."
+    arxiv_url: "https://arxiv.org/abs/2412.14482"
+    scholar_url: "https://scholar.google.com/scholar?q=F-TAC+Hand+robotic+tactile"
+    post_slug: "2412-f-tac-hand"
+    category: "related"
+  - title: "Learning In-Hand Translation Using Tactile Skin With Shear and Normal Force Sensing"
+    author: "Jessica Yin et al."
+    description: "촉각 피부로 인핸드 이동을 학습하는 RL 접근. TacPalm SoftHand는 학습 정책 대신 시각-촉각 손바닥의 명시적 피드백 신호로 손가락-손바닥 협조를 설계한다."
+    arxiv_url: "https://arxiv.org/abs/2407.07885"
+    scholar_url: "https://scholar.google.com/scholar?q=tactile+skin+in-hand+translation"
+    post_slug: "2407-tactile-skin-inhand-translation"
+    category: "related"
+  - title: "Canonical Representation and Force-Based Pretraining of 3D Tactile for Dexterous Visuo-Tactile Policy Learning"
+    author: "Tianhao Wu et al."
+    description: "3D 촉각의 정규 좌표계 표현과 힘 기반 사전학습. TacPalm SoftHand의 표면 재구성과 같이 시각-촉각 신호에서 형상을 추출하지만, 학습 정책 측면에서 보완적이다."
+    arxiv_url: "https://arxiv.org/abs/2409.17549"
+    scholar_url: "https://scholar.google.com/scholar?q=canonical+3D+tactile+visuo-tactile+policy"
+    post_slug: "2409-3dtactile-dex"
+    category: "related"
+  - title: "PP-Tac: Paper Picking Using Tactile Feedback in Dexterous Robotic Hands"
+    author: "Pei Lin et al."
+    description: "촉각 피드백 + diffusion policy로 박형 변형체를 집는 시스템. TacPalm SoftHand의 손바닥-가이트 협조로 카드를 집는 데모(Fig. 6a)와 직접 비교 가능."
+    arxiv_url: "https://arxiv.org/abs/2504.16649"
+    scholar_url: "https://scholar.google.com/scholar?q=PP-Tac+paper+picking+tactile"
+    post_slug: "2504-pp-tac"
+    category: "related"
+  - title: "OSMO: Open-Source Tactile Glove for Human-to-Robot Skill Transfer"
+    author: "Jessica Yin et al."
+    description: "촉각 글러브로 인간-로봇 시연 전이. TacPalm SoftHand는 외장 글러브 대신 손바닥 자체에 GelSight 계열 센서를 통합한 다른 경로를 택했다."
+    arxiv_url: "https://arxiv.org/abs/2512.08920"
+    scholar_url: "https://scholar.google.com/scholar?q=OSMO+tactile+glove+human-to-robot"
+    post_slug: "2512-osmo-tactile-glove"
+    category: "related"
+translated_to:
+  - "en"
+---
+
+## TL;DR
+
+소프트 로봇 손이 인간처럼 다양한 일상 물체를 부드럽게 다루려면 손가락뿐 아니라 **손바닥의 풍부한 접촉 정보**가 필요하다. TacPalm SoftHand는 GelSight 계열 시각-촉각 손바닥(밀도 **181,000 unit/cm²**, 1 kPa 응답, 5,000회 이상 내구)을 3개의 2세그먼트 섬유 강화 공압 소프트 손가락과 결합하고, 손바닥-손가락 협조 전략으로 안정 파지·표면 재구성·물체 분류·동적 자세 보정을 모두 구현한다. 컵 뚜껑 집기 **100%** (촉각 미사용 65%), 직물 분류 **97%**, 블라인드 백 식별 **88%**를 달성했다.
+
+## 문제
+
+소프트 로봇 손에 촉각 센싱을 더하는 연구는 빠르게 늘었지만, 거의 모두 **손가락(특히 손끝)에 센서를 집중**해 왔다. 인간 손에서 손바닥은 파지·조작 접촉의 상당 부분을 담당하고 안정성과 표면 인지에 결정적 역할을 한다. 그러나 기존 소프트 핸드의 손바닥 센서는 다음 한계를 가진다:
+
+- **낮은 센싱 밀도**: 일반적으로 10 unit/cm² 미만 — 인간 손(240 unit/cm²)에 비해 한참 부족
+- **단순한 손가락 움직임**: 손바닥과 협조할 만한 정교한 그립 모드가 부재
+- **손바닥-손가락 분리 설계**: 두 부분이 단순 결합돼 있어 상호 보완 효과가 거의 없음
+
+결과적으로 손바닥에서 풍부한 접촉 정보를 얻고, 그 정보로 손가락의 동작을 동적으로 조정하는 **양방향 협조**는 미해결이었다.
+
+## 핵심 아이디어
+
+TacPalm SoftHand는 **시각-촉각 손바닥 + 2세그먼트 소프트 손가락 + 양방향 협조 전략**을 통합한 시스템이다:
+
+- **시각-촉각 손바닥**: 마이크로 카메라 + 다층 센싱 바디(투명 탄성체에 회색 잉크 코팅 + 아크릴 + 디퓨저) + RGB LED 링. 광학 모델로 LED 장착 높이 4.56 mm를 도출해 내부 반사를 억제. 1280×800 픽셀이 30.08×18.80 mm를 덮어 **181,000 unit/cm²**의 인간 손 750배 밀도 달성
+- **2세그먼트 섬유 강화 공압 손가락**: 한 손가락이 근위(PA), 원위(DA), 균등(UA) 세 모드로 독립 굽힘 가능. PA에서 정밀 핀치, UA에서 파워 랩까지 한 손에서 처리. 길이 비 L_p:L_d = 2:3은 인간 손가락 비율과 유사
+- **손바닥-손가락 협조 전략**: 손바닥의 압흔 윤곽 면적(ICA), 모서리 검출, 색상 차이 등을 폐루프 신호로 사용해 손가락 가이트(rest→touch→pull→raise→recover)와 공압을 실시간 조정
+
+<Figure src="./fig-2.png" caption="TacPalm SoftHand의 기계 설계. a, 전체 손 구조: 원통형 시각-촉각 손바닥 + 3개의 2세그먼트 소프트 손가락 + 40° 기울기 3-마운팅 베이스 연결부. b, 촉각 손바닥 단면도: 마이크로 카메라, 다층 센싱 바디(회색 잉크 코팅 투명 탄성체 + 아크릴 + 디퓨저), RGB LED 링. c, 광학 모델로 LED 장착 높이 h_lm = (r_p − w_l)/tan(θ/2) − h_ca = 4.56 mm로 결정해 내부 반사 억제. d, 소프트 손가락 구성: 2세그먼트 섬유 강화 탄성 챔버(Dragon Skin 10), 폴리에틸렌 시트(E = 275 MPa), Ecoflex 00-30 외피; 세그먼트 길이 비 L_p:L_d = 2:3." />
+
+<Collapsible title="구체적 방법">
+
+### 시각-촉각 손바닥 설계
+
+원통형 손바닥은 마이크로 카메라 모듈, 다층 센싱 바디, RGB LED 링, 보조 부품으로 구성된다. 센싱 바디는 (i) 회색 잉크 막을 입혀 균일 알베도를 갖는 투명 실리콘 탄성체, (ii) 탄성체를 지지하는 투명 아크릴, (iii) 빛을 분산하는 디퓨저로 이루어진다. LED 링은 R/G/B 세 그룹으로 프로그램되어 누름 깊이에 따라 색상 그라디언트를 만든다. 광학 모델 $h_{lm} = (r_p - w_l) / \tan(\theta/2) - h_{ca} = 4.56$ mm로 LED 장착 높이를 결정해 아크릴 층에서 발생하는 내부 반사를 억제한다.
+
+### 표면 형상 재구성
+
+알려진 직경(5.09 mm)의 보정 볼을 누른 데이터로 RGB 강도 $(I_R, I_G, I_B) \to$ 깊이 기울기 $(G_x, G_y)$ 룩업 테이블을 만들고, **Fast Poisson Reconstruction**으로 표면을 복원. 룩업 정확도는 R² = 0.9783 (x), 0.9798 (y). 1 mm 간격 줄무늬 블록과 0.5 mm 단차 삼각 계단으로 평가한 SSRA(표면 재구성 정확도)는 x-y 평면 92.3%, z-방향 81%.
+
+### 2세그먼트 공압 손가락
+
+섬유 강화 탄성 챔버(Dragon Skin 10, $E = 0.16$ MPa) 위에 폴리에틸렌 시트($E = 275$ MPa)를 부착한 비대칭 구조. 공압 시 위는 늘어나지만 아래는 고정되어 굽힘이 발생한다. 외피는 Ecoflex 00-30($E = 0.07$ MPa)로 인간 유사 외형과 컴플라이언트 접촉면을 제공. 근위·원위 세그먼트가 독립 작동해 한 손가락이 정밀 핀치~파워 랩 모드를 모두 수행한다.
+
+### 협조 가이트와 폐루프 제어
+
+- **카드 집기 (Fig. 6a-d)**: 책상에 평평하게 놓인 카드를 rest→touch→pull→raise→recover 가이트로 점진적 이동. 카드 모서리가 손바닥에 닿으면 모서리 검출 알고리즘이 트리거 → 다른 손가락이 적응적으로 감싼다
+- **연속 결함 감지 (Fig. 6e-f)**: 손가락이 직물을 단계적으로 손바닥 위로 이동시켜, 30×19 mm 손바닥보다 큰 영역을 스캔. 색상 차이로 결함/정상 구분
+- **차주전자 자세 보정 (Fig. 6g-j)**: 손바닥의 선택된 점에 대한 ICA를 실시간 모니터링. ICA가 임계값 아래로 떨어지면 한 손가락의 원위 세그먼트를 80 kPa로 부풀려 자세 재안정화
+
+### 분류 모델
+
+직물·블라인드 백 분류는 ResNet34를 촉각 이미지에 미세 조정. 이미지당 처리 시간 0.01초 미만으로 실시간 가능.
+
+</Collapsible>
+
+## 주요 결과
+
+- **손바닥 센싱**: 밀도 **181,000 unit/cm²** (인간 손 240 unit/cm²의 약 750배), 최소 응답 압력 1 kPa, 5,000회 이상 사이클링에서 무열화
+- **표면 재구성 정확도**: x-y 평면 SSRA **92.3%**, z-방향 SSRA **81%**
+- **손가락 성능**: 작업 공간 57.2 × 96.5 mm; 최대 굽힘각 PA 85.3°, DA 117.9°, UA 204.3°; 손끝 힘 PA 0.71 N, DA 1.31 N, UA 2.19 N; 최대 파지력 14.6 N; 최단 폐쇄 0.6 s, 최대 속도 153°/s
+- **컵 뚜껑 집기**: 촉각 사용 시 **100% 성공** (n=20), 미사용 시 **65%** — 손바닥 접촉이 파워 랩 모드를 트리거
+- **고속 운반**: 180°/s, 720°/s²의 팔 운동에서 촉각 사용 시 성공, 미사용 시 실패
+- **직물 분류**: 10종 직물에서 ResNet34로 평균 **97%** 정확도 (이미지당 0.01초 미만)
+- **블라인드 백 식별**: 5종 봉투(육각 너트, 완두콩, 볼트, 호박씨, 사고)에서 평균 **88%** — 호박씨 100%, 유사 형태 그룹은 약 15% 혼동
+- **동적 차주전자**: 따르는 도중 ICA 감소 감지 → 80 kPa 원위 세그먼트 가압으로 즉시 재안정화
+
+<Figure src="./fig-4.png" caption="손가락 성능과 손바닥 보조 파지. a, 초승달 모양의 손가락 작업 공간 57.2 mm (x) × 96.5 mm (y). b, 근위(PA)·원위(DA)·균등(UA) 작동에 대한 굽힘각-공압 곡선; 최대각 85.3°/117.9°/204.3°. c, 손끝 힘 0.71/1.31/2.19 N (PA/DA/UA); 최대 파지력 약 14.6 N. d, JAKA Zu7 7-DoF 로봇팔에 장착된 TacPalm SoftHand로 다양한 일상 물체 파지. e, 인간-로봇 핸드오버 예시 — 손가락 모드가 PA → DA → UA로 전환되며 정밀 핀치에서 파워 랩까지. f, 고속 운반(180°/s, 720°/s²): 촉각 사용 시 성공, 미사용 기준선은 실패. g, 컵 뚜껑 집기: 촉각 손바닥 사용 시 100% (n=20), 미사용 시 65% (n=20)." />
+
+<Figure src="./fig-6.png" caption="촉각 손바닥과 소프트 손가락의 협조. a, 윗면만 노출된 채 책상에 놓인 카드 집기(n=3). b, 순환 손가락 가이트: rest→touch→pull→raise→recover로 카드 모서리를 손바닥에 점차 접촉. c, 공압 작동 시스템. d, 손바닥의 모서리 감지가 다른 손가락의 적응적 파지를 촉발. e, 무늬 직물의 연속 결함 감지 — 손가락이 직물을 손바닥 위로 한 단계씩 이동시켜 30×19 mm 감지 영역보다 더 넓은 영역을 스캔. f, 결함 vs 무결함의 압흔 차이를 색상 차이 기반 영상 처리로 구분. g, 동적 자세 조정과 함께 차 따르기(n=3). h, 차주전자 바닥의 선택된 점에 대한 압흔 윤곽 면적(ICA) 실시간 모니터링. i, 촉각 피드백 제어 시스템. j, 시간 T1–T6에서의 공압과 ICA — 따르는 도중 ICA가 임계값 아래로 떨어지면 한 손가락의 원위 세그먼트가 80 kPa로 부풀어 차주전자를 재안정화." />
+
+## 달성점과 한계점
+
+**새롭게 달성한 점**
+- **손바닥 센싱 밀도의 패러다임 전환**: 기존 소프트 핸드 10 unit/cm² 미만 → **181,000 unit/cm²**, 인간 손의 750배 — 동시에 1 kPa 감도, 5,000회 내구 확보
+- **소프트 손가락 + 시각-촉각 손바닥의 진정한 협조**: 단순 결합이 아닌, 손바닥 신호가 손가락 가이트를 트리거하고(카드 집기), 손가락이 손바닥 센싱 영역을 확장(연속 결함 감지)하는 양방향 상호 보완
+- **다양한 응용을 단일 시스템으로**: 표면 재구성, 직물·봉투 분류, 동적 자세 보정, 인간-로봇 핸드오버까지 한 하드웨어로 demo
+
+**한계점**
+- 3개 손가락 구성 — 엄지 대향이나 회전 자유도가 없어 인간형 정교 조작에 한계
+- 공압 액추에이션은 외부 컴프레서·다채널 밸브를 요구해 모바일 통합이 어려움
+- 손바닥 감지 영역이 30×19 mm 직사각형 — 인간 손바닥에 비해 작아, 큰 물체는 부분 접촉만 측정 가능
+- ResNet34 분류는 시나리오별 별도 학습 필요 — 통합된 일반 정책 부재
+- 🤖 시각-촉각 손바닥은 데이터 대역폭이 크고 GelSight 계열은 시뮬레이션-실제 갭이 여전히 어려움 — 학습 기반 정책과 결합한 sim-to-real 검증은 미수행
+
+## Terry's Memo
+
+- *(None)*

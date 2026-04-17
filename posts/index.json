@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-17T01:59:43.963Z",
-  "total_posts": 39,
+  "generated_at": "2026-04-17T02:13:40.919Z",
+  "total_posts": 40,
   "posts": [
     {
       "post_number": 1,
@@ -2775,6 +2775,96 @@
       ],
       "visibility": "public",
       "allowed_groups": []
+    },
+    {
+      "post_number": 40,
+      "slug": "2503-tacpalm-softhand",
+      "content_type": "papers",
+      "title_en": "TacPalm SoftHand: High-Density Tactile Palm Coordinated with Soft Pneumatic Fingers",
+      "title_ko": "TacPalm SoftHand: 고밀도 촉각 손바닥과 소프트 손가락의 협조",
+      "summary_ko": "GelSight 계열 시각-촉각 손바닥(181,000 unit/cm²)과 3개의 2세그먼트 공압 소프트 손가락을 결합한 TacPalm SoftHand. 손바닥-손가락 협조로 컵 뚜껑 집기 100%, 직물 분류 97%, 블라인드 백 식별 88%, 동적 차주전자 자세 보정을 구현한다.",
+      "summary_en": "TacPalm SoftHand pairs a GelSight-style visual-tactile palm (181,000 unit/cm²) with three two-segment pneumatic soft fingers. Palm-finger coordination delivers 100% cup-cap pickup, 97% fabric classification, 88% blind-bag identification, and dynamic teapot pose stabilization.",
+      "domain": "robotics",
+      "subfields": [
+        "soft-robotics",
+        "tactile-sensing",
+        "robotic-hand"
+      ],
+      "key_concepts": [
+        "visual-tactile-palm",
+        "soft-pneumatic-finger",
+        "fiber-reinforced-actuator",
+        "palm-finger-cooperation",
+        "high-density-tactile",
+        "GelSight-style-sensor",
+        "two-segment-actuation",
+        "object-classification"
+      ],
+      "methodology": [
+        "soft-robot-fabrication",
+        "visual-tactile-sensing",
+        "shape-reconstruction",
+        "ResNet34-classification",
+        "tactile-feedback-control"
+      ],
+      "contribution_type": "system",
+      "tags": [
+        "Papers",
+        "Robotics",
+        "Tactile Sensing",
+        "Soft Robotics",
+        "Palm"
+      ],
+      "source_author": "Ningbin Zhang et al.",
+      "source_date": "2025-03-10T00:00:00Z",
+      "published_at": "2026-04-17T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "Three-finger soft pneumatic hand with a 181,000 unit/cm² visual-tactile palm — palm-finger coordination yields 100% cup-cap pickup, 97% fabric classification, and dynamic teapot-pose stabilization",
+        "problem": "Soft robotic hands rarely instrument the palm with high-density tactile sensing despite the palm carrying a substantial share of grasping/manipulation contact in humans",
+        "solution": "TacPalm SoftHand combines a GelSight-style visual-tactile palm (181,000 unit/cm², 1 kPa response, 5000+ cycle durability) with three two-segment fiber-reinforced pneumatic soft fingers, plus palm-finger feedback strategies for grasp stabilization, surface reconstruction, and object classification",
+        "key_result": "Tactile cup-cap pickup 100% vs 65% without (n=20); fabric classification 97% across 10 textures; blind-bag classification 88% across 5 categories; 92.3%/81% shape reconstruction accuracy in x-y/z; teapot pose dynamically restabilized via ICA-based feedback",
+        "limitations": [
+          "Three fingers only — no thumb opposition or rotational dexterity",
+          "Pneumatic actuation requires external compressor / multi-channel valves",
+          "Palm sensing area is a 30×19 mm rectangle — small relative to human palm",
+          "Classification relies on offline-trained ResNet34 per scenario; no general policy"
+        ]
+      },
+      "relations": [
+        {
+          "slug": "2412-f-tac-hand",
+          "type": "compares_with"
+        },
+        {
+          "slug": "2407-tactile-skin-inhand-translation",
+          "type": "related"
+        },
+        {
+          "slug": "2409-3dtactile-dex",
+          "type": "related"
+        },
+        {
+          "slug": "2504-pp-tac",
+          "type": "related"
+        },
+        {
+          "slug": "2511-equitac-tactile-equivariance",
+          "type": "related"
+        },
+        {
+          "slug": "2512-osmo-tactile-glove",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "robotics/hand/tactile",
+      "taxonomy_secondary": [
+        "robotics/hand/dexterous"
+      ],
+      "visibility": "public",
+      "allowed_groups": []
     }
   ],
   "knowledge_graph": {
@@ -3202,6 +3292,30 @@
       {
         "from": "2412-f-tac-hand",
         "type": "compares_with"
+      },
+      {
+        "from": "2503-tacpalm-softhand",
+        "type": "compares_with"
+      },
+      {
+        "from": "2503-tacpalm-softhand",
+        "type": "related"
+      },
+      {
+        "from": "2503-tacpalm-softhand",
+        "type": "related"
+      },
+      {
+        "from": "2503-tacpalm-softhand",
+        "type": "related"
+      },
+      {
+        "from": "2503-tacpalm-softhand",
+        "type": "related"
+      },
+      {
+        "from": "2503-tacpalm-softhand",
+        "type": "related"
       }
     ],
     "clusters": [
@@ -3251,7 +3365,8 @@
           16,
           18,
           37,
-          39
+          39,
+          40
         ],
         "core_concepts": [
           "diffusion-policy",
@@ -3412,7 +3527,8 @@
       36,
       37,
       38,
-      39
+      39,
+      40
     ],
     "outlier_papers": []
   },
@@ -4076,10 +4192,34 @@
     ],
     "palm-tactile": [
       39
+    ],
+    "visual-tactile-palm": [
+      40
+    ],
+    "soft-pneumatic-finger": [
+      40
+    ],
+    "fiber-reinforced-actuator": [
+      40
+    ],
+    "palm-finger-cooperation": [
+      40
+    ],
+    "high-density-tactile": [
+      40
+    ],
+    "GelSight-style-sensor": [
+      40
+    ],
+    "two-segment-actuation": [
+      40
+    ],
+    "object-classification": [
+      40
     ]
   },
   "domain_stats": {
-    "robotics": 28,
+    "robotics": 29,
     "ml": 2,
     "ai": 6,
     "philosophy": 2,
@@ -4089,12 +4229,12 @@
     "robotics/brain/vla": 7,
     "robotics/arm:secondary": 11,
     "robotics/arm/force-control": 2,
-    "robotics/hand/tactile": 8,
+    "robotics/hand/tactile": 9,
     "robotics/arm/exoskeleton": 3,
     "robotics/hand:secondary": 1,
     "robotics/hand/dexterous": 3,
     "ai/agent": 7,
-    "robotics/hand/dexterous:secondary": 6,
+    "robotics/hand/dexterous:secondary": 7,
     "robotics/arm/exoskeleton:secondary": 1,
     "robotics/brain": 11,
     "ai/llm:secondary": 5,
@@ -4103,8 +4243,8 @@
     "robotics/brain:secondary": 2,
     "robotics/brain/vla:secondary": 1,
     "robotics/arm": 5,
-    "robotics/hand": 11,
-    "robotics": 27,
+    "robotics/hand": 12,
+    "robotics": 28,
     "ai": 8
   }
 }

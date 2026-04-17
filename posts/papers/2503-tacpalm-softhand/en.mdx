@@ -1,0 +1,139 @@
+---
+locale: "en"
+translation_of: "2503-tacpalm-softhand:ko"
+title: "TacPalm SoftHand: High-Density Tactile Palm Coordinated with Soft Pneumatic Fingers"
+subtitle: "181,000 unit/cm² palm + two-segment pneumatic fingers"
+summary: "Soft robotic hands have largely instrumented fingers only, leaving the palm's rich contact information untapped. TacPalm SoftHand combines a GelSight-style visual-tactile palm (181,000 unit/cm² density, 1 kPa response, >5,000 cycles) with three two-segment fiber-reinforced pneumatic soft fingers, plus palm-finger coordination strategies for stable grasping, surface reconstruction, object classification, and dynamic pose stabilization. It achieves 100% cup-cap pickup, 97% fabric classification, and 88% blind-bag identification."
+card_summary: "TacPalm SoftHand pairs a GelSight-style visual-tactile palm (181,000 unit/cm²) with three two-segment pneumatic soft fingers. Palm-finger coordination delivers 100% cup-cap pickup, 97% fabric classification, 88% blind-bag identification, and dynamic teapot pose stabilization."
+cover_caption: "Concept of TacPalm SoftHand. A high-density visual-tactile palm coordinated with two-segment pneumatic soft fingers enables precise grasping, perception, and manipulation."
+published_at: "2026-04-17T00:00:00Z"
+source_type: "Nature Communications"
+source_url: "https://www.nature.com/articles/s41467-025-57741-6"
+source_date: "2025-03-10T00:00:00Z"
+display_tags:
+  - "Robotics"
+  - "Tactile Sensing"
+  - "Soft Robotics"
+  - "Palm"
+terrys_memo: ""
+references:
+  - title: "F-TAC Hand: Embedding High-Resolution Touch Across Robotic Hands for Adaptive Human-like Grasping"
+    author: "Zihang Zhao et al."
+    description: "Concurrent work that embeds 17 vision-based tactile sensors into a rigid biomimetic hand. TacPalm SoftHand pursues the same vision (high-resolution tactile across the hand) via a soft-pneumatic actuation paradigm with a single palm sensor."
+    arxiv_url: "https://arxiv.org/abs/2412.14482"
+    scholar_url: "https://scholar.google.com/scholar?q=F-TAC+Hand+robotic+tactile"
+    post_slug: "2412-f-tac-hand"
+    category: "related"
+  - title: "Learning In-Hand Translation Using Tactile Skin With Shear and Normal Force Sensing"
+    author: "Jessica Yin et al."
+    description: "RL approach that learns in-hand translation from tactile skin. TacPalm SoftHand uses explicit visual-tactile palm signals to coordinate fingers rather than learning a policy."
+    arxiv_url: "https://arxiv.org/abs/2407.07885"
+    scholar_url: "https://scholar.google.com/scholar?q=tactile+skin+in-hand+translation"
+    post_slug: "2407-tactile-skin-inhand-translation"
+    category: "related"
+  - title: "Canonical Representation and Force-Based Pretraining of 3D Tactile for Dexterous Visuo-Tactile Policy Learning"
+    author: "Tianhao Wu et al."
+    description: "Canonical 3D-tactile representation with force-based pretraining for visuotactile policy learning. Complementary to TacPalm SoftHand on the policy side; both extract geometry from visuo-tactile signals."
+    arxiv_url: "https://arxiv.org/abs/2409.17549"
+    scholar_url: "https://scholar.google.com/scholar?q=canonical+3D+tactile+visuo-tactile+policy"
+    post_slug: "2409-3dtactile-dex"
+    category: "related"
+  - title: "PP-Tac: Paper Picking Using Tactile Feedback in Dexterous Robotic Hands"
+    author: "Pei Lin et al."
+    description: "Tactile-feedback + diffusion-policy system that picks thin deformables. Directly comparable to TacPalm SoftHand's palm-gait card-picking demo (Fig. 6a)."
+    arxiv_url: "https://arxiv.org/abs/2504.16649"
+    scholar_url: "https://scholar.google.com/scholar?q=PP-Tac+paper+picking+tactile"
+    post_slug: "2504-pp-tac"
+    category: "related"
+  - title: "OSMO: Open-Source Tactile Glove for Human-to-Robot Skill Transfer"
+    author: "Jessica Yin et al."
+    description: "Tactile glove for human-to-robot demonstration transfer. TacPalm SoftHand takes a different route — embedding GelSight-style sensing in the palm itself rather than wearing a glove."
+    arxiv_url: "https://arxiv.org/abs/2512.08920"
+    scholar_url: "https://scholar.google.com/scholar?q=OSMO+tactile+glove+human-to-robot"
+    post_slug: "2512-osmo-tactile-glove"
+    category: "related"
+translated_to: []
+---
+
+## TL;DR
+
+For soft robotic hands to handle everyday objects gracefully, **rich palm contact information** is required, not just fingertip sensing. TacPalm SoftHand combines a GelSight-style visual-tactile palm (**181,000 unit/cm²** density, 1 kPa response, >5,000-cycle durability) with three two-segment fiber-reinforced pneumatic soft fingers, plus palm-finger coordination strategies for stable grasping, surface reconstruction, object classification, and dynamic pose stabilization. It achieves **100%** cup-cap pickup (vs 65% without tactile), **97%** fabric classification, and **88%** blind-bag identification.
+
+## Problem
+
+Adding tactile sensing to soft robotic hands has accelerated, but **almost all sensors are concentrated on fingers (especially fingertips)**. In humans, the palm carries a substantial portion of grasping/manipulation contact and is critical for stability and surface perception. Existing soft-hand palm sensors face several limitations:
+
+- **Low sensing density**: typically under 10 unit/cm² — far below the human hand's 240 unit/cm²
+- **Simple finger motions**: lack the precise grip modes needed to coordinate with the palm
+- **Decoupled palm-finger design**: palm and fingers are merely combined, with little mutual benefit
+
+The result: **bidirectional coordination** — where the palm produces rich contact signals and uses them to dynamically tune finger motions — has remained unsolved.
+
+## Key Idea
+
+TacPalm SoftHand integrates a **visual-tactile palm + two-segment soft pneumatic fingers + bidirectional coordination strategies**:
+
+- **Visual-tactile palm**: micro camera + multi-layer sensing body (gray-ink-coated transparent elastomer + acrylic + diffuser) + RGB LED ring. An optical model fixes the LED mounting height at 4.56 mm to suppress inter-reflection. 1280×800 pixels over 30.08×18.80 mm yields **181,000 unit/cm²** — about 750× the density of the human hand
+- **Two-segment fiber-reinforced pneumatic fingers**: each finger can independently bend in proximal-only (PA), distal-only (DA), or uniform (UA) modes — covering precision pinch through power wrap. Segment ratio L_p:L_d = 2:3 mirrors human finger proportions
+- **Palm-finger coordination strategies**: closed-loop signals such as indentation contour area (ICA), edge detection, and color-difference filtering drive finger gaits (rest→touch→pull→raise→recover) and pneumatic pressures in real time
+
+<Figure src="./fig-2.png" caption="Mechanical design of TacPalm SoftHand. a, Overall hand structure: cylinder-like visual-tactile palm + three soft two-segment fingers + a 40°-inclined three-base palm-finger connector. b, Tactile palm cross-section: micro camera, multi-layer sensing body (gray-ink-coated transparent elastomer + acrylic + diffuser), and an RGB LED ring. c, Optical model determining LED mounting height h_lm = (r_p − w_l)/tan(θ/2) − h_ca = 4.56 mm to suppress inter-reflection. d, Soft finger composition: two-segment fiber-reinforced elastomeric chamber (Dragon Skin 10), polyethylene sheet (E = 275 MPa), and Ecoflex 00-30 outer skin; segment length ratio L_p:L_d = 2:3." />
+
+<Collapsible title="Detailed Methods">
+
+### Visual-Tactile Palm Design
+
+The cylindrical palm integrates a micro camera module, a multi-layer sensing body, an RGB LED ring, and supporting components. The sensing body comprises (i) a transparent silicone elastomer covered with a gray-ink membrane for uniform albedo, (ii) a transparent acrylic layer for support, and (iii) a diffuser for light spreading. The LED ring is programmed into R/G/B groups to produce color gradients varying with touch depth. The optical model $h_{lm} = (r_p - w_l) / \tan(\theta/2) - h_{ca} = 4.56$ mm fixes LED mounting height to suppress inter-reflection from the acrylic layer.
+
+### Surface Shape Reconstruction
+
+A look-up table maps RGB intensities $(I_R, I_G, I_B)$ to depth gradients $(G_x, G_y)$, calibrated by pressing a known-diameter (5.09 mm) ball on the palm. **Fast Poisson Reconstruction** then yields the surface. Look-up accuracy is R² = 0.9783 (x), 0.9798 (y). Surface Shape Reconstruction Accuracy (SSRA), evaluated on a 1 mm-stripe block and a 0.5 mm-step triangular block, is 92.3% (x-y) and 81% (z).
+
+### Two-Segment Pneumatic Finger
+
+A fiber-reinforced elastomeric chamber (Dragon Skin 10, $E = 0.16$ MPa) is asymmetrically bonded to a polyethylene sheet ($E = 275$ MPa). Pressurization elongates the top while the sheet anchors the bottom, producing bending. An Ecoflex 00-30 ($E = 0.07$ MPa) outer skin provides anthropomorphic compliance. Independent proximal/distal actuation lets one finger span precision pinch through power wrap.
+
+### Coordinated Gaits and Closed-Loop Control
+
+- **Card pickup (Fig. 6a-d)**: A flat card on the desk is moved by a rest→touch→pull→raise→recover gait until its edge contacts the palm. Edge detection on the palm triggers other fingers to wrap adaptively.
+- **Continuous flaw detection (Fig. 6e-f)**: Fingers shuffle a fabric across the palm step by step, scanning more area than the 30×19 mm sensing region. Color-difference filtering distinguishes flaw vs flawless.
+- **Teapot pose adjustment (Fig. 6g-j)**: Real-time monitoring of ICA at a selected dot on the teapot bottom. When ICA drops below threshold during pouring, a finger's distal segment inflates to 80 kPa and restabilizes the teapot.
+
+### Classification Models
+
+Fabric and blind-bag classification use ResNet34 fine-tuned on tactile images. Per-image inference runs in under 0.01 s for real-time operation.
+
+</Collapsible>
+
+## Key Results
+
+- **Palm sensing**: density **181,000 unit/cm²** (~750× human hand's 240 unit/cm²); minimum response pressure 1 kPa; >5,000 cycles without significant degradation
+- **Surface reconstruction**: SSRA **92.3%** (x-y), **81%** (z)
+- **Finger performance**: workspace 57.2 × 96.5 mm; max flexion PA 85.3°, DA 117.9°, UA 204.3°; fingertip force PA 0.71 N, DA 1.31 N, UA 2.19 N; max grasping force 14.6 N; min closing time 0.6 s, max speed 153°/s
+- **Cup-cap pickup**: **100% success** with tactile (n=20) vs **65%** without — palm contact triggers a power-wrap mode
+- **High-speed delivery**: at 180°/s and 720°/s² arm motion, tactile-enabled hand succeeds while baseline fails
+- **Fabric classification**: **97%** mean accuracy across 10 fabrics with ResNet34 (under 0.01 s/image)
+- **Blind-bag identification**: **88%** mean accuracy across 5 categories (hexagon nuts, peas, bolts, melon seeds, sagos); melon seeds 100%; similar-shape groups confused at ~15%
+- **Dynamic teapot pouring**: ICA drop is detected during pouring and corrected by 80 kPa distal-segment inflation, restabilizing the teapot
+
+<Figure src="./fig-4.png" caption="Finger performance and palm-assisted grasping. a, Crescent-shaped finger workspace spanning 57.2 mm (x) × 96.5 mm (y). b, Flexion vs pneumatic pressure for proximal-only (PA), distal-only (DA), and uniform (UA) actuation; max angles 85.3°/117.9°/204.3°. c, Fingertip forces 0.71/1.31/2.19 N (PA/DA/UA); max grasping force ≈14.6 N. d, TacPalm SoftHand mounted on a JAKA Zu7 7-DoF arm grasping diverse everyday objects. e, Human–robot handover examples — finger mode transitions PA → DA → UA; precision pinch to power wrap. f, High-speed delivery (180°/s, 720°/s²): tactile-enabled hand succeeds, no-tactile baseline fails. g, Cup-cap pickup: 100% (n=20) with tactile palm vs 65% (n=20) without." />
+
+<Figure src="./fig-6.png" caption="Cooperation of the tactile palm and soft fingers. a, Picking a card placed on a desk with only its top exposed (n=3 task times). b, Cyclic finger gait: rest→touch→pull→raise→recover gradually moves the card edge to contact the palm. c, Pneumatic actuation system. d, Edge detection on the palm triggers adaptive grasping by other fingers. e, Continuous flaw detection on a variegated fabric — fingers step the fabric across the palm so the palm scans more area than its 30×19 mm sensing region. f, Indentation difference between flaw vs flawless captured via color-difference image processing. g, Teapot pouring with dynamic pose adjustment (n=3 task times). h, Real-time monitoring of indentation contour area (ICA) on a selected dot on the teapot bottom. i, Tactile-feedback control system. j, Pneumatic pressure and ICA over time T1–T6: when ICA falls below the threshold during pouring, one finger's distal segment inflates to 80 kPa and restabilizes the teapot." />
+
+## Achievements and Limitations
+
+**Key achievements**
+- **Paradigm shift in palm sensing density**: prior soft hands < 10 unit/cm² → **181,000 unit/cm²** (~750× human hand) while preserving 1 kPa sensitivity and 5,000-cycle durability
+- **Genuine palm-finger coordination**: not mere combination — palm signals trigger finger gaits (card pickup) and fingers extend the palm's effective sensing area (continuous flaw detection)
+- **Multiple applications on a single platform**: surface reconstruction, fabric/bag classification, dynamic pose stabilization, and human-robot handover demonstrated on one hardware system
+
+**Limitations**
+- Three-finger configuration — no thumb opposition or rotational dexterity, limiting fine human-like manipulation
+- Pneumatic actuation requires an external compressor and multi-channel valves — challenging for mobile integration
+- Palm sensing area is a 30×19 mm rectangle — small relative to a human palm, so large objects only contact partially
+- ResNet34 classification requires per-scenario training — no unified general policy
+- 🤖 Visual-tactile palms have high data bandwidth, and the GelSight-family sim-to-real gap remains hard — integration with learning-based policies for sim-to-real has not been verified
+
+## Terry's Memo
+
+- *(None)*
