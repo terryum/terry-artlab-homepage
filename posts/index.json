@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T02:23:01.181Z",
+  "generated_at": "2026-04-17T13:54:14.139Z",
   "total_posts": 41,
   "posts": [
     {
@@ -136,7 +136,7 @@
       "post_number": 3,
       "slug": "2501-dexforce-force-informed-actions",
       "content_type": "papers",
-      "title_en": "DexForce: Learning Contact Forces from Human Demonstrations for Dexterous Manipulation\"summary: \"DexForce leverages contact forces from kinesthetic demonstrations to compute force-informed action targets for dexterous manipulation. Across six tasks, policies trained with force-informed actions achieve 76% average success rate, while policies ignoring contact forces achieve near-zero success.",
+      "title_en": "DexForce: Learning Contact Forces from Human Demonstrations for Dexterous Manipulation",
       "title_ko": "DexForce: 인간 시연에서 접촉력을 학습하는 다지 조작",
       "summary_ko": "Kinesthetic 시연에서 측정한 접촉 힘으로 force-informed action target을 계산하는 DexForce를 제안한다. 간단한 스프링 모델 하나로 6개 dexterous manipulation 태스크에서 평균 76% 성공률을 달성하며, 힘을 무시한 정책 대비 압도적 차이를 보인다.",
       "summary_en": "DexForce computes force-informed action targets from contact forces measured during kinesthetic demonstrations. A single spring model parameter achieves 76% average success across six dexterous manipulation tasks, while policies ignoring forces achieve near-zero success.",
