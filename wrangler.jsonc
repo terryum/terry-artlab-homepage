@@ -30,9 +30,6 @@
       "bucket_name": "terry-artlab-homepage-cache"
     }
   ],
-  "routes": [
-    { "pattern": "terry.artlab.ai", "custom_domain": true }
-  ],
   "observability": {
     "enabled": true,
     "logs": {
