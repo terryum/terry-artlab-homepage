@@ -55,5 +55,9 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next|api|admin|co|login|posts|surveys|images|favicon|sitemap|robots).*)'],
+  // Run middleware on all paths except Next.js internal assets + favicon.
+  // Apex terryum.ai → www redirect must cover every route including /api, /posts,
+  // /surveys, /images, /robots.txt, etc. The locale-redirect logic inside the
+  // handler has its own early-returns for those paths so only the host check fires.
+  matcher: ['/((?!_next|favicon.ico).*)'],
 };
