@@ -2,7 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { LOCALES, DEFAULT_LOCALE, type Locale } from '@/lib/i18n';
 
 export function middleware(request: NextRequest) {
+  const host = request.headers.get('host') || '';
   const { pathname } = request.nextUrl;
+
+  // Apex terryum.ai → www.terryum.ai (308 permanent redirect, path preserved).
+  // terry.artlab.ai redirect is handled at AWS CloudFront + S3, so no host check here.
+  if (host === 'terryum.ai') {
+    const url = request.nextUrl.clone();
+    url.host = 'www.terryum.ai';
+    url.protocol = 'https:';
+    return NextResponse.redirect(url, { status: 308 });
+  }
 
   // Skip if path already has locale prefix
   const pathnameHasLocale = LOCALES.some(

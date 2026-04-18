@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://terry.artlab.ai'),
+  metadataBase: new URL('https://www.terryum.ai'),
   title: {
     template: '%s | Terry on the Manifold',
     default: 'Terry on the Manifold',

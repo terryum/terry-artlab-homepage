@@ -3,7 +3,7 @@ import { getAllSlugs, getPostMeta } from '@/lib/posts';
 import { loadPublicSurveys } from '@/lib/surveys';
 import { loadPublicProjects } from '@/lib/projects';
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://terry.artlab.ai';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.terryum.ai';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];

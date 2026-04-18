@@ -11,12 +11,16 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
+  "routes": [
+    { "pattern": "www.terryum.ai", "custom_domain": true },
+    { "pattern": "terryum.ai", "custom_domain": true }
+  ],
   // NEXT_PUBLIC_* values are baked into the client JS bundle at build time.
   // They are public by design (RLS-protected anon keys, public GA IDs, public CDN URLs).
   // Declaring them here ensures `wrangler deploy` preserves them across deployments
   // (Dashboard-only Text variables get wiped on each deploy).
   "vars": {
-    "NEXT_PUBLIC_SITE_URL": "https://terry.artlab.ai",
+    "NEXT_PUBLIC_SITE_URL": "https://www.terryum.ai",
     "NEXT_PUBLIC_SUPABASE_URL": "https://fyrgooabpegysrcawtdm.supabase.co",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ5cmdvb2FicGVneXNyY2F3dGRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4MDA2OTksImV4cCI6MjA4OTM3NjY5OX0.CaPWT-E9yUfwKwaz3QKtzgoBcFsOb10AYuP5x__M6jA",
     "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-3KR4M92C3G",
