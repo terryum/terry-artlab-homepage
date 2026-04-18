@@ -80,7 +80,7 @@ rm -rf .next && npm run build
 ```bash
 # TTFB 측정
 curl -o /dev/null -s -w "TTFB: %{time_starttransfer}s, Total: %{time_total}s\n" \
-  "https://terry.artlab.ai/ko"
+  "https://www.terryum.ai/ko"
 
 # Git repo 크기
 du -sh .git/ posts/ public/posts/

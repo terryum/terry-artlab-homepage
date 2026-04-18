@@ -13,7 +13,7 @@ argument-hint: "<번호 | slug | 제목 | URL> [플랫폼 필터]"
   /share P1                                 → Project P1 전체 플랫폼
   /share brain-augmentation X에만           → slug으로 식별, X만
   /share Tactile Sensing 링크드인에만       → 제목으로 식별
-  /share https://terry.artlab.ai/posts/...  → URL로 식별
+  /share https://www.terryum.ai/posts/...  → URL로 식별
 
 ## 필수 참조
 실행 전 반드시 `docs/SOCIAL_SHARE_GUIDE.md`를 읽고 플랫폼별 메시지 포맷, 커버이미지 규칙, URL 규칙을 준수할 것.
@@ -50,7 +50,7 @@ argument-hint: "<번호 | slug | 제목 | URL> [플랫폼 필터]"
 - **데이터 소스**: MDX frontmatter의 `summary` → `card_summary` → `ai_summary.one_liner`
 - **papers**: AI가 쓴 논문 요약. 핵심 기여와 결과를 간결하게 전달
 - **essays/memos**: Terry가 직접 쓴 글. 가장 강한 인사이트 1-2문장으로
-- **공유 URL**: `https://terry.artlab.ai/posts/{slug}` (캐시버스팅: `?v={YYYYMMDD}`)
+- **공유 URL**: `https://www.terryum.ai/posts/{slug}` (캐시버스팅: `?v={YYYYMMDD}`)
 - **커버이미지**: `posts/{slug}/og.png` (OG 메타태그로 자동 전달)
 - **papers 공유 시 확인**: content_type이 essays/memos가 아니면 사용자에게 확인 후 진행
 
@@ -58,13 +58,13 @@ argument-hint: "<번호 | slug | 제목 | URL> [플랫폼 필터]"
 - **데이터 소스**: `surveys.json`의 `description.ko` / `description.en`
 - **1인칭 톤**: "저의 AI scientist들과 분석하였습니다" — 주체성 강조
 - **규모감**: 논문 수, 챕터 수 등 구체적 숫자 포함
-- **공유 URL**: `https://terry.artlab.ai/surveys/{slug}` (캐시버스팅: `?v={YYYYMMDD}`)
+- **공유 URL**: `https://www.terryum.ai/surveys/{slug}` (캐시버스팅: `?v={YYYYMMDD}`)
 - **커버이미지**: `images/projects/{slug}-og.jpg` (OG 메타태그로 자동 전달)
 
 ### Projects
 - **데이터 소스**: `projects.json`의 `description.ko` / `description.en`
 - **1인칭 톤**: 내가 만든 결과물임을 강조
-- **공유 URL**: `https://terry.artlab.ai/projects/{slug}` 또는 외부 링크
+- **공유 URL**: `https://www.terryum.ai/projects/{slug}` 또는 외부 링크
 - **커버이미지**: `images/projects/{slug}-og.jpg` (없으면 cover.webp)
 
 ### 플랫폼별 언어 + 글자수
