@@ -3,7 +3,7 @@ doc_id: -2
 type: "draft"
 visibility: "private"
 content_type: "memos"
-slug: "260419-quiet-bill"
+slug: "260419-vercel-quiet-bill"
 created_at: 2026-04-19
 source_memos: []
 domain: ""
