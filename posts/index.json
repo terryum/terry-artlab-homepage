@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-19T22:22:40.073Z",
+  "generated_at": "2026-04-19T22:31:33.154Z",
   "total_posts": 42,
   "posts": [
     {
@@ -2957,8 +2957,8 @@
       "post_number": 42,
       "slug": "260419-quiet-bill",
       "content_type": "memos",
-      "title_en": "The Quiet Bill",
-      "title_ko": "조용한 청구서",
+      "title_en": "The Quiet Bill — When Vercel Bills You for Bots",
+      "title_ko": "조용한 청구서 - Bot에도 과금하는 Vercel",
       "summary_ko": "Vercel Pro에서 봇+Observability가 청구서를 부풀렸다. Cloudflare는 보안 스택이 계량기 앞에 있어서 구조적으로 싸다.",
       "summary_en": "Vercel Pro let bots + Observability inflate my bill. Cloudflare's security stack sits before the meter, so blocked traffic costs nothing.",
       "domain": "Infra & Cost",
