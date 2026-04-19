@@ -176,7 +176,7 @@ export default function SearchBar({
     locale === 'ko' ? item.title_ko : item.title_en;
 
   return (
-    <div ref={containerRef} className="relative mb-4">
+    <div ref={containerRef} className="relative mb-4 ml-auto w-full sm:w-72">
       <div className="relative">
         {/* Search icon */}
         <svg
