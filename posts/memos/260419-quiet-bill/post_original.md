@@ -1,0 +1,86 @@
+---
+doc_id: -2
+type: "draft"
+visibility: "private"
+content_type: "memos"
+slug: "260419-quiet-bill"
+created_at: 2026-04-19
+source_memos: []
+domain: ""
+subfields: []
+key_concepts: []
+tags: []
+taxonomy_primary: ""
+taxonomy_secondary: []
+relations: []
+---
+
+`#-2` · Vercel → Cloudflare 이전 기록
+
+## TL;DR
+
+- Vercel **Pro 플랜**에서 봇 트래픽 + Observability 이벤트가 합쳐져 청구서가 사용자 수 대비 비정상 확대
+- Cloudflare 이전 후 한 자릿수 달러로 안정화
+- 핵심은 "봇을 완벽히 막는 것"이 아니라 **차단 위치가 과금 계량기 앞이냐 뒤냐**의 구조 차이
+
+## 청구서가 조용히 부풀어 오르는 구조
+
+어느 달 청구서를 뜯어보니 실제 방문자는 수백명 뿐이었지만 Edge Requests · Observability 이벤트가 각각 **수천만 건**. 1인당 수만 회의 조회 = 사실상 봇 트래픽.
+
+Vercel 과금 구조의 함정:
+
+- **Edge Requests · Observability events · Function invocations** 모두 raw count 기반. 봇 요청도 동일하게 카운트
+- **WAF custom rule 대부분이 "평가 후 과금"**: Vercel 공식 문서에 따르면 persistent deny(IP 블록·attack mode 등)는 계량기 이전에 끊지만, 일반 WAF rule의 deny/challenge, **Bot Protection의 challenge는 Edge Request에 포함됨**
+- **Observability는 켜는 것만으로 청구서 거의 2배**: $20 월 정액만 내면 되는줄 알았는데, 디버깅 로그가 그대로 이벤트 단위 과금으로 환산. 실제로 가장 큰 비용 증폭 요인
+
+오히려 **Free 플랜이 더 안전**하다. Payment method 미등록 → 한도 초과 시 Vercel이 자동 차단. Pro 플랜은 결제 수단이 있으니 청구가 그냥 누적됨.
+
+> 위험은 "방어 약한 플랜"이 아니라 **"결제 수단이 등록된 플랜"**이다.
+
+## Cloudflare로 옮길 때의 구조적 차이
+
+CF의 트래픽 처리 순서: **DDoS → WAF → Bot Fight Mode → Rate limit → Managed rules → Workers**. Workers가 거의 마지막이라 보안 스택에서 끊긴 요청은 **Worker 호출 자체가 발생하지 않음** → 과금 제로.
+
+| 항목                | Vercel Pro                        | Cloudflare                |
+| ----------------- | --------------------------------- | ------------------------- |
+| 일반 WAF rule 차단     | Edge Request에 **카운트됨**             | Workers 이전 단계 — **카운트 안 됨**  |
+| Bot challenge      | Challenge 서빙도 카운트                  | Edge에서 처리, Worker 호출 없음   |
+| Observability     | 별도 이벤트 과금                          | 기본 analytics — 추가 과금 없음    |
+| 이미지/asset egress  | 과금                                 | R2 무료 (CF 내부)             |
+| Workers/Fn 초과 단가  | ~$2/M Edge Request                 | $0.30/M invocations       |
+
+$179 → $3-5 차이의 주범은 (a) 보안 스택 앞/뒤 차이 + (b) Observability 별도 과금 구조 + (c) 단가 7배 차이가 누적된 결과.
+
+## 다만 "CF = 만능"은 아님
+
+BFM은 단순 봇만 막음. 고도화된 봇(residential proxy, browser automation)은 통과해서 Worker까지 도달 → 그때부터는 양쪽 다 과금된다. 단가 차이로 여전히 CF가 저렴하지만 "제로"는 아님.
+
+추가 주의:
+- Durable Objects / KV writes / Logpush / Images / Argo — 각각 별도 미터
+- R2 → 외부 네트워크 egress는 과금 (CF 내부는 무료)
+- Worker 내부에서 외부 origin으로 `fetch()`하는 구조면 origin 비용은 별도
+
+## 옮길지 판단
+
+**옮겨야 할 신호**
+- Pro 플랜에서 청구서가 사용자 수 대비 비정상 (봇 비중 50%+, Observability 비중 높음)
+- 대부분 SSG, edge 로직 얕음 → Workers로 충분
+- 이미 Cloudflare 생태계(DNS/R2/Pages) 일부 사용 중
+- wrangler CLI 직접 배포해도 개발 속도 견딜 수 있음
+
+**아직 Vercel이 맞는 경우**
+- MVP, 트래픽 예측 불가, 이터레이션 속도가 곧 생존
+- 팀 협업, PR Preview URL의 가치가 큼
+- Vercel Functions / KV / Storage / Fluid Compute를 깊이 사용
+
+## 이전 절차 (Next.js 15 기준)
+
+1. `@opennextjs/cloudflare` 어댑터로 Worker 번들 컴파일
+2. Cloudflare Workers / Pages 배포
+3. DNS / 도메인 이전
+
+### 막판 함정
+
+- **OpenNext는 런타임에서 `fs.readFile` / `compileMDX` 미지원** → 마크다운 소스 정적 import + `react-markdown`으로 리팩토링
+- **R2 incremental cache populate 플로우 불안정** → 수동 업로드 스크립트가 더 빠름
+- **OG 크롤러는 301 redirect를 잘 안 따라감** → 도메인 이전 시 canonical URL을 직접 박을 것 (안 그러면 SNS 공유 카드 빈 박스)

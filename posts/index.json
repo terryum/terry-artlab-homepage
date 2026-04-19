@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-17T13:54:14.139Z",
-  "total_posts": 41,
+  "generated_at": "2026-04-19T22:22:40.073Z",
+  "total_posts": 42,
   "posts": [
     {
       "post_number": 1,
@@ -2952,6 +2952,59 @@
       ],
       "visibility": "public",
       "allowed_groups": []
+    },
+    {
+      "post_number": 42,
+      "slug": "260419-quiet-bill",
+      "content_type": "memos",
+      "title_en": "The Quiet Bill",
+      "title_ko": "조용한 청구서",
+      "summary_ko": "Vercel Pro에서 봇+Observability가 청구서를 부풀렸다. Cloudflare는 보안 스택이 계량기 앞에 있어서 구조적으로 싸다.",
+      "summary_en": "Vercel Pro let bots + Observability inflate my bill. Cloudflare's security stack sits before the meter, so blocked traffic costs nothing.",
+      "domain": "Infra & Cost",
+      "subfields": [
+        "serverless",
+        "CDN",
+        "bot defense"
+      ],
+      "key_concepts": [
+        "Vercel",
+        "Cloudflare",
+        "Workers",
+        "Bot Fight Mode",
+        "Observability",
+        "billing meter",
+        "WAF"
+      ],
+      "methodology": [],
+      "contribution_type": null,
+      "tags": [
+        "Memos",
+        "Vercel",
+        "Cloudflare",
+        "Infra",
+        "Cost"
+      ],
+      "source_author": null,
+      "source_date": null,
+      "published_at": "2026-04-19T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "보안 스택이 과금 계량기 앞에 있느냐 뒤에 있느냐의 구조 차이가 청구서 자릿수를 바꾼다",
+        "problem": "Vercel Pro에서 봇 트래픽과 Observability 이벤트가 raw count로 카운트되어 청구서가 사용자 수 대비 비정상 확대",
+        "solution": "Cloudflare는 보안 스택(WAF/BFM)이 Workers 이전 단계라서, 차단된 요청은 과금되지 않는 구조",
+        "key_result": "월 $179 → $3-5 수준으로 안정화",
+        "limitations": [
+          "고도화된 봇은 여전히 Worker까지 도달하므로 비용 제로는 아님"
+        ]
+      },
+      "relations": [],
+      "idea_status": null,
+      "related_posts": [],
+      "taxonomy_primary": "infra/serverless",
+      "taxonomy_secondary": [],
+      "visibility": "public",
+      "allowed_groups": []
     }
   ],
   "knowledge_graph": {
@@ -4362,6 +4415,27 @@
     ],
     "in-hand-reorientation": [
       41
+    ],
+    "Vercel": [
+      42
+    ],
+    "Cloudflare": [
+      42
+    ],
+    "Workers": [
+      42
+    ],
+    "Bot Fight Mode": [
+      42
+    ],
+    "Observability": [
+      42
+    ],
+    "billing meter": [
+      42
+    ],
+    "WAF": [
+      42
     ]
   },
   "domain_stats": {
@@ -4369,7 +4443,8 @@
     "ml": 2,
     "ai": 6,
     "philosophy": 2,
-    "AI & Society": 1
+    "AI & Society": 1,
+    "Infra & Cost": 1
   },
   "taxonomy_stats": {
     "robotics/brain/vla": 7,
@@ -4388,6 +4463,7 @@
     "ai/agents:secondary": 1,
     "robotics/brain:secondary": 2,
     "robotics/brain/vla:secondary": 1,
+    "infra/serverless": 1,
     "robotics/arm": 5,
     "robotics/hand": 13,
     "robotics": 29,

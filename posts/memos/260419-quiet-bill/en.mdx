@@ -1,0 +1,77 @@
+---
+locale: "en"
+translation_of: "260419-quiet-bill:ko"
+title: "The Quiet Bill"
+subtitle: "When bots pass the meter before the walls"
+summary: "On Vercel Pro, bot traffic and Observability events inflated the bill far beyond actual user count. After migrating to Cloudflare, the bill dropped to single-digit dollars. The point isn't blocking bots perfectly — it's whether the blocking happens before or after the billing meter."
+card_summary: "Vercel Pro let bots + Observability inflate my bill. Cloudflare's security stack sits before the meter, so blocked traffic costs nothing."
+terrys_memo: ""
+---
+
+## TL;DR
+
+- On Vercel **Pro plan**, bot traffic plus Observability events expanded the bill far beyond actual user count
+- After migrating to Cloudflare, it stabilized at single-digit dollars
+- The key isn't "blocking bots perfectly" — it's a structural difference in **whether the block happens before or after the billing meter**
+
+## How the Bill Quietly Inflates
+
+Reviewing one month's bill: real visitors were only in the hundreds, but Edge Requests and Observability events each hit **tens of millions**. Tens of thousands of hits per person — that's bot traffic, plainly.
+
+Vercel's billing traps:
+
+- **Edge Requests · Observability events · Function invocations** are all raw-count based. Bot requests are counted the same way
+- **Most WAF custom rules are "evaluate then bill"**: per Vercel's docs, persistent deny (IP blocks, attack mode) is cut before the meter, but regular WAF rule deny/challenge — and **Bot Protection challenges** — still count as Edge Requests
+- **Observability alone nearly doubles the bill**: the $20/month flat fee is not the whole story. Debug logs translate directly to per-event billing. In practice this was the biggest amplifier.
+
+The **Free plan is actually safer**. No payment method registered → Vercel auto-blocks when the limit is hit. Pro plan has a payment method, so charges just accumulate.
+
+> The risk isn't "a plan with weak defenses" — it's **"a plan with a payment method on file."**
+
+## The Structural Difference with Cloudflare
+
+Cloudflare's traffic pipeline: **DDoS → WAF → Bot Fight Mode → Rate limit → Managed rules → Workers**. Workers sits near the end, so any request stopped in the security stack **never invokes the Worker** → zero billing.
+
+| Item | Vercel Pro | Cloudflare |
+|---|---|---|
+| Generic WAF rule block | **Counted** as Edge Request | Before Workers — **not counted** |
+| Bot challenge | Challenge serving is counted | Handled at the edge, no Worker invoke |
+| Observability | Separately billed per event | Base analytics — no extra charge |
+| Image / asset egress | Billed | R2 is free (within CF) |
+| Workers/Fn overage | ~$2/M Edge Requests | $0.30/M invocations |
+
+The $179 → $3–5 gap comes from (a) security before/after the meter, (b) Observability as a separate meter, and (c) ~7× unit-price difference compounding.
+
+## "CF = silver bullet" — not exactly
+
+Bot Fight Mode only stops simple bots. Sophisticated ones (residential proxies, browser automation) still slip through and reach the Worker — at which point both sides start billing. CF is still cheaper per unit, but it's not "zero."
+
+Other gotchas:
+- Durable Objects / KV writes / Logpush / Images / Argo — each has its own meter
+- R2 → egress to external networks is billed (within CF it's free)
+- If Workers `fetch()` external origins, you pay for the origin separately
+
+## When to Migrate
+
+**Signs you should move**
+- Your Pro-plan bill is abnormal relative to user count (bot share >50%, or heavy Observability weight)
+- Mostly SSG with shallow edge logic → Workers is enough
+- You already use parts of the Cloudflare stack (DNS/R2/Pages)
+- You can tolerate direct deploys via `wrangler` CLI
+
+**When Vercel is still right**
+- MVP stage, unpredictable traffic, iteration speed is survival
+- Team collaboration where PR Preview URLs carry serious value
+- Heavy use of Vercel Functions / KV / Storage / Fluid Compute
+
+## Migration Steps (Next.js 15)
+
+1. Compile to a Worker bundle via the `@opennextjs/cloudflare` adapter
+2. Deploy to Cloudflare Workers / Pages
+3. Move DNS / domain
+
+### Last-mile traps
+
+- **OpenNext doesn't support `fs.readFile` / `compileMDX` at runtime** → refactor markdown sources to static imports + `react-markdown`
+- **R2 incremental cache populate flow is unstable** → a manual upload script is faster
+- **OG crawlers don't follow 301 redirects well** → pin `canonical` URLs directly when moving domains (otherwise SNS share cards render empty)
