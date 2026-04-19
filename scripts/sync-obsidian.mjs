@@ -66,7 +66,7 @@ function r2ImageUrl(slug, filename) {
 const TYPE_TO_FOLDER = {
   papers: 'From AI/Papers',
   notes: 'From AI/Notes',
-  memos: 'From Terry/Essays',
+  memos: 'From Terry/Memos',
   essays: 'From Terry/Essays',
 };
 
