@@ -1,6 +1,6 @@
 # Skills 카탈로그
 
-이 프로젝트(terry-artlab-homepage)에서 사용하는 Claude 스킬 목록. **새 스킬 추가 시 이 파일도 업데이트**.
+이 프로젝트(terryum-ai)에서 사용하는 Claude 스킬 목록. **새 스킬 추가 시 이 파일도 업데이트**.
 
 터미널에서 `/<skill-name>` 형태로 호출되며, 각 스킬의 상세 명세는 `SKILL.md`의 frontmatter + 본문에 정의됨.
 

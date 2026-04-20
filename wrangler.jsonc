@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "terry-artlab-homepage",
+  "name": "terryum-ai",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-04-17",
   "compatibility_flags": [
@@ -31,7 +31,7 @@
   "r2_buckets": [
     {
       "binding": "NEXT_INC_CACHE_R2_BUCKET",
-      "bucket_name": "terry-artlab-homepage-cache"
+      "bucket_name": "terryum-ai-cache"
     }
   ],
   "observability": {

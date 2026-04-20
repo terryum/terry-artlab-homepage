@@ -99,7 +99,7 @@ cd /Users/terrytaewoongum/Codes/personal/terry-surveys
 ```
 
 그 다음 **`/cite-post <survey-name>`** 스킬을 호출한다. cite-post는:
-- `terry-artlab-homepage/posts/papers/` 전수 스캔 → `meta.json`에서 slug·postNumber·제목·저자 수집
+- `terryum-ai/posts/papers/` 전수 스캔 → `meta.json`에서 slug·postNumber·제목·저자 수집
 - `surveys/<name>/book/{ko,en}/ch*.md`의 `## 참고문헌` / `## References` 파싱
 - 제목·저자 매칭된 각 ref에 `[#NN](https://www.terryum.ai/{ko|en}/posts/{slug})` 삽입
 - (선택) 인라인 인용에도 동일 링크 삽입

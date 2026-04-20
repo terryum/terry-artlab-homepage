@@ -64,7 +64,7 @@ jobs:
         if: ${{ inputs.dry_run != 'true' }}
         run: |
           git config user.name "Terry Homepage Bot"
-          git config user.email "bot@terry-homepage.noreply"
+          git config user.email "bot@terryum-ai.noreply"
           git add .social-published.json || true
           git diff --cached --quiet || git commit -m "chore: social publish cache update"
           git push

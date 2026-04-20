@@ -16,7 +16,7 @@ The site hosts 35+ research paper summaries, tech essays, memos, and an interact
 
 | Workspace | Role | Repository |
 |-----------|------|------------|
-| **terry-artlab-homepage** (this repo) | Site code + infrastructure | [terryum/terry-artlab-homepage](https://github.com/terryum/terry-artlab-homepage) |
+| **terryum-ai** (this repo) | Site code + infrastructure | [terryum/terryum-ai](https://github.com/terryum/terryum-ai) |
 | **terry-papers** | Paper posting + knowledge graph | [terryum/terry-papers](https://github.com/terryum/terry-papers) |
 | **terry-surveys** | Survey book creation + management | [terryum/terry-surveys](https://github.com/terryum/terry-surveys) |
 | **terry-obsidian** | Obsidian vault + content publishing | (private) |
@@ -53,7 +53,7 @@ The site hosts 35+ research paper summaries, tech essays, memos, and an interact
 
 Skills are split across two workspaces:
 
-**This repo** (`terry-artlab-homepage`) — site development + content pipeline:
+**This repo** (`terryum-ai`) — site development + content pipeline:
 
 | Skill | Description | Example |
 |-------|-------------|---------|
@@ -112,8 +112,8 @@ This is a personal project, not a plug-and-play template. However, since the rep
 #### 1. Clone and Install
 
 ```bash
-git clone https://github.com/terryum/terry-artlab-homepage.git
-cd terry-artlab-homepage
+git clone https://github.com/terryum/terryum-ai.git
+cd terryum-ai
 npm install
 cp .env.example .env.local
 ```

@@ -45,7 +45,7 @@
 
 스킬은 두 워크스페이스에 분산되어 있습니다:
 
-**이 레포** (`terry-artlab-homepage`) — 사이트 개발 + 콘텐츠 파이프라인:
+**이 레포** (`terryum-ai`) — 사이트 개발 + 콘텐츠 파이프라인:
 
 | 스킬 | 설명 | 예시 |
 |------|------|------|
@@ -104,8 +104,8 @@
 #### 1. 클론 및 설치
 
 ```bash
-git clone https://github.com/terryum/terry-artlab-homepage.git
-cd terry-artlab-homepage
+git clone https://github.com/terryum/terryum-ai.git
+cd terryum-ai
 npm install
 cp .env.example .env.local
 ```

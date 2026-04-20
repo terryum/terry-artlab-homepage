@@ -12,7 +12,7 @@
 - Canonical 도메인: **`www.terryum.ai`** (terryum.ai apex → www 308 redirect · 구 terry.artlab.ai → AWS CloudFront 301 redirect)
 - 이미지 서빙: **Cloudflare R2 CDN** (포스트 이미지) + Worker 번들 (OG 이미지)
 - Survey: 3개 모두 Cloudflare Pages (`survey-*.pages.dev`) — snu는 group-only (visibility='group', 메타공개+본문보호)
-- 워크스페이스: terry-artlab-homepage (코드), terry-obsidian (콘텐츠), terry-surveys, terry-papers
+- 워크스페이스: terryum-ai (코드), terry-obsidian (콘텐츠), terry-surveys, terry-papers
 
 ## 3) 완료됨
 - [x] 포스트 37개 이상 발행
@@ -43,7 +43,7 @@
 - terry.artlab.ai/* → www.terryum.ai/* 301 (AWS CloudFront) ✅
 
 ## 7) 컨텍스트 메모 (다음 세션용)
-- R2 버킷: `terry-artlab-homepage-cache` (incremental cache, Worker 바인딩), public assets CDN=`pub-b74efb4aaf3d47cfbbad2283798604f7.r2.dev`
+- R2 버킷: `terryum-ai-cache` (incremental cache, Worker 바인딩), public assets CDN=`pub-b74efb4aaf3d47cfbbad2283798604f7.r2.dev`
 - 빌드/배포: `npm run build:cf` → `npx opennextjs-cloudflare deploy`
 - Cache populate: 새 빌드 시 `node /tmp/populate-r2.mjs` 수동 실행 (OpenNext populate 플로우 실패 시 대안)
 - `.env.production`은 `NEXT_PUBLIC_*`만 commit (번들 인라인용), 민감값은 `wrangler secret put`

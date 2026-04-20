@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 ## 워크스페이스 역할 분리
-- **이 폴더 (terry-artlab-homepage)**: 홈페이지 코드/기능 개발, 인프라, 지식시스템 코딩
+- **이 폴더 (terryum-ai)**: 홈페이지 코드/기능 개발, 인프라, 지식시스템 코딩
 - **terry-obsidian**: Obsidian 운영 + 콘텐츠 발행 (포스팅/수정). Obsidian 스킬은 그쪽에서 관리
 - **terry-surveys**: Survey 콘텐츠 생성/수정. 개별 survey repo 빌드 + 홈페이지 surveys.json 업데이트
 - **terry-papers** (예정): Papers 콘텐츠 + 지식그래프 관리. `/post`, `/paper-search` 등 콘텐츠 작업 분리
