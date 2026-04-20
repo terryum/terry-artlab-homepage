@@ -161,6 +161,33 @@ function hasSyncHashField(noteContent) {
   return /^sync_hash:/m.test(fmMatch[1]);
 }
 
+// ── Detect drift between human-curated vault frontmatter and canonical meta ──
+// Returns array of {field, vault, canonical} mismatches. Does not mutate.
+function detectHumanCuratedDrift(noteContent, meta) {
+  const fmMatch = noteContent.match(/^---\n([\s\S]*?)\n---/);
+  if (!fmMatch) return [];
+  const fm = fmMatch[1];
+  const getField = (key) => {
+    const scalar = fm.match(new RegExp(`^${key}:\\s*"?([^"\\n]*?)"?\\s*$`, 'm'));
+    return scalar ? scalar[1].trim() : null;
+  };
+  const drifts = [];
+  const vaultDocId = getField('doc_id');
+  if (vaultDocId !== null && meta.post_number != null &&
+      String(vaultDocId) !== String(meta.post_number)) {
+    drifts.push({ field: 'doc_id', vault: vaultDocId, canonical: meta.post_number });
+  }
+  const vaultSlug = getField('slug');
+  if (vaultSlug !== null && meta.slug && vaultSlug !== meta.slug) {
+    drifts.push({ field: 'slug', vault: vaultSlug, canonical: meta.slug });
+  }
+  const vaultType = getField('content_type');
+  if (vaultType !== null && meta.content_type && vaultType !== meta.content_type) {
+    drifts.push({ field: 'content_type', vault: vaultType, canonical: meta.content_type });
+  }
+  return drifts;
+}
+
 // ── Strip frontmatter from MDX/MD content ──
 function stripFrontmatter(mdxContent) {
   return mdxContent.replace(/^---\n[\s\S]*?\n---\n?/, '').replace(/^\n+/, '');
@@ -567,6 +594,7 @@ async function main() {
   let synced = 0;
   let skipped = 0;
   const slugToPostMap = [];
+  const driftWarnings = [];
 
   for (const post of targetPosts) {
     const slug = post.slug;
@@ -622,6 +650,12 @@ async function main() {
 
     // Human-curated essays/memos: file exists and frontmatter lacks sync_hash → skip entirely
     if (isTerryAuthored && existingContent && !hasSyncHashField(existingContent)) {
+      const drifts = detectHumanCuratedDrift(existingContent, meta);
+      if (drifts.length > 0) {
+        driftWarnings.push({ slug, drifts });
+        const driftStr = drifts.map(d => `${d.field} vault=${d.vault} ≠ meta=${d.canonical}`).join(', ');
+        console.warn(`  ⚠ ${slug}: human-curated drift (${driftStr}) — skipping per spec; resolve manually`);
+      }
       skipped++;
       // Still collect for meta files
       slugToPostMap.push({
@@ -792,6 +826,17 @@ async function main() {
   }
 
   console.log(`\n🏁 Done. Synced: ${synced}, Skipped (unchanged): ${skipped}, Newly indexed: ${newlyIndexed}`);
+
+  if (driftWarnings.length > 0) {
+    console.warn(`\n⚠ ${driftWarnings.length} human-curated file(s) have frontmatter drift vs. meta.json:`);
+    for (const w of driftWarnings) {
+      for (const d of w.drifts) {
+        console.warn(`  - ${w.slug}: ${d.field} vault=${d.vault} ≠ meta=${d.canonical}`);
+      }
+    }
+    console.warn('  Resolve by updating meta.json or the vault frontmatter so they match.');
+    process.exitCode = 2;
+  }
 }
 
 main().catch(err => {
