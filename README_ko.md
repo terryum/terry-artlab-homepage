@@ -12,7 +12,14 @@
 
 [On the Manifold](https://www.terryum.ai)은 한국어/영어 이중 언어 연구 블로그이자 지식 그래프, 개인 홈페이지입니다. [Andrej Karpathy의 외부 두뇌 방식](https://x.com/karpathy/status/1911080111710109960)에 영감을 받아, Claude Code가 AI 에이전트로서 논문 요약, 인덱싱, 관계 연결, 발행을 자연어 명령으로 수행합니다.
 
-현재 27개 이상의 논문 요약, 테크 에세이, 메모, 인터랙티브 논문 관계 그래프를 AI 파이프라인으로 관리하고 있습니다. 이 프로젝트는 두 개의 워크스페이스로 운영됩니다: 이 레포는 사이트 개발용, `terry-obsidian`은 Obsidian 볼트 관리와 콘텐츠 발행용입니다.
+현재 40개 이상의 논문 요약, 테크 에세이, 메모, 인터랙티브 논문 관계 그래프를 AI 파이프라인으로 관리하고 있습니다. 이 프로젝트는 여러 워크스페이스로 나뉘어 운영됩니다:
+
+| 워크스페이스 | 역할 | 레포 |
+|--------------|------|------|
+| **terryum-ai** (이 레포) | 사이트 코드 + 인프라 | [terryum/terryum-ai](https://github.com/terryum/terryum-ai) |
+| **terry-papers** | 논문 포스팅 + 지식 그래프 | [terryum/terry-papers](https://github.com/terryum/terry-papers) |
+| **terry-surveys** | 서베이 책 제작 + 관리 | [terryum/terry-surveys](https://github.com/terryum/terry-surveys) |
+| **terry-obsidian** | Obsidian 볼트 + 콘텐츠 발행 | (비공개) |
 
 ## 아키텍처
 

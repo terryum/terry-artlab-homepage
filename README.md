@@ -12,7 +12,7 @@
 
 [On the Manifold](https://www.terryum.ai) is a bilingual (Korean/English) research blog, knowledge graph, and personal homepage. Inspired by [Andrej Karpathy's approach](https://x.com/karpathy/status/1911080111710109960) to external-brain knowledge management, the entire content pipeline is operated by Claude Code — papers are summarized, indexed, connected, and published through natural language commands.
 
-The site hosts 35+ research paper summaries, tech essays, memos, and an interactive paper relationship graph. The project uses a multi-workspace setup:
+The site hosts 40+ research paper summaries, tech essays, memos, and an interactive paper relationship graph. The project uses a multi-workspace setup:
 
 | Workspace | Role | Repository |
 |-----------|------|------------|

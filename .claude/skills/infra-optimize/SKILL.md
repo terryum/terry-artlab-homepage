@@ -34,7 +34,7 @@ description: "코드베이스 리팩토링 + Cloudflare R2 마이그레이션 + 
 
 ### 1-3. R2 아키텍처 설계
 - 버킷 구조: `posts/<slug>/fig-*.png`, `posts/<slug>/cover.webp`
-- CDN URL 패턴: `https://assets.artlab.ai/posts/<slug>/fig-1.png`
+- CDN URL 패턴: `https://pub-0c3a2ab4c1e34dd1b7abc088a943482d.r2.dev/posts/<slug>/fig-1.png` (버킷: `terryum-ai-assets`)
 - Fallback: R2 실패 시 로컬 이미지 사용
 - OG 이미지: R2에서 서빙 (Next.js OG 태그 경로 변경)
 

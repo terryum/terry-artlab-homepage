@@ -58,7 +58,7 @@
 ## 8. 운영/기술 전제 (v1)
 - 1차 개발은 **자체사이트만 운영**한다.
 - 콘텐츠 원고 작성은 VS Code 기반 Markdown 워크플로우를 사용한다.
-- GitHub push 기반 자동 배포를 전제로 한다.
+- 배포는 Cloudflare Workers(OpenNext)에 수동 실행(`npm run build:cf` → `opennextjs-cloudflare deploy`)한다.
 - Claude Code는 번역, 메타데이터 생성, 커버 생성, 게시용 파일 정리를 담당한다.
 
 ## 9. 성공 기준 (v1)

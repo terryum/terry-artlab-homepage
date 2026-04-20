@@ -46,8 +46,7 @@ v1 개인 웹사이트의 기술 구성과 시스템 경계를 정의한다.
 
 ### AWS (레거시 도메인 리다이렉트 전용)
 - Route 53: `artlab.ai` zone 유지 (16개 Cosmax 프로덕션 서비스)
-- S3 static website + CloudFront + ACM으로 `terry.artlab.ai/*` → `https://www.terryum.ai/*` 301 리다이렉트
-- Vercel 거치지 않고 AWS 레벨에서 직접 리다이렉트
+- S3 static website + CloudFront + ACM으로 `terry.artlab.ai/*` → `https://www.terryum.ai/*` 301 리다이렉트 (AWS 레벨에서 직접 처리)
 
 ### GitHub
 - 사이트 코드 + `posts/` 콘텐츠 저장
@@ -78,7 +77,7 @@ v1 개인 웹사이트의 기술 구성과 시스템 경계를 정의한다.
 |------|-----------|-----------|
 | `/images/*`, `/fonts/*`, `/_next/static/*` | `public, max-age=31536000, immutable` (1년) | `public/_headers` |
 | Next.js 최적화 이미지 | `minimumCacheTTL: 86400` (24시간) | `next.config.ts` images |
-| 포스트 커버/figure | R2 public CDN (`pub-b74efb...r2.dev`) | R2 버킷 설정 |
+| 포스트 커버/figure | R2 public CDN (`terryum-ai-assets` → `pub-0c3a2ab4...r2.dev`) | R2 버킷 설정 |
 
 ### 기타
 - DNS Prefetch: 전역 활성화 (`X-DNS-Prefetch-Control: on`)

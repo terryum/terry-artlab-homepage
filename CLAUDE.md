@@ -5,7 +5,7 @@
 - **terry-obsidian**: Obsidian 운영 + 콘텐츠 발행 (포스팅/수정). Obsidian 스킬은 그쪽에서 관리
 - **terry-surveys**: Survey 콘텐츠 생성/수정. 개별 survey repo 빌드 + 홈페이지 surveys.json 업데이트
 - **terry-papers** (예정): Papers 콘텐츠 + 지식그래프 관리. `/post`, `/paper-search` 등 콘텐츠 작업 분리
-- 콘텐츠 스킬 (`/post`, `/project` 등)은 이곳에서 유지관리하며, terry-obsidian/terry-surveys에서 심링크로 참조
+- 콘텐츠 스킬 (`/post`, `/project` 등)은 이곳에서 유지관리하며, terry-obsidian/terry-surveys에서 심링크로 참조 (원칙: `docs/SKILLS_MANAGEMENT.md`)
 
 ### 동시 작업 시 충돌 방지
 - 다른 워크스페이스에서 이 repo에 push할 때는 반드시 `git pull --rebase origin main` 후 push
