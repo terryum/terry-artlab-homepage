@@ -816,6 +816,10 @@ async function main() {
             id, slug: file.replace('.md', ''), type, visibility: 'private',
             title, path: storePath,
           });
+          // Recovered id must not be reissued to a future first-time note.
+          if (id < 0 && globalIndex.next_private_id > id - 1) {
+            globalIndex.next_private_id = id - 1;
+          }
           console.log(`  🔁 Recovered: ${file} → #${id}`);
           newlyIndexed++;
         }
