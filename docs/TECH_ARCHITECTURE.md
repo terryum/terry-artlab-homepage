@@ -41,7 +41,7 @@ v1 개인 웹사이트의 기술 구성과 시스템 경계를 정의한다.
 - CDN 캐싱/전달
 - **Workers**: 메인 사이트 런타임 (OpenNext로 컴파일된 Next.js 번들 실행)
 - **Pages**: survey book 정적 사이트 3종 (`survey-*.pages.dev`)
-- **R2**: incremental cache 버킷 (`terryum-ai-cache`) + 에셋 public CDN 버킷 (`pub-b74efb4aaf3d47cfbbad2283798604f7.r2.dev`)
+- **R2**: incremental cache 버킷 (`terryum-ai-cache`) + 에셋 public CDN 버킷 `terryum-ai-assets` (`pub-0c3a2ab4c1e34dd1b7abc088a943482d.r2.dev`)
 - Bot Fight Mode 활성으로 봇 트래픽 차단
 
 ### AWS (레거시 도메인 리다이렉트 전용)

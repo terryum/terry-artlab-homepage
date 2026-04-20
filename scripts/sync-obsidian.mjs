@@ -57,7 +57,7 @@ const VAULT_FOLDERS = [
 ];
 
 // ── R2 public URL for images ──
-const R2_PUBLIC_URL = 'https://pub-b74efb4aaf3d47cfbbad2283798604f7.r2.dev';
+const R2_PUBLIC_URL = 'https://pub-0c3a2ab4c1e34dd1b7abc088a943482d.r2.dev';
 function r2ImageUrl(slug, filename) {
   return `${R2_PUBLIC_URL}/posts/${slug}/${filename}`;
 }

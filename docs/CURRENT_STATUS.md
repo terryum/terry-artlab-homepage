@@ -43,7 +43,7 @@
 - terry.artlab.ai/* → www.terryum.ai/* 301 (AWS CloudFront) ✅
 
 ## 7) 컨텍스트 메모 (다음 세션용)
-- R2 버킷: `terryum-ai-cache` (incremental cache, Worker 바인딩), public assets CDN=`pub-b74efb4aaf3d47cfbbad2283798604f7.r2.dev`
+- R2 버킷: `terryum-ai-cache` (incremental cache, Worker 바인딩), `terryum-ai-assets` (public assets)=`pub-0c3a2ab4c1e34dd1b7abc088a943482d.r2.dev`
 - 빌드/배포: `npm run build:cf` → `npx opennextjs-cloudflare deploy`
 - Cache populate: 새 빌드 시 `node /tmp/populate-r2.mjs` 수동 실행 (OpenNext populate 플로우 실패 시 대안)
 - `.env.production`은 `NEXT_PUBLIC_*`만 commit (번들 인라인용), 민감값은 `wrangler secret put`
