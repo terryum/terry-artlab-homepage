@@ -1,0 +1,41 @@
+{
+  "post_id": "260420-debt-changes-hands",
+  "slug": "260420-debt-changes-hands",
+  "post_number": 44,
+  "published_at": "2026-04-21T00:00:00Z",
+  "updated_at": "2026-04-21T00:00:00Z",
+  "status": "published",
+  "content_type": "essays",
+  "tags": ["Essays", "AI", "Founder Work", "Engineering"],
+  "cover_image": "./cover.webp",
+  "reading_time_min": 6,
+  "domain": "AI & Society",
+  "subfields": ["AI agents", "founder work", "engineering productivity"],
+  "key_concepts": ["tech debt", "AI coding", "founder-developer dynamic", "Claude Code", "legacy code"],
+  "idea_status": null,
+  "related_posts": [
+    "260420-one-day-recovery",
+    "260406-writing-daily-by-hand",
+    "260413-new-leverage",
+    "260415-democratization-of-research"
+  ],
+  "taxonomy_primary": "ai/society",
+  "taxonomy_secondary": ["ai/agents"],
+  "relations": [
+    {"target": "260420-one-day-recovery", "type": "extends"},
+    {"target": "260413-new-leverage", "type": "related"},
+    {"target": "260415-democratization-of-research", "type": "related"},
+    {"target": "260406-writing-daily-by-hand", "type": "related"}
+  ],
+  "ai_summary": {
+    "one_liner": "기술 부채를 푸는 일이 개발자의 손에서 창업자의 손으로 넘어왔다",
+    "problem": "창업자와 개발자의 줄다리기 속에서 영원히 닫히지 않던 기술 부채는 누가 풀어내는가",
+    "solution": "비개발자 창업자가 Claude Code로 하루에 묵은 부채를 직접 정리한다",
+    "key_result": "개발자의 자리는 줄어들고 '고객을 사랑하고 그 문제를 푸는 사람'이 본질이 된다",
+    "limitations": []
+  },
+  "figures": [],
+  "tables": [],
+  "newsletter_eligible": false,
+  "featured": false
+}

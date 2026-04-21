@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-20T05:22:35.948Z",
-  "total_posts": 43,
+  "generated_at": "2026-04-21T00:08:04.621Z",
+  "total_posts": 44,
   "posts": [
     {
       "post_number": 1,
@@ -3076,6 +3076,78 @@
       ],
       "visibility": "public",
       "allowed_groups": []
+    },
+    {
+      "post_number": 44,
+      "slug": "260420-debt-changes-hands",
+      "content_type": "essays",
+      "title_en": "Developers Are No Longer Needed",
+      "title_ko": "개발자가 필요 없어졌다",
+      "summary_ko": "묵은 기술 부채를 하루에 풀었다. Claude Code가. 개발자에게 부탁하지 않고 대표가 직접. 그래서 생긴 질문 — 앞으로 누가 개발자인가.",
+      "summary_en": "A founder closed a years-old tech debt in one day with Claude Code. No developer needed. Which leaves the question — who counts as a developer now?",
+      "domain": "AI & Society",
+      "subfields": [
+        "AI agents",
+        "founder work",
+        "engineering productivity"
+      ],
+      "key_concepts": [
+        "tech debt",
+        "AI coding",
+        "founder-developer dynamic",
+        "Claude Code",
+        "legacy code"
+      ],
+      "methodology": [],
+      "contribution_type": null,
+      "tags": [
+        "Essays",
+        "AI",
+        "Founder Work",
+        "Engineering"
+      ],
+      "source_author": null,
+      "source_date": null,
+      "published_at": "2026-04-21T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "기술 부채를 푸는 일이 개발자의 손에서 창업자의 손으로 넘어왔다",
+        "problem": "창업자와 개발자의 줄다리기 속에서 영원히 닫히지 않던 기술 부채는 누가 풀어내는가",
+        "solution": "비개발자 창업자가 Claude Code로 하루에 묵은 부채를 직접 정리한다",
+        "key_result": "개발자의 자리는 줄어들고 '고객을 사랑하고 그 문제를 푸는 사람'이 본질이 된다",
+        "limitations": []
+      },
+      "relations": [
+        {
+          "target": "260420-one-day-recovery",
+          "type": "extends"
+        },
+        {
+          "target": "260413-new-leverage",
+          "type": "related"
+        },
+        {
+          "target": "260415-democratization-of-research",
+          "type": "related"
+        },
+        {
+          "target": "260406-writing-daily-by-hand",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": [
+        "260420-one-day-recovery",
+        "260406-writing-daily-by-hand",
+        "260413-new-leverage",
+        "260415-democratization-of-research"
+      ],
+      "taxonomy_primary": "ai/society",
+      "taxonomy_secondary": [
+        "ai/agents"
+      ],
+      "visibility": "public",
+      "allowed_groups": []
     }
   ],
   "knowledge_graph": {
@@ -3555,6 +3627,26 @@
       {
         "from": "260420-one-day-recovery",
         "type": "related"
+      },
+      {
+        "from": "260420-debt-changes-hands",
+        "to": "260420-one-day-recovery",
+        "type": "extends"
+      },
+      {
+        "from": "260420-debt-changes-hands",
+        "to": "260413-new-leverage",
+        "type": "related"
+      },
+      {
+        "from": "260420-debt-changes-hands",
+        "to": "260415-democratization-of-research",
+        "type": "related"
+      },
+      {
+        "from": "260420-debt-changes-hands",
+        "to": "260406-writing-daily-by-hand",
+        "type": "related"
       }
     ],
     "clusters": [
@@ -3681,6 +3773,18 @@
         ],
         "taxonomy_nodes": [
           "robotics/brain"
+        ]
+      },
+      {
+        "id": "ai-society",
+        "label": "ai/society",
+        "post_numbers": [
+          32,
+          44
+        ],
+        "core_concepts": [],
+        "taxonomy_nodes": [
+          "ai/society"
         ]
       },
       {
@@ -4551,6 +4655,21 @@
     ],
     "backfill": [
       43
+    ],
+    "tech debt": [
+      44
+    ],
+    "AI coding": [
+      44
+    ],
+    "founder-developer dynamic": [
+      44
+    ],
+    "Claude Code": [
+      44
+    ],
+    "legacy code": [
+      44
     ]
   },
   "domain_stats": {
@@ -4558,7 +4677,7 @@
     "ml": 2,
     "ai": 6,
     "philosophy": 2,
-    "AI & Society": 1,
+    "AI & Society": 2,
     "Infra & Cost": 1,
     "Infra & Ops": 1
   },
@@ -4575,8 +4694,8 @@
     "robotics/arm/exoskeleton:secondary": 1,
     "robotics/brain": 11,
     "ai/llm:secondary": 5,
-    "ai/society": 1,
-    "ai/agents:secondary": 1,
+    "ai/society": 2,
+    "ai/agents:secondary": 2,
     "robotics/brain:secondary": 2,
     "robotics/brain/vla:secondary": 1,
     "infra/serverless": 2,
@@ -4584,6 +4703,6 @@
     "robotics/arm": 5,
     "robotics/hand": 13,
     "robotics": 29,
-    "ai": 8
+    "ai": 9
   }
 }

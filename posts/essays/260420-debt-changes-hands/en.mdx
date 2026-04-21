@@ -1,0 +1,29 @@
+---
+locale: "en"
+translation_of: "260420-debt-changes-hands:ko"
+title: "Developers Are No Longer Needed"
+subtitle: "The owner of legacy work has changed"
+summary: "The tech debt that lived in the tug-of-war between founders and developers got resolved in a single day. By the non-engineer founder himself. Now what you need is someone who loves the customer and is obsessed with solving their problem — that's it."
+card_summary: "A founder closed a years-old tech debt in one day with Claude Code. No developer needed. Which leaves the question — who counts as a developer now?"
+terrys_memo: ""
+---
+
+The founder's job is to chase customer satisfaction. And customer satisfaction — or the lack of it — usually comes from small details. So founders look at a product and keep picking at this and that, which is one of the things developers hate most.
+
+Developers hate it because the sprint always runs forward. What you're working on this week was locked in at the sprint planning two weeks ago, and if you're going to hit the deadline and quality bar, you can't afford to get pulled off course. When the founder keeps dropping "just fix this one thing" requests, the whole schedule slips. And if the code you're being asked to fix isn't yours — if whoever wrote it already left the company — you really don't want to touch it. Reading someone else's messy code is neither fun nor productive.
+
+[SkinChat](https://skinchat.ai) was that kind of project for me. We built the service in a month, right after the ChatGPT moment in early 2023. We iterated on it a few times that year, but our main focus shifted to B2B SaaS, and in 2024 we were heads-down on sales (which also eats real engineering hours — initial setup, PoCs, integrations). The last meaningful update to the product itself was in 2023. AI models got faster and smarter after that, but SkinChat stayed frozen. Five hundred people a day, five thousand a month kept using it, and the "too slow" feedback kept coming in every week — but we couldn't fix it. The product had already moved past us.
+
+Then last weekend, the non-engineer founder (me) solved the long-standing debt in a single day. Thanks to Claude Code.
+
+The method was simple. I downloaded every repo scattered across Bitbucket and let the AI read the whole thing. Once it had read everything, the structure showed itself — what was a dead experiment, what was from a discontinued service, what looked tangled but was actually easy to peel off. Asking a developer to read all of that and figure out which pieces are safe to delete is effectively impossible. How are you supposed to read someone else's context-free code in its entirety?
+
+The AI does it instantly. It measures load, points at bottlenecks, proposes fixes. Along the way it even flagged security holes the developers themselves didn't know about. The kind of thankless, grimy work that no developer would willingly touch no matter how much I pleaded — Claude Code did it without a word of complaint. I was so grateful. Chat latency dropped by 35%, things that had been quietly failing with API errors got fixed, and I cleared out all the unused repos. (I wrote that day's work up separately [here](/posts/260420-one-day-recovery).)
+
+Do we still need developers? Isn't it enough to have someone who loves the customer and is obsessed with solving their problem? Or should the most important quality in a developer now be "love for the customer"? If a founder wants to do something for their customer and there's a developer blocking that with high persuasion costs for unrelated reasons, firing that person is probably the right call in this new world. (I'm actually seeing a handful of founders doing exactly this lately: "You don't like this direction? We don't seem aligned, so maybe it's time to part ways.")
+
+I do still need teammates. I can't live a life of just clicking approve on the AI agents running in a dozen windows. Leaders need time for deep thinking too, but in a world where you're handed the superpower to build anything, you end up losing your depth of thought to building and fixing pointless things. (That's why I committed to [writing daily by hand, keeping it light](/posts/260406-writing-daily-by-hand).)
+
+But I want those teammates to feel like copies of me. Actually, I just want to be able to clone myself. No persuasion costs, pure execution — giving me room to think deeply while my AI assistants quietly do the work and respectfully check in without disrupting my peace. Today's Claude Code is too noisy, too chatty.
+
+Who should we work with going forward? The era of "let's work together because you can code" feels over. The people I want next to me should (1) point in the same direction on the problems we're trying to solve, (2) have the maturity and seasoning that persuasion doesn't cost much energy, and (3) therefore be able to work quietly and comfortably while putting out performance at the speed of light. If that sounds like you, reach out anytime.
