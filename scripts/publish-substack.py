@@ -34,6 +34,13 @@ SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "https://www.terryum.ai")
 SUBSTACK_COOKIE = os.environ.get("SUBSTACK_COOKIE", "")
 SUBSTACK_EN_URL = os.environ.get("NEXT_PUBLIC_SUBSTACK_EN_URL", "")
 SUBSTACK_KO_URL = os.environ.get("NEXT_PUBLIC_SUBSTACK_KO_URL", "")
+# 커버 이미지 공개 CDN (Cloudflare R2). public/posts/*/cover.webp는 gitignore 대상이므로
+# 로컬 복사본에 의존하지 말고 R2 공개 URL을 그대로 Substack에 전달한다.
+R2_PUBLIC_URL = (
+    os.environ.get("NEXT_PUBLIC_R2_URL")
+    or os.environ.get("R2_PUBLIC_URL")
+    or ""
+).rstrip("/")
 
 PUBLISHED_CACHE = REPO_ROOT / ".substack-published.json"
 
@@ -183,17 +190,12 @@ def build_ko_post(post: dict, fm: dict) -> tuple[str, str, list[str], str]:
     return title, subtitle, paragraphs, link
 
 
-def copy_cover_to_public(post: dict, cover_path: Path) -> "str | None":
-    """커버 이미지를 public/posts/{slug}/ 에 복사하고 공개 URL 반환."""
+def build_cover_public_url(post: dict, cover_path: Path) -> "str | None":
+    """커버 이미지의 공개 R2 URL을 반환. R2 URL 미설정 시 None."""
+    if not R2_PUBLIC_URL:
+        return None
     slug = post["slug"]
-    dest_dir = REPO_ROOT / "public" / "posts" / slug
-    dest_dir.mkdir(parents=True, exist_ok=True)
-    dest = dest_dir / cover_path.name
-    import shutil
-    shutil.copy2(cover_path, dest)
-    url = f"{SITE_BASE_URL}/posts/{slug}/{cover_path.name}"
-    print(f"  ✓ 커버 이미지 public 복사 완료: /posts/{slug}/{cover_path.name}")
-    return url
+    return f"{R2_PUBLIC_URL}/posts/{slug}/{cover_path.name}"
 
 
 # ─── Substack API ───────────────────────────────────────────────────────────
@@ -359,14 +361,16 @@ def main():
     ko_title, ko_subtitle, ko_paragraphs, ko_link = build_ko_post(post, fm_ko)
     cover_path = find_cover_image(post)
 
-    # 커버 이미지를 public/posts/에 복사 → 공개 URL로 Substack 이미지 노드에 삽입
+    # 커버 이미지는 R2 공개 URL을 그대로 Substack 이미지 노드에 삽입
+    # (R2는 upload-to-r2.mjs로 포스트 발행 전에 이미 업로드됨)
     image_url: "str | None" = None
     if cover_path:
         print(f"  커버 이미지: {cover_path.name}")
-        if not args.dry_run:
-            image_url = copy_cover_to_public(post, cover_path)
+        image_url = build_cover_public_url(post, cover_path)
+        if image_url:
+            print(f"  커버 URL: {image_url}")
         else:
-            image_url = f"{SITE_BASE_URL}/posts/{slug}/{cover_path.name}"
+            print("  ⚠️ NEXT_PUBLIC_R2_URL 미설정 — 커버 이미지 없이 발행")
     else:
         print("  커버 이미지 없음")
 
