@@ -452,15 +452,40 @@ sharp('posts/<type>/<slug>/cover.webp')
   Draft frontmatter에서 그대로 복사. `source: "claude-session"`은 URL 필드 없이 남겨둔다 (프론트엔드가 URL 없을 때도 라벨만 렌더).
 - **visibility 필드**: 항상 포함. `--visibility` 미지정 시 `"public"`.
 
-### Step B6-pre) Draft-only 블록 제거 (threads 전용)
+### Step B6-pre) Draft 마커 제거 (공개 본문 정제)
 
-Threads 초안은 `<!-- draft-only --> ... <!-- /draft-only -->` 블록 안에 To-Do, 원문 링크 같은 초안 검토용 섹션을 둔다. 공개 포스트에는 이 블록을 포함하지 않는다.
+Obsidian 초안에는 공개 본문에 나가지 말아야 하는 두 종류의 마커가 있다. MDX 생성 전에 **반드시 모두 제거**한다.
 
-절차:
-1. `post_original.md` 본문에서 `<!-- draft-only -->` 마커로 시작하고 `<!-- /draft-only -->` 마커로 끝나는 모든 블록을 **통째로 제거**
-2. 제거 결과의 앞뒤 공백 라인 정리
-3. 정리된 본문을 ko.mdx 본문으로 사용 (en 번역 전에 draft-only 블록부터 제거)
-4. content_type이 `essays`·`memos`인 경우에는 적용하지 않음 (threads 전용). 다만 해당 content_type 초안에 마커가 있더라도 같은 규칙으로 제거하는 건 안전하므로 일반 후처리로 두어도 무방.
+**제거 대상 1: 초안 인덱스 헤더 줄** (`/write` Mode 1·2·5가 초안 본문 첫 줄에 찍는 규약)
+
+```
+`#<doc_id>` · <제목>
+```
+
+- 예: `` `#-5` · 스킬, 에이전트, 그리고 멀티에이전트 슬랙 ``
+- 이 줄은 **Obsidian 뷰에서 인덱스 번호를 보이기 위한 초안 전용 규약**이다. 공개 포스트에는 title frontmatter가 이미 있으므로 중복이자 노이즈.
+- 모든 content_type(`essays`·`memos`·`threads`)에 공통 적용.
+- 제거 방법: frontmatter 제거 후 본문 맨 앞의 공백/빈 줄을 건너뛰고, 정규식 `^\s*\`#-?\d+\`\s*·\s*[^\n]*\n+`를 한 번 적용. 또는 multiline 모드로 처리하되, 오직 "본문 첫 등장 줄"만 지워야 한다(중간에 같은 패턴이 우연히 있으면 보존).
+
+**제거 대상 2: `<!-- draft-only --> ... <!-- /draft-only -->` 블록** (threads 주로 사용)
+
+- Threads 초안은 이 블록 안에 To-Do, 원문 링크 같은 초안 검토용 섹션을 둔다. 공개에는 포함하지 않음.
+- 마커 페어 전체(여는 주석 포함)를 통째로 제거. `re.DOTALL` 필수.
+- content_type이 `essays`·`memos`인 경우 블록이 없을 확률이 높지만, 있더라도 같은 규칙으로 제거하는 건 안전. 공통 후처리로 둔다.
+
+**절차:**
+
+1. `post_original.md`에서 YAML frontmatter 제거 (`^---\n.*?\n---\n`, DOTALL)
+2. 제거 대상 1(인덱스 헤더 줄)을 본문 맨 앞에서 한 번 스트립
+3. 제거 대상 2(draft-only 블록)를 본문 전체에서 제거
+4. 본문 앞뒤 공백/빈 줄 정리
+5. 이 결과를 ko.mdx 본문 영역으로 사용. en.mdx 번역도 같은 정제본 기준.
+
+**검증:**
+
+- `grep -n '^\`#-\?[0-9]' posts/<type>/<slug>/ko.mdx posts/<type>/<slug>/en.mdx` 결과가 비어 있어야 함.
+- `grep -n 'draft-only' posts/<type>/<slug>/ko.mdx posts/<type>/<slug>/en.mdx` 결과도 비어 있어야 함.
+- 본문 첫 줄이 `##` 섹션 헤더이거나 본 내용 문단으로 시작해야 함.
 
 ### Step B6) MDX 파일 생성
 
