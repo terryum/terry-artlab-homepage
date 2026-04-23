@@ -92,7 +92,7 @@ function normalizeTags(
   const tagSlugs = rawTags.map((t) => normalizeTagSlug(t));
   const contentTypeTagMap: Record<PostCategory, string> = {
     papers: 'Papers',
-    notes: 'Notes',
+    threads: 'Threads',
     memos: 'Memos',
     essays: 'Essays',
   };
