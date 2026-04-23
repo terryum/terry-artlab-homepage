@@ -1,11 +1,11 @@
 # CLAUDE.md
 
 ## 워크스페이스 역할 분리
-- **이 폴더 (terryum-ai)**: 홈페이지 코드/기능 개발, 인프라, 지식시스템 코딩
-- **terry-obsidian**: Obsidian 운영 + 콘텐츠 발행 (포스팅/수정). Obsidian 스킬은 그쪽에서 관리
-- **terry-surveys**: Survey 콘텐츠 생성/수정. 개별 survey repo 빌드 + 홈페이지 surveys.json 업데이트
-- **terry-papers** (예정): Papers 콘텐츠 + 지식그래프 관리. `/post`, `/paper-search` 등 콘텐츠 작업 분리
-- 콘텐츠 스킬 (`/post`, `/project` 등)은 이곳에서 유지관리하며, terry-obsidian/terry-surveys에서 심링크로 참조 (원칙: `docs/SKILLS_MANAGEMENT.md`)
+- **이 폴더 (terryum-ai)**: 홈페이지 코드/기능 개발, 인프라, 지식시스템 코딩. 공유 스킬 canonical: `/project`, `/share`, `/del`, `/infra-optimize`, `/defuddle`, `/paper-search`
+- **terry-obsidian**: Obsidian 운영 + 직접 초안 발행(essays/memos/threads). **`/post` 스킬 canonical** (여기서 유지관리). Obsidian 스킬도 이쪽
+- **terry-surveys**: Survey 콘텐츠 생성/수정 + 홈페이지 surveys.json 업데이트. **`/survey` 스킬 canonical**
+- **terry-papers**: 외부 논문·학술지·블로그 요약 + 지식그래프. **`/paper` 스킬 canonical** + 관련 docs(`POST_LOADING_*`, `PAPERS_SUMMARY_RULES.md`, `POST_GENERATOR_PAPERS.md`)
+- 콘텐츠 스킬은 각 도메인 repo에서 canonical로 유지, 다른 repo에서는 심링크로 참조 (원칙: `docs/SKILLS_MANAGEMENT.md`)
 
 ### 동시 작업 시 충돌 방지
 - 다른 워크스페이스에서 이 repo에 push할 때는 반드시 `git pull --rebase origin main` 후 push
@@ -14,9 +14,10 @@
 ## 시작 순서
 `CLAUDE.md` → `docs/CURRENT_STATUS.md` → 현재 작업 관련 `docs/*.md`만 읽기
 
-## Research 포스팅 fast path
-- arXiv 포스팅: `memory/posting-pipeline.md`만 읽고 실행. 규칙 변경 지시 있을 때만 `docs/RESEARCH_SUMMARY_RULES.md` 참조
-- 로딩 세부사항: arXiv → `docs/POST_LOADING_ARXIV.md` / 비-arXiv → `docs/POST_LOADING_ETC.md`
+## Papers 포스팅 fast path
+- arXiv/학술지/블로그 요약: `/paper` 스킬(terry-papers canonical) 사용
+- 규칙 변경 시: `~/Codes/personal/terry-papers/docs/PAPERS_SUMMARY_RULES.md` 참조
+- 로딩 세부사항: arXiv → `~/Codes/personal/terry-papers/docs/POST_LOADING_ARXIV.md` / 비-arXiv → `~/Codes/personal/terry-papers/docs/POST_LOADING_ETC.md` / 블로그 → `~/Codes/personal/terry-papers/docs/POST_LOADING_BLOG.md`
 
 ## v1 범위 (절대)
 - v1은 **자체사이트만 개발**
@@ -24,8 +25,8 @@
 - 과도한 CMS/복잡한 백엔드 기능은 v1에 넣지 않음
 
 ## 구현 절대 규칙
-- `Ideas` / `Research`는 **공용 템플릿**으로 구현 (경로: `/ideas`, `/research`)
-- 차이는 최소 필드만 허용 (예: Research의 arXiv 원문 링크/출처)
+- `Ideas` / `Papers`는 **공용 템플릿**으로 구현 (경로: `/posts?tab=ideas`, `/posts?tab=papers`)
+- 차이는 최소 필드만 허용 (예: Papers의 arXiv 원문 링크/출처)
 - i18n 라우팅/fallback은 `docs/I18N_ROUTING.md` 기준으로 구현
 - **하드코딩 자제**: 비슷한 구조의 코드/콘텐츠는 최대한 재사용하여 구현하고, 중복이 발견되면 리팩토링을 제안할 것
 - 리팩토링 원칙은 `docs/REFACTOR_PRINCIPAL.md` 참조
