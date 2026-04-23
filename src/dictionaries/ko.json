@@ -20,11 +20,11 @@
   "tabs_index": {
     "memos": {
       "title": "Memos",
-      "description": "Terry가 매일 떠오르는 생각을 가볍게 씁니다."
+      "description": "Terry가 연구·개발 관련 메모를 남깁니다."
     },
     "essays": {
       "title": "Essays",
-      "description": "Terry가 AI, 삶, 변화하는 세상에 대한 생각을 나눕니다."
+      "description": "Terry가 기술로 변화하는 세상과 삶에 대한 생각을 나눕니다."
     },
     "papers": {
       "title": "Papers",
@@ -32,7 +32,7 @@
     },
     "threads": {
       "title": "Threads",
-      "description": "AI와의 ChatGPT 대화를 요약해 정리한 글입니다."
+      "description": "AI에게 묻고 답한 내용을 정리합니다."
     },
     "terry": {
       "title": "Terry's Posts",
@@ -97,7 +97,7 @@
   },
   "surveys": {
     "title": "Surveys",
-    "description": "AI 과학자들과 함께 쓴 연구 서베이입니다.",
+    "description": "AI가 피지컬AI 논문들을 조사해 서베이 형태로 정리합니다.",
     "empty": "아직 서베이가 없습니다."
   },
   "footer": {

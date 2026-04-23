@@ -20,11 +20,11 @@
   "tabs_index": {
     "memos": {
       "title": "Memos",
-      "description": "Terry shares quick thoughts on AI, life, and the changing world."
+      "description": "Terry's notes on research and development."
     },
     "essays": {
       "title": "Essays",
-      "description": "Terry shares quick thoughts on AI, life, and the changing world."
+      "description": "Terry's reflections on life and a world reshaped by technology."
     },
     "papers": {
       "title": "Papers",
@@ -32,7 +32,7 @@
     },
     "threads": {
       "title": "Threads",
-      "description": "Summaries of ChatGPT conversations on AI, research, and ideas."
+      "description": "Questions asked to AI and the answers, organized for reference."
     },
     "terry": {
       "title": "Terry's Posts",
@@ -97,7 +97,7 @@
   },
   "surveys": {
     "title": "Surveys",
-    "description": "Research surveys written with AI scientists.",
+    "description": "AI reviews Physical AI papers and organizes them as surveys.",
     "empty": "No surveys yet."
   },
   "footer": {
