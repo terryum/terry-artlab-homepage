@@ -1,0 +1,71 @@
+---
+title: "Skills, Agents, and Multi-Agent Slack"
+summary: "A ChatGPT thread distilled: what an agent is, how it differs from a Skill, how the same definition is reused across Claude Code and Slack, and the techniques behind a working multi-agent setup."
+card_summary: "How agents differ from skills, and how one definition can run in both Claude Code and Slack."
+locale: "en"
+translation_of: "260423-slack-agents-control-plane:ko"
+---
+
+## Topics explored
+
+- What is an agent — the components of its definition
+- How agents differ from Skills — where a Skill ends and an Agent begins
+- Whether an agent used in Claude Code is the same as one used in Slack
+- Practical uses and implementation techniques for multi-agent Slack
+- What Claude API alone can cover, and the cost range
+
+## Lessons
+
+- An Agent is a "worker" that owns a role, memory, tool permissions, and triggers. A Skill is a "playbook" loaded on demand. One Agent can bundle several Skills from the start, and simple recurring procedures are often handled well enough by a Skill plus a scheduler.
+- Agent definitions live as a single shared asset, independent of the runtime. Claude Code and Slack load the same definition and attach only a thin adapter per environment — this separation of definition and runtime is the core of the design.
+- Slack is not where the agent thinks; it is the conversation bus. Reasoning, long-term memory, and tool calls all happen on the outer control plane (Obsidian + Claude Code + MCP servers), while Slack only relays `@mention`·DM events and renders replies.
+- The real use of multi-agent Slack is not "AIs debating each other" but "calling in specialist agents in a channel and having the team review their answers." The 2026 examples — Dust's `@code-help`, OpenAI Workspace Agents, Slack's MCP Server — all show the same pattern.
+- Personality diversity comes from system prompts and tool access boundaries, not from mixing model vendors. A single Claude API is enough, and at small scale (under ~1k messages/month) the bill sits around 20–40 USD/month.
+
+## FAQ
+
+### Q. How do Agent and Skill differ at the file and behavior level?
+
+- A Skill is a playbook — an instruction loaded on demand.
+- It is invoked by `/name`, or Claude picks it up automatically when relevant.
+- An Agent (Subagent) has its own context window, system prompt, tool permissions, and memory — a persistent role.
+- An Agent can bundle multiple Skills up front via its definition.
+- Selection rule: if the same procedure produces the same result regardless of who runs it, use a Skill. If you need accumulated context, memory, or isolated tool permissions, promote to an Agent.
+
+### Q. What does "defining" an agent actually mean?
+
+- Role: what this agent is supposed to be good at
+- Tools: which searchers, files, and APIs it may access (allowlist)
+- Memory: what to treat as long-term memory and what to search each turn
+- Output contract: what format, length, and structure the answer must follow
+- Triggers: where it gets called from — `/command`, `@mention`, scheduled jobs, delegation from another agent
+- These five are the body of the agent definition, independent of runtime.
+
+### Q. What stays the same and what differs when the same agent runs in Claude Code vs. Slack?
+
+- Reused across both: the Agent Core (purpose, output contract, judgment rules) and the Tool/Memory Layer (tools exposed through MCP).
+- Newly built per environment: the Runtime Adapter (event → Claude API wrapper) and the Interface (channel, DM, CLI).
+- In Claude Code, the subagent wrapper runs directly in a local process.
+- In Slack, an external Bolt app receives events, converts the definition file into a system prompt, calls Claude API, and renders the result as a Slack message.
+
+### Q. What do people actually use multi-agent Slack for?
+
+- Calling specialists in a channel — `@code-help`, `@literature-agent` — where the team reviews the answer.
+- Ticket and issue automation — answer plus related documents plus a newly filed issue, all in one flow.
+- Internal support bots — connected to Notion, Google Drive, Salesforce, and the like, answering FAQs.
+- "AIs arguing with each other" is rarely the point. The real value is a human-agent collaboration surface.
+
+### Q. What are the key techniques for implementing multi-agent Slack?
+
+- Event reception: build the app with Slack Bolt or the `slack create agent` CLI template.
+- Entry points: decide among `@mention`, DM, and the assistant side panel.
+- Definition loading: on each event, read `agents/<name>.md` and convert it into a system prompt plus an allowed-tool list.
+- Tool abstraction: wrap searchers, memory, and external sources in MCP servers so agents and runtimes can be swapped easily.
+- Long-term memory: store long conversations and accumulated context on the control plane (local markdown, etc.); Slack only keeps the thread identifier.
+
+### Q. Can a single Claude API carry a multi-agent setup? What is the cost range?
+
+- Yes. Personality diversity is built from system prompts and tool boundaries, not from model variety.
+- There is no strong structural reason to mix multiple LLM APIs — one model with different roles is easier to manage.
+- At small scale (under ~1k messages/month): Claude API 20–40 USD/month plus the Slack free tier is enough to cover it.
+- At larger scale, long-context usage and the number of MCP tool calls become the dominant cost drivers.
