@@ -207,23 +207,28 @@ export async function getPost(slug: string, locale: string): Promise<Post | null
     }
   }
 
-  // Fallback: private body in R2. Index.json carries the light meta + visibility;
-  // the MDX in R2 can carry its own frontmatter which overrides.
+  // Fallback 1: private body in R2 (new unified path).
   const index = await loadIndexJson();
   const entry = (index as { posts?: Array<Record<string, unknown>> }).posts?.find(
     (p) => p.slug === slug
   );
-  if (!entry) return null;
-  const contentType = (entry.content_type as string) || 'essays';
-  const { fetchPrivateMdx } = await import('@/lib/r2-private');
-  const raw = await fetchPrivateMdx('posts', contentType, slug, locale);
-  if (!raw) return null;
-  const { data: frontmatter, content } = matter(raw);
-  const merged = { ...entry, ...stripUndefined(frontmatter) };
-  return {
-    meta: normalizeMeta(merged, slug, contentType as PostCategory),
-    content,
-  };
+  if (entry) {
+    const contentType = (entry.content_type as string) || 'essays';
+    const { fetchPrivateMdx } = await import('@/lib/r2-private');
+    const raw = await fetchPrivateMdx('posts', contentType, slug, locale);
+    if (raw) {
+      const { data: frontmatter, content } = matter(raw);
+      const merged = { ...entry, ...stripUndefined(frontmatter) };
+      return {
+        meta: normalizeMeta(merged, slug, contentType as PostCategory),
+        content,
+      };
+    }
+  }
+
+  // Fallback 2: legacy Supabase private_content (transitional until R2 migration).
+  const { getPrivatePost } = await import('@/lib/private-content');
+  return getPrivatePost(slug, locale);
 }
 
 export async function getPostMeta(slug: string, locale: string): Promise<PostMeta | null> {
@@ -292,10 +297,29 @@ export async function getAllPostParams(): Promise<{ lang: string; slug: string }
 }
 
 export async function getAllPosts(locale: string): Promise<PostMeta[]> {
-  // index.json is the source of truth for both public and private post metadata.
-  // getAllPostsFromIndex returns entries regardless of visibility; list pages render
-  // a 🔒 badge for non-public items, and detail pages gate via requireReadAccess.
-  return getAllPostsFromIndex(locale);
+  // index.json is the source of truth for public + R2-migrated private metadata.
+  // Legacy Supabase private_content still surfaces for authenticated sessions
+  // until the R2 migration completes.
+  const fromIndex = await getAllPostsFromIndex(locale);
+
+  const { getAuthenticatedGroup, isAdminSession } = await import('@/lib/group-auth');
+  const [group, admin] = await Promise.all([getAuthenticatedGroup(), isAdminSession()]);
+  if (!group && !admin) return fromIndex;
+
+  const { getAllPrivatePosts, getPrivatePosts } = await import('@/lib/private-content');
+  const legacy = admin
+    ? await getAllPrivatePosts(locale)
+    : group ? await getPrivatePosts(group, locale) : [];
+  const seen = new Set(fromIndex.map((p) => p.slug));
+  for (const p of legacy) {
+    if (!seen.has(p.slug)) fromIndex.push(p);
+  }
+
+  return fromIndex.sort((a, b) => {
+    const dateDiff = new Date(b.published_at).getTime() - new Date(a.published_at).getTime();
+    if (dateDiff !== 0) return dateDiff;
+    return (b.post_number ?? 0) - (a.post_number ?? 0);
+  });
 }
 
 /**
