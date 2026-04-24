@@ -106,8 +106,10 @@ export interface PostMeta {
   idea_status?: 'hypothesis' | 'exploring' | 'validated' | 'abandoned' | 'incorporated';
   related_posts?: string[];
   // ACL
-  visibility?: 'public' | 'group';
+  visibility?: 'public' | 'private' | 'group';
   allowed_groups?: string[];
+  /** 'repo' (default): MDX lives in this git repo. 'r2': fetch from R2 private/ prefix. */
+  body_source?: 'repo' | 'r2';
 }
 
 export interface Post {

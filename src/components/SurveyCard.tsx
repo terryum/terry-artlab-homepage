@@ -14,9 +14,10 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
   const lang = locale as 'ko' | 'en';
   const title = survey.title[lang] || survey.title.en;
   const description = survey.description[lang] || survey.description.en;
-  // Group-restricted surveys have embed_url stripped server-side for
-  // security, but still route internally so the auth gate can redirect.
-  const isInternal = Boolean(survey.embed_url) || survey.visibility === 'group';
+  // Restricted surveys have embed_url stripped server-side for security, but
+  // still route internally so the auth gate can redirect.
+  const isRestricted = survey.visibility != null && survey.visibility !== 'public';
+  const isInternal = Boolean(survey.embed_url) || isRestricted;
   const href = isInternal
     ? `/${locale}/surveys/${survey.slug}`
     : survey.links[0]?.url || '#';
@@ -59,8 +60,15 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
             <div>
               <span className="text-xs text-text-muted">
                 S{survey.survey_number}
-                {survey.visibility === 'group' && (
-                  <span className="ml-1.5 text-accent/70" title={locale === 'ko' ? '그룹 회원 전용' : 'Group members only'}>· 🔒</span>
+                {survey.visibility && survey.visibility !== 'public' && (
+                  <span
+                    className="ml-1.5 text-accent/70"
+                    title={
+                      survey.visibility === 'group'
+                        ? (locale === 'ko' ? '그룹 회원 전용' : 'Group members only')
+                        : (locale === 'ko' ? '비공개' : 'Private')
+                    }
+                  >· 🔒</span>
                 )}
               </span>
               <h3 className="text-base font-semibold text-text-primary group-hover:text-accent transition-colors leading-snug mt-0.5">
@@ -114,8 +122,15 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
             <div>
               <span className="text-xs text-text-muted">
                 S{survey.survey_number}
-                {survey.visibility === 'group' && (
-                  <span className="ml-1.5 text-accent/70" title={locale === 'ko' ? '그룹 회원 전용' : 'Group members only'}>· 🔒</span>
+                {survey.visibility && survey.visibility !== 'public' && (
+                  <span
+                    className="ml-1.5 text-accent/70"
+                    title={
+                      survey.visibility === 'group'
+                        ? (locale === 'ko' ? '그룹 회원 전용' : 'Group members only')
+                        : (locale === 'ko' ? '비공개' : 'Private')
+                    }
+                  >· 🔒</span>
                 )}
               </span>
               <h3 className="text-base font-semibold text-text-primary group-hover:text-accent transition-colors leading-snug mt-0.5">

@@ -1,10 +1,12 @@
 import { notFound } from 'next/navigation';
-import { isValidLocale, type Locale } from '@/lib/i18n';
+import { isValidLocale } from '@/lib/i18n';
 import { getProject, loadPublicProjects } from '@/lib/projects';
+import { requireReadAccess } from '@/lib/access-guard';
 import ProjectEmbed from '@/components/ProjectEmbed';
 import type { Metadata } from 'next';
 
-export const dynamicParams = false;
+// Public projects prerender; private/group render on-demand with an auth gate.
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const projects = await loadPublicProjects();
@@ -63,6 +65,8 @@ export default async function ProjectDetailPage({
 
   const project = await getProject(slug);
   if (!project || !project.embed_url) notFound();
+
+  await requireReadAccess(project, `/${lang}/projects/${slug}`);
 
   const title = project.title[lang as 'ko' | 'en'] || project.title.en;
 

@@ -1,11 +1,13 @@
 import 'katex/dist/katex.min.css';
 import { getPost, getAllPostParams } from '@/lib/posts';
 import { buildContentDetailProps } from '@/lib/content-page-helpers';
+import { requireReadAccess } from '@/lib/access-guard';
 import ContentDetailPage from '@/components/ContentDetailPage';
 import type { Metadata } from 'next';
 
-// Fully static: rebuild on git push triggers new deployment with updated content
-export const dynamicParams = false;
+// Allow on-demand rendering for private/group posts that aren't in generateStaticParams.
+// Public posts are still prerendered; non-public ones render dynamically with an auth gate.
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   return getAllPostParams();
@@ -52,6 +54,10 @@ export default async function PostDetailPage({
   params: Promise<{ lang: string; slug: string }>;
 }) {
   const { lang, slug } = await params;
+  const gateMeta = (await getPost(slug, lang))?.meta;
+  if (gateMeta) {
+    await requireReadAccess(gateMeta, `/${lang}/posts/${slug}`);
+  }
   const { locale, post, content, alternateLocale, labels, relatedPosts, taxonomyBreadcrumb, adjacentPosts } =
     await buildContentDetailProps(lang, slug);
 

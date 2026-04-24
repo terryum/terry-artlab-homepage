@@ -8,9 +8,8 @@ import { TAB_CONFIG } from '@/lib/site-config';
 import indexJson from '../../posts/index.json';
 import taxonomyJson from '../../posts/taxonomy.json';
 import contentConfig from '../../content.config.json';
-// Dynamic imports for auth/private — avoids pulling cookies() into static render path
-// import { getPrivatePosts, getPrivatePost, getAllPrivatePosts } from '@/lib/private-content';
-// import { getAuthenticatedGroup, isAdminSession } from '@/lib/group-auth';
+// Private bodies (visibility: private|group) live in R2 under `private/posts/<type>/<slug>/<lang>.mdx`.
+// Dynamic import to avoid pulling server-only into static paths.
 
 export async function loadIndexJson(): Promise<Record<string, unknown>> {
   return indexJson as unknown as Record<string, unknown>;
@@ -204,13 +203,27 @@ export async function getPost(slug: string, locale: string): Promise<Post | null
         content,
       };
     } catch {
-      // fall through to Supabase
+      // fall through to R2 private fetch
     }
   }
 
-  // Fallback: try Supabase private_content (dynamic import to avoid cookies() in static path)
-  const { getPrivatePost } = await import('@/lib/private-content');
-  return getPrivatePost(slug, locale);
+  // Fallback: private body in R2. Index.json carries the light meta + visibility;
+  // the MDX in R2 can carry its own frontmatter which overrides.
+  const index = await loadIndexJson();
+  const entry = (index as { posts?: Array<Record<string, unknown>> }).posts?.find(
+    (p) => p.slug === slug
+  );
+  if (!entry) return null;
+  const contentType = (entry.content_type as string) || 'essays';
+  const { fetchPrivateMdx } = await import('@/lib/r2-private');
+  const raw = await fetchPrivateMdx('posts', contentType, slug, locale);
+  if (!raw) return null;
+  const { data: frontmatter, content } = matter(raw);
+  const merged = { ...entry, ...stripUndefined(frontmatter) };
+  return {
+    meta: normalizeMeta(merged, slug, contentType as PostCategory),
+    content,
+  };
 }
 
 export async function getPostMeta(slug: string, locale: string): Promise<PostMeta | null> {
@@ -279,41 +292,19 @@ export async function getAllPostParams(): Promise<{ lang: string; slug: string }
 }
 
 export async function getAllPosts(locale: string): Promise<PostMeta[]> {
-  const slugs = await getAllSlugs();
-  const allMeta = await Promise.all(slugs.map((slug) => getPostMeta(slug, locale)));
-  const posts = allMeta.filter(
-    (meta): meta is PostMeta => meta !== null && meta.status === 'published'
-  );
-
-  // Merge private posts from Supabase if authenticated (dynamic import to avoid cookies() in static path)
-  const { getAuthenticatedGroup, isAdminSession } = await import('@/lib/group-auth');
-  const [group, admin] = await Promise.all([
-    getAuthenticatedGroup(),
-    isAdminSession(),
-  ]);
-  if (group || admin) {
-    const { getAllPrivatePosts, getPrivatePosts } = await import('@/lib/private-content');
-    const privatePosts = admin
-      ? await getAllPrivatePosts(locale)
-      : group ? await getPrivatePosts(group, locale) : [];
-    const existingSlugs = new Set(posts.map(p => p.slug));
-    for (const pp of privatePosts) {
-      if (!existingSlugs.has(pp.slug)) posts.push(pp);
-    }
-  }
-
-  return posts.sort((a, b) => {
-    const dateDiff = new Date(b.published_at).getTime() - new Date(a.published_at).getTime();
-    if (dateDiff !== 0) return dateDiff;
-    return (b.post_number ?? 0) - (a.post_number ?? 0);
-  });
+  // index.json is the source of truth for both public and private post metadata.
+  // getAllPostsFromIndex returns entries regardless of visibility; list pages render
+  // a 🔒 badge for non-public items, and detail pages gate via requireReadAccess.
+  return getAllPostsFromIndex(locale);
 }
 
 /**
- * Lightweight post loader using pre-built index.json (public posts only).
+ * Lightweight post loader using pre-built index.json.
  * Reads a single JSON file instead of 50+ MDX files.
  * Does NOT call cookies() — safe for ISR/static pages.
- * Use for homepage, feeds, and anywhere full MDX content is not needed.
+ *
+ * Returns BOTH public and private/group entries. List pages render a 🔒 badge
+ * for non-public items, and detail pages gate access via requireReadAccess.
  */
 export async function getAllPostsFromIndex(locale: string): Promise<PostMeta[]> {
   const index = await loadIndexJson();
@@ -327,7 +318,6 @@ export async function getAllPostsFromIndex(locale: string): Promise<PostMeta[]> 
     essays: 'Essays',
   };
   const result: PostMeta[] = posts
-    .filter((p) => (p.visibility as string || 'public') === 'public')
     .map((p) => {
       // Inject content-type tag if missing (parity with normalizeTags for filesystem posts)
       const contentType = p.content_type as string;

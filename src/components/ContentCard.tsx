@@ -75,6 +75,13 @@ export default function ContentCard({ post, locale, showTabTag, hidePubDate }: C
             {post.post_number != null && (
               <span className="font-mono text-xs text-text-muted mr-1.5">#{post.post_number}</span>
             )}
+            {post.visibility && post.visibility !== 'public' && (
+              <span
+                className="inline-block mr-1 text-text-muted"
+                title={post.visibility === 'group' ? `Restricted: ${(post.allowed_groups ?? []).join(', ')}` : 'Private'}
+                aria-label="Restricted content"
+              >🔒</span>
+            )}
             {post.title}
           </h3>
           {isReading && post.source_author && (

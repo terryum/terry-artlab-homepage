@@ -100,6 +100,13 @@ export default function ProjectCard({ project, locale }: ProjectCardProps) {
         <div className="flex items-center justify-between gap-2">
           <h3 className="text-base font-semibold text-text-primary group-hover:text-accent transition-colors leading-snug">
             {project.project_number != null && <span className="text-xs text-text-muted font-normal mr-1">P{project.project_number}</span>}
+            {project.visibility && project.visibility !== 'public' && (
+              <span
+                className="inline-block mr-1 text-text-muted"
+                title={project.visibility === 'group' ? `Restricted: ${(project.allowed_groups ?? []).join(', ')}` : 'Private'}
+                aria-label="Restricted content"
+              >🔒</span>
+            )}
             {title}
           </h3>
           <time className="text-xs text-text-muted whitespace-nowrap flex-shrink-0">
