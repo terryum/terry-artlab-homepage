@@ -46,13 +46,14 @@ argument-hint: "<번호 | slug | 제목 | URL> [플랫폼 필터]"
 
 ## Step 2. 콘텐츠 타입별 메시지 전략
 
-### Posts (papers, essays, memos)
+### Posts (papers, essays, memos, threads)
 - **데이터 소스**: MDX frontmatter의 `summary` → `card_summary` → `ai_summary.one_liner`
 - **papers**: AI가 쓴 논문 요약. 핵심 기여와 결과를 간결하게 전달
 - **essays/memos**: Terry가 직접 쓴 글. 가장 강한 인사이트 1-2문장으로
+- **threads**: AI 대화(ChatGPT share URL 또는 Claude 세션)를 Terry가 요약한 글. 탐색 주제·레슨·FAQ 구조 중 가장 강한 1~2 bullet을 뽑아 한두 문장으로
 - **공유 URL**: `https://www.terryum.ai/posts/{slug}` (캐시버스팅: `?v={YYYYMMDD}`)
 - **커버이미지**: `posts/{slug}/og.png` (OG 메타태그로 자동 전달)
-- **papers 공유 시 확인**: content_type이 essays/memos가 아니면 사용자에게 확인 후 진행
+- **publishableTypes**: `content.config.json`의 `publishableTypes` 배열이 소셜 공유 대상을 결정. 현재 `["essays", "memos", "threads"]`. `papers`는 외부 논문 요약이라 기본적으로 `/share` 대상이 아니다 — 공유 시 사용자 확인 후 임시로 배열 확장 또는 개별 스크립트 우회
 
 ### Surveys
 - **데이터 소스**: `surveys.json`의 `description.ko` / `description.en`
