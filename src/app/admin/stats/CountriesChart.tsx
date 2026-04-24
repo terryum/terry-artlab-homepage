@@ -26,7 +26,7 @@ export default function CountriesChart({ data }: { data: CountryItem[] }) {
         margin={{ top: 0, right: 8, left: 4, bottom: 0 }}
       >
         <XAxis type="number" tick={{ fontSize: 11 }} />
-        <YAxis type="category" dataKey="country" tick={{ fontSize: 11 }} width={90} />
+        <YAxis type="category" dataKey="country" tick={{ fontSize: 11 }} width={120} interval={0} />
         <Tooltip />
         <Bar dataKey="visitors" radius={[0, 3, 3, 0]}>
           {data.slice(0, 8).map((_, i) => (

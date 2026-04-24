@@ -5,6 +5,8 @@ import dynamic from 'next/dynamic';
 
 type Period = '7d' | '30d' | '90d';
 type PostLocale = 'all' | 'ko' | 'en';
+type SortKey = 'views' | 'visitors' | 'avgTime';
+type SortDir = 'asc' | 'desc';
 
 interface StatsData {
   kpi: {
@@ -16,7 +18,7 @@ interface StatsData {
   trend: { date: string; visitors: number; pageviews: number }[];
   sources: { source: string; medium: string; sessions: number; visitors: number }[];
   countries: { country: string; visitors: number }[];
-  posts: { path: string; locale: string; slug: string; pageviews: number; visitors: number; avgDuration: number }[];
+  posts: { path: string; locale: string; slug: string; number: string | null; pageviews: number; visitors: number; avgDuration: number }[];
   period: string;
 }
 
@@ -51,6 +53,20 @@ export default function StatsPage() {
   const [data, setData] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [sortBy, setSortBy] = useState<SortKey>('views');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
+
+  const handleSort = (key: SortKey) => {
+    if (sortBy === key) {
+      setSortDir((d) => (d === 'desc' ? 'asc' : 'desc'));
+    } else {
+      setSortBy(key);
+      setSortDir('desc');
+    }
+  };
+
+  const sortFieldOf = (p: { pageviews: number; visitors: number; avgDuration: number }, key: SortKey) =>
+    key === 'views' ? p.pageviews : key === 'visitors' ? p.visitors : p.avgDuration;
 
   const fetchStats = useCallback(async (p: Period) => {
     setLoading(true);
@@ -74,9 +90,16 @@ export default function StatsPage() {
     fetchStats(period);
   }, [period, fetchStats]);
 
-  const filteredPosts = data?.posts.filter(
+  const filteredPosts = (data?.posts.filter(
     (p) => postLocale === 'all' || p.locale === postLocale
-  ) ?? [];
+  ) ?? []).slice().sort((a, b) => {
+    const av = sortFieldOf(a, sortBy);
+    const bv = sortFieldOf(b, sortBy);
+    return sortDir === 'desc' ? bv - av : av - bv;
+  });
+
+  const sortArrow = (key: SortKey) =>
+    sortBy === key ? (sortDir === 'desc' ? '↓' : '↑') : '';
 
   return (
     <div className="space-y-6">
@@ -163,21 +186,44 @@ export default function StatsPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-line-default bg-bg-secondary">
+                    <th className="text-left px-3 py-2 text-text-secondary font-medium w-16">#</th>
                     <th className="text-left px-3 py-2 text-text-secondary font-medium">Slug</th>
                     <th className="text-center px-3 py-2 text-text-secondary font-medium">Lang</th>
-                    <th className="text-right px-3 py-2 text-text-secondary font-medium">Views</th>
-                    <th className="text-right px-3 py-2 text-text-secondary font-medium">Visitors</th>
-                    <th className="text-right px-3 py-2 text-text-secondary font-medium">Avg Time</th>
+                    <th className="text-right px-3 py-2 text-text-secondary font-medium">
+                      <button
+                        onClick={() => handleSort('views')}
+                        className="inline-flex items-center gap-1 hover:text-accent transition-colors"
+                      >
+                        Views <span className="text-text-muted">{sortArrow('views') || '↕'}</span>
+                      </button>
+                    </th>
+                    <th className="text-right px-3 py-2 text-text-secondary font-medium">
+                      <button
+                        onClick={() => handleSort('visitors')}
+                        className="inline-flex items-center gap-1 hover:text-accent transition-colors"
+                      >
+                        Visitors <span className="text-text-muted">{sortArrow('visitors') || '↕'}</span>
+                      </button>
+                    </th>
+                    <th className="text-right px-3 py-2 text-text-secondary font-medium">
+                      <button
+                        onClick={() => handleSort('avgTime')}
+                        className="inline-flex items-center gap-1 hover:text-accent transition-colors"
+                      >
+                        Avg Time <span className="text-text-muted">{sortArrow('avgTime') || '↕'}</span>
+                      </button>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredPosts.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="px-3 py-4 text-center text-text-secondary">No data</td>
+                      <td colSpan={6} className="px-3 py-4 text-center text-text-secondary">No data</td>
                     </tr>
                   ) : (
                     filteredPosts.map((post) => (
                       <tr key={post.path} className="border-b border-line-default last:border-b-0">
+                        <td className="px-3 py-2 text-text-secondary font-mono text-xs">{post.number ?? ''}</td>
                         <td className="px-3 py-2 text-text-primary truncate max-w-xs">{post.slug}</td>
                         <td className="px-3 py-2 text-center text-text-secondary uppercase text-xs">{post.locale}</td>
                         <td className="text-right px-3 py-2 text-text-secondary tabular-nums">{post.pageviews.toLocaleString()}</td>

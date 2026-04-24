@@ -33,7 +33,7 @@ export default function SourcesChart({ data }: { data: SourceItem[] }) {
         margin={{ top: 0, right: 8, left: 4, bottom: 0 }}
       >
         <XAxis type="number" tick={{ fontSize: 11 }} />
-        <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={110} />
+        <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={170} interval={0} />
         <Tooltip />
         <Bar dataKey="sessions" radius={[0, 3, 3, 0]}>
           {chartData.map((_, i) => (

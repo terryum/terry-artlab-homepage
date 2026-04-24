@@ -1,8 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { SignJWT, importPKCS8 } from 'jose';
 import { isAdminFromRequest } from '@/lib/identity';
+import postsIndex from '../../../../../posts/index.json';
+import surveysBundle from '../../../../../projects/surveys/surveys.json';
+import projectsBundle from '../../../../../projects/gallery/projects.json';
 
 export const runtime = 'nodejs';
+
+const POST_NUMBERS = new Map<string, number>(
+  (postsIndex as { posts: Array<{ slug: string; post_number: number }> }).posts
+    .map((p) => [p.slug, p.post_number]),
+);
+const SURVEY_NUMBERS = new Map<string, number>(
+  (surveysBundle as { surveys: Array<{ slug: string; survey_number: number }> }).surveys
+    .map((s) => [s.slug, s.survey_number]),
+);
+const PROJECT_NUMBERS = new Map<string, number>(
+  (projectsBundle as { projects: Array<{ slug: string; project_number?: number }> }).projects
+    .filter((p): p is { slug: string; project_number: number } => p.project_number != null)
+    .map((p) => [p.slug, p.project_number]),
+);
+
+function formatNumberForPath(kind: string, slug: string): string | null {
+  if (kind === 'posts') {
+    const n = POST_NUMBERS.get(slug);
+    return n != null ? `#${n}` : null;
+  }
+  if (kind === 'surveys') {
+    const n = SURVEY_NUMBERS.get(slug);
+    return n != null ? `#S${n}` : null;
+  }
+  if (kind === 'projects') {
+    const n = PROJECT_NUMBERS.get(slug);
+    return n != null ? `#P${n}` : null;
+  }
+  return null;
+}
 
 // GA4 Data API is called via REST (not the @google-analytics/data gRPC SDK)
 // so the route works on Cloudflare Workers, where gRPC over HTTP/2 is not viable.
@@ -139,18 +172,12 @@ export async function GET(request: NextRequest) {
         dimensionFilter: {
           orGroup: {
             expressions: [
-              {
-                filter: {
-                  fieldName: 'pagePath',
-                  stringFilter: { matchType: 'BEGINS_WITH', value: '/ko/posts/' },
-                },
-              },
-              {
-                filter: {
-                  fieldName: 'pagePath',
-                  stringFilter: { matchType: 'BEGINS_WITH', value: '/en/posts/' },
-                },
-              },
+              { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/ko/posts/' } } },
+              { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/en/posts/' } } },
+              { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/ko/surveys/' } } },
+              { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/en/surveys/' } } },
+              { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/ko/projects/' } } },
+              { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/en/projects/' } } },
             ],
           },
         },
@@ -187,11 +214,15 @@ export async function GET(request: NextRequest) {
 
     const posts = (postsRes.rows ?? []).map((row) => {
       const path = row.dimensionValues?.[0]?.value ?? '';
-      const match = path.match(/^\/(ko|en)\/posts\/(.+)$/);
+      const match = path.match(/^\/(ko|en)\/(posts|surveys|projects)\/(.+)$/);
+      const locale = match?.[1] ?? '';
+      const kind = match?.[2] ?? 'posts';
+      const slug = match?.[3] ?? path;
       return {
         path,
-        locale: match?.[1] ?? '',
-        slug: match?.[2] ?? path,
+        locale,
+        slug,
+        number: formatNumberForPath(kind, slug),
         pageviews: Number(row.metricValues?.[0]?.value ?? 0),
         visitors: Number(row.metricValues?.[1]?.value ?? 0),
         avgDuration: Number(row.metricValues?.[2]?.value ?? 0),
