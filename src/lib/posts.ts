@@ -187,6 +187,17 @@ function normalizeMeta(
 }
 
 export async function getPost(slug: string, locale: string): Promise<Post | null> {
+  try {
+    return await getPostInner(slug, locale);
+  } catch (e) {
+    const msg = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
+    console.error(`[getPost] ${slug} (${locale}) threw: ${msg}`);
+    if (e instanceof Error && e.stack) console.error(e.stack);
+    return null;
+  }
+}
+
+async function getPostInner(slug: string, locale: string): Promise<Post | null> {
   // Try filesystem first (public posts)
   const resolved = await resolvePostPath(slug);
   if (resolved) {

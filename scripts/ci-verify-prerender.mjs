@@ -26,6 +26,16 @@ if (!fs.existsSync(INDEX_PATH)) fail(`posts/index.json not found`);
 const manifest = JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf-8'));
 const index = JSON.parse(fs.readFileSync(INDEX_PATH, 'utf-8'));
 const routes = manifest.routes || {};
+const dynamicRoutes = manifest.dynamicRoutes || {};
+
+// If the posts detail route is force-dynamic, prerender-manifest has no
+// /<locale>/posts/<slug> entries at all — only a /[lang]/posts/[slug]
+// template under dynamicRoutes. In that regime this check has nothing to
+// verify; pass with a note.
+if (dynamicRoutes['/[lang]/posts/[slug]'] && !Object.keys(routes).some((r) => r.includes('/posts/'))) {
+  console.log('✓ Prerender check skipped — /[lang]/posts/[slug] is force-dynamic (by design).');
+  process.exit(0);
+}
 
 const publicPosts = (index.posts || []).filter(
   (p) => (p.visibility || 'public') === 'public'

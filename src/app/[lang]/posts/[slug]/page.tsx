@@ -5,9 +5,12 @@ import { requireReadAccess } from '@/lib/access-guard';
 import ContentDetailPage from '@/components/ContentDetailPage';
 import type { Metadata } from 'next';
 
-// Public posts are prerendered (preserves CI prerender-manifest check);
-// private/group slugs resolve on-demand via the R2 fallback behind
-// requireReadAccess.
+// Match the surveys route: render every request on-demand so that private/group
+// slugs resolve via the R2 fallback behind requireReadAccess. Mixing SSG with
+// dynamicParams=true crashed on OpenNext + Workers for slugs outside the
+// prerender manifest (renders errored in the Server Components path before
+// our try/catch could see them).
+export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
