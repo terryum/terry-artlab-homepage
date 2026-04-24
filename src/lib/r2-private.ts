@@ -41,9 +41,14 @@ export function privateMetaKey(
 async function fetchR2(key: string): Promise<Response | null> {
   if (!R2_URL) return null;
   try {
+    // IMPORTANT: omit `cache: 'no-store'` — that flips the page from
+    // SSG-with-dynamicParams to dynamic at runtime and crashes with
+    // "Page changed from static to dynamic" on the OpenNext worker.
+    // We rely on Next's default fetch cache + ISR revalidation; private
+    // bodies are small, so cache hits are cheap and correctness is fine
+    // because we also don't mutate R2 keys in-place.
     const res = await fetch(`${R2_URL}/${key}`, {
-      // Server-only fetch; never cached at CDN edge for client consumption.
-      cache: 'no-store',
+      next: { revalidate: 60 },
     });
     if (!res.ok) return null;
     return res;
