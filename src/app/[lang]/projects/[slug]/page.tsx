@@ -5,8 +5,6 @@ import { requireReadAccess } from '@/lib/access-guard';
 import ProjectEmbed from '@/components/ProjectEmbed';
 import type { Metadata } from 'next';
 
-// Force dynamic — see posts/[slug]/page.tsx for rationale.
-export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
 
 export async function generateStaticParams() {

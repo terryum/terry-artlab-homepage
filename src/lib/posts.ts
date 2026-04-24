@@ -208,6 +208,11 @@ export async function getPost(slug: string, locale: string): Promise<Post | null
   }
 
   // Fallback: private body in R2 under private/posts/<type>/<slug>/<lang>.mdx.
+  // Runs on Cloudflare Workers for non-prerendered slugs, so keep this path
+  // edge-safe: strip the YAML frontmatter with a regex (gray-matter pulls in
+  // Node-only deps that the Workers runtime may reject) and trust the index
+  // entry for metadata — index.json already carries everything normalizeMeta
+  // needs (title_*, summary_*, cover_image, tags, etc.).
   const index = await loadIndexJson();
   const entry = (index as { posts?: Array<Record<string, unknown>> }).posts?.find(
     (p) => p.slug === slug
@@ -217,15 +222,18 @@ export async function getPost(slug: string, locale: string): Promise<Post | null
   const { fetchPrivateMdx } = await import('@/lib/r2-private');
   const raw = await fetchPrivateMdx('posts', contentType, slug, locale);
   if (!raw) return null;
-  const { data: frontmatter, content } = matter(raw);
-  // Merge precedence: frontmatter wins for content fields, but the index
-  // entry wins for paths (cover_image/cover_thumb) because those may point
-  // at a different bucket/API than the R2 body itself.
-  const merged: Record<string, unknown> = { ...entry, ...stripUndefined(frontmatter) };
-  if (entry.cover_image) merged.cover_image = entry.cover_image;
-  if (entry.cover_thumb) merged.cover_thumb = entry.cover_thumb;
+  const fm = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+  const content = fm ? raw.slice(fm[0].length) : raw;
+  // Adapt the index.json entry (bilingual title_ko/title_en) into the shape
+  // normalizeMeta expects (single locale-specific title/summary).
+  const localized: Record<string, unknown> = {
+    ...(entry as Record<string, unknown>),
+    title: locale === 'ko' ? entry.title_ko : entry.title_en,
+    summary: locale === 'ko' ? entry.summary_ko : entry.summary_en,
+    status: 'published',
+  };
   return {
-    meta: normalizeMeta(merged, slug, contentType as PostCategory),
+    meta: normalizeMeta(localized, slug, contentType as PostCategory),
     content,
   };
 }
