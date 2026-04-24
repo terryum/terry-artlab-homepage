@@ -166,7 +166,17 @@ export async function buildContentDetailProps(
   }
 
   const dict = await getDictionary(lang);
-  const { content } = await renderMDX(post.content, slug);
+  let content: React.ReactNode;
+  try {
+    content = (await renderMDX(post.content, slug)).content;
+  } catch (e) {
+    const msg = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
+    console.error(
+      `[buildContentDetailProps] renderMDX failed for ${slug} (${lang}): ${msg}`
+    );
+    if (e instanceof Error && e.stack) console.error(e.stack);
+    content = null; // surface gracefully instead of 500; caller can render a fallback
+  }
   const alternateLocale = await getPostAlternateLocale(slug, lang);
 
   // Build related posts from index.json
