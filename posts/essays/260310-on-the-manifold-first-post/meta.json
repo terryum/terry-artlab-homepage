@@ -12,7 +12,7 @@
     "Physical AI",
     "Research Philosophy"
   ],
-  "cover_image": "./cover.webp",
+  "cover_image": "./cover-v2.webp",
   "thumb_source": "./thumb_original.png",
   "thumb_fit": "contain",
   "thumb_padding": 0.72,
@@ -44,5 +44,6 @@
   "figures": [],
   "tables": [],
   "newsletter_eligible": false,
-  "featured": false
+  "featured": false,
+  "cover_thumb": "./cover-thumb-v2.webp"
 }

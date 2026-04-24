@@ -64,7 +64,7 @@
     "Harness Design",
     "Anthropic Blog"
   ],
-  "cover_image": "./cover.webp",
+  "cover_image": "./cover-v2.webp",
   "cover_caption": "Scores on the SWE-bench Verified benchmark across Claude model versions highlight its evolution.",
   "cover_figure_number": 1,
   "thumb_source": "./fig-2.png",
@@ -80,7 +80,7 @@
   "figures": [
     {
       "number": 1,
-      "src": "./fig-1.png",
+      "src": "./fig-1-v2.png",
       "caption": "Scores on the SWE-bench Verified benchmark across Claude model versions highlight its evolution.",
       "caption_ko": "Claude 모델 버전별 SWE-bench Verified 벤치마크 점수로, Claude의 진화를 보여준다."
     },
@@ -127,5 +127,6 @@
   "taxonomy_primary": "ai/agent",
   "taxonomy_secondary": [
     "ai/llm"
-  ]
+  ],
+  "cover_thumb": "./cover-thumb-v2.webp"
 }

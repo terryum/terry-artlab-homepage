@@ -14,7 +14,7 @@
     "exoskeleton",
     "data-collection"
   ],
-  "cover_image": "./cover.webp",
+  "cover_image": "./cover-v2.webp",
   "cover_caption": "DexUMI transfer dexterous human manipulation skills to various robot hand by using wearable exoskeletons and a data processing framework. We demonstrate DexUMI's capability and effectiveness on both underactuated (e.g., Inspire) and fully-actuated (e.g., XHand) robot hand for a wide variety of manipulation tasks.",
   "reading_time_min": 8,
   "source_date": "2025-05-28",
@@ -184,5 +184,6 @@
   "taxonomy_secondary": [
     "robotics/hand"
   ],
-  "cover_figure_number": 1
+  "cover_figure_number": 1,
+  "cover_thumb": "./cover-thumb-v2.webp"
 }
