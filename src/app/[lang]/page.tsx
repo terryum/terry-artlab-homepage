@@ -74,7 +74,6 @@ export default async function HomePage({
           locale={lang}
           emptyText={dict.home.no_posts_yet}
           showTabTag={true}
-          hidePubDate={true}
         />
       ))}
 
@@ -103,7 +102,7 @@ export default async function HomePage({
                 title={survey.title[l] || survey.title.en}
                 description={survey.description[l] || survey.description.en}
                 number={`S${survey.survey_number}`}
-                date={new Date(survey.updated_at || survey.published_at).toISOString().slice(0, 10)}
+                date={`last updated: ${new Date(survey.updated_at || survey.published_at).toISOString().slice(0, 10)}`}
                 tags={survey.tech_stack.slice(0, 3)}
                 external={!isInternal}
               />
