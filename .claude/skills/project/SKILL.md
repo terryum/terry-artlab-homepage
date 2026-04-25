@@ -1,6 +1,6 @@
 ---
 name: project
-description: "Project 갤러리 추가. GitHub URL 또는 수동 입력(책, 제품 등)으로 프로젝트 카드를 생성. 다중 링크, 커버 이미지 자동 생성(/gemini-3-image-generation) 지원."
+description: "Project 갤러리 추가. GitHub URL 또는 수동 입력(책, 제품 등)으로 프로젝트 카드를 생성. 다중 링크, 커버 이미지 자동 생성(/image-gen) 지원."
 argument-hint: "<GitHub-URL | --type=book --title=... --url=...> [--featured] [--status=active|archived|wip] [--visibility=group --group=snu]"
 ---
 
@@ -103,7 +103,7 @@ README.md도 읽어서:
 
 ## Step 4) 커버 이미지 생성
 
-`/gemini-3-image-generation` 스킬을 사용하여 커버 이미지를 생성한다.
+`/image-gen` 스킬을 사용하여 커버 이미지를 생성한다.
 
 프롬프트 구성:
 - 프로젝트의 핵심 주제를 반영하는 추상적/기술적 일러스트
@@ -170,7 +170,7 @@ links 배열에 여러 링크를 추가할 수 있다. **첫 번째 링크가 pr
 ### 커버 이미지 처리
 - `--cover` 제공 시: sharp로 16:9 비율 크롭 → `public/images/projects/{slug}-cover.webp`로 저장
   - 책 표지: 상단(제목 영역) 위주로 크롭
-- `--cover` 없으면: `/gemini-3-image-generation` 또는 SVG placeholder 사용
+- `--cover` 없으면: `/image-gen` 또는 SVG placeholder 사용
 
 ### 메타데이터
 - 제목/설명은 ko/en 모두 입력 또는 번역 생성

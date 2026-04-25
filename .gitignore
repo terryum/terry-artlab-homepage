@@ -51,6 +51,7 @@ pnpm-debug.log*
 .mcp.json
 .mcp.local.json
 .claude/settings.local.json
+.claude/scheduled_tasks.lock
 
 # --- OS / Editor ---
 .DS_Store

@@ -10,7 +10,7 @@
 | 직접 초안 발행 (`post`) + Obsidian 운영 (`obsidian-*`, `tagging`, `draft`, `create`, `write` 등) | `terry-obsidian/.claude/skills/` |
 | 책·서베이 (`survey`, `cite-post`, `book-*`, `ieee-*` 등) | `terry-surveys/.claude/skills/` |
 | 외부 논문·학술지·블로그 요약 (`paper`) + 관련 docs (`POST_LOADING_*`, `PAPERS_SUMMARY_RULES.md`, `POST_GENERATOR_PAPERS.md`) | `terry-papers/.claude/skills/` + `terry-papers/docs/` |
-| 크로스 도메인·메타 (`harness`, `gemini-3-image-generation`, `pdf-update`) | `~/.claude/skills/` (전역) |
+| 크로스 도메인·메타 (`harness`, `image-gen`, `pdf-update`) | `~/.claude/skills/` (전역) |
 
 **원칙**: 한 스킬은 단 하나의 canonical 경로에만 실체(디렉토리)로 존재. 그 외 위치는 모두 심링크.
 
