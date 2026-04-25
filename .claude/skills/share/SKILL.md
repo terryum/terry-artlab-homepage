@@ -145,8 +145,11 @@ argument-hint: "<번호 | slug | 제목 | URL> [플랫폼 필터]"
 콘텐츠 타입에 따라 적절한 스크립트 사용:
 
 ```bash
-# Posts (소셜미디어: facebook, threads, linkedin, x, bluesky)
+# Posts (소셜미디어: facebook, threads, linkedin, x, bluesky) — 기본 메시지
 python scripts/publish-social.py --slug={slug} --platform={platforms}
+
+# Posts (커스텀 메시지) — Step 3.7 글자수 초과 시 사용
+python scripts/publish-social.py --slug={slug} --message-ko-file=/tmp/share-ko.txt --message-en-file=/tmp/share-en.txt --platform={platforms}
 
 # Posts (Substack: 별도 스크립트 — EN/KO 동시 발행)
 python scripts/publish-substack.py --slug={slug}
@@ -157,6 +160,8 @@ python scripts/publish-project-social.py --slug={slug} --platform={platforms}
 # Surveys / Projects (커스텀 메시지)
 python scripts/publish-project-social.py --slug={slug} --message-ko-file=/tmp/share-ko.txt --message-en-file=/tmp/share-en.txt --platform={platforms}
 ```
+
+`--message-ko-file`은 facebook/threads에 적용, `--message-en-file`은 linkedin/x/bluesky에 적용. 빌더가 override를 받아 그대로 쓰되, 한계 초과면 동일한 truncate 규칙으로 자른다 (즉 사용자가 한계 이내로 사이즈를 맞춰 넘기면 잘림 없이 발행됨).
 
 **중요: Substack은 `publish-social.py`에 포함되어 있지 않다.** 반드시 `publish-substack.py`를 별도로 실행해야 한다. `--platform=substack`은 `publish-social.py`에서 무시된다.
 
