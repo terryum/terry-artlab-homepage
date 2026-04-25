@@ -1,6 +1,7 @@
 import 'server-only';
+import { getR2PublicUrl } from './r2-config';
 
-const R2_URL = process.env.R2_PUBLIC_URL || process.env.NEXT_PUBLIC_R2_URL || '';
+const R2_URL = getR2PublicUrl();
 
 export type PrivateDomain = 'posts' | 'projects';
 

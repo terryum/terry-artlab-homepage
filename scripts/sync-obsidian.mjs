@@ -20,6 +20,10 @@ import os from 'os';
 import crypto from 'crypto';
 import { POSTS_DIR, getContentDirs } from './lib/paths.mjs';
 import { isSupabaseConfigured, getSupabase } from './lib/supabase.mjs';
+import { loadEnv } from './lib/env.mjs';
+import { getR2PublicUrl } from './lib/r2-config.mjs';
+
+await loadEnv();
 
 const CATEGORIES = await getContentDirs();
 
@@ -57,7 +61,11 @@ const VAULT_FOLDERS = [
 ];
 
 // ── R2 public URL for images ──
-const R2_PUBLIC_URL = 'https://pub-0c3a2ab4c1e34dd1b7abc088a943482d.r2.dev';
+const R2_PUBLIC_URL = getR2PublicUrl();
+if (!R2_PUBLIC_URL) {
+  console.error('❌ R2_PUBLIC_URL (or NEXT_PUBLIC_R2_URL) not set in .env.local');
+  process.exit(1);
+}
 function r2ImageUrl(slug, filename) {
   return `${R2_PUBLIC_URL}/posts/${slug}/${filename}`;
 }

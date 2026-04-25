@@ -1,4 +1,6 @@
-const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL || process.env.NEXT_PUBLIC_R2_URL || '';
+import { getR2PublicUrl } from './r2-config';
+
+const R2_PUBLIC_URL = getR2PublicUrl();
 
 /**
  * Resolve a relative asset path (`./foo.jpg`) to a CDN URL or local path.
