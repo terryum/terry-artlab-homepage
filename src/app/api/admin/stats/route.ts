@@ -113,6 +113,33 @@ const PERIOD_MAP: Record<string, string> = {
   '90d': '90daysAgo',
 };
 
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+function todayIso(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function presetStartIso(period: string): string {
+  const days = period === '30d' ? 30 : period === '90d' ? 90 : 7;
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() - days);
+  return d.toISOString().slice(0, 10);
+}
+
+async function fetchPropertyCreateDate(propertyId: string, token: string): Promise<string | null> {
+  try {
+    const res = await fetch(
+      `https://analyticsadmin.googleapis.com/v1beta/properties/${propertyId}`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+    if (!res.ok) return null;
+    const json = (await res.json()) as { createTime?: string };
+    return json.createTime ? json.createTime.slice(0, 10) : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(request: NextRequest) {
   if (!isAdminFromRequest(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -123,13 +150,54 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'GA4_PROPERTY_ID not configured' }, { status: 500 });
   }
 
-  const period = request.nextUrl.searchParams.get('period') || '7d';
-  const startDate = PERIOD_MAP[period] || '7daysAgo';
-  const dateRanges = [{ startDate, endDate: 'today' }];
+  const sp = request.nextUrl.searchParams;
+  const period = sp.get('period') || '7d';
+  const today = todayIso();
+
+  let startDate: string;
+  let endDate: string;
+
+  if (period === 'custom') {
+    const s = sp.get('startDate') ?? '';
+    const e = sp.get('endDate') ?? '';
+    if (!DATE_RE.test(s) || !DATE_RE.test(e)) {
+      return NextResponse.json({ error: 'Invalid date format (YYYY-MM-DD required)' }, { status: 400 });
+    }
+    if (s > e) {
+      return NextResponse.json({ error: 'startDate must be on or before endDate' }, { status: 400 });
+    }
+    if (e > today) {
+      return NextResponse.json({ error: 'endDate cannot be in the future' }, { status: 400 });
+    }
+    if (s < '2020-01-01') {
+      return NextResponse.json({ error: 'startDate cannot be before 2020-01-01' }, { status: 400 });
+    }
+    startDate = s;
+    endDate = e;
+  } else if (period === 'all') {
+    startDate = process.env.GA4_START_DATE ?? '2020-01-01';
+    endDate = today;
+  } else if (PERIOD_MAP[period]) {
+    startDate = presetStartIso(period);
+    endDate = today;
+  } else {
+    startDate = presetStartIso('7d');
+    endDate = today;
+  }
+
+  const dateRanges = [{ startDate, endDate }];
 
   try {
     const sa = loadServiceAccount();
     const token = await getAccessToken(sa);
+
+    if (period === 'all' && !process.env.GA4_START_DATE) {
+      const created = await fetchPropertyCreateDate(propertyId, token);
+      if (created) {
+        startDate = created;
+        dateRanges[0].startDate = created;
+      }
+    }
 
     const [kpiRes, trendRes, sourcesRes, countriesRes, postsRes] = await Promise.all([
       runReport(propertyId, token, {
@@ -218,18 +286,28 @@ export async function GET(request: NextRequest) {
       const locale = match?.[1] ?? '';
       const kind = match?.[2] ?? 'posts';
       const slug = match?.[3] ?? path;
+      const number = formatNumberForPath(kind, slug);
       return {
         path,
         locale,
         slug,
-        number: formatNumberForPath(kind, slug),
+        number,
+        exists: number != null,
         pageviews: Number(row.metricValues?.[0]?.value ?? 0),
         visitors: Number(row.metricValues?.[1]?.value ?? 0),
         avgDuration: Number(row.metricValues?.[2]?.value ?? 0),
       };
     });
 
-    return NextResponse.json({ kpi, trend, sources, countries, posts, period });
+    return NextResponse.json({
+      kpi,
+      trend,
+      sources,
+      countries,
+      posts,
+      period,
+      dateRange: { startDate, endDate },
+    });
   } catch (err) {
     const detail = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
     console.error('[admin/stats] GA4 REST failed:', err instanceof Error ? err.stack : err);

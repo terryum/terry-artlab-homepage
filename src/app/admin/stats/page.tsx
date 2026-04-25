@@ -1,9 +1,12 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 
-type Period = '7d' | '30d' | '90d';
+type PresetKind = '7d' | '30d' | '90d' | 'all';
+type Period =
+  | { kind: PresetKind }
+  | { kind: 'custom'; startDate: string; endDate: string };
 type PostLocale = 'all' | 'ko' | 'en';
 type SortKey = 'views' | 'visitors' | 'avgTime';
 type SortDir = 'asc' | 'desc';
@@ -18,8 +21,21 @@ interface StatsData {
   trend: { date: string; visitors: number; pageviews: number }[];
   sources: { source: string; medium: string; sessions: number; visitors: number }[];
   countries: { country: string; visitors: number }[];
-  posts: { path: string; locale: string; slug: string; number: string | null; pageviews: number; visitors: number; avgDuration: number }[];
+  posts: { path: string; locale: string; slug: string; number: string | null; exists: boolean; pageviews: number; visitors: number; avgDuration: number }[];
   period: string;
+  dateRange: { startDate: string; endDate: string };
+}
+
+function todayIso(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function formatRangeLabel(startDate: string, endDate: string): string {
+  const fmt = new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', year: 'numeric' });
+  const start = new Date(`${startDate}T00:00:00Z`);
+  const end = new Date(`${endDate}T00:00:00Z`);
+  const days = Math.round((end.getTime() - start.getTime()) / 86_400_000) + 1;
+  return `${fmt.format(start)} – ${fmt.format(end)} · ${days} day${days === 1 ? '' : 's'}`;
 }
 
 // recharts — SSR 제외하여 브라우저에서만 로드
@@ -48,7 +64,10 @@ function KpiCard({ label, value }: { label: string; value: string }) {
 }
 
 export default function StatsPage() {
-  const [period, setPeriod] = useState<Period>('7d');
+  const [period, setPeriod] = useState<Period>({ kind: '7d' });
+  const [showCustom, setShowCustom] = useState(false);
+  const [customStart, setCustomStart] = useState('');
+  const [customEnd, setCustomEnd] = useState(todayIso());
   const [postLocale, setPostLocale] = useState<PostLocale>('all');
   const [data, setData] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -68,11 +87,23 @@ export default function StatsPage() {
   const sortFieldOf = (p: { pageviews: number; visitors: number; avgDuration: number }, key: SortKey) =>
     key === 'views' ? p.pageviews : key === 'visitors' ? p.visitors : p.avgDuration;
 
+  const periodKey = useMemo(
+    () =>
+      period.kind === 'custom'
+        ? `custom:${period.startDate}:${period.endDate}`
+        : period.kind,
+    [period],
+  );
+
   const fetchStats = useCallback(async (p: Period) => {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`/api/admin/stats?period=${p}`);
+      const qs =
+        p.kind === 'custom'
+          ? `period=custom&startDate=${p.startDate}&endDate=${p.endDate}`
+          : `period=${p.kind}`;
+      const res = await fetch(`/api/admin/stats?${qs}`);
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         const msg = body.error ? (body.detail ? `${body.error}: ${body.detail}` : body.error) : `Stats API ${res.status}`;
@@ -88,7 +119,21 @@ export default function StatsPage() {
 
   useEffect(() => {
     fetchStats(period);
-  }, [period, fetchStats]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [periodKey, fetchStats]);
+
+  const customValid =
+    /^\d{4}-\d{2}-\d{2}$/.test(customStart) &&
+    /^\d{4}-\d{2}-\d{2}$/.test(customEnd) &&
+    customStart <= customEnd &&
+    customEnd <= todayIso();
+
+  const applyCustom = () => {
+    if (!customValid) return;
+    setPeriod({ kind: 'custom', startDate: customStart, endDate: customEnd });
+  };
+
+  const isActive = (kind: PresetKind) => period.kind === kind;
 
   const filteredPosts = (data?.posts.filter(
     (p) => postLocale === 'all' || p.locale === postLocale
@@ -104,24 +149,77 @@ export default function StatsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-lg font-medium text-text-primary">Stats</h1>
-        <div className="flex gap-1">
-          {(['7d', '30d', '90d'] as Period[]).map((p) => (
+        <div className="flex flex-wrap items-center gap-1">
+          {(['7d', '30d', '90d', 'all'] as PresetKind[]).map((p) => (
             <button
               key={p}
-              onClick={() => setPeriod(p)}
+              onClick={() => {
+                setShowCustom(false);
+                setPeriod({ kind: p });
+              }}
               className={`px-3 py-1 text-sm rounded-md transition-colors ${
-                period === p
+                isActive(p)
                   ? 'bg-accent text-white'
                   : 'text-text-secondary hover:text-accent border border-line-default'
               }`}
             >
-              {p}
+              {p === 'all' ? 'All' : p}
             </button>
           ))}
+          <button
+            onClick={() => setShowCustom((v) => !v)}
+            className={`px-3 py-1 text-sm rounded-md transition-colors ${
+              period.kind === 'custom' || showCustom
+                ? 'bg-accent text-white'
+                : 'text-text-secondary hover:text-accent border border-line-default'
+            }`}
+          >
+            Custom…
+          </button>
         </div>
       </div>
+
+      {showCustom && (
+        <div className="flex flex-wrap items-end gap-2 -mt-2">
+          <label className="flex flex-col text-xs text-text-secondary">
+            Start
+            <input
+              type="date"
+              value={customStart}
+              max={customEnd || todayIso()}
+              min="2020-01-01"
+              onChange={(e) => setCustomStart(e.target.value)}
+              className="mt-1 px-2 py-1 text-sm border border-line-default rounded-md bg-bg-primary text-text-primary"
+            />
+          </label>
+          <label className="flex flex-col text-xs text-text-secondary">
+            End
+            <input
+              type="date"
+              value={customEnd}
+              min={customStart || '2020-01-01'}
+              max={todayIso()}
+              onChange={(e) => setCustomEnd(e.target.value)}
+              className="mt-1 px-2 py-1 text-sm border border-line-default rounded-md bg-bg-primary text-text-primary"
+            />
+          </label>
+          <button
+            onClick={applyCustom}
+            disabled={!customValid}
+            className="px-3 py-1 text-sm rounded-md bg-accent text-white disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Apply
+          </button>
+        </div>
+      )}
+
+      {data && (
+        <p className="text-xs text-text-secondary -mt-2">
+          {formatRangeLabel(data.dateRange.startDate, data.dateRange.endDate)}
+        </p>
+      )}
 
       {error && <p className="text-red-500 text-sm">{error}</p>}
 
@@ -222,9 +320,19 @@ export default function StatsPage() {
                     </tr>
                   ) : (
                     filteredPosts.map((post) => (
-                      <tr key={post.path} className="border-b border-line-default last:border-b-0">
+                      <tr
+                        key={post.path}
+                        className={`border-b border-line-default last:border-b-0 ${
+                          post.exists ? '' : 'opacity-50'
+                        }`}
+                      >
                         <td className="px-3 py-2 text-text-secondary font-mono text-xs">{post.number ?? ''}</td>
-                        <td className="px-3 py-2 text-text-primary truncate max-w-xs">{post.slug}</td>
+                        <td className="px-3 py-2 text-text-primary truncate max-w-xs">
+                          <span>{post.slug}</span>
+                          {!post.exists && (
+                            <span className="ml-2 text-xs text-text-muted">(deleted)</span>
+                          )}
+                        </td>
                         <td className="px-3 py-2 text-center text-text-secondary uppercase text-xs">{post.locale}</td>
                         <td className="text-right px-3 py-2 text-text-secondary tabular-nums">{post.pageviews.toLocaleString()}</td>
                         <td className="text-right px-3 py-2 text-text-secondary tabular-nums">{post.visitors.toLocaleString()}</td>
