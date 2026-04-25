@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-25T06:01:31.191Z",
-  "total_posts": 48,
+  "generated_at": "2026-04-25T07:01:53.647Z",
+  "total_posts": 49,
   "posts": [
     {
       "post_number": 1,
@@ -3430,10 +3430,10 @@
       "post_number": 48,
       "slug": "260425-sw-becomes-cosmetics",
       "content_type": "essays",
-      "title_en": "Software Becomes Cosmetics",
-      "title_ko": "SW는 화장품이 된다",
-      "summary_ko": "SW 만드는 능력이 흔해지면 가치는 다른 축으로 이동한다. 한국 화장품 산업이 이미 그린 곡선을 SW가 따라간다.",
-      "summary_en": "When the ability to build software becomes common, value shifts to other axes — brand, marketing, ODM. Korea's cosmetics industry already drew that curve.",
+      "title_en": "260425-sw-becomes-cosmetics",
+      "title_ko": "260425-sw-becomes-cosmetics",
+      "summary_ko": null,
+      "summary_en": null,
       "cover_image": "https://pub-0c3a2ab4c1e34dd1b7abc088a943482d.r2.dev/private/posts/essays/260425-sw-becomes-cosmetics/cover.webp",
       "cover_thumb": "https://pub-0c3a2ab4c1e34dd1b7abc088a943482d.r2.dev/private/posts/essays/260425-sw-becomes-cosmetics/cover-thumb.webp",
       "domain": "AI & Society",
@@ -3494,6 +3494,62 @@
         "industry/transition"
       ],
       "visibility": "private",
+      "allowed_groups": []
+    },
+    {
+      "post_number": 49,
+      "slug": "260425-retry-storm-postmortem",
+      "content_type": "memos",
+      "title_en": "Why a Static Site Got Hit 50M Times — Retry Storm Postmortem",
+      "title_ko": "정적 사이트가 5천만 회 두드려진 이유 — retry storm 사후 분석",
+      "summary_ko": "5천만 회 두드려진 정적 사이트 — onerror 자기 루프와 헤드리스 자동화의 곱",
+      "summary_en": "50M hits on a static site — the product of an `onerror` self-loop and headless automation.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
+      "domain": "Infrastructure",
+      "subfields": [
+        "edge hosting",
+        "cost engineering",
+        "bot mitigation"
+      ],
+      "key_concepts": [
+        "retry storm",
+        "onerror self-loop",
+        "static asset migration",
+        "egress pricing",
+        "headless automation",
+        "spend limit"
+      ],
+      "methodology": [],
+      "contribution_type": null,
+      "tags": [
+        "Memos",
+        "infra",
+        "postmortem",
+        "retry-storm",
+        "cloudflare",
+        "static-site"
+      ],
+      "source_author": null,
+      "source_date": null,
+      "published_at": "2026-04-25T00:00:00+09:00",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "정적 사이트가 4일간 5천만 edge requests를 받은 사고의 사후 분석 — 두 결함의 곱이 외부 자동화의 종료 조건 없는 retry와 만났을 때.",
+        "problem": "단일 IP에서 정적 사이트의 깨진 이미지 3개에 4일간 약 5천만 edge requests가 들어왔다. 트리거는 figure 경로 stale + onerror 자기 루프 + 헤드리스 자동화의 retry policy.",
+        "solution": "사후 조치 4층 — 코드 단발화(`this.onerror=null`) + 빌드 단계 figure file-existence validator + Cloudflare egress 무료 호스팅 이전 + DDoS L7 / Billing $10 알림 셋업.",
+        "key_result": "동일 사고 재발 시 금전 손실 0, 1분 내 차단, 청구 주기 30일이 아닌 이메일 즉시 인지.",
+        "limitations": []
+      },
+      "relations": [],
+      "idea_status": null,
+      "related_posts": [
+        "260419-vercel-quiet-bill",
+        "260420-one-day-recovery"
+      ],
+      "taxonomy_primary": null,
+      "taxonomy_secondary": [],
+      "visibility": "public",
       "allowed_groups": []
     }
   ],
@@ -5179,6 +5235,24 @@
     ],
     "cosmetics industry": [
       48
+    ],
+    "retry storm": [
+      49
+    ],
+    "onerror self-loop": [
+      49
+    ],
+    "static asset migration": [
+      49
+    ],
+    "egress pricing": [
+      49
+    ],
+    "headless automation": [
+      49
+    ],
+    "spend limit": [
+      49
     ]
   },
   "domain_stats": {
@@ -5189,7 +5263,8 @@
     "AI & Society": 4,
     "Infra & Cost": 1,
     "Infra & Ops": 1,
-    "ai-tooling": 2
+    "ai-tooling": 2,
+    "Infrastructure": 1
   },
   "taxonomy_stats": {
     "robotics/brain/vla": 7,

@@ -1,0 +1,110 @@
+---
+locale: "en"
+translation_of: "260425-retry-storm-postmortem:ko"
+title: "Why a Static Site Got Hit 50M Times — Retry Storm Postmortem"
+subtitle: "Static assets, defenseless against one bot"
+summary: "A static site received about 50 million edge requests over four days from a single IP, all to three broken images. Three faults compounded: stale figure paths, an `onerror` self-loop pattern that runs forever in headless environments, and external automation with no termination condition. A four-layer mitigation (code one-shot, file-existence validator, egress-free hosting migration, and alerts) reduces a recurrence to zero financial impact."
+card_summary: "50M hits on a static site — the product of an `onerror` self-loop and headless automation."
+terrys_memo: ""
+---
+
+## TL;DR
+
+- Over four days, a single IP sent ~50M edge requests, all to three broken images on a static survey site.
+- Average ~150 RPS, ~17M requests per image — well outside any human-traffic signature.
+- Trigger = product of two faults: (1) figure paths pointing at the old per-chapter folder layout while files had been moved to flat naming (404 on every figure), (2) an `<img onerror="this.src='{src}'">` pattern that re-fires forever in headless environments.
+- The April invoice was the first signal — no real-time monitoring, no spend limit, no traffic-anomaly alert.
+- Mitigation in four layers: code one-shot, figure validator, migration to a Cloudflare egress-free host, and DDoS/Billing alerts.
+
+## Context
+
+| Item | Value |
+|---|---|
+| Window | April 9–12 (4 days) |
+| Source | Single IP, consistent UA, same referrer |
+| Target | Three broken images on a static survey site |
+| Total requests | ~50M edge requests |
+| Average RPS | ~150 |
+| End | Self-terminated (likely session timeout) |
+| Diagnosis | Hosting platform: "not DDoS" |
+
+The signature is one automation tool hammering the same images on the same page — not a distributed attack. Likely an LLM agent's browsing tool or a headless crawler.
+
+## Root cause
+
+### Fault 1 — stale figure paths
+
+When the survey was a standalone build, figures were placed under `assets/figures/ch{N}/fig_<slug>.png` per-chapter subfolders. Just before merging into the monorepo, the standard switched to flat naming (`ch{N}_<slug>_fig{N}.png`). Files moved, but a standalone build that still carried the old paths went out — every figure request 404'd.
+
+Generalization: static-asset path migrations leak stale URLs to production whenever the build pipeline lacks a figure-existence check.
+
+### Fault 2 — `onerror` self-loop
+
+```python
+# build script
+onerror="this.src='{src}'"
+```
+
+The intent was a fallback to light-mode when the dark-mode image is missing. But when both dark and light are broken, normal browsers self-guard against re-firing on the same `src`; headless Chromium and some LLM-agent browser tools don't. After the first failure, `onerror` keeps re-requesting the same broken `src`.
+
+Generalization: any `onerror` that reassigns `src` becomes a self-loop in headless environments unless the handler clears itself with `this.onerror=null` on first failure.
+
+### External automation's retry policy
+
+The tool opened the page headlessly, fetched the images, all 404. With no termination condition, the retry loop ran for four days — the typical "automation that doesn't know it's stuck" pattern, intent-free.
+
+Generalization: LLM-agent browsing tools and headless crawlers commonly retry without termination. Whoever publishes the assets carries the burden of cutting the loop at the meter.
+
+## Mitigation (four layers)
+
+### Layer 1 — code
+
+- One-shot `onerror`: `this.onerror=null;this.src='{src}'` — first failure stops re-firing, capping requests per image at two.
+- Stronger validator: file-existence check for every figure referenced in the body, plus a build-fail rule on the old subfolder pattern.
+- PR-level enforcement via GitHub Actions — broken paths can no longer reach `main`.
+
+### Layer 2 — hosting (move to egress-free)
+
+- Per-request billing → unmetered egress host. A recurrence yields zero invoice change.
+- Rate-Limiting Rule: block any IP hitting `/assets/` more than 100×/10s.
+- Bot Fight Mode + AI Bot Block: known LLM-crawler UAs (GPTBot/ClaudeBot/PerplexityBot, etc.) auto-challenged or blocked.
+
+### Layer 3 — awareness channel
+
+- DDoS L7 alert: email on traffic anomaly.
+- Billing threshold alert: email at every $10 step.
+- The first signal must be email, not the invoice.
+
+### Layer 4 — identity tracking (optional)
+
+- An OTP rule scoped to that one IP: re-visits require email + 6-digit code. Zero impact on other users.
+
+## Decision table — "static is not safe"
+
+| Situation | Recommendation |
+|---|---|
+| Hosting bills per edge request | Operate as if bot traffic will be billed in full — spend limit is mandatory. |
+| Hosting offers unmetered egress | A recurrence is free of money loss, but anomaly alerts still need separate setup. |
+| Migrating asset paths | Mandate a build-step file-existence rule so stale paths cannot deploy. |
+| Using `onerror` for image fallback | Force `this.onerror=null` on first failure; verify the behavior under headless. |
+| Cloud service with stored billing method | All three of spend limit, billing alert, and anomaly alert must be set up — the invoice cannot be your awareness channel. |
+
+## Pitfalls
+
+- Reassigning `src` from `onerror` works fine in normal browsers but loops forever in headless. Test the failure path in the same environment.
+- After a static-asset migration, deploying without verifying that old build artifacts still reference the old paths can publish stale URLs by itself.
+- A stored billing method with no automated cap is equivalent to no defense at all — without spend limits, daily thresholds, or anomaly alerts, the invoice is your first signal.
+- LLM-agent browsing tools commonly retry without termination. Intent-free "automation that doesn't know it's stuck" is a routine cause of cost runaway.
+
+## ROI
+
+| Input | Output |
+|---|---|
+| One line of code (`this.onerror=null`), one validator rule, one hosting migration, four alerts | Zero loss on a recurrence, blocked within a minute, and email — not a 30-day billing cycle — as the first signal |
+
+What changed isn't the strength of the defense but its existence. Before, there was none.
+
+## Related
+
+- [[260419-vercel-quiet-bill|Quiet Invoice — Vercel Bills for Bots Too]] — the cost-structure side of the same incident.
+- [[260420-one-day-recovery|One-Day Recovery — Paying Down SkinChat's Infra Debt]] — a single-session cleanup of accumulated infrastructure debt.
