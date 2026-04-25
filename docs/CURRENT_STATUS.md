@@ -30,6 +30,7 @@
 - **#1** 비공개 본문 자동 R2 업로드 (`/post --visibility=group/private` 흐름 끝에 R2 업로드 단계 추가) — terry-obsidian 워크스페이스에서 진행
 - **Hard HTTP 404**: 위 4) 항목 참조. middleware 에서 known-slug 검증 후 rewrite 또는 Next.js issue 진척 확인
 - **번들 사이즈 트리거 도달 시**: `node scripts/check-bundle-size.mjs --strict` 가 5 MiB 임계 알림. 도달 시 R2 fetch 또는 chunked imports 검토
+- **5-repo 코드베이스 정리** (2026-04-25 시작): A/B 그룹 + C6 완료. C1 큰 파일 분리, C2 vitest 도입, C3 동적 404, C4 에러 관측성, C5 R2 토큰 권한 분리는 미완. **백로그·실행 가이드**: `~/.claude/plans/terryum-ai-terry-surveys-toasty-zephyr.md` 의 § C 섹션 참조 (각 항목 파일·라인·검증법까지 박혀 있음). 권장 다음 세션은 **C2(테스트 깔기) → C1(분리)** 순.
 
 ## 6) 검증 상태 (이번 세션 마지막)
 - 로컬 dev (`http://localhost:3041/en`): 6 회귀 슬러그 모두 카드에서 `cover-v2.webp` / `cover-thumb-v2.webp` 정상 표시 ✅
