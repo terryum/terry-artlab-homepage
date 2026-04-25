@@ -2,7 +2,7 @@ import { isValidLocale, type Locale } from '@/lib/i18n';
 import { getDictionary } from '@/lib/dictionaries';
 import { getAllProjects } from '@/lib/projects';
 import { Container } from '@/components/ui/Container';
-import ProjectCard from '@/components/ProjectCard';
+import ProjectList from '@/components/projects/ProjectList';
 import type { Metadata } from 'next';
 
 // Fully static
@@ -44,17 +44,7 @@ export default async function ProjectsPage({
         {dict.projects.description}
       </p>
 
-      {projects.length === 0 ? (
-        <p className="text-text-muted py-8 text-center">
-          {dict.projects.empty}
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {projects.map((project) => (
-            <ProjectCard key={project.slug} project={project} locale={lang} />
-          ))}
-        </div>
-      )}
+      <ProjectList projects={projects} locale={lang} emptyLabel={dict.projects.empty} />
     </Container>
   );
 }

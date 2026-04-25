@@ -2,7 +2,7 @@ import { isValidLocale, type Locale } from '@/lib/i18n';
 import { getDictionary } from '@/lib/dictionaries';
 import { getAllSurveys } from '@/lib/surveys';
 import { Container } from '@/components/ui/Container';
-import SurveyCard from '@/components/SurveyCard';
+import SurveyList from '@/components/surveys/SurveyList';
 import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
@@ -44,17 +44,7 @@ export default async function SurveysPage({
         {dict.surveys.description}
       </p>
 
-      {surveys.length === 0 ? (
-        <p className="text-text-muted py-8 text-center">
-          {dict.surveys.empty}
-        </p>
-      ) : (
-        <div className="flex flex-col gap-6">
-          {surveys.map((survey) => (
-            <SurveyCard key={survey.slug} survey={survey} locale={lang} />
-          ))}
-        </div>
-      )}
+      <SurveyList surveys={surveys} locale={lang} emptyLabel={dict.surveys.empty} />
     </Container>
   );
 }
