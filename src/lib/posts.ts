@@ -379,8 +379,12 @@ export async function getAllPostsFromIndex(locale: string): Promise<PostMeta[]> 
       status: 'published' as const,
       content_type: p.content_type as PostMeta['content_type'],
       tags,
-      cover_image: (p.cover_image as string) || resolvePostCdnPath(p.slug as string, 'cover.webp'),
-      cover_thumb: (p.cover_thumb as string) || resolvePostCdnPath(p.slug as string, 'cover-thumb.webp'),
+      cover_image: p.cover_image
+        ? resolvePostAssetPath(p.cover_image as string, p.slug as string)
+        : resolvePostCdnPath(p.slug as string, 'cover.webp'),
+      cover_thumb: p.cover_thumb
+        ? resolvePostAssetPath(p.cover_thumb as string, p.slug as string)
+        : resolvePostCdnPath(p.slug as string, 'cover-thumb.webp'),
       post_number: p.post_number as number,
       domain: p.domain as string,
       subfields: (p.subfields as string[]) ?? [],

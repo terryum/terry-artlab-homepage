@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-25T04:17:03.303Z",
+  "generated_at": "2026-04-25T04:34:07.267Z",
   "total_posts": 47,
   "posts": [
     {
@@ -10,6 +10,8 @@
       "title_ko": "ForceVLA: 접촉이 많은 로봇 조작을 위한 힘 인식 MoE",
       "summary_ko": "VLA 모델에 힘 감지가 빠져있어 접촉이 많은 조작에서 한계를 보이는 문제를, 태스크 단계별로 힘 정보의 중요도를 동적 라우팅하는 MoE 기반 힘-비전-언어 융합(ForceVLA)으로 해결했다.",
       "summary_en": "VLA models lack force sensing, limiting contact-rich manipulation. ForceVLA solves this with an MoE-based force-vision-language fusion that dynamically routes force information importance across task phases.",
+      "cover_image": "./cover-v2.webp",
+      "cover_thumb": "./cover-thumb-v2.webp",
       "domain": "robotics",
       "subfields": [
         "manipulation",
@@ -77,6 +79,8 @@
       "title_ko": "π₀: 범용 로봇 제어를 위한 비전-언어-행동 플로우 모델",
       "summary_ko": "사전학습된 VLM 위에 flow matching 기반 행동 생성을 결합한 로봇 foundation model로, 7가지 로봇·68개 태스크의 만 시간 이상 데이터로 학습하여 세탁물 접기부터 박스 조립까지 복잡한 정교 조작을 단일 모델로 수행한다.",
       "summary_en": "A robot foundation model combining a pre-trained VLM with flow matching-based action generation, trained on 10,000+ hours across 7 robots and 68 tasks to perform complex dexterous manipulation from laundry folding to box assembly with a single model.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "manipulation",
@@ -140,6 +144,8 @@
       "title_ko": "DexForce: 인간 시연에서 접촉력을 학습하는 다지 조작",
       "summary_ko": "Kinesthetic 시연에서 측정한 접촉 힘으로 force-informed action target을 계산하는 DexForce를 제안한다. 간단한 스프링 모델 하나로 6개 dexterous manipulation 태스크에서 평균 76% 성공률을 달성하며, 힘을 무시한 정책 대비 압도적 차이를 보인다.",
       "summary_en": "DexForce computes force-informed action targets from contact forces measured during kinesthetic demonstrations. A single spring model parameter achieves 76% average success across six dexterous manipulation tasks, while policies ignoring forces achieve near-zero success.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "dexterous-manipulation",
@@ -201,6 +207,8 @@
       "title_ko": "π₀.₆: 경험에서 스스로 학습하는 VLA",
       "summary_ko": "VLA 모델이 실제 배포 이후 스스로 개선되기 어렵다는 문제를, advantage conditioning 기반 RECAP 방법으로 데모·on-policy 데이터·사람 개입을 통합하여 실세계 RL 파인튜닝을 가능하게 했다.",
       "summary_en": "VLA models struggle to improve through real-world deployment. RECAP (RL with Experience and Corrections via Advantage-conditioned Policies) solves this by incorporating demonstrations, on-policy data, and human interventions into a unified advantage-conditioned RL framework, more than doubling task throughput on the hardest tasks.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "manipulation",
@@ -264,6 +272,8 @@
       "title_ko": "On the Manifold",
       "summary_ko": "AI가 생각하는 인간과 노동하는 인간의 위상을 동시에 흔드는 지금, 변화의 기울기를 따라 다음 세계를 탐구하는 블로그를 시작한다.",
       "summary_en": "As AI simultaneously unsettles the standing of thinking man and laboring man, I begin a blog to trace the gradient of change and explore the world ahead.",
+      "cover_image": "./cover-v2.webp",
+      "cover_thumb": "./cover-thumb-v2.webp",
       "domain": "robotics",
       "subfields": [
         "research-philosophy"
@@ -314,6 +324,8 @@
       "title_ko": "Stretchable Glove: 액체금속 센서로 손 자세를 정밀 추적하는 장갑",
       "summary_ko": "기존 손 추적 글러브의 제한적 자세 인식과 복잡한 다중 센서 문제를, 단일 신축 센싱 메커니즘으로 뼈 길이와 관절 각도를 동시 추정하는 원사이즈 글러브로 해결했다.",
       "summary_en": "Existing hand tracking gloves are limited in pose recognition and require complex multi-sensor setups. This work solves both with a one-size-fits-all stretchable glove that simultaneously estimates bone lengths and joint angles from a single sensing mechanism.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "wearable-sensing",
@@ -374,6 +386,8 @@
       "title_ko": "Brain Augmentation",
       "summary_ko": "AI 시대의 연구에서 중요한 것은 '내가 더 많이 아는 것'이 아니라, AI scientist가 자가발전의 지식 창출을 이어갈 수 있는 환경을 구축하는 일이다.",
       "summary_en": "What matters in AI-age research is not 'knowing more myself' but building environments where AI scientists can sustain self-improving knowledge creation.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "ml",
       "subfields": [
         "ai-research-methodology",
@@ -425,6 +439,8 @@
       "title_ko": "DexUMI: 인간 손을 다지 로봇 조작의 범용 인터페이스로",
       "summary_ko": "로봇 손에 dexterous manipulation을 가르치는 데는 kinematic gap과 visual gap이라는 두 가지 근본적 장벽이 있다. DexUMI는 착용형 exoskeleton으로 전자를, SAM2 + AI inpainting으로 후자를 동시에 해소하여 서로 다른 두 종류의 로봇 손에서 평균 86% 태스크 성공률을 달성했다.\"seo_title: 'DexUMI: 인간 손을 Dexterous Manipulation 범용 인터페이스로 활용하기'",
       "summary_en": "Teaching dexterous manipulation to robot hands faces two fundamental barriers: kinematic gap and visual gap. DexUMI resolves both simultaneously — via wearable exoskeleton and SAM2 + AI inpainting — achieving 86% average task success rate across two different robot hand platforms.\"seo_title: \"DexUMI: Using Human Hand as Universal Manipulation Interface for Dexterous Robots\"seo_description: \"DexUMI resolves kinematic and visual gaps between human and robot hands using a wearable exoskeleton and AI inpainting pipeline, achieving 86% task success rate on Inspire and XHand robot platforms.",
+      "cover_image": "./cover-v2.webp",
+      "cover_thumb": "./cover-thumb-v2.webp",
       "domain": "robotics",
       "subfields": [
         "dexterous-manipulation",
@@ -505,6 +521,8 @@
       "title_ko": "ExoStart: 10회 엑소스켈레톤 시연으로 다지 로봇 조작 학습",
       "summary_ko": "소수의 exoskeleton 시연에서 출발해 dynamics filtering으로 시뮬레이션 궤적을 증폭하고, auto-curriculum RL과 vision 기반 student 증류를 거쳐 복잡한 dexterous 조작의 zero-shot 실세계 전이를 달성했다. 7가지 태스크 중 6가지에서 50% 이상 성공률.\"seo_title: 'ExoStart: Sensorized Exoskeleton 시연과 RL로 효율적 Dexterous Manipulation 학습'",
       "summary_en": "Starting from as few as 10 exoskeleton demonstrations, ExoStart uses dynamics filtering to amplify them into physically valid sim trajectories, then trains via auto-curriculum RL and distills into a vision-based student policy for zero-shot real-world transfer — achieving >50% success on 6 of 7 complex dexterous tasks.\"seo_title: \"ExoStart: Efficient Dexterous Manipulation Learning with Sensorized Exoskeleton Demonstrations\"seo_description: \"ExoStart combines ~10 exoskeleton demonstrations, MuJoCo dynamics filtering, auto-curriculum RL, and vision-based policy distillation to achieve >50% real-world success on 6 of 7 complex dexterous manipulation tasks.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "dexterous-manipulation",
@@ -580,6 +598,8 @@
       "title_ko": "DEXOP: 직접 접촉 기반 다지 조작 시연을 위한 패시브 엑소스켈레톤",
       "summary_ko": "Actuator 없이 4-bar linkage로 인간과 로봇 손가락을 직접 연결하는 passive exoskeleton. 자연스러운 직접 접촉 피드백으로 teleoperation 대비 최대 8배 빠른 dexterous 시연 수집을 가능하게 하며, 더 적은 시간에 더 높은 정책 성공률을 달성했다.\"seo_title: 'DEXOP: Passive Exoskeleton으로 Dexterous Manipulation 데이터를 8배 빠르게 수집'",
       "summary_en": "A passive exoskeleton with 4-bar linkages that mechanically couples human and robot fingers, with no actuators or calibration required. Direct contact feedback enables natural manipulation at up to 8× teleoperation speed, producing higher-quality demonstration data for dexterous robot learning.\"seo_title: \"DEXOP: Passive Mechanical Exoskeleton for 8× Faster Dexterous Robot Demonstration Collection\"seo_description: \"DEXOP's 4-bar linkage mechanism directly couples human and robot fingers for natural dexterous demonstration collection. Achieves up to 8× faster throughput than teleoperation and higher policy success rates on complex manipulation tasks.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "dexterous-manipulation",
@@ -657,6 +677,8 @@
       "title_ko": "AI Co-scientist: 자율 과학 발견을 위한 멀티에이전트 시스템",
       "summary_ko": "LLM이 문헌 요약을 넘어 진짜 신규 가설을 생성할 수 있는가? Google의 AI co-scientist는 Gemini 2.0 기반 멀티에이전트가 과학 토론과 Elo 토너먼트로 자기개선 루프를 돌리며, AML·간섬유증·AMR 3개 영역의 wet-lab 실험으로 검증했다.",
       "summary_en": "Can LLMs go beyond literature summarization to generate truly novel hypotheses? Google's AI co-scientist runs Gemini 2.0 multi-agents in a generate-debate-evolve loop with Elo tournaments for self-improvement, validated by wet-lab experiments across AML, liver fibrosis, and antimicrobial resistance.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "ml",
       "subfields": [
         "scientific-discovery",
@@ -725,6 +747,8 @@
       "title_ko": "PP-Tac: 촉각 피드백으로 종이를 집는 다지 로봇 손",
       "summary_ko": "종이처럼 얇고 유연한 물체를 집을 수 없는 로봇 손의 한계를, 촉각 센서 기반 슬립 감지 + 접촉력 제어 + 확산 정책의 3단 파이프라인(PP-Tac)으로 87.5% 성공률로 극복했다.",
       "summary_en": "PP-Tac overcomes the inability of robotic hands to grasp thin, deformable objects like paper — combining R-Tac tactile sensors, a slip-detection CNN, online force control, and a diffusion policy for an 87.5% success rate across diverse materials and terrains.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "dexterous-manipulation",
@@ -800,6 +824,8 @@
       "title_ko": "Tactile Skin: 촉각 피부로 배우는 인핸드 이동",
       "summary_ko": "촉각 시뮬레이션의 정밀도-속도 트레이드오프를 해결하는 촉각 피부 센서 모델로, 전단·수직 힘의 제로샷 sim-to-real 전이를 실현하여 인핸드 이동에서 고유감각 대비 +51% 이동 거리를 달성했다.",
       "summary_en": "A tactile skin sensor model resolving the fidelity-speed tradeoff in tactile simulation, enabling zero-shot sim-to-real transfer of shear and normal forces for in-hand translation with +51% distance improvement over proprioception-only baselines.",
+      "cover_image": "./cover-v2.webp",
+      "cover_thumb": "./cover-thumb-v2.webp",
       "domain": "robotics",
       "subfields": [
         "dexterous-manipulation",
@@ -878,6 +904,8 @@
       "title_ko": "3D 촉각의 정규 표현과 힘 기반 사전학습으로 손재주 있는 시각촉각 정책 학습",
       "summary_ko": "3D 촉각 데이터 학습의 어려움을 정규 좌표계 표현과 힘 기반 자기지도 사전학습으로 해결해, 4가지 정밀 손 조작 태스크에서 78% 평균 성공률 달성",
       "summary_en": "3D tactile feature learning for dexterous manipulation via canonical representation + force-based self-supervised pretraining, achieving 78% average success rate across 4 contact-rich tasks",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "dexterous-manipulation",
@@ -960,6 +988,8 @@
       "title_ko": "RoboPaint: 인간 시연에서 어떤 로봇·어떤 뷰로도",
       "summary_ko": "텔레오퍼레이션 없이 인간 글러브 시연 → Dex-Tactile 리타겟팅 + 3DGS 렌더링으로 어떤 로봇·카메라 뷰로도 VLA 훈련 데이터를 생성하는 Real-Sim-Real 파이프라인",
       "summary_en": "Real-Sim-Real pipeline: human glove demos → Dex-Tactile retargeting + 3DGS rendering → VLA training data for any robot or camera view, without teleoperation",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "data-collection",
@@ -1043,6 +1073,8 @@
       "title_ko": "UniTacHand: 인간-로봇 손 촉각 통합 표현으로 제로샷 기술 이전",
       "summary_ko": "인간·로봇 손의 이질적 촉각 신호를 MANO UV 맵으로 통합하고 대조 학습으로 정렬 — 10분 페어 데이터로 제로샷 정책 이전 달성",
       "summary_en": "Heterogeneous human/robot tactile signals unified on a MANO UV map and aligned via contrastive learning — zero-shot skill transfer with only 10 minutes of paired data",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "dexterous-manipulation",
@@ -1125,6 +1157,8 @@
       "title_ko": "MANO: 관절형 비선형 변형 손 모델",
       "summary_ko": "손 스캔 1,000개로 배운 통계적 손 모델 MANO — PCA 형상 공간 + 포즈 블렌드셰이프로 778개 버텍스의 손 형태를 소수의 파라미터만으로 표현하고, SMPL 신체와 통합해 전신 4D 캡처를 실현한 foundational 논문이다.",
       "summary_en": "A foundational statistical hand model (MANO) trained from 1,000 3D scans — PCA shape space + pose blend shapes compress 778-vertex hand geometry into a handful of parameters, and SMPL+H integrates it with the body model for full-body 4D capture.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "hand-pose-estimation",
@@ -1202,6 +1236,8 @@
       "title_ko": "OSMO: 인간-로봇 기술 이전을 위한 오픈소스 촉각 글러브",
       "summary_ko": "인간과 로봇에 같은 글러브를 장착해 visual·tactile gap을 한 번에 해소 — 로봇 데이터 없이 인간 시연만으로 72% 닦기 성공률, 완전 오픈소스 촉각 글러브 OSMO.",
       "summary_en": "Same glove on human and robot eliminates visual + tactile gaps at once — 72% wiping success with zero robot training data, fully open-source tactile glove hardware OSMO.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "tactile-sensing",
@@ -1289,6 +1325,8 @@
       "title_ko": "CaP-X: Code-as-Policy 로봇 조작 에이전트 벤치마크 및 개선 프레임워크",
       "summary_ko": "VLA 대신 코드 생성으로 로봇을 조작하는 Code-as-Policy 접근법을 체계적으로 벤치마킹하고, multi-turn 상호작용과 앙상블 추론으로 학습 없이 human-level 성능을 회복하는 CaP-Agent0를 제안했다.",
       "summary_en": "A systematic benchmark showing that Code-as-Policy agents can match human-level robot manipulation through multi-turn interaction and ensemble reasoning, without any task-specific training data.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "manipulation",
@@ -1355,6 +1393,8 @@
       "title_ko": "RoboClaw: 확장 가능한 장기 로봇 조작을 위한 에이전틱 프레임워크",
       "summary_ko": "VLA의 데이터 수집·학습·배포를 VLM 에이전트 하나로 통합하고, 순방향-역방향 액션 쌍(EAP)으로 자율 데이터 수집을 가능하게 하여 long-horizon 조작 태스크에서 성공률 25% 향상과 인간 개입 53.7% 감소를 달성했다.",
       "summary_en": "A VLM-driven agentic framework that unifies robot data collection, policy learning, and deployment. Entangled Action Pairs enable self-resetting autonomous data collection, achieving 25% better success on long-horizon tasks with 53.7% less human effort.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "manipulation",
@@ -1426,6 +1466,8 @@
       "title_ko": "Towards a Medical AI Scientist: 임상 자율 연구를 위한 AI 과학자",
       "summary_ko": "임상 의학 특화 AI 과학자 프레임워크로, 문헌 기반 아이디어 생성부터 실험 실행, 논문 작성까지 자동화한다. 171개 케이스에서 상용 LLM보다 높은 아이디어 품질을 보이고, 생성 논문이 MICCAI 수준에 근접한다.",
       "summary_en": "The first clinical medicine-specialized AI scientist framework that automates literature-based idea generation, experiment execution, and manuscript drafting. Outperforms commercial LLMs across 171 cases and generates papers approaching MICCAI quality.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "ai",
       "subfields": [
         "medical-ai",
@@ -1492,6 +1534,8 @@
       "title_ko": "Meta-Harness: LLM 하네스의 자동 최적화",
       "summary_ko": "LLM 하네스(프롬프트·컨텍스트 관리 코드)를 자동 탐색하는 Meta-Harness. 이전 후보의 소스코드·실행 트레이스·점수를 파일시스템에 축적하여, 텍스트 분류 +7.7점, IMO 수학 +4.7점, TerminalBench-2 최고 성능을 달성한다.",
       "summary_en": "An outer-loop system that automatically optimizes LLM harness code by giving proposer agents full access to prior candidates' source code, execution traces, and scores. Achieves +7.7 on text classification, +4.7 on IMO math, and top performance on TerminalBench-2.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "ai",
       "subfields": [
         "harness-engineering",
@@ -1553,6 +1597,8 @@
       "title_ko": "GEN-0: 물리적 상호작용으로 스케일링하는 Embodied Foundation Model",
       "summary_ko": "로보틱스에 예측 가능한 스케일링 법칙이 부재한 문제를, 270,000시간 이상의 실세계 조작 데이터로 학습한 embodied foundation model(GEN-0)로 해결. 7B 파라미터에서 위상 전이, power-law 스케일링, harmonic reasoning(사고와 행동의 동시 처리)을 입증했다.",
       "summary_en": "Robotics lacks predictable scaling laws unlike LLMs. GEN-0, an embodied foundation model trained on 270,000+ hours of real-world manipulation data, demonstrates phase transitions at 7B parameters, power-law scaling, and harmonic reasoning for simultaneous thinking and acting.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "foundation-model",
@@ -1621,6 +1667,8 @@
       "title_ko": "GEN-1: 범용 Physical AI의 상용화 임계점을 넘다",
       "summary_ko": "GEN-0의 64% 성공률로는 상용화가 불가능했던 로봇 파운데이션 모델의 한계를, 인간 웨어러블 데이터 사전학습과 추론 최적화로 99% 성공률·3배 속도를 달성하며 상용 가능성의 임계점을 넘은 GEN-1.",
       "summary_en": "Robot foundation models at GEN-0's 64% success rate couldn't reach commercial deployment. GEN-1 crosses the viability threshold with human wearable data pretraining and inference optimization, achieving 99% success rates and 3x speed.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "foundation-model",
@@ -1695,6 +1743,8 @@
       "title_ko": "Harnessing Claude's Intelligence: 에이전트 하네스 설계의 3가지 패턴",
       "summary_ko": "에이전트 프레임워크는 Claude의 한계에 대한 가정을 인코딩하지만, 모델이 진화하면 이 가정이 병목이 된다. Anthropic이 제시하는 3가지 패턴은 범용 도구 활용, 자기 오케스트레이션, 그리고 캐싱과 보안 경계를 통한 신중한 제약 설정이다.",
       "summary_en": "Agent frameworks encode assumptions about Claude's limitations that become performance bottlenecks as the model evolves. Anthropic presents three patterns: leverage general-purpose tools, enable self-orchestration, and set boundaries carefully through caching and security layers.",
+      "cover_image": "./cover-v2.webp",
+      "cover_thumb": "./cover-thumb-v2.webp",
       "domain": "ai",
       "subfields": [
         "agent-engineering",
@@ -1768,6 +1818,8 @@
       "title_ko": "매일 가볍게, 내 손으로 글을 쓰기로 했다",
       "summary_ko": "AI 시대에 직접 읽고 쓰는 일의 의미를 묻는다. 요약의 요약은 깊이를 주지 않고, 쓰기는 '생각의 정제 과정'이다.",
       "summary_en": "Questioning the value of reading and writing in the AI era. Summaries don't build depth; writing is a 'thought refining process.'",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "philosophy",
       "subfields": [
         "writing-practice",
@@ -1820,6 +1872,8 @@
       "title_ko": "레버리지의 공식이 바뀌었다",
       "summary_ko": "레버리지의 원천이 바뀌었다. 조직이 아니라 나 자신을 복제하는 시대, 병목은 곧 나의 수준이다.",
       "summary_en": "Leverage no longer comes from organizations. In an era of self-replication through AI agents, the bottleneck is you.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "philosophy",
       "subfields": [
         "ai-era-reflection",
@@ -1874,6 +1928,8 @@
       "title_ko": "Automated Alignment Researchers: LLM으로 확장 가능한 정렬 감독 구현하기",
       "summary_ko": "프론티어 모델이 빠르게 발전하면서 정렬 연구가 따라갈 수 있는지, 그리고 인간보다 똑똑해진 모델을 어떻게 감독할 수 있는지가 핵심 과제다. Anthropic은 9개의 Claude Opus 4.6 인스턴스(Automated Alignment Researchers)에게 샌드박스 환경과 협업 포럼을 제공하여 weak-to-strong supervision 연구를 수행하게 했으며, 인간 연구자의 PGR 0.23 대비 PGR 0.97을 달성했다.",
       "summary_en": "As frontier models advance rapidly, keeping alignment research in pace and overseeing models smarter than humans are critical challenges. Anthropic equipped nine Claude Opus 4.6 instances (Automated Alignment Researchers) with sandboxed workspaces and collaboration forums to conduct weak-to-strong supervision research, achieving PGR 0.97 compared to human researchers' PGR 0.23.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "ai",
       "subfields": [
         "alignment",
@@ -1942,6 +1998,8 @@
       "title_ko": "ACT-1: 로봇 데이터 없이 학습한 가정용 로봇 파운데이션 모델",
       "summary_ko": "로봇 조작 데이터 부족이 가정용 로봇의 핵심 병목이다. Sunday Robotics는 인간 손 형태에 맞춘 로봇 하드웨어(Embodiment Alignment)와 Skill Capture Glove를 통해 로봇 데이터 없이 파운데이션 모델 ACT-1을 학습시켰다. Table-to-Dishwasher 과제에서 33종의 고유 조작을 포함하는 초장기 자율 수행, 그리고 처음 방문한 Airbnb 환경에서의 제로샷 일반화를 시연했다.",
       "summary_en": "Lack of robot manipulation data is the key bottleneck for home robots. Sunday Robotics trained foundation model ACT-1 without any robot data by aligning robot hardware to human hand form (Embodiment Alignment) and using Skill Capture Gloves. They demonstrated ultra-long-horizon autonomous execution with 33 unique dexterous interactions in a Table-to-Dishwasher task, plus zero-shot generalization in unseen Airbnb homes.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "mobile-manipulation",
@@ -2016,6 +2074,8 @@
       "title_ko": "autoresearch: AI 에이전트가 밤새 ML 실험을 돌리는 시대",
       "summary_ko": "ML 연구의 반복적 실험-평가-개선 루프를 AI 에이전트에게 위임할 수 있을까? Karpathy의 autoresearch는 단일 train.py를 AI 에이전트가 자율적으로 수정·실험·평가하는 프레임워크로, 2일간 700개 실험을 자율 수행하여 GPT-2 학습 시간을 2.02시간에서 1.80시간으로 11% 단축했다.",
       "summary_en": "Can the iterative experiment-evaluate-improve loop of ML research be delegated to AI agents? Karpathy's autoresearch lets AI agents autonomously modify train.py, run experiments, and evaluate results. In 2 days and ~700 experiments, it reduced GPT-2 training time from 2.02h to 1.80h (11%) while finding real bugs that a 20-year expert had missed.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "ai",
       "subfields": [
         "autonomous-research",
@@ -2084,6 +2144,8 @@
       "title_ko": "Self-Driving Labs: AI 로봇이 과학 실험을 자율 수행하는 시대",
       "summary_ko": "AI와 로보틱스를 결합한 'self-driving lab'이 약물 설계, 재료 탐색, 화학 합성 등 과학 실험의 전체 루프를 자율적으로 수행하기 시작했다. Eve, Coscientist, AISF 등의 시스템이 가설 수립→실험 설계→수행→분석→반복의 과학적 방법을 기계 안에 구현하며, 일부 영역에서는 이미 인간 수준을 넘어선 '초인적' 실험 설계를 보이고 있다.",
       "summary_en": "Self-driving labs combining AI and robotics are beginning to autonomously perform the full loop of scientific experimentation — from hypothesis generation to experiment design, execution, and analysis. Systems like Eve, Coscientist, and AISF are implementing the scientific method inside machines, with some already showing 'superhuman' experiment design in certain domains.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "ai",
       "subfields": [
         "autonomous-lab",
@@ -2155,6 +2217,8 @@
       "title_ko": "코딩의 민주화, 다음은 연구의 민주화",
       "summary_ko": "코딩의 민주화 이후, 다음 차례는 학술 연구다. 문헌 조사부터 컴퓨터 실험, 피지컬 실험까지 AI가 단계적으로 대체하면서 지식이 값싸지는 시대가 온다.",
       "summary_en": "After the democratization of coding, academic research is next. From literature review to physical experiments, AI replaces researchers step by step — knowledge becomes as cheap as code.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "AI & Society",
       "subfields": [
         "research automation",
@@ -2232,6 +2296,8 @@
       "title_ko": "Habilis-β: 빠르고 오래가는 온디바이스 VLA 모델",
       "summary_ko": "기존 VLA 모델은 단일 시행 성공률만 측정하여 실제 배포 성능을 반영하지 못한다. Habilis-β는 Play 데이터 사전학습 + 순환 과제 후학습 + Rectified Flow 증류의 3단계 학습과 ESPADA 동작 압축으로, 시뮬레이션에서 TPH 572.6(π0.5 대비 4.75×), 실환경에서 TPH 124(π0.5 대비 6.53×)를 달성하며 온디바이스 실시간 제어를 실현했다.",
       "summary_en": "Existing VLA models are evaluated by single-trial success rates that fail to capture real deployment performance. Habilis-β proposes continuous operation metrics (TPH, MTBI) and achieves 572.6 TPH in simulation (4.75× vs π0.5) and 124 TPH in real-world (6.53× vs π0.5) through 3-stage training with play data pre-training, cyclic post-training, rectified flow distillation, and ESPADA motion compression — all running on-device.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "vla",
@@ -2309,6 +2375,8 @@
       "title_ko": "Diffusion Policy: 행동 확산으로 배우는 시각-운동 정책",
       "summary_ko": "로봇 행동 클로닝에서 멀티모달 행동 분포, 고차원 행동 공간, 학습 안정성이 핵심 과제다. Diffusion Policy는 로봇의 시각-운동 정책을 조건부 노이즈 제거 확산 과정으로 표현하여, 4개 벤치마크 15개 과제에서 기존 SOTA 대비 평균 46.9% 성능 향상을 달성했다.",
       "summary_en": "Multimodal action distributions, high-dimensional action spaces, and training stability are key challenges in robot behavior cloning. Diffusion Policy represents visuomotor policies as conditional denoising diffusion processes, achieving an average 46.9% improvement over existing SOTA across 15 tasks from 4 benchmarks.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "visuomotor-policy",
@@ -2384,6 +2452,8 @@
       "title_ko": "UMI: 야외 인간 시연을 로봇 정책으로 직접 전이하는 범용 조작 인터페이스",
       "summary_ko": "로봇 조작 데이터 수집은 비용이 높고 환경이 제한적이다. UMI는 핸드헬드 그리퍼 + GoPro 피쉬아이 카메라 + 사이드 미러로 야외(in-the-wild) 인간 시연 데이터를 수집하고, 레이턴시 매칭과 상대 궤적 표현을 통해 하드웨어 무관 로봇 정책을 학습한다. 컵 정리 100%, 동적 던지기 87.5%, 양손 옷 접기 70%, 설거지 70% 성공률과 처음 본 환경에서의 제로샷 일반화를 달성했다.",
       "summary_en": "Robot manipulation data collection is expensive and environment-limited. UMI uses hand-held grippers with GoPro fisheye cameras and side mirrors to collect in-the-wild human demonstrations, then learns hardware-agnostic robot policies via latency matching and relative trajectory representations. Achieved 100% on cup arrangement, 87.5% on dynamic tossing, 70% on bimanual cloth folding, 70% on dish washing, and zero-shot generalization to unseen environments.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "manipulation",
@@ -2461,6 +2531,8 @@
       "title_ko": "UMI-FT: 야외 시연에서 배우는 힘 인식 컴플라이언트 조작",
       "summary_ko": "접촉이 많은 조작에서 힘 조절은 필수적이지만, 상용 F/T 센서는 비싸고 크고 깨지기 쉽다. UMI-FT는 UMI 핸드헬드 그리퍼에 2g 크기의 CoinFT 6축 센서를 손가락마다 장착하여, RGB·깊이·자세와 함께 손가락별 렌치 데이터를 수집한다. 적응형 컴플라이언스 정책(ACP)은 위치 목표, 파지력, 강성을 동시에 예측하여, 화이트보드 닦기 92%, 호박 꼬치 꽂기 80%, 전구 삽입 95% 성공률을 달성했다.",
       "summary_en": "Force modulation is essential for contact-rich manipulation, but commercial F/T sensors are expensive, bulky, and fragile. UMI-FT mounts 2g CoinFT 6-axis sensors on each finger of a UMI hand-held gripper, capturing per-finger wrench alongside RGB, depth, and pose. The Adaptive Compliance Policy (ACP) simultaneously predicts position targets, grasp force, and stiffness, achieving 92% on whiteboard wiping, 80% on zucchini skewering, and 95% on lightbulb insertion.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "force-control",
@@ -2540,6 +2612,8 @@
       "title_ko": "EquiTac: 촉각 등변성을 활용한 잔차 회전 보정",
       "summary_ko": "시각-촉각 정책 학습에서 촉각 데이터 수집 비용이 높아 샘플 효율이 핵심 과제다. EquiTac은 인핸드 물체 회전의 고유한 SO(2) 대칭을 활용하여 촉각 표면 법선맵에서 등변 네트워크로 보정 회전을 예측한다. 10개 시연만으로 꽃꽂이 85~90% 성공률을 달성하며, 처음 본 방향에 대한 제로샷 일반화를 실현한다.",
       "summary_en": "High tactile data collection cost makes sample efficiency critical for visuotactile policy learning. EquiTac exploits the inherent SO(2) symmetry of in-hand object rotation by predicting corrective rotations from tactile surface normal maps via an equivariant network. Achieves 90% success on flower arrangement with only 10 demonstrations and zero-shot generalization to unseen orientations.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "tactile-sensing",
@@ -2614,6 +2688,8 @@
       "title_ko": "EgoScale: 자기중심 인간 데이터로 손재주 조작을 스케일링하다",
       "summary_ko": "로봇 손재주 조작에서 인간 행동 데이터를 어떻게 대규모로 활용할 수 있을까? EgoScale은 20,854시간의 행동 레이블 자기중심 비디오로 VLA 모델을 사전학습하고, 경량 정렬 인간-로봇 중간학습으로 전이하여 22-DoF 로봇 손에서 baseline 대비 평균 성공률 54% 향상을 달성했다. 데이터 규모와 성능 사이의 로그-선형 스케일링 법칙(R²=0.9983)을 발견했다.",
       "summary_en": "How can large-scale human behavioral data improve robotic dexterous manipulation? EgoScale pretrains a VLA model on 20,854 hours of action-labeled egocentric video and transfers via lightweight aligned human-robot mid-training, achieving 54% average success rate improvement on a 22-DoF robotic hand. Discovers a log-linear scaling law (R²=0.9983) between data volume and performance.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "dexterous-manipulation",
@@ -2694,6 +2770,8 @@
       "title_ko": "F-TAC Hand: 손 전면에 고해상도 촉각을 심어 적응형 인간 유사 파지 실현",
       "summary_ko": "0.1 mm 해상도 시각 기반 촉각 센서 17개를 손 표면 70%에 통합한 F-TAC Hand. 15 DoF 인간형 구조에 ADELM 파지 생성과 맥락 기반 제어를 결합해 600회 다중 물체 파지 실험에서 촉각 사용 시 100%, 미사용 시 53.5% 성공률을 달성했다.",
       "summary_en": "F-TAC Hand embeds 17 vision-based tactile sensors (0.1 mm resolution) across 70% of a 15-DoF biomimetic hand. Combined with ADELM grasp generation and context-sensitive motor control, it reaches 100% success on 600 multi-object grasping trials vs 53.5% without tactile.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "tactile-sensing",
@@ -2784,6 +2862,8 @@
       "title_ko": "TacPalm SoftHand: 고밀도 촉각 손바닥과 소프트 손가락의 협조",
       "summary_ko": "GelSight 계열 시각-촉각 손바닥(181,000 unit/cm²)과 3개의 2세그먼트 공압 소프트 손가락을 결합한 TacPalm SoftHand. 손바닥-손가락 협조로 컵 뚜껑 집기 100%, 직물 분류 97%, 블라인드 백 식별 88%, 동적 차주전자 자세 보정을 구현한다.",
       "summary_en": "TacPalm SoftHand pairs a GelSight-style visual-tactile palm (181,000 unit/cm²) with three two-segment pneumatic soft fingers. Palm-finger coordination delivers 100% cup-cap pickup, 97% fabric classification, 88% blind-bag identification, and dynamic teapot pose stabilization.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "soft-robotics",
@@ -2874,6 +2954,8 @@
       "title_ko": "촉각 분포의 역할: 인간형 손의 인핸드 조작 최적 센서 배치",
       "summary_ko": "Shadow Hand의 19개 촉각 영역에 대한 PPO 정책 ablation. 상부 손바닥(27.87 성공/3.1× 수렴)이 원위 지절(28.21 성공/3.2× 수렴)에 거의 필적하며, 물체 크기에 따라 최적 배치가 달라진다.",
       "summary_en": "PPO ablation across 19 tactile regions of the Shadow Hand. The upper palm (27.87 successes / 3.1× convergence) is nearly on par with distal phalanges (28.21 / 3.2×), and the optimal placement shifts with object size.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "robotics",
       "subfields": [
         "tactile-sensing",
@@ -2961,6 +3043,8 @@
       "title_ko": "조용한 청구서 - Bot에도 과금하는 Vercel",
       "summary_ko": "Vercel Pro에서 봇+Observability가 청구서를 부풀렸다. Cloudflare는 보안 스택이 계량기 앞에 있어서 구조적으로 싸다.",
       "summary_en": "Vercel Pro let bots + Observability inflate my bill. Cloudflare's security stack sits before the meter, so blocked traffic costs nothing.",
+      "cover_image": "./cover-v2.webp",
+      "cover_thumb": "./cover-thumb-v2.webp",
       "domain": "Infra & Cost",
       "subfields": [
         "serverless",
@@ -3014,6 +3098,8 @@
       "title_ko": "하루 만에 고친 SkinChat 인프라 부채",
       "summary_ko": "비개발자 혼자 하루 세션으로 SkinChat·SkinLog 인프라 부채 7건 해소. 응답 −37%/−32%, 90일 장애 복구, 보안 2건 봉쇄.",
       "summary_en": "A non-developer closed seven SkinChat/SkinLog infra debts in one session: latency −37%/−32%, 90-day outage recovered, two security holes sealed.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "Infra & Ops",
       "subfields": [
         "serverless",
@@ -3085,6 +3171,8 @@
       "title_ko": "개발자가 필요 없어졌다",
       "summary_ko": "묵은 기술 부채를 하루에 풀었다. Claude Code가. 개발자에게 부탁하지 않고 대표가 직접. 그래서 생긴 질문 — 앞으로 누가 개발자인가.",
       "summary_en": "A founder closed a years-old tech debt in one day with Claude Code. No developer needed. Which leaves the question — who counts as a developer now?",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "AI & Society",
       "subfields": [
         "AI agents",
@@ -3157,6 +3245,8 @@
       "title_ko": "스킬, 에이전트, 그리고 멀티에이전트 슬랙",
       "summary_ko": "에이전트와 Skill은 어떻게 다르고, 같은 정의를 Claude Code와 슬랙에서 어떻게 재사용할 수 있는가.",
       "summary_en": "How agents differ from skills, and how one definition can run in both Claude Code and Slack.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "ai-tooling",
       "subfields": [
         "agent-architecture",
@@ -3210,6 +3300,8 @@
       "title_ko": "Claude Code에서 Codex로 넘어가는 길",
       "summary_ko": "코드 양에 따라 재구현이냐 자동 이관이냐 — Claude Code → Codex 두 갈래.",
       "summary_en": "Refactor or auto-migrate: two paths from Claude Code to Codex.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "ai-tooling",
       "subfields": [
         "coding-agents",
@@ -3267,6 +3359,8 @@
       "title_ko": "개발 중독: 일이 아닌 일",
       "summary_ko": "세션 4개를 끝없이 돌리며 잔잔바리만 정리하는 자신을 본다. 10년 전 GPU를 쉬게 하지 못하던 강박과 같은 패턴 — 일이 아닌 일을 일이라 착각하지 말 것.",
       "summary_en": "Four sessions running, polishing rooms already spotless. Same compulsion as keeping GPUs running through Christmas a decade ago — don't mistake work-that-isn't for work.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
       "domain": "AI & Society",
       "subfields": [
         "AI productivity",
