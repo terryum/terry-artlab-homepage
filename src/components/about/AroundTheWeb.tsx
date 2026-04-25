@@ -3,6 +3,7 @@ import type { LocalizedMediaItem } from '@/lib/about';
 interface SectionLabels {
   around_the_web: string;
   talks: string;
+  interviews: string;
   writing: string;
   books: string;
   code: string;
@@ -11,6 +12,7 @@ interface SectionLabels {
 interface AroundTheWebProps {
   labels: SectionLabels;
   talks: LocalizedMediaItem[];
+  interviews: LocalizedMediaItem[];
   writing: LocalizedMediaItem[];
   books: LocalizedMediaItem[];
   code: LocalizedMediaItem[];
@@ -44,8 +46,16 @@ function MediaList({ heading, items }: { heading: string; items: LocalizedMediaI
   );
 }
 
-export default function AroundTheWeb({ labels, talks, writing, books, code }: AroundTheWebProps) {
-  const hasAny = talks.length + writing.length + books.length + code.length > 0;
+export default function AroundTheWeb({
+  labels,
+  talks,
+  interviews,
+  writing,
+  books,
+  code,
+}: AroundTheWebProps) {
+  const hasAny =
+    talks.length + interviews.length + writing.length + books.length + code.length > 0;
   if (!hasAny) return null;
   return (
     <section className="mt-10 pt-8 border-t border-line-default">
@@ -53,6 +63,7 @@ export default function AroundTheWeb({ labels, talks, writing, books, code }: Ar
         {labels.around_the_web}
       </h2>
       <MediaList heading={labels.talks} items={talks} />
+      <MediaList heading={labels.interviews} items={interviews} />
       <MediaList heading={labels.writing} items={writing} />
       <MediaList heading={labels.books} items={books} />
       <MediaList heading={labels.code} items={code} />

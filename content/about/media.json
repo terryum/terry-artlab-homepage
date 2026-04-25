@@ -5,31 +5,30 @@
   },
   "talks": [
     {
-      "title_ko": "Physical AI: 제조 현장으로 들어가는 로봇",
-      "title_en": "Physical AI: Robots on the Manufacturing Floor",
-      "source": "YouTube",
-      "year": "2025",
-      "url": "#"
+      "title_ko": "AI+Education: 밀레니얼을 위한 AI & Robotics Tech Lab, ART Lab의 도전",
+      "title_en": "AI+Education: ART Lab — An AI & Robotics Tech Lab for the Millennial Era",
+      "source": "KAIST School of Computing",
+      "url": "https://www.youtube.com/watch?v=7-ncAnCYDo8"
     },
+    {
+      "title_ko": "인공지능 기술 × 스킨케어 시장 = ART Lab",
+      "title_en": "AI Technology × the Skincare Market = ART Lab",
+      "source": "YouTube",
+      "url": "https://www.youtube.com/watch?v=3n3BNDMBj2g"
+    },
+    {
+      "title_ko": "ART Lab — 창업자가 직접 소개하는 회사",
+      "title_en": "ART Lab — Founder's Company Introduction",
+      "source": "ART Lab for Beauty AI",
+      "url": "https://www.youtube.com/watch?v=dQ7ydYFvoD8"
+    }
+  ],
+  "interviews": [
     {
       "title_ko": "AI 연구실에서 산업 현장까지 — 창업과 인수, 그 사이의 5년",
       "title_en": "From the Lab to the Factory Floor — Five Years Between Founding and Acquisition",
       "source": "EO Podcast",
       "year": "2024",
-      "url": "#"
-    },
-    {
-      "title_ko": "How AI Is Reshaping Cosmetics Manufacturing",
-      "title_en": "How AI Is Reshaping Cosmetics Manufacturing",
-      "source": "RSS Workshop Keynote",
-      "year": "2024",
-      "url": "#"
-    },
-    {
-      "title_ko": "딥러닝, 그 다음 10년",
-      "title_en": "Deep Learning: The Next Decade",
-      "source": "KAIST Lecture",
-      "year": "2023",
       "url": "#"
     }
   ],

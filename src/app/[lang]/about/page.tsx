@@ -75,12 +75,14 @@ export default async function AboutPage({
       <AroundTheWeb
         labels={{
           around_the_web: aboutLabels.around_the_web || 'Around the web',
-          talks: aboutLabels.talks || 'Talks & interviews',
+          talks: aboutLabels.talks || 'Talks',
+          interviews: aboutLabels.interviews || 'Interviews',
           writing: aboutLabels.writing || 'In writing',
           books: aboutLabels.books || 'Books & writing',
           code: aboutLabels.code || 'Code',
         }}
         talks={media.talks}
+        interviews={media.interviews}
         writing={media.writing}
         books={media.books}
         code={media.code}

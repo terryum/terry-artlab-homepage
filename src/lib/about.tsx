@@ -19,6 +19,7 @@ export interface MediaItem {
 export interface AboutMedia {
   currently: { ko: string; en: string };
   talks: MediaItem[];
+  interviews: MediaItem[];
   writing: MediaItem[];
   books: MediaItem[];
   code: MediaItem[];
@@ -34,6 +35,7 @@ export interface LocalizedMediaItem {
 export interface LocalizedAboutMedia {
   currently: string;
   talks: LocalizedMediaItem[];
+  interviews: LocalizedMediaItem[];
   writing: LocalizedMediaItem[];
   books: LocalizedMediaItem[];
   code: LocalizedMediaItem[];
@@ -88,6 +90,7 @@ function localizeItem(item: MediaItem, locale: Locale): LocalizedMediaItem {
 export async function getAboutMedia(locale: Locale): Promise<LocalizedAboutMedia> {
   const data = mediaJson as AboutMedia;
   const talks = (data.talks ?? []).map(i => localizeItem(i, locale));
+  const interviews = (data.interviews ?? []).map(i => localizeItem(i, locale));
   const writing = (data.writing ?? []).map(i => localizeItem(i, locale));
   const books = (data.books ?? []).map(i => localizeItem(i, locale));
   const code = (data.code ?? []).map(i => localizeItem(i, locale));
@@ -95,9 +98,11 @@ export async function getAboutMedia(locale: Locale): Promise<LocalizedAboutMedia
   return {
     currently,
     talks,
+    interviews,
     writing,
     books,
     code,
-    hasAnyMedia: talks.length + writing.length + books.length + code.length > 0,
+    hasAnyMedia:
+      talks.length + interviews.length + writing.length + books.length + code.length > 0,
   };
 }
