@@ -1,5 +1,6 @@
 import type { ProjectMeta } from '@/types/project';
 import projectsBundle from '../../projects/gallery/projects.json';
+import { findBySlug } from './find-by-slug';
 
 /** Returns every project in the bundle regardless of visibility. */
 export async function loadAllProjects(): Promise<ProjectMeta[]> {
@@ -24,5 +25,5 @@ export async function getAllProjects(): Promise<ProjectMeta[]> {
 }
 
 export async function getProject(slug: string): Promise<ProjectMeta | null> {
-  return (await loadAllProjects()).find((p) => p.slug === slug) ?? null;
+  return findBySlug(await loadAllProjects(), slug);
 }

@@ -4,6 +4,7 @@ import matter from 'gray-matter';
 import type { Post, PostMeta, FigureItem, Reference, PostRelation, AISummary } from '@/types/post';
 import { normalizeTagSlug } from '@/lib/tags';
 import { resolvePostAssetPath, resolvePostCdnPath } from '@/lib/paths';
+import { findBySlug } from '@/lib/find-by-slug';
 import { TAB_CONFIG } from '@/lib/site-config';
 import indexJson from '../../posts/index.json';
 import taxonomyJson from '../../posts/taxonomy.json';
@@ -444,7 +445,7 @@ export async function getAdjacentPosts(
   // Public post detail pages must stay fully SSG so Cloudflare serves pre-rendered HTML.
   const allPosts = await getAllPostsFromIndex(locale);
 
-  const currentMeta = allPosts.find(p => p.slug === slug);
+  const currentMeta = findBySlug(allPosts, slug);
   if (!currentMeta) return { prev: null, next: null };
 
   const currentTab = TAB_CONFIG.find(t => t.slug === currentMeta.content_type);

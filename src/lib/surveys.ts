@@ -1,5 +1,6 @@
 import type { SurveyMeta } from '@/types/survey';
 import surveysBundle from '../../projects/surveys/surveys.json';
+import { findBySlug } from './find-by-slug';
 
 /**
  * Internal raw view: includes private URLs (embed_url, links) for restricted
@@ -39,5 +40,5 @@ export async function getAllSurveys(): Promise<SurveyMeta[]> {
  * The caller must run requireReadAccess before handing embed_url to the iframe.
  */
 export async function getSurvey(slug: string): Promise<SurveyMeta | null> {
-  return loadSurveysRaw().find((s) => s.slug === slug) ?? null;
+  return findBySlug(loadSurveysRaw(), slug);
 }

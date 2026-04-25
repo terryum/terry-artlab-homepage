@@ -1,8 +1,5 @@
 import type { ResourceLink, BilingualText } from './common';
 
-/** @deprecated Use ResourceLink from common.ts instead */
-export type SurveyLink = ResourceLink;
-
 export interface SurveyMeta {
   slug: string;
   survey_number: number;

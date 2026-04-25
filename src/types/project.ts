@@ -1,8 +1,5 @@
 import type { ResourceLink, BilingualText } from './common';
 
-/** @deprecated Use ResourceLink from common.ts instead */
-export type ProjectLink = ResourceLink;
-
 export interface ProjectMeta {
   slug: string;
   project_number?: number;
