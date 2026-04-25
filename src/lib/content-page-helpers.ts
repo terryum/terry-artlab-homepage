@@ -151,20 +151,8 @@ export async function buildContentDetailProps(
     notFound();
   }
 
-  // Visibility check: group-scoped posts require authentication
-  // Dynamic import to avoid pulling cookies() into the static render path
-  if (post.meta.visibility === 'group') {
-    const { getAuthenticatedGroup, isAdminSession } = await import('@/lib/group-auth');
-    const isAdmin = await isAdminSession();
-    if (!isAdmin) {
-      const group = await getAuthenticatedGroup();
-      const allowed = post.meta.allowed_groups || [];
-      if (!group || !allowed.includes(group)) {
-        redirect(`/login?redirect=${encodeURIComponent(`/${lang}/posts/${slug}`)}`);
-      }
-    }
-  }
-
+  // Visibility (private/group) gating runs in src/middleware.ts so this
+  // helper can stay cookie-free and the route stays prerenderable.
   const dict = await getDictionary(lang);
   const { content } = await renderMDX(post.content, slug);
   const alternateLocale = await getPostAlternateLocale(slug, lang);

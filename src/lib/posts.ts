@@ -310,6 +310,12 @@ export async function postExistsForLocale(slug: string, locale: string): Promise
   // Workers runtime fallback (fs is unreliable on Cloudflare Workers).
   const bundled = postBodies[slug];
   if (bundled && (locale === 'ko' ? bundled.ko : bundled.en)) return true;
+  // Private/group bodies live in R2; index.json registers them in both locales.
+  const index = await loadIndexJson();
+  const entry = (index as { posts?: Array<Record<string, unknown>> }).posts?.find(
+    (p) => p.slug === slug
+  );
+  if (entry && ((entry.visibility as string) ?? 'public') !== 'public') return true;
   return false;
 }
 
@@ -323,7 +329,20 @@ export async function getPostAlternateLocale(
 }
 
 export async function getAllPostParams(): Promise<{ lang: string; slug: string }[]> {
-  const slugs = await getAllSlugs();
+  // Union of slugs that have a renderable body somewhere — local fs, the
+  // bundled ?raw map, or R2 (private/group). Including R2-only slugs is what
+  // lets generateStaticParams prerender private detail pages at build time
+  // (where MDX compilation runs on Node, not under Workers' eval ban).
+  const fsSlugs = await getAllSlugs();
+  const slugSet = new Set<string>(fsSlugs);
+  const index = await loadIndexJson();
+  const indexPosts = (index as { posts?: Array<Record<string, unknown>> }).posts ?? [];
+  for (const entry of indexPosts) {
+    const slug = entry.slug as string;
+    const visibility = (entry.visibility as string) ?? 'public';
+    if (visibility !== 'public') slugSet.add(slug);
+  }
+  const slugs = [...slugSet];
   const checks = slugs.flatMap((slug) =>
     (['ko', 'en'] as const).map(async (locale) => {
       const exists = await postExistsForLocale(slug, locale);

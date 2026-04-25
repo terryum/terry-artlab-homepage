@@ -2,17 +2,17 @@ import 'katex/dist/katex.min.css';
 import { notFound, redirect } from 'next/navigation';
 import { getPost, getAllPostParams, postExistsForLocale } from '@/lib/posts';
 import { buildContentDetailProps } from '@/lib/content-page-helpers';
-import { requireReadAccess } from '@/lib/access-guard';
 import ContentDetailPage from '@/components/ContentDetailPage';
 import type { Metadata } from 'next';
 
-// SSG for every public slug; on-demand for everything else. Public MDX
-// bodies are inlined at build via src/data/post-bodies.ts (?raw imports),
-// so the Workers runtime no longer needs fs. Private slugs (not in the
-// prerender manifest) fall through to the R2 fetch in getPostInner and
-// the visibility gate in buildContentDetailProps redirects to /login when
-// the reader doesn't have access.
-export const dynamicParams = true;
+// Pure SSG for every known slug (public + private/group). MDX is compiled at
+// build time on Node — Workers can't run `compileMDX` at runtime because the
+// MDX evaluator uses `new Function`, which Workers blocks. Visibility gating
+// for private/group slugs runs in middleware (src/middleware.ts) so the page
+// itself stays cookie-free and prerenderable. dynamicParams=false makes
+// unknown slugs 404 cleanly instead of falling into the OpenNext+Workers
+// hybrid-SSG crash documented in feedback_opennext_ssg_dynamicparams.
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   return getAllPostParams();
@@ -71,10 +71,6 @@ export default async function PostDetailPage({
   params: Promise<{ lang: string; slug: string }>;
 }) {
   const { lang, slug } = await params;
-  const gateMeta = (await getPost(slug, lang))?.meta;
-  if (gateMeta) {
-    await requireReadAccess(gateMeta, `/${lang}/posts/${slug}`);
-  }
   const { locale, post, content, alternateLocale, labels, relatedPosts, taxonomyBreadcrumb, adjacentPosts } =
     await buildContentDetailProps(lang, slug);
 

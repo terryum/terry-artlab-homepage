@@ -57,7 +57,10 @@ async function collectPosts() {
         continue;
       }
 
-      // Read titles from frontmatter
+      // Read titles from frontmatter when local MDX is present. Private/group
+      // posts keep their bodies in R2, so terryum-ai only has meta.json — those
+      // entries must carry title_ko/title_en/summary_ko/summary_en/card_summary_*
+      // directly so the index lookup doesn't fall back to the slug.
       const koFm = await readFrontmatter(path.join(catDir, slug, 'ko.mdx'));
       const enFm = await readFrontmatter(path.join(catDir, slug, 'en.mdx'));
 
@@ -65,10 +68,10 @@ async function collectPosts() {
         post_number: meta.post_number ?? null,
         slug: meta.slug || slug,
         content_type: meta.content_type || cat,
-        title_en: enFm.title || meta.source_title || slug,
-        title_ko: koFm.title || meta.source_title || slug,
-        summary_ko: koFm.card_summary || koFm.summary || null,
-        summary_en: enFm.card_summary || enFm.summary || null,
+        title_en: enFm.title || meta.title_en || meta.source_title || slug,
+        title_ko: koFm.title || meta.title_ko || meta.source_title || slug,
+        summary_ko: koFm.card_summary || koFm.summary || meta.card_summary_ko || meta.summary_ko || null,
+        summary_en: enFm.card_summary || enFm.summary || meta.card_summary_en || meta.summary_en || null,
         cover_image: meta.cover_image || null,
         cover_thumb: meta.cover_thumb || null,
         domain: meta.domain || null,
