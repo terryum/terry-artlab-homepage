@@ -1,16 +1,95 @@
 {
   "currently": {
-    "ko": "",
-    "en": ""
+    "ko": "현재는 글로벌 1위 화장품제조사, 코스맥스에서 AI & Robotics Tech 총괄을 맡고 있습니다.",
+    "en": "Currently leading AI & Robotics Tech at Cosmax, the world's #1 cosmetics manufacturer."
   },
-  "talks": [],
-  "writing": [],
-  "books": [],
+  "talks": [
+    {
+      "title_ko": "Physical AI: 제조 현장으로 들어가는 로봇",
+      "title_en": "Physical AI: Robots on the Manufacturing Floor",
+      "source": "YouTube",
+      "year": "2025",
+      "url": "#"
+    },
+    {
+      "title_ko": "AI 연구실에서 산업 현장까지 — 창업과 인수, 그 사이의 5년",
+      "title_en": "From the Lab to the Factory Floor — Five Years Between Founding and Acquisition",
+      "source": "EO Podcast",
+      "year": "2024",
+      "url": "#"
+    },
+    {
+      "title_ko": "How AI Is Reshaping Cosmetics Manufacturing",
+      "title_en": "How AI Is Reshaping Cosmetics Manufacturing",
+      "source": "RSS Workshop Keynote",
+      "year": "2024",
+      "url": "#"
+    },
+    {
+      "title_ko": "딥러닝, 그 다음 10년",
+      "title_en": "Deep Learning: The Next Decade",
+      "source": "KAIST Lecture",
+      "year": "2023",
+      "url": "#"
+    }
+  ],
+  "writing": [
+    {
+      "title_ko": "AI가 뷰티 제조를 바꾼다",
+      "title_en": "How AI Is Reshaping Beauty Manufacturing",
+      "source": "DBR",
+      "year": "2024",
+      "url": "#"
+    },
+    {
+      "title_ko": "Physical AI 창업가의 길 — 연구실에서 공장까지",
+      "title_en": "A Founder's Path Into Physical AI — From Lab to Factory",
+      "source": "Forbes Korea",
+      "year": "2024",
+      "url": "#"
+    },
+    {
+      "title_ko": "AI·로봇 융합이 만드는 다음 10년",
+      "title_en": "The Next Decade of AI–Robotics Convergence",
+      "source": "Maeil Business",
+      "year": "2023",
+      "url": "#"
+    }
+  ],
+  "books": [
+    {
+      "title_ko": "Physical AI 서베이 시리즈",
+      "title_en": "Physical AI Survey Series",
+      "source": "terryum.ai/surveys",
+      "year": "2024–",
+      "url": "/surveys"
+    },
+    {
+      "title_ko": "딥러닝 핸드북 (공저)",
+      "title_en": "Deep Learning Handbook (Co-author)",
+      "source": "Hanbit Media",
+      "year": "2022",
+      "url": "#"
+    }
+  ],
   "code": [
     {
       "title_ko": "github.com/terryum",
       "title_en": "github.com/terryum",
       "url": "https://github.com/terryum"
+    },
+    {
+      "title_ko": "awesome-deep-learning-papers",
+      "title_en": "awesome-deep-learning-papers",
+      "source": "GitHub",
+      "year": "16k+ stars",
+      "url": "https://github.com/terryum/awesome-deep-learning-papers"
+    },
+    {
+      "title_ko": "terry.artlab.ai — 사이드 사이트",
+      "title_en": "terry.artlab.ai — side site",
+      "source": "Cloudflare Pages",
+      "url": "https://terry.artlab.ai"
     }
   ]
 }
