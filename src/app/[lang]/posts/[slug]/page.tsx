@@ -5,14 +5,13 @@ import { requireReadAccess } from '@/lib/access-guard';
 import ContentDetailPage from '@/components/ContentDetailPage';
 import type { Metadata } from 'next';
 
-// Pure SSG: every public slug is in posts/index.json, generateStaticParams
-// returns them all, and the build prerenders to static HTML (Workers serves
-// the cached output). dynamicParams=false makes unknown slugs 404 cleanly
-// instead of triggering the OpenNext+Workers crash on hybrid SSG paths.
-// Re-introduce dynamicParams only after the runtime data path is Workers-safe
-// (fs.readFile in src/lib/posts.ts:206 fails on Workers — public MDX bodies
-// would need to move to R2 first).
-export const dynamicParams = false;
+// SSG for every public slug; on-demand for everything else. Public MDX
+// bodies are inlined at build via src/data/post-bodies.ts (?raw imports),
+// so the Workers runtime no longer needs fs. Private slugs (not in the
+// prerender manifest) fall through to the R2 fetch in getPostInner and
+// the visibility gate in buildContentDetailProps redirects to /login when
+// the reader doesn't have access.
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   return getAllPostParams();

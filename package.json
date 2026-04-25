@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node scripts/clean-next.mjs && next dev -p 3040",
-    "build": "node scripts/clean-next.mjs && next build",
-    "build:full": "node scripts/clean-next.mjs && node scripts/copy-post-images.mjs && node scripts/generate-thumbnails.mjs && next build",
+    "dev": "node scripts/clean-next.mjs && node scripts/generate-post-bodies.mjs && next dev -p 3040",
+    "build": "node scripts/clean-next.mjs && node scripts/generate-post-bodies.mjs && next build",
+    "build:full": "node scripts/clean-next.mjs && node scripts/copy-post-images.mjs && node scripts/generate-thumbnails.mjs && node scripts/generate-post-bodies.mjs && next build",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
@@ -15,7 +15,7 @@
     "test-graph": "node scripts/test-graph.mjs",
     "sync-obsidian": "node scripts/sync-obsidian.mjs",
     "sync-obsidian:init": "node scripts/sync-obsidian.mjs --init",
-    "build:cf": "node scripts/clean-next.mjs && opennextjs-cloudflare build",
+    "build:cf": "node scripts/clean-next.mjs && node scripts/generate-post-bodies.mjs && opennextjs-cloudflare build",
     "preview:cf": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy:cf": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"

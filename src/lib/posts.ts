@@ -8,6 +8,7 @@ import { TAB_CONFIG } from '@/lib/site-config';
 import indexJson from '../../posts/index.json';
 import taxonomyJson from '../../posts/taxonomy.json';
 import contentConfig from '../../content.config.json';
+import { postBodies } from '@/data/post-bodies';
 // Private bodies (visibility: private|group) live in R2 under `private/posts/<type>/<slug>/<lang>.mdx`.
 // Dynamic import to avoid pulling server-only into static paths.
 
@@ -198,7 +199,7 @@ export async function getPost(slug: string, locale: string): Promise<Post | null
 }
 
 async function getPostInner(slug: string, locale: string): Promise<Post | null> {
-  // Try filesystem first (public posts)
+  // 1. Filesystem path (build-time SSG; Node.js, fs works).
   const resolved = await resolvePostPath(slug);
   if (resolved) {
     const filePath = path.join(resolved.dir, `${locale}.mdx`);
@@ -214,11 +215,26 @@ async function getPostInner(slug: string, locale: string): Promise<Post | null> 
         content,
       };
     } catch {
-      // fall through to R2 private fetch
+      // fall through to bundled bodies
     }
   }
 
-  // Fallback: private body in R2 under private/posts/<type>/<slug>/<lang>.mdx.
+  // 2. Bundled post-bodies (Workers runtime; ?raw imports inlined at build).
+  const bundled = postBodies[slug];
+  if (bundled) {
+    const raw = locale === 'ko' ? bundled.ko : bundled.en;
+    if (raw) {
+      const { data: frontmatter, content } = matter(raw);
+      // meta.json isn't bundled (optional per CLAUDE.md). Frontmatter is the
+      // sole meta source on this path.
+      return {
+        meta: normalizeMeta(frontmatter, slug, bundled.type as PostCategory),
+        content,
+      };
+    }
+  }
+
+  // 3. Fallback: private body in R2 under private/posts/<type>/<slug>/<lang>.mdx.
   // Runs on Cloudflare Workers for non-prerendered slugs, so keep this path
   // edge-safe: strip the YAML frontmatter with a regex (gray-matter pulls in
   // Node-only deps that the Workers runtime may reject) and trust the index
@@ -283,14 +299,17 @@ export async function getLatestPosts(
 
 export async function postExistsForLocale(slug: string, locale: string): Promise<boolean> {
   const resolved = await resolvePostPath(slug);
-  if (!resolved) return false;
-  const filePath = path.join(resolved.dir, `${locale}.mdx`);
-  try {
-    await fs.access(filePath);
-    return true;
-  } catch {
-    return false;
+  if (resolved) {
+    const filePath = path.join(resolved.dir, `${locale}.mdx`);
+    try {
+      await fs.access(filePath);
+      return true;
+    } catch { /* fall through */ }
   }
+  // Workers runtime fallback (fs is unreliable on Cloudflare Workers).
+  const bundled = postBodies[slug];
+  if (bundled && (locale === 'ko' ? bundled.ko : bundled.en)) return true;
+  return false;
 }
 
 export async function getPostAlternateLocale(
