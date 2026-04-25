@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import TagChip from './TagChip';
+import LockBadge from './cards/LockBadge';
 import { normalizeTagSlug } from '@/lib/tags';
 import { TAB_TAG_SLUGS } from '@/lib/site-config';
 import { getDisplayTags, formatPostDate } from '@/lib/display';
@@ -75,13 +76,7 @@ export default function ContentCard({ post, locale, showTabTag, hidePubDate }: C
             {post.post_number != null && (
               <span className="font-mono text-xs text-text-muted mr-1.5">#{post.post_number}</span>
             )}
-            {post.visibility && post.visibility !== 'public' && (
-              <span
-                className="inline-block mr-1 text-text-muted"
-                title={post.visibility === 'group' ? `Restricted: ${(post.allowed_groups ?? []).join(', ')}` : 'Private'}
-                aria-label="Restricted content"
-              >🔒</span>
-            )}
+            <LockBadge visibility={post.visibility} allowedGroups={post.allowed_groups} />
             {post.title}
           </h3>
           {isReading && post.source_author && (

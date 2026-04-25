@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import LockBadge from './cards/LockBadge';
 import { isUnoptimizedImage } from '@/lib/card-utils';
 import type { SurveyMeta } from '@/types/survey';
 
@@ -60,16 +61,13 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
             <div>
               <span className="text-xs text-text-muted">
                 S{survey.survey_number}
-                {survey.visibility && survey.visibility !== 'public' && (
-                  <span
-                    className="ml-1.5 text-accent/70"
-                    title={
-                      survey.visibility === 'group'
-                        ? (locale === 'ko' ? '그룹 회원 전용' : 'Group members only')
-                        : (locale === 'ko' ? '비공개' : 'Private')
-                    }
-                  >· 🔒</span>
-                )}
+                <LockBadge
+                  visibility={survey.visibility}
+                  allowedGroups={survey.allowed_groups}
+                  locale={locale}
+                  className="ml-1.5 text-accent/70"
+                  prefix="· "
+                />
               </span>
               <h3 className="text-base font-semibold text-text-primary group-hover:text-accent transition-colors leading-snug mt-0.5">
                 {title}
@@ -122,16 +120,13 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
             <div>
               <span className="text-xs text-text-muted">
                 S{survey.survey_number}
-                {survey.visibility && survey.visibility !== 'public' && (
-                  <span
-                    className="ml-1.5 text-accent/70"
-                    title={
-                      survey.visibility === 'group'
-                        ? (locale === 'ko' ? '그룹 회원 전용' : 'Group members only')
-                        : (locale === 'ko' ? '비공개' : 'Private')
-                    }
-                  >· 🔒</span>
-                )}
+                <LockBadge
+                  visibility={survey.visibility}
+                  allowedGroups={survey.allowed_groups}
+                  locale={locale}
+                  className="ml-1.5 text-accent/70"
+                  prefix="· "
+                />
               </span>
               <h3 className="text-base font-semibold text-text-primary group-hover:text-accent transition-colors leading-snug mt-0.5">
                 {title}

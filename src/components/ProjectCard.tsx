@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import LockBadge from './cards/LockBadge';
 import { trackEvent } from '@/lib/analytics';
 import { formatCardDate, isUnoptimizedImage } from '@/lib/card-utils';
 import type { ProjectMeta } from '@/types/project';
@@ -100,13 +101,7 @@ export default function ProjectCard({ project, locale }: ProjectCardProps) {
         <div className="flex items-center justify-between gap-2">
           <h3 className="text-base font-semibold text-text-primary group-hover:text-accent transition-colors leading-snug">
             {project.project_number != null && <span className="text-xs text-text-muted font-normal mr-1">P{project.project_number}</span>}
-            {project.visibility && project.visibility !== 'public' && (
-              <span
-                className="inline-block mr-1 text-text-muted"
-                title={project.visibility === 'group' ? `Restricted: ${(project.allowed_groups ?? []).join(', ')}` : 'Private'}
-                aria-label="Restricted content"
-              >🔒</span>
-            )}
+            <LockBadge visibility={project.visibility} allowedGroups={project.allowed_groups} />
             {title}
           </h3>
           <time className="text-xs text-text-muted whitespace-nowrap flex-shrink-0">
