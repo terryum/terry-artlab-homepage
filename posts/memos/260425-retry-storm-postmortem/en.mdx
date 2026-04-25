@@ -1,110 +1,123 @@
 ---
 locale: "en"
 translation_of: "260425-retry-storm-postmortem:ko"
-title: "Why a Static Site Got Hit 50M Times — Retry Storm Postmortem"
-subtitle: "Static assets, defenseless against one bot"
-summary: "A static site received about 50 million edge requests over four days from a single IP, all to three broken images. Three faults compounded: stale figure paths, an `onerror` self-loop pattern that runs forever in headless environments, and external automation with no termination condition. A four-layer mitigation (code one-shot, file-existence validator, egress-free hosting migration, and alerts) reduces a recurrence to zero financial impact."
-card_summary: "50M hits on a static site — the product of an `onerror` self-loop and headless automation."
+title: "The Vercel Surge — The Culprit Was Someone at KAIST"
+subtitle: "What happened that day, and what was my fault"
+summary: "From April 9 to 12, about 50 million edge requests hit three broken images on a static survey site from a single KAIST IP — a retry storm. The trigger: stale figure paths multiplied by an `onerror` self-loop multiplied by external automation with no termination condition. One line of code, a hosting migration, and four alerts later, the same incident now costs zero."
+card_summary: "50M hits from a bot, and four days of not noticing — my fault."
 terrys_memo: ""
 ---
 
+> Where the previous post [[260419-vercel-quiet-bill]] covered "why the invoice ballooned (the structural problem)," this one covers "what exactly happened that day, and what was my responsibility (the postmortem of one incident)."
+
 ## TL;DR
 
-- Over four days, a single IP sent ~50M edge requests, all to three broken images on a static survey site.
-- Average ~150 RPS, ~17M requests per image — well outside any human-traffic signature.
-- Trigger = product of two faults: (1) figure paths pointing at the old per-chapter folder layout while files had been moved to flat naming (404 on every figure), (2) an `<img onerror="this.src='{src}'">` pattern that re-fires forever in headless environments.
-- The April invoice was the first signal — no real-time monitoring, no spend limit, no traffic-anomaly alert.
-- Mitigation in four layers: code one-shot, figure validator, migration to a Cloudflare egress-free host, and DDoS/Billing alerts.
+- April 9–12: a single KAIST IP sent **about 50 million edge requests** to three broken images on a single survey site — a retry storm.
+- The trigger was **two faults compounded**: (1) figure paths still pointing at the old per-chapter folders while files had moved to the new flat layout (404 on every figure), (2) the `<img onerror="this.src='{src}'">` pattern re-firing forever in headless environments.
+- External automation (an LLM agent's browsing tool or a headless crawler) looped on top of those two faults for four days.
+- I learned about it from the invoice — **the biggest problem was that I didn't even notice while the incident was still happening.**
+- Mitigation: one line of code (`this.onerror=null`), a figure-path validator, migration to Cloudflare, an Access-OTP rule to identify that IP if it returns, and billing/anomaly alerts.
+- KAIST stranger, if you're reading this — get in touch. You owe me a meal.
 
-## Context
+## What happened
 
-| Item | Value |
-|---|---|
-| Window | April 9–12 (4 days) |
-| Source | Single IP, consistent UA, same referrer |
-| Target | Three broken images on a static survey site |
-| Total requests | ~50M edge requests |
-| Average RPS | ~150 |
-| End | Self-terminated (likely session timeout) |
-| Diagnosis | Hosting platform: "not DDoS" |
+Vercel invoices were normally in the single-digit dollars. One day in April, an abnormal charge showed up. I asked for an analysis, and the answer came back:
 
-The signature is one automation tool hammering the same images on the same page — not a distributed attack. Likely an LLM agent's browsing tool or a headless crawler.
+> "I've taken a look at the traffic from April 8th → April 12th and do indeed see the spike you are referring to. After digging into the traffic, it appears that these requests originate from Korea Advanced Institute of Science and Technology and the majority of the requests are to image URLs. All these requests occur from the same IP address with the same referrer URL `https://survey-robot-hand-tactile-sensor.vercel.app/ko/ch10.html`."
 
-## Root cause
+Single IP, consistent UA, same referrer. Not a distributed attack — **one person (or one automation tool) hammering the same three images on the same page** for four days. Vercel's diagnosis was also "not DDoS."
 
-### Fault 1 — stale figure paths
+Average ~150 requests per second. Roughly 17 million per image. **Numbers no human or normal browser could produce.**
 
-When the survey was a standalone build, figures were placed under `assets/figures/ch{N}/fig_<slug>.png` per-chapter subfolders. Just before merging into the monorepo, the standard switched to flat naming (`ch{N}_<slug>_fig{N}.png`). Files moved, but a standalone build that still carried the old paths went out — every figure request 404'd.
+## Why it ran away — the product of two faults
 
-Generalization: static-asset path migrations leak stale URLs to production whenever the build pipeline lacks a figure-existence check.
+### Fault 1: figure paths pointing at files that no longer existed
 
-### Fault 2 — `onerror` self-loop
+When the survey was a standalone, figures lived under per-chapter subfolders like `assets/figures/ch10/fig_10_X_<slug>.png`. Just before merging into the monorepo, the standard switched to flat naming (`ch10_<slug>_fig<N>.png`). Files moved, but **a standalone build that still carried the old `ch10.html` paths went out as-is.** Result: every image request 404'd.
+
+### Fault 2: an `onerror` self-loop
+
+One line in `shared/build_site.py:479`:
 
 ```python
-# build script
 onerror="this.src='{src}'"
 ```
 
-The intent was a fallback to light-mode when the dark-mode image is missing. But when both dark and light are broken, normal browsers self-guard against re-firing on the same `src`; headless Chromium and some LLM-agent browser tools don't. After the first failure, `onerror` keeps re-requesting the same broken `src`.
+The intent was to fall back to the light-mode image when the dark-mode one was missing. But **when both dark and light were broken**, headless environments kept firing the `onerror` over and over. Normal browsers self-guard against re-firing on the same `src`; headless Chromium and some LLM-agent browser tools have weak or no such guard.
 
-Generalization: any `onerror` that reassigns `src` becomes a self-loop in headless environments unless the handler clears itself with `this.onerror=null` on first failure.
+### External automation on top of both faults
 
-### External automation's retry policy
+Someone at KAIST likely fed that chapter (embodiment retargeting) to an automation tool — something like "summarize this page" or "download all the figures here." The tool opened the page headlessly and tried to fetch the images, all 404. The retry policy ran without a termination condition. The natural ending around April 12 was probably a closed laptop or a session timeout.
 
-The tool opened the page headlessly, fetched the images, all 404. With no termination condition, the retry loop ran for four days — the typical "automation that doesn't know it's stuck" pattern, intent-free.
+**No malice apparent.** A textbook case of automation getting stuck and not knowing it was stuck. But that person's ignorance (or bad luck) shows up directly on my invoice — that's the cost structure of this new era.
 
-Generalization: LLM-agent browsing tools and headless crawlers commonly retry without termination. Whoever publishes the assets carries the burden of cutting the loop at the meter.
+## My fault
 
-## Mitigation (four layers)
+That the bill got to an abnormal amount before I noticed wasn't bad luck — it was an absence of design. Four points.
 
-### Layer 1 — code
+### 1. I didn't finish the migration cleanly
 
-- One-shot `onerror`: `this.onerror=null;this.src='{src}'` — first failure stops re-firing, capping requests per image at two.
-- Stronger validator: file-existence check for every figure referenced in the body, plus a build-fail rule on the old subfolder pattern.
-- PR-level enforcement via GitHub Actions — broken paths can no longer reach `main`.
+I moved the files when switching to flat naming, but **I didn't check whether deploys with the old paths were still live.** There was no build-step rule that asks "do all the figures this page references actually exist on disk?" If there had been, the April 8 deploy would never have shipped.
 
-### Layer 2 — hosting (move to egress-free)
+### 2. I didn't put a guard on `onerror`
 
-- Per-request billing → unmetered egress host. A recurrence yields zero invoice change.
-- Rate-Limiting Rule: block any IP hitting `/assets/` more than 100×/10s.
-- Bot Fight Mode + AI Bot Block: known LLM-crawler UAs (GPTBot/ClaudeBot/PerplexityBot, etc.) auto-challenged or blocked.
+`onerror="this.src='{src}'"` isn't fail-safe even when the intent is right. **The one line that nulls `onerror` on first failure was missing.** I tested only in normal browsers and never verified the behavior in a headless environment.
 
-### Layer 3 — awareness channel
+### 3. There was no automatic cap on cost
 
-- DDoS L7 alert: email on traffic anomaly.
-- Billing threshold alert: email at every $10 step.
-- The first signal must be email, not the invoice.
+Vercel keeps billing without limit once a payment method is on file. **Spend limit, billing alert, daily-threshold alert — none of them set up.** Putting a credit card on a Pro plan without automating "I trust this much, no further" is just being defenseless.
 
-### Layer 4 — identity tracking (optional)
+### 4. Monitoring was effectively nonexistent
 
-- An OTP rule scoped to that one IP: re-visits require email + 6-digit code. Zero impact on other users.
+Not a single email arrived through several days of traffic anomaly. **The invoice was the alert.** The billing cycle is monthly, so that's a signal as much as 30 days late. Not having a channel where I could see the anomaly myself is barely distinguishable from not monitoring at all.
 
-## Decision table — "static is not safe"
+If even one of these four had been in place, the incident would never have started, or would have been cut within an hour of starting.
 
-| Situation | Recommendation |
-|---|---|
-| Hosting bills per edge request | Operate as if bot traffic will be billed in full — spend limit is mandatory. |
-| Hosting offers unmetered egress | A recurrence is free of money loss, but anomaly alerts still need separate setup. |
-| Migrating asset paths | Mandate a build-step file-existence rule so stale paths cannot deploy. |
-| Using `onerror` for image fallback | Force `this.onerror=null` on first failure; verify the behavior under headless. |
-| Cloud service with stored billing method | All three of spend limit, billing alert, and anomaly alert must be set up — the invoice cannot be your awareness channel. |
+## What I've done since
 
-## Pitfalls
+Stacked layers. So that if one layer is bypassed, the next one catches.
 
-- Reassigning `src` from `onerror` works fine in normal browsers but loops forever in headless. Test the failure path in the same environment.
-- After a static-asset migration, deploying without verifying that old build artifacts still reference the old paths can publish stale URLs by itself.
-- A stored billing method with no automated cap is equivalent to no defense at all — without spend limits, daily thresholds, or anomaly alerts, the invoice is your first signal.
-- LLM-agent browsing tools commonly retry without termination. Intent-free "automation that doesn't know it's stuck" is a routine cause of cost runaway.
+### Code
 
-## ROI
+- **`shared/build_site.py:479` — one-shot `onerror`**: `this.onerror=null;this.src='{src}'`. Stops re-firing on the first failure. Caps requests per image at two.
+- **Stronger figure validation in `shared/validate.py`** — build fails on the appearance of an `assets/figures/ch{N}/` subfolder, plus a file-existence check for every figure referenced in the body.
+- **GitHub Actions PR validate** — the rules above run automatically at PR stage. Broken paths can't reach `main`.
 
-| Input | Output |
-|---|---|
-| One line of code (`this.onerror=null`), one validator rule, one hosting migration, four alerts | Zero loss on a recurrence, blocked within a minute, and email — not a 30-day billing cycle — as the first signal |
+### Infrastructure (Vercel → Cloudflare migration + Cloudflare protection)
 
-What changed isn't the strength of the defense but its existence. Before, there was none.
+- **Migrated to Cloudflare Pages** — unmetered egress. A recurrence of the same incident yields zero invoice change.
+- **WAF Rate Limiting Rule** — the same IP hitting `/assets/` more than 100 times in 10 seconds is blocked.
+- **Bot Fight Mode** — known bad-bot UAs are auto-challenged.
+- **AI Bot Block + AI Labyrinth** — GPTBot/ClaudeBot/PerplexityBot and other LLM crawlers blocked automatically; bots that try to evade get sent into a fake maze that burns their resources. **The most direct answer to the possibility that this incident was an LLM agent.**
+- **Browser Integrity Check + Email Obfuscation + automatic Polyfill replacement** — general hygiene.
+- **Security.txt + robots.txt content signals** — explicit opt-out from AI training.
+- **DDoS L7 alert + Billing $10 alert** — email, not the invoice, becomes the first signal.
+
+## So what changed
+
+If the same incident hits tomorrow:
+- **Zero financial loss** — Cloudflare egress is free.
+- **Traffic itself blocked within a minute** — Rate Limit + Bot Fight Mode + AI Bot Block, any one layer catches.
+- **Immediate awareness** — the DDoS L7 alert lands in email.
+- **Recurrence itself is hard** — broken figure paths are blocked at PR stage; the `onerror` self-loop is gone from the code.
+
+The change isn't "stronger defense" but **the existence of any defense at all**. Before, there was literally none.
+
+## Lesson — even static sites can run away on cost
+
+For a long time I believed static site = safe cost. HTML/CSS/JS as a bundle, no server code. A wrong assumption.
+
+- On a host that bills static assets by **edge request count**, one bot hitting 50 million times costs you 50 million times.
+- Automation tools (especially LLM-agent browsing tools) commonly retry **without a termination condition** — intent-free.
+- "Static site, therefore safe" needs to become "where is the egress meter?"
+- That Cloudflare offers free unmetered egress isn't just a pricing policy — it's **structural insurance against this kind of incident.**
+
+## The bigger picture
+
+The real message of this incident isn't to blame someone at KAIST. It's that **in an era where automation is universal, intent-free incidents become routine.** Machine ignorance (or a badly designed retry policy) generates more cost, more often, than human mistakes do.
+
+So every public asset has to start from four baseline assumptions: **infrastructure that cuts at the meter + automation-friendly fail-safes + automatic alerts + automatic billing caps.** This incident was an expensive tuition. (But, KAIST stranger — if you read this, do reach out and at least buy me that meal... it was a very pricey meal.. T.T)
 
 ## Related
 
-- [[260419-vercel-quiet-bill|Quiet Invoice — Vercel Bills for Bots Too]] — the cost-structure side of the same incident.
-- [[260420-one-day-recovery|One-Day Recovery — Paying Down SkinChat's Infra Debt]] — a single-session cleanup of accumulated infrastructure debt.
+- [[260419-vercel-quiet-bill]] — the same incident from a cost-structure angle. If this post is "the event," that one is "the structure."

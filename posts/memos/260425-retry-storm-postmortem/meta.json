@@ -7,9 +7,9 @@
   "status": "published",
   "content_type": "memos",
   "visibility": "public",
-  "tags": ["Memos", "infra", "postmortem", "retry-storm", "cloudflare", "static-site"],
+  "tags": ["Memos", "vercel", "cloudflare", "retry-storm", "llm-agent", "postmortem", "infra-cost"],
   "cover_image": "./cover.webp",
-  "reading_time_min": 4,
+  "reading_time_min": 8,
   "domain": "Infrastructure",
   "subfields": ["edge hosting", "cost engineering", "bot mitigation"],
   "key_concepts": [
@@ -18,18 +18,19 @@
     "static asset migration",
     "egress pricing",
     "headless automation",
-    "spend limit"
+    "spend limit",
+    "Cloudflare Pages",
+    "AI Bot Block"
   ],
   "idea_status": null,
   "related_posts": [
-    "260419-vercel-quiet-bill",
-    "260420-one-day-recovery"
+    "260419-vercel-quiet-bill"
   ],
   "ai_summary": {
-    "one_liner": "정적 사이트가 4일간 5천만 edge requests를 받은 사고의 사후 분석 — 두 결함의 곱이 외부 자동화의 종료 조건 없는 retry와 만났을 때.",
-    "problem": "단일 IP에서 정적 사이트의 깨진 이미지 3개에 4일간 약 5천만 edge requests가 들어왔다. 트리거는 figure 경로 stale + onerror 자기 루프 + 헤드리스 자동화의 retry policy.",
-    "solution": "사후 조치 4층 — 코드 단발화(`this.onerror=null`) + 빌드 단계 figure file-existence validator + Cloudflare egress 무료 호스팅 이전 + DDoS L7 / Billing $10 알림 셋업.",
-    "key_result": "동일 사고 재발 시 금전 손실 0, 1분 내 차단, 청구 주기 30일이 아닌 이메일 즉시 인지.",
+    "one_liner": "4월 9–12일 KAIST 단일 IP에서 5천만 edge requests를 받은 사고의 사후 복기 — 두 결함의 곱과 종료 조건 없는 외부 자동화.",
+    "problem": "단일 IP에서 정적 사이트의 깨진 이미지 3개에 4일간 약 5천만 edge requests가 들어왔다. figure 경로 stale + onerror 자기 루프 + 헤드리스 자동화의 retry policy가 곱해진 결과.",
+    "solution": "코드 측: onerror 단발화(`this.onerror=null`) + figure file-existence validator + GitHub Actions PR validate. 인프라 측: Cloudflare Pages 이전 + WAF Rate Limit + Bot Fight Mode + AI Bot Block + AI Labyrinth + DDoS L7/Billing 알림.",
+    "key_result": "동일 사고 재발 시 금전 손실 0, 1분 내 차단, 청구서가 아닌 이메일이 첫 인지 채널로 전환.",
     "limitations": []
   },
   "figures": [],
