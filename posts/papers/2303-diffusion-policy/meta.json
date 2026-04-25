@@ -108,5 +108,7 @@
   "tables": [],
   "terrys_memo": "",
   "newsletter_eligible": false,
-  "featured": false
+  "featured": false,
+  "arxiv_id": "2303.04137",
+  "bibtex_key": "chi2023diffusion"
 }

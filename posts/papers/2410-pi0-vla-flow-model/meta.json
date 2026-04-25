@@ -172,5 +172,7 @@
   "featured": false,
   "starred": true,
   "taxonomy_primary": "robotics/brain/vla",
-  "cover_figure_number": 3
+  "cover_figure_number": 3,
+  "arxiv_id": "2410.24164",
+  "bibtex_key": "black2024pi0"
 }

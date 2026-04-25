@@ -170,5 +170,6 @@
   ],
   "newsletter_eligible": false,
   "featured": false,
-  "cover_figure_number": 1
+  "cover_figure_number": 1,
+  "arxiv_id": "2504.16649"
 }

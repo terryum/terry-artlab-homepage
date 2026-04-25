@@ -113,5 +113,6 @@
   "newsletter_eligible": false,
   "featured": false,
   "taxonomy_primary": "robotics/hand/tactile",
-  "cover_figure_number": 1
+  "cover_figure_number": 1,
+  "doi": "10.1038/s41467-024-50101-w"
 }

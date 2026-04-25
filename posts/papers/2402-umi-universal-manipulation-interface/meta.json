@@ -117,5 +117,7 @@
   "thumb_source": "./fig-7.png",
   "terrys_memo": "",
   "newsletter_eligible": false,
-  "featured": false
+  "featured": false,
+  "arxiv_id": "2402.10329",
+  "bibtex_key": "ha2024umi"
 }

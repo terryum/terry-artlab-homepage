@@ -150,5 +150,6 @@
   "newsletter_eligible": false,
   "featured": false,
   "taxonomy_primary": "ai/agent",
-  "cover_figure_number": 12
+  "cover_figure_number": 12,
+  "arxiv_id": "2502.18864"
 }

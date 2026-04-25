@@ -126,5 +126,6 @@
   "newsletter_eligible": false,
   "featured": false,
   "taxonomy_primary": "robotics/arm/force-control",
-  "cover_figure_number": 3
+  "cover_figure_number": 3,
+  "arxiv_id": "2501.10356"
 }

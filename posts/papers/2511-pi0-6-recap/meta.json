@@ -155,5 +155,6 @@
   "newsletter_eligible": false,
   "featured": false,
   "taxonomy_primary": "robotics/brain/vla",
-  "cover_figure_number": 3
+  "cover_figure_number": 3,
+  "arxiv_id": "2511.14759"
 }
