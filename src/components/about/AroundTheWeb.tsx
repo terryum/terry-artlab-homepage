@@ -7,6 +7,7 @@ interface SectionLabels {
   writing: string;
   books: string;
   code: string;
+  lang_other: string; // shown after a title when the content's language differs from view locale
 }
 
 interface AroundTheWebProps {
@@ -18,7 +19,15 @@ interface AroundTheWebProps {
   code: LocalizedMediaItem[];
 }
 
-function MediaList({ heading, items }: { heading: string; items: LocalizedMediaItem[] }) {
+function MediaList({
+  heading,
+  items,
+  langOther,
+}: {
+  heading: string;
+  items: LocalizedMediaItem[];
+  langOther: string;
+}) {
   if (items.length === 0) return null;
   return (
     <div className="mb-5">
@@ -34,6 +43,9 @@ function MediaList({ heading, items }: { heading: string; items: LocalizedMediaI
             >
               {item.title}
             </a>
+            {item.isOtherLang && (
+              <span className="text-text-muted ml-1 text-xs">{langOther}</span>
+            )}
             {(item.source || item.year) && (
               <span className="text-text-muted ml-2 text-xs">
                 {[item.source, item.year].filter(Boolean).join(' · ')}
@@ -62,11 +74,11 @@ export default function AroundTheWeb({
       <h2 className="text-base font-[540] text-text-primary tracking-tight mb-5">
         {labels.around_the_web}
       </h2>
-      <MediaList heading={labels.talks} items={talks} />
-      <MediaList heading={labels.interviews} items={interviews} />
-      <MediaList heading={labels.writing} items={writing} />
-      <MediaList heading={labels.books} items={books} />
-      <MediaList heading={labels.code} items={code} />
+      <MediaList heading={labels.talks}      items={talks}      langOther={labels.lang_other} />
+      <MediaList heading={labels.interviews} items={interviews} langOther={labels.lang_other} />
+      <MediaList heading={labels.writing}    items={writing}    langOther={labels.lang_other} />
+      <MediaList heading={labels.books}      items={books}      langOther={labels.lang_other} />
+      <MediaList heading={labels.code}       items={code}       langOther={labels.lang_other} />
     </section>
   );
 }

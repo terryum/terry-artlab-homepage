@@ -17,7 +17,8 @@
     "interviews": "Interviews",
     "writing": "In writing",
     "books": "Books & writing",
-    "code": "Code"
+    "code": "Code",
+    "lang_other": "(영어)"
   },
   "posts_index": {
     "title": "Posts",

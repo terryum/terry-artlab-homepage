@@ -14,6 +14,7 @@ export interface MediaItem {
   source?: string; // e.g. "YouTube", "Podcast", magazine name
   year?: string | number;
   url: string;
+  content_lang?: 'ko' | 'en'; // language of the content itself; marker shown when it differs from view locale
 }
 
 export interface AboutMedia {
@@ -30,6 +31,7 @@ export interface LocalizedMediaItem {
   source?: string;
   year?: string;
   url: string;
+  isOtherLang: boolean; // content language differs from current view locale
 }
 
 export interface LocalizedAboutMedia {
@@ -84,6 +86,7 @@ function localizeItem(item: MediaItem, locale: Locale): LocalizedMediaItem {
     source: item.source,
     year: item.year != null ? String(item.year) : undefined,
     url: item.url,
+    isOtherLang: item.content_lang != null && item.content_lang !== locale,
   };
 }
 

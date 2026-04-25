@@ -80,6 +80,7 @@ export default async function AboutPage({
           writing: aboutLabels.writing || 'In writing',
           books: aboutLabels.books || 'Books & writing',
           code: aboutLabels.code || 'Code',
+          lang_other: aboutLabels.lang_other || (lang === 'ko' ? '(영어)' : '(Korean)'),
         }}
         talks={media.talks}
         interviews={media.interviews}
