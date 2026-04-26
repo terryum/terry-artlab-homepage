@@ -68,6 +68,8 @@ interface CommentNotificationInput {
   content: string;
   status: 'visible' | 'hidden' | 'spam';
   ipHash?: string;
+  parentAuthor?: string;
+  parentExcerpt?: string;
 }
 
 function siteUrl(): string {
@@ -88,37 +90,48 @@ export async function notifyNewComment(input: CommentNotificationInput): Promise
   if (!adminEmail) return;
 
   const postLabel = input.postTitle ? `${input.postTitle} (${input.slug})` : input.slug;
-  const flag = input.status === 'spam' ? '[SPAM] ' : input.status === 'hidden' ? '[HIDDEN] ' : '';
-  const subject = `${flag}[terryum.ai] 새 댓글: ${postLabel} — ${input.authorName}`;
+  const isReply = !!input.parentAuthor;
+  const statusFlag = input.status === 'spam' ? '[SPAM] ' : input.status === 'hidden' ? '[HIDDEN] ' : '';
+  const replyFlag = isReply ? '[REPLY] ' : '';
+  const heading = isReply ? `↳ ${input.parentAuthor}님께 답글` : '새 댓글이 등록되었습니다.';
+  const subject = `${statusFlag}${replyFlag}[terryum.ai] ${isReply ? '답글' : '새 댓글'}: ${postLabel} — ${input.authorName}`;
 
   const postUrl = `${siteUrl()}/posts/${input.slug}`;
   const adminUrl = `${siteUrl()}/admin/comments`;
 
   const text = [
-    `새 댓글이 등록되었습니다.`,
+    heading,
     ``,
     `Post:    ${postLabel}`,
     `URL:     ${postUrl}`,
     `Status:  ${input.status}`,
     `Author:  ${input.authorName} <${input.authorEmail}>`,
     input.ipHash ? `IP hash: ${input.ipHash}` : null,
+    isReply ? `` : null,
+    isReply ? `--- 부모 댓글 (${input.parentAuthor}) ---` : null,
+    isReply ? input.parentExcerpt : null,
+    isReply ? `------------` : null,
     ``,
     `--- 본문 ---`,
     input.content,
     `------------`,
     ``,
     `모더레이션: ${adminUrl}`,
-  ].filter(Boolean).join('\n');
+  ].filter((v) => v !== null && v !== undefined).join('\n');
 
   const html = `
     <div style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;max-width:600px">
-      <h2 style="margin:0 0 12px">새 댓글이 등록되었습니다</h2>
+      <h2 style="margin:0 0 12px">${isReply ? `↳ ${escapeHtml(input.parentAuthor!)}님께 답글` : '새 댓글이 등록되었습니다'}</h2>
       <table style="font-size:14px;border-collapse:collapse">
         <tr><td style="padding:4px 8px;color:#666">Post</td><td style="padding:4px 8px"><a href="${escapeHtml(postUrl)}">${escapeHtml(postLabel)}</a></td></tr>
         <tr><td style="padding:4px 8px;color:#666">Status</td><td style="padding:4px 8px">${escapeHtml(input.status)}</td></tr>
         <tr><td style="padding:4px 8px;color:#666">Author</td><td style="padding:4px 8px">${escapeHtml(input.authorName)} &lt;${escapeHtml(input.authorEmail)}&gt;</td></tr>
         ${input.ipHash ? `<tr><td style="padding:4px 8px;color:#666">IP hash</td><td style="padding:4px 8px;font-family:monospace">${escapeHtml(input.ipHash)}</td></tr>` : ''}
       </table>
+      ${isReply && input.parentExcerpt ? `
+      <p style="font-size:13px;color:#666;margin-top:12px;margin-bottom:4px">부모 댓글 — ${escapeHtml(input.parentAuthor!)}</p>
+      <blockquote style="border-left:3px solid #ddd;padding:6px 12px;margin:0;color:#666;font-size:13px;white-space:pre-wrap">${escapeHtml(input.parentExcerpt)}</blockquote>
+      ` : ''}
       <pre style="background:#f6f6f6;padding:12px;border-radius:6px;white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:14px;margin-top:12px">${escapeHtml(input.content)}</pre>
       <p style="font-size:13px;color:#666">
         <a href="${escapeHtml(adminUrl)}">모더레이션 페이지에서 검토</a>

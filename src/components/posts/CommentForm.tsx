@@ -8,6 +8,11 @@ interface Props {
   slug: string;
   locale: Locale;
   onCreated: (comment: PublicComment) => void;
+  parentId?: string;
+  parentAuthor?: string;
+  onCancel?: () => void;
+  compact?: boolean;
+  autoFocus?: boolean;
 }
 
 const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
@@ -48,7 +53,16 @@ function loadTurnstileScript(): Promise<void> {
   });
 }
 
-export default function CommentForm({ slug, locale, onCreated }: Props) {
+export default function CommentForm({
+  slug,
+  locale,
+  onCreated,
+  parentId,
+  parentAuthor,
+  onCancel,
+  compact = false,
+  autoFocus = false,
+}: Props) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [content, setContent] = useState('');
@@ -59,6 +73,11 @@ export default function CommentForm({ slug, locale, onCreated }: Props) {
   const turnstileTokenRef = useRef<string>('');
   const widgetIdRef = useRef<string | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const firstFieldRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (autoFocus) firstFieldRef.current?.focus();
+  }, [autoFocus]);
 
   useEffect(() => {
     if (!SITE_KEY) return;
@@ -111,6 +130,7 @@ export default function CommentForm({ slug, locale, onCreated }: Props) {
           content,
           website,
           turnstileToken: turnstileTokenRef.current,
+          parentId: parentId ?? null,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -143,21 +163,46 @@ export default function CommentForm({ slug, locale, onCreated }: Props) {
   };
 
   const labels = locale === 'ko'
-    ? { name: '이름', email: '이메일', content: '댓글', submit: '등록', emailHint: '이메일은 공개되지 않습니다.' }
-    : { name: 'Name', email: 'Email', content: 'Comment', submit: 'Submit', emailHint: 'Your email will not be shown publicly.' };
+    ? {
+        name: '이름',
+        email: '이메일',
+        content: parentId ? '답글' : '댓글',
+        submit: parentId ? '답글 등록' : '등록',
+        cancel: '취소',
+        emailHint: '이메일은 공개되지 않습니다.',
+        replyTo: (n: string) => `↳ ${n}님께 답글`,
+      }
+    : {
+        name: 'Name',
+        email: 'Email',
+        content: parentId ? 'Reply' : 'Comment',
+        submit: parentId ? 'Reply' : 'Submit',
+        cancel: 'Cancel',
+        emailHint: 'Your email will not be shown publicly.',
+        replyTo: (n: string) => `↳ Reply to ${n}`,
+      };
+
+  const containerClass = compact ? 'space-y-2 mt-2' : 'space-y-3 mt-6';
+  const inputClass =
+    'mt-1 px-3 py-2 text-sm border border-line-default rounded-md bg-bg-primary text-text-primary';
+  const textareaRows = compact ? 3 : 4;
 
   return (
-    <form onSubmit={submit} className="space-y-3 mt-6">
+    <form onSubmit={submit} className={containerClass}>
+      {parentId && parentAuthor && (
+        <p className="text-xs text-text-muted">{labels.replyTo(parentAuthor)}</p>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <label className="flex flex-col text-xs text-text-secondary">
           {labels.name}
           <input
+            ref={firstFieldRef}
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
             maxLength={40}
-            className="mt-1 px-3 py-2 text-sm border border-line-default rounded-md bg-bg-primary text-text-primary"
+            className={inputClass}
           />
         </label>
         <label className="flex flex-col text-xs text-text-secondary">
@@ -167,7 +212,7 @@ export default function CommentForm({ slug, locale, onCreated }: Props) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="mt-1 px-3 py-2 text-sm border border-line-default rounded-md bg-bg-primary text-text-primary"
+            className={inputClass}
           />
           <span className="mt-1 text-[11px] text-text-muted">{labels.emailHint}</span>
         </label>
@@ -181,8 +226,8 @@ export default function CommentForm({ slug, locale, onCreated }: Props) {
           required
           minLength={5}
           maxLength={2000}
-          rows={4}
-          className="mt-1 px-3 py-2 text-sm border border-line-default rounded-md bg-bg-primary text-text-primary resize-y"
+          rows={textareaRows}
+          className={`${inputClass} resize-y`}
         />
       </label>
 
@@ -205,13 +250,25 @@ export default function CommentForm({ slug, locale, onCreated }: Props) {
       {error && <p className="text-sm text-red-500">{error}</p>}
       {success && <p className="text-sm text-emerald-600">{success}</p>}
 
-      <button
-        type="submit"
-        disabled={submitting}
-        className="px-4 py-2 text-sm rounded-md bg-accent text-white hover:opacity-90 disabled:opacity-50"
-      >
-        {submitting ? (locale === 'ko' ? '등록 중…' : 'Submitting…') : labels.submit}
-      </button>
+      <div className="flex items-center gap-2">
+        <button
+          type="submit"
+          disabled={submitting}
+          className="px-4 py-2 text-sm rounded-md bg-accent text-white hover:opacity-90 disabled:opacity-50"
+        >
+          {submitting ? (locale === 'ko' ? '등록 중…' : 'Submitting…') : labels.submit}
+        </button>
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={submitting}
+            className="px-4 py-2 text-sm rounded-md border border-line-default text-text-secondary hover:text-accent hover:border-accent transition-colors disabled:opacity-50"
+          >
+            {labels.cancel}
+          </button>
+        )}
+      </div>
     </form>
   );
 }
