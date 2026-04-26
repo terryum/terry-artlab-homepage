@@ -8,6 +8,29 @@ import { execSync } from 'child_process';
 // (font-manifest, pages-manifest, .nft.json, standalone copy, …) that look
 // like a flaky build. Detect and bail out with the matched PIDs instead.
 try {
+  // Build the set of ancestor PIDs (self → parent → … → init). pgrep -f
+  // matches against the FULL cmdline, so a parent shell invoked as
+  // `sh -c "node scripts/clean-next.mjs && … && opennextjs-cloudflare build"`
+  // matches our pattern via its own arguments — that's a false positive on
+  // CI where `npm run build:cf` is the wrapper. Exclude the entire ancestor
+  // chain instead of only `process.pid`.
+  const ancestors = new Set([process.pid]);
+  let cur = process.pid;
+  for (let i = 0; i < 16; i++) {
+    let ppid;
+    try {
+      ppid = parseInt(
+        execSync(`ps -o ppid= -p ${cur}`, { stdio: ['ignore', 'pipe', 'ignore'] })
+          .toString()
+          .trim(),
+        10,
+      );
+    } catch { break; }
+    if (!ppid || ppid <= 1 || ancestors.has(ppid)) break;
+    ancestors.add(ppid);
+    cur = ppid;
+  }
+
   const conflicts = execSync(
     'pgrep -fl "opennextjs-cloudflare|next build|next-server|wrangler r2 object put|wrangler deploy" || true',
     { stdio: ['ignore', 'pipe', 'ignore'] },
@@ -15,7 +38,12 @@ try {
     .toString()
     .split('\n')
     .map((l) => l.trim())
-    .filter((l) => l && !l.includes('clean-next.mjs') && !l.includes(`pid ${process.pid}`));
+    .filter((l) => {
+      if (!l || l.includes('clean-next.mjs')) return false;
+      const m = l.match(/^(\d+)\s/);
+      if (m && ancestors.has(parseInt(m[1], 10))) return false;
+      return true;
+    });
   if (conflicts.length) {
     console.error('[clean-next] another build/deploy is still running:');
     for (const line of conflicts) console.error('  ' + line);
