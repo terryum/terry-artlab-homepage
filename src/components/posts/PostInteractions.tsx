@@ -11,9 +11,15 @@ interface Props {
 
 export default function PostInteractions({ slug, locale }: Props) {
   return (
-    <section className="mt-10 pt-8 border-t border-line-default" aria-label={locale === 'ko' ? '독자 반응' : 'Reader interactions'}>
-      <LikeButton slug={slug} locale={locale} />
-      <CommentSection slug={slug} locale={locale} />
+    <section
+      className="mt-10 pt-8 border-t border-line-default"
+      aria-label={locale === 'ko' ? '독자 반응' : 'Reader interactions'}
+    >
+      <CommentSection
+        slug={slug}
+        locale={locale}
+        actionPrefix={<LikeButton slug={slug} locale={locale} />}
+      />
     </section>
   );
 }
