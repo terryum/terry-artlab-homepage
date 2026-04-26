@@ -52,6 +52,8 @@ jobs:
           NEXT_PUBLIC_SUBSTACK_EN_URL: ${{ secrets.NEXT_PUBLIC_SUBSTACK_EN_URL }}
           NEXT_PUBLIC_SUBSTACK_KO_URL: ${{ secrets.NEXT_PUBLIC_SUBSTACK_KO_URL }}
           NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
+          # Turnstile sitekey is public by design — read by the client to mount the widget.
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: 0x4AAAAAADD6Jt6VjEQHSG6F
         run: npm run build:cf
 
       - name: Verify prerender manifest covers all public posts
