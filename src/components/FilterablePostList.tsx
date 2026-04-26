@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import TagFilterBar from './TagFilterBar';
-import ContentCard from './ContentCard';
+import ContentCard, { type PostCardStats } from './ContentCard';
 import SearchBar from './SearchBar';
 import Pagination from './posts/Pagination';
 import { useFilterableUrlState } from './posts/useFilterableUrlState';
@@ -71,6 +71,24 @@ function FilterablePostListInner({
 
   const [mobileTaxonomyOpen, setMobileTaxonomyOpen] = useState(false);
   const [searchActive, setSearchActive] = useState(false);
+  const [statsMap, setStatsMap] = useState<Record<string, PostCardStats> | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/public/post-stats', { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = (await res.json()) as { stats: Record<string, PostCardStats> };
+        if (!cancelled) setStatsMap(data.stats ?? null);
+      } catch {
+        /* silent — stats are non-critical */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Reset tags, starred, taxonomy when tab changes.
   const prevScopeRef = useRef(selectedTab);
@@ -255,7 +273,12 @@ function FilterablePostListInner({
               {finalPosts
                 .slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
                 .map((post) => (
-                  <ContentCard key={post.post_id} post={post} locale={locale} />
+                  <ContentCard
+                    key={post.post_id}
+                    post={post}
+                    locale={locale}
+                    stats={statsMap?.[post.slug]}
+                  />
                 ))}
               <Pagination
                 currentPage={currentPage}

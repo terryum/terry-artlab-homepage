@@ -7,11 +7,44 @@ import { getDisplayTags, formatPostDate } from '@/lib/display';
 import tagsData from '@/data/tags.json';
 import type { PostMeta } from '@/types/post';
 
+export interface PostCardStats {
+  likes: number;
+  comments: number;
+  views: number;
+}
+
 interface ContentCardProps {
   post: PostMeta;
   locale: string;
   showTabTag?: boolean;
   hidePubDate?: boolean;
+  stats?: PostCardStats;
+}
+
+function StatsRow({ stats }: { stats: PostCardStats }) {
+  return (
+    <div className="flex items-center gap-3 mt-2 text-xs text-text-muted tabular-nums">
+      <span className="inline-flex items-center gap-1" aria-label={`${stats.likes} likes`}>
+        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z" />
+        </svg>
+        {stats.likes}
+      </span>
+      <span className="inline-flex items-center gap-1" aria-label={`${stats.comments} comments`}>
+        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+        </svg>
+        {stats.comments}
+      </span>
+      <span className="inline-flex items-center gap-1" aria-label={`${stats.views} views`}>
+        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+        {stats.views}
+      </span>
+    </div>
+  );
 }
 
 function getTabLabel(post: PostMeta, locale: string): string | null {
@@ -21,7 +54,7 @@ function getTabLabel(post: PostMeta, locale: string): string | null {
   return tagDef?.label[locale as 'ko' | 'en'] ?? tabSlug;
 }
 
-export default function ContentCard({ post, locale, showTabTag, hidePubDate }: ContentCardProps) {
+export default function ContentCard({ post, locale, showTabTag, hidePubDate, stats }: ContentCardProps) {
   const href = `/${locale}/posts/${post.slug}`;
   const isReading = post.content_type === 'papers';
 
@@ -66,6 +99,7 @@ export default function ContentCard({ post, locale, showTabTag, hidePubDate }: C
           <TagChip key={tag} tag={tag} />
         ))}
       </div>
+      {stats && <StatsRow stats={stats} />}
     </BaseCard>
   );
 }
