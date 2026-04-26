@@ -21,20 +21,9 @@ function todayIso(): string {
 
 export async function GET() {
   const supabase = getSupabaseAdmin();
-  const propertyIdRaw = process.env.GA4_PROPERTY_ID;
-  const propertyId = (propertyIdRaw ?? '').trim() || undefined;
-  const saRaw = process.env.GA4_SERVICE_ACCOUNT_JSON;
+  const propertyId = (process.env.GA4_PROPERTY_ID ?? '').trim() || undefined;
   const startDate = process.env.GA4_START_DATE ?? '2024-01-01';
   const endDate = todayIso();
-  const debug = {
-    propertyIdLength: propertyIdRaw?.length ?? 0,
-    propertyIdSet: propertyIdRaw != null,
-    saLength: saRaw?.length ?? 0,
-    saSet: saRaw != null,
-  };
-
-  let viewsError: string | null = null;
-  if (!propertyId) viewsError = 'GA4_PROPERTY_ID not configured';
 
   const [likesRes, commentsRes, viewsMap] = await Promise.all([
     supabase.from('post_likes').select('post_slug'),
@@ -48,7 +37,6 @@ export async function GET() {
         }).catch((err) => {
           const msg = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
           console.warn('[public/post-stats] GA4 fetch failed:', msg);
-          viewsError = msg;
           return new Map<string, number>();
         })
       : Promise.resolve(new Map<string, number>()),
@@ -78,7 +66,7 @@ export async function GET() {
   }
 
   return NextResponse.json(
-    { stats, fetchedAt: new Date().toISOString(), viewsError, debug },
+    { stats, fetchedAt: new Date().toISOString() },
     {
       headers: {
         'cache-control': 'public, s-maxage=3600, stale-while-revalidate=86400',
