@@ -16,6 +16,7 @@ export interface MediaItem {
   url: string;
   content_lang?: 'ko' | 'en'; // language of the content; routes the item into the matching section
   thumbnail_url?: string;     // optional cover image (used by the Books gallery)
+  role?: string;              // e.g. "집필", "참여", "감수" — shown in the meta line for Books
 }
 
 export interface AboutMedia {
@@ -33,6 +34,7 @@ export interface LocalizedMediaItem {
   year?: string;
   url: string;
   thumbnail_url?: string;
+  role?: string;
 }
 
 export interface KoSectionMedia {
@@ -116,6 +118,7 @@ function localizeItem(item: MediaItem, locale: Locale): LocalizedMediaItem {
     year: formatYearMonth(item.year),
     url: item.url,
     thumbnail_url: item.thumbnail_url,
+    role: item.role,
   };
 }
 

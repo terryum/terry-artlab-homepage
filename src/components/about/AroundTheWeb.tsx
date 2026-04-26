@@ -17,10 +17,10 @@ interface AroundTheWebProps {
 }
 
 // Renders "Around the web (Korean)" with the trailing parenthetical
-// dropped to a smaller, muted style — keeps the language tag from
-// competing visually with the section name.
+// dropped to a smaller, muted style and the parens stripped — keeps the
+// language tag from competing visually with the section name.
 function SectionHeading({ label }: { label: string }) {
-  const m = label.match(/^(.*?)\s*(\(.+\))\s*$/);
+  const m = label.match(/^(.*?)\s*\(([^)]+)\)\s*$/);
   return (
     <h2 className="text-base font-[540] text-text-primary tracking-tight mb-5">
       {m ? m[1] : label}
@@ -107,9 +107,9 @@ function BooksGallery({ heading, items }: { heading: string; items: LocalizedMed
               <div className="mt-2 text-xs text-text-primary leading-snug group-hover:text-accent transition-colors">
                 {item.title}
               </div>
-              {(item.source || item.year) && (
+              {(item.role || item.source || item.year) && (
                 <div className="mt-0.5 text-[11px] text-text-muted">
-                  {[item.source, item.year].filter(Boolean).join(' · ')}
+                  {[item.role, item.source, item.year].filter(Boolean).join(' · ')}
                 </div>
               )}
             </a>
