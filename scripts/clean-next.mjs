@@ -40,8 +40,15 @@ try {
     .map((l) => l.trim())
     .filter((l) => {
       if (!l || l.includes('clean-next.mjs')) return false;
-      const m = l.match(/^(\d+)\s/);
-      if (m && ancestors.has(parseInt(m[1], 10))) return false;
+      const m = l.match(/^(\d+)\s+(.+)$/);
+      if (!m) return false;
+      const [, pidStr, cmd] = m;
+      if (ancestors.has(parseInt(pidStr, 10))) return false;
+      // Bare shell wrappers (e.g. `sh -c "node clean-next.mjs && opennextjs-cloudflare build"`
+      // invoked by `npm run build:cf`) match our pattern via their args, not
+      // because they're actually doing I/O on .next. Strip them out.
+      const firstBin = (cmd.split(/\s+/)[0] ?? '').split('/').pop() ?? '';
+      if (/^(?:sh|bash|dash|zsh|ash)$/.test(firstBin)) return false;
       return true;
     });
   if (conflicts.length) {
