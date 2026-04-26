@@ -20,7 +20,22 @@ interface AroundTheWebProps {
   enSection: LocalizedMediaItem[];
 }
 
-// Renders "Around the web (Korean)" with the trailing parenthetical
+type Aspect = 'video' | '4/3' | '3/4';
+
+const ASPECT_CLASS: Record<Aspect, string> = {
+  video: 'aspect-video',
+  '4/3':  'aspect-[4/3]',
+  '3/4':  'aspect-[3/4]',
+};
+
+// Per-aspect grid columns. Wider cards (16:9) need fewer columns to stay legible.
+const GRID_COLS: Record<Aspect, string> = {
+  video: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
+  '4/3':  'grid-cols-2 sm:grid-cols-3 md:grid-cols-4',
+  '3/4':  'grid-cols-3 sm:grid-cols-4 md:grid-cols-5',
+};
+
+// Renders "Featured Elsewhere (Korean)" with the trailing parenthetical
 // dropped to a smaller, muted style and the parens stripped — keeps the
 // language tag from competing visually with the section name.
 function SectionHeading({ label }: { label: string }) {
@@ -32,47 +47,6 @@ function SectionHeading({ label }: { label: string }) {
         <span className="ml-2 text-xs font-normal text-text-muted">{m[2]}</span>
       )}
     </h2>
-  );
-}
-
-function MetaLine({ source, year }: { source?: string; year?: string }) {
-  if (!source && !year) return null;
-  return (
-    <span className="text-text-muted ml-2 text-xs">
-      {[source, year].filter(Boolean).join(' · ')}
-    </span>
-  );
-}
-
-function MediaList({
-  heading,
-  items,
-}: {
-  heading?: string;
-  items: LocalizedMediaItem[];
-}) {
-  if (items.length === 0) return null;
-  return (
-    <div className="mb-5">
-      {heading && (
-        <h3 className="text-xs uppercase tracking-wide text-text-muted mb-2">{heading}</h3>
-      )}
-      <ul className="space-y-1.5">
-        {items.map((item, i) => (
-          <li key={`${item.url}-${i}`} className="text-sm">
-            <a
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-text-primary hover:text-accent transition-colors"
-            >
-              {item.title}
-            </a>
-            <MetaLine source={item.source} year={item.year} />
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }
 
@@ -90,129 +64,171 @@ function SubHeading({ label }: { label: string }) {
   );
 }
 
-function MediaListSub({
+function MediaCard({ item, aspect }: { item: LocalizedMediaItem; aspect: Aspect }) {
+  const isExternal = item.url.startsWith('http');
+  return (
+    <a
+      href={item.url}
+      target={isExternal ? '_blank' : undefined}
+      rel={isExternal ? 'noopener noreferrer' : undefined}
+      className="group block"
+    >
+      <div className={`relative ${ASPECT_CLASS[aspect]} overflow-hidden rounded-sm bg-bg-surface border border-line-default`}>
+        {item.thumbnail_url ? (
+          <Image
+            src={item.thumbnail_url}
+            alt={item.title}
+            fill
+            sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+            className="object-cover transition-transform group-hover:scale-[1.02]"
+            unoptimized
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center px-2 text-center text-xs text-text-muted">
+            {item.title}
+          </div>
+        )}
+      </div>
+      <div className="mt-2 text-xs text-text-primary leading-snug group-hover:text-accent transition-colors">
+        {item.title}
+      </div>
+      {(item.role || item.source || item.year) && (
+        <div className="mt-0.5 text-[11px] text-text-muted">
+          {[item.role, item.source, item.year].filter(Boolean).join(' · ')}
+        </div>
+      )}
+    </a>
+  );
+}
+
+function MediaGallery({
   heading,
   items,
+  aspect,
 }: {
-  heading: string;
+  heading?: string;
   items: LocalizedMediaItem[];
+  aspect: Aspect;
 }) {
   if (items.length === 0) return null;
   return (
     <div className="mb-5">
-      <SubHeading label={heading} />
-      <ul className="space-y-1.5">
+      {heading && <SubHeading label={heading} />}
+      <div className={`grid ${GRID_COLS[aspect]} gap-x-3 gap-y-4`}>
         {items.map((item, i) => (
-          <li key={`${item.url}-${i}`} className="text-sm">
-            <a
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-text-primary hover:text-accent transition-colors"
-            >
-              {item.title}
-            </a>
-            <MetaLine source={item.source} year={item.year} />
-          </li>
+          <MediaCard key={`${item.url}-${i}`} item={item} aspect={aspect} />
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
 
 function BooksGallery({ items }: { items: LocalizedMediaItem[] }) {
   if (items.length === 0) return null;
+  // Authored/co-authored ("공저") vs contributed/edited ("참여", "감수", etc.) — split with a divider.
+  const authored = items.filter(i => i.role === '공저');
+  const others   = items.filter(i => i.role !== '공저');
+  const mobileGrid = 'grid grid-cols-3 sm:grid-cols-4 gap-x-3 gap-y-4';
+
+  if (authored.length === 0 || others.length === 0) {
+    return (
+      <div className="mb-5">
+        <div className={`grid ${GRID_COLS['3/4']} gap-x-3 gap-y-4`}>
+          {items.map((item, i) => <MediaCard key={`${item.url}-${i}`} item={item} aspect="3/4" />)}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mb-5">
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-x-3 gap-y-4">
-        {items.map((item, i) => {
-          const isExternal = item.url.startsWith('http');
-          return (
-            <a
-              key={`${item.url}-${i}`}
-              href={item.url}
-              target={isExternal ? '_blank' : undefined}
-              rel={isExternal ? 'noopener noreferrer' : undefined}
-              className="group block"
-            >
-              <div className="relative aspect-[3/4] overflow-hidden rounded-sm bg-bg-surface border border-line-default">
-                {item.thumbnail_url ? (
-                  <Image
-                    src={item.thumbnail_url}
-                    alt={item.title}
-                    fill
-                    sizes="(min-width: 768px) 20vw, 40vw"
-                    className="object-cover transition-transform group-hover:scale-[1.02]"
-                    unoptimized
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center px-2 text-center text-xs text-text-muted">
-                    {item.title}
-                  </div>
-                )}
-              </div>
-              <div className="mt-2 text-xs text-text-primary leading-snug group-hover:text-accent transition-colors">
-                {item.title}
-              </div>
-              {(item.role || item.source || item.year) && (
-                <div className="mt-0.5 text-[11px] text-text-muted">
-                  {[item.role, item.source, item.year].filter(Boolean).join(' · ')}
-                </div>
-              )}
-            </a>
-          );
-        })}
+      {/* Mobile/tablet: stacked groups with horizontal divider */}
+      <div className="md:hidden">
+        <div className={mobileGrid}>
+          {authored.map((item, i) => <MediaCard key={`a-${item.url}-${i}`} item={item} aspect="3/4" />)}
+        </div>
+        <div className="border-t border-line-default my-5" />
+        <div className={mobileGrid}>
+          {others.map((item, i) => <MediaCard key={`o-${item.url}-${i}`} item={item} aspect="3/4" />)}
+        </div>
+      </div>
+
+      {/* Desktop: single row with vertical divider between the two groups */}
+      <div className="hidden md:flex md:items-stretch md:gap-x-3">
+        {authored.map((item, i) => (
+          <div key={`a-${item.url}-${i}`} className="w-1/5">
+            <MediaCard item={item} aspect="3/4" />
+          </div>
+        ))}
+        <div className="border-l border-line-default mx-2 self-stretch" />
+        {others.map((item, i) => (
+          <div key={`o-${item.url}-${i}`} className="w-1/5">
+            <MediaCard item={item} aspect="3/4" />
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
-export default function AroundTheWeb({ labels, koSection, enSection }: AroundTheWebProps) {
+function FeaturedSection({
+  heading,
+  section,
+  labels,
+}: {
+  heading: string;
+  section: KoSectionMedia;
+  labels: SectionLabels;
+}) {
   const mediaCount =
-    koSection.media.talks.length +
-    koSection.media.interviews.length +
-    koSection.media.speaking.length;
-  const etcCount = koSection.etc.research.length + koSection.etc.code.length;
-  const koHasAny = mediaCount + koSection.books.length + etcCount > 0;
-  const enHasAny = enSection.length > 0;
-  if (!koHasAny && !enHasAny) return null;
+    section.media.talks.length + section.media.interviews.length + section.media.speaking.length;
+  const etcCount = section.etc.research.length + section.etc.code.length;
+  if (mediaCount + section.books.length + etcCount === 0) return null;
 
   return (
-    <>
-      {koHasAny && (
-        <section className="mt-10 pt-8 border-t border-line-default">
-          <SectionHeading label={labels.around_the_web_ko} />
+    <section className="mt-10 pt-8 border-t border-line-default">
+      <SectionHeading label={heading} />
 
-          {mediaCount > 0 && (
-            <>
-              <GroupHeading label={labels.media} />
-              <MediaListSub heading={labels.talks}      items={koSection.media.talks} />
-              <MediaListSub heading={labels.interviews} items={koSection.media.interviews} />
-              <MediaListSub heading={labels.speaking}   items={koSection.media.speaking} />
-            </>
-          )}
-
-          {koSection.books.length > 0 && (
-            <>
-              <GroupHeading label={labels.books} />
-              <BooksGallery items={koSection.books} />
-            </>
-          )}
-
-          {etcCount > 0 && (
-            <>
-              <GroupHeading label={labels.etc} />
-              <MediaListSub heading={labels.research} items={koSection.etc.research} />
-              <MediaListSub heading={labels.code}     items={koSection.etc.code} />
-            </>
-          )}
-        </section>
+      {mediaCount > 0 && (
+        <>
+          <GroupHeading label={labels.media} />
+          <MediaGallery heading={labels.talks}      items={section.media.talks}      aspect="video" />
+          <MediaGallery heading={labels.interviews} items={section.media.interviews} aspect="4/3" />
+          <MediaGallery heading={labels.speaking}   items={section.media.speaking}   aspect="4/3" />
+        </>
       )}
 
-      {enHasAny && (
+      {section.books.length > 0 && (
+        <>
+          <GroupHeading label={labels.books} />
+          <BooksGallery items={section.books} />
+        </>
+      )}
+
+      {etcCount > 0 && (
+        <>
+          <GroupHeading label={labels.etc} />
+          <MediaGallery heading={labels.research} items={section.etc.research} aspect="4/3" />
+          <MediaGallery heading={labels.code}     items={section.etc.code}     aspect="4/3" />
+        </>
+      )}
+    </section>
+  );
+}
+
+export default function AroundTheWeb({ labels, koSection, enSection }: AroundTheWebProps) {
+  return (
+    <>
+      <FeaturedSection heading={labels.around_the_web_ko} section={koSection} labels={labels} />
+      {enSection.length > 0 && (
         <section className="mt-10 pt-8 border-t border-line-default">
           <SectionHeading label={labels.around_the_web_en} />
-          <MediaList items={enSection} />
+          {/* Curated 4-card row: 2 cols on mobile, 4 across from sm up. */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-4">
+            {enSection.map((item, i) => (
+              <MediaCard key={`${item.url}-${i}`} item={item} aspect="video" />
+            ))}
+          </div>
         </section>
       )}
     </>

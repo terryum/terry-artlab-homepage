@@ -28,6 +28,7 @@ export interface AboutMedia {
   books: MediaItem[];
   research: MediaItem[];   // 대표 논문 — Etc. 그룹
   code: MediaItem[];       // GitHub repos — Etc. 그룹
+  enFeatured?: MediaItem[]; // curated cards for the English Featured Elsewhere row
 }
 
 export interface LocalizedMediaItem {
@@ -57,7 +58,7 @@ export interface KoSectionMedia {
 export interface LocalizedAboutMedia {
   currently: string;
   koSection: KoSectionMedia;
-  enSection: LocalizedMediaItem[]; // single flat list — English content is sparse
+  enSection: LocalizedMediaItem[]; // single curated row driven by media.json `enFeatured`
   hasAnyMedia: boolean;
 }
 
@@ -121,13 +122,26 @@ function sortNewestFirst(items: MediaItem[]): MediaItem[] {
   return items.slice().sort((a, b) => getSortKey(b).localeCompare(getSortKey(a)));
 }
 
+// Auto-derive a thumbnail URL from a YouTube watch/short URL when none is set.
+// Uses mqdefault (320×180) which is the only size guaranteed to be 16:9 across
+// every video — hqdefault has letterboxing and maxresdefault isn't always present.
+function getYouTubeThumbnail(url: string): string | undefined {
+  const m = url.match(/(?:v=|youtu\.be\/|embed\/)([A-Za-z0-9_-]{11})/);
+  return m ? `https://img.youtube.com/vi/${m[1]}/mqdefault.jpg` : undefined;
+}
+
 function localizeItem(item: MediaItem, locale: Locale): LocalizedMediaItem {
+  const thumbnail =
+    item.thumbnail_url
+    ?? (item.url.includes('youtube.com') || item.url.includes('youtu.be')
+        ? getYouTubeThumbnail(item.url)
+        : undefined);
   return {
     title: (locale === 'ko' ? item.title_ko : item.title_en) || item.title_en || item.title_ko,
     source: item.source,
     year: formatYearMonth(item.year),
     url: item.url,
-    thumbnail_url: item.thumbnail_url,
+    thumbnail_url: thumbnail,
     role: item.role,
   };
 }
@@ -181,27 +195,16 @@ export async function getAboutMedia(locale: Locale): Promise<LocalizedAboutMedia
     },
   };
 
-  // English section: flatten all categories, sort newest-first as one list
-  const enRaw = [
-    ...koSplits.talks.en,
-    ...koSplits.interviews.en,
-    ...koSplits.speaking.en,
-    ...koSplits.writing.en,
-    ...koSplits.books.en,
-    ...koSplits.research.en,
-    ...koSplits.code.en,
-  ];
-  const enSection = sortNewestFirst(enRaw).map(i => localizeItem(i, locale));
+  // English section: a hand-curated row defined by `enFeatured` in media.json.
+  // Order is preserved as-authored — no sorting or filtering.
+  const enSection: LocalizedMediaItem[] =
+    (data.enFeatured ?? []).map(i => localizeItem(i, locale));
 
   const currently = (data.currently?.[locale] ?? '').trim();
-  const koCount =
-    koSection.media.talks.length +
-    koSection.media.interviews.length +
-    koSection.media.speaking.length +
-    koSection.books.length +
-    koSection.etc.research.length +
-    koSection.etc.code.length;
-  const hasAnyMedia = koCount + enSection.length > 0;
+  const koSectionCount =
+    koSection.media.talks.length + koSection.media.interviews.length + koSection.media.speaking.length +
+    koSection.books.length + koSection.etc.research.length + koSection.etc.code.length;
+  const hasAnyMedia = koSectionCount + enSection.length > 0;
 
   return { currently, koSection, enSection, hasAnyMedia };
 }

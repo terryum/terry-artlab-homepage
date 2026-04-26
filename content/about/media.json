@@ -5,98 +5,116 @@
   },
   "talks": [
     {
-      "title_ko": "ART Lab — 창업자가 직접 소개하는 회사",
-      "title_en": "ART Lab — Founder's Company Introduction",
-      "source": "YouTube · ART Lab for Beauty AI",
-      "year": "2024-10",
-      "url": "https://www.youtube.com/watch?v=dQ7ydYFvoD8",
-      "content_lang": "en"
-    },
-    {
-      "title_ko": "[디자인테이블 시즌3] EP02: AI 서비스를 디자인하기 위해 알아야 하는 것들",
-      "title_en": "[Design Table S3] EP02: What You Should Know to Design an AI Service",
-      "source": "YouTube · 디자인 스펙트럼",
-      "year": "2022-10",
-      "url": "https://www.youtube.com/watch?v=UiRfT1L1r-Y",
+      "title_ko": "'대학원생 때 알았더라면 좋았을 것들' Naver D2 밋업",
+      "title_en": "'Things I Wish I'd Known in Grad School' — Naver D2 Meetup",
+      "source": "YouTube · Naver D2",
+      "year": "2018-07",
+      "url": "https://youtu.be/RHghh72SRuE",
       "content_lang": "ko"
     },
     {
-      "title_ko": "인공지능 기술 × 스킨케어 시장 = ART Lab",
-      "title_en": "AI Technology × the Skincare Market = ART Lab",
+      "title_ko": "ART Lab 창업동기: AI로 세상을 바꾸는 법",
+      "title_en": "ART Lab Founding Story: Changing the World with AI",
+      "source": "YouTube · ART Lab",
+      "year": "2022-11",
+      "url": "https://youtu.be/Ll-jA_lpJII",
+      "content_lang": "ko"
+    },
+    {
+      "title_ko": "'로봇공학을 위한 열린모임' 겨울학교 오프닝",
+      "title_en": "'Open Robotics Meetup' Winter School Opening",
+      "source": "YouTube · 로열모",
+      "year": "2015-12",
+      "url": "https://youtu.be/-P1y1F_mQlY",
+      "content_lang": "ko"
+    },
+    {
+      "title_ko": "머신러닝에 대한 아주 쉬운 설명",
+      "title_en": "An Easy Introduction to Machine Learning",
+      "source": "YouTube · Naver D2",
+      "year": "2019-03",
+      "url": "https://www.youtube.com/watch?v=mqaATsYP6j0",
+      "content_lang": "ko"
+    },
+    {
+      "title_ko": "스킨케어 시장에 AI가 왜 필요할까요?",
+      "title_en": "Why Does the Skincare Market Need AI?",
       "source": "YouTube · Terry TaeWoong Um",
       "year": "2021-03",
       "url": "https://www.youtube.com/watch?v=3n3BNDMBj2g",
       "content_lang": "ko"
     },
     {
-      "title_ko": "AI+Education: 밀레니얼을 위한 AI & Robotics Tech Lab, ART Lab의 도전",
-      "title_en": "AI+Education: ART Lab — An AI & Robotics Tech Lab for the Millennial Era",
+      "title_ko": "KAIST AI+Education: AI시대의 교육",
+      "title_en": "KAIST AI+Education: Education in the Age of AI",
       "source": "YouTube · KAIST School of Computing",
       "year": "2019-04",
       "url": "https://www.youtube.com/watch?v=7-ncAnCYDo8",
       "content_lang": "ko"
+    },
+    {
+      "title_ko": "AI 트랜스포메이션: Why, What, How",
+      "title_en": "AI Transformation: Why, What, How",
+      "source": "YouTube · 서울경제진흥원",
+      "year": "2020-12",
+      "url": "https://www.youtube.com/watch?v=HNwQmIlrQ6U",
+      "content_lang": "ko"
+    },
+    {
+      "title_ko": "ART Lab, 데이터로 스킨케어를 하다",
+      "title_en": "ART Lab — Doing Skincare with Data",
+      "source": "YouTube · 과기정통부",
+      "year": "2021-12",
+      "url": "https://youtu.be/4h5r3HEkw_Q",
+      "content_lang": "ko"
     }
   ],
   "speaking": [],
-  "research": [
-    {
-      "title_ko": "Google Scholar 프로필",
-      "title_en": "Google Scholar profile",
-      "source": "Google Scholar",
-      "url": "https://scholar.google.com/citations?user=9Zgeg14AAAAJ",
-      "content_lang": "en"
-    }
-  ],
+  "research": [],
   "interviews": [
     {
-      "title_ko": "[유통DX리더] 엄태웅 코스맥스 AI혁신그룹장 — \"AI와 로봇 기술로 글로벌 뷰티기업 도약\"",
-      "title_en": "[Distribution DX Leader] Eom Tae-Woong, Cosmax AI Innovation Group Lead — \"AI and Robotics Will Take Global Beauty Higher\"",
+      "title_ko": "코스맥스, AI스타트업 아트랩 인수",
+      "title_en": "Cosmax Acquires AI Startup ART Lab",
+      "source": "뉴스1",
+      "year": "2024-11",
+      "url": "https://www.news1.kr/industry/distribution/5615352",
+      "content_lang": "ko",
+      "thumbnail_url": "https://i3n.news1.kr/system/photos/2024/11/29/7010440/high.jpg"
+    },
+    {
+      "title_ko": "코스맥스 엄태웅 본부장, \"AI와 로봇기술로 글로벌 뷰티기업 도약\"",
+      "title_en": "Terry Um, Cosmax — \"AI and Robotics Will Take Global Beauty Higher\"",
       "source": "전자신문",
       "year": "2025-06",
       "url": "https://m.etnews.com/20250612000294",
-      "content_lang": "ko"
+      "content_lang": "ko",
+      "thumbnail_url": "https://img.etnews.com/news/article/2025/06/12/news-p.v1.20250612.868c50d6fc754bdc83db87afc442c2f0_P1.jpg"
     },
     {
-      "title_ko": "코스맥스 AI혁신그룹장 인터뷰 — \"화장품 제조는 지난 30년간 가장 큰 변화를 겪었다\"",
-      "title_en": "\"Cosmetics has undergone the most drastic change in manufacturing over the past 30 years\"",
-      "source": "Maeil Business",
-      "year": "2025-05",
-      "url": "https://www.mk.co.kr/en/business/11306738",
-      "content_lang": "en"
-    },
-    {
-      "title_ko": "[SBA × IT동아] 아트랩 — \"피부 좋아지는 법, AI가 찾아드립니다\"",
-      "title_en": "[SBA × IT Donga] ART Lab — \"AI Will Help You Find Better Skin Care\"",
+      "title_ko": "아트랩 엄태웅 대표, \"피부 좋아지는 법, AI가 찾아드립니다\"",
+      "title_en": "Terry Um, ART Lab — \"AI Will Help You Find Better Skin Care\"",
       "source": "IT동아",
       "year": "2024-06",
       "url": "https://www.donga.com/news/It/article/all/20240613/125422001/1",
-      "content_lang": "ko"
+      "content_lang": "ko",
+      "thumbnail_url": "https://dimg.donga.com/wps/NEWS/IMAGE/2024/06/13/125421931.1.jpg"
     },
     {
-      "title_ko": "[특별 인터뷰] \"화장품만 판매하는 시대는 끝나가고 있다\"",
-      "title_en": "[Special Interview] \"The Era of Just Selling Cosmetics Is Ending\"",
+      "title_ko": "아트랩 엄태웅 대표, \"화장품만 판매하는 시대가 끝나고 있다\"",
+      "title_en": "Terry Um, ART Lab — \"The Era of Just Selling Cosmetics Is Ending\"",
       "source": "이코노믹리뷰",
       "year": "2022-12",
       "url": "https://www.econovill.com/news/articleView.html?idxno=598858",
-      "content_lang": "ko"
+      "content_lang": "ko",
+      "thumbnail_url": "https://cdn.econovill.com/news/thumbnail/202212/598858_530646_4327_v150.jpg"
     }
   ],
   "writing": [],
   "books": [
     {
-      "title_ko": "미래를 읽다 과학이슈 11 SEASON 4",
-      "title_en": "Reading the Future: Science Issues 11, Season 4",
-      "role": "참여",
-      "source": "동아엠앤비",
-      "year": "2021-05",
-      "url": "https://www.yes24.com/product/goods/101512250",
-      "thumbnail_url": "https://image.yes24.com/goods/101512250/xl",
-      "content_lang": "ko"
-    },
-    {
       "title_ko": "대학원생 때 알았더라면 좋았을 것들",
       "title_en": "Things I Wish I'd Known in Grad School",
-      "role": "집필",
+      "role": "공저",
       "source": "스마트북스",
       "year": "2019",
       "url": "https://product.kyobobook.co.kr/detail/S000001926765",
@@ -124,20 +142,36 @@
       "content_lang": "ko"
     }
   ],
-  "code": [
+  "code": [],
+  "enFeatured": [
     {
-      "title_ko": "github.com/terryum",
-      "title_en": "github.com/terryum",
-      "url": "https://github.com/terryum",
-      "content_lang": "en"
+      "title_en": "Terry's 3-min pitch, ART Lab",
+      "title_ko": "Terry's 3-min pitch, ART Lab",
+      "source": "YouTube · ART Lab",
+      "year": "2024-10",
+      "url": "https://www.youtube.com/watch?v=dQ7ydYFvoD8"
     },
     {
-      "title_ko": "awesome-deep-learning-papers",
-      "title_en": "awesome-deep-learning-papers",
+      "title_en": "Terry's interview, Cosmax",
+      "title_ko": "Terry's interview, Cosmax",
+      "source": "Press · Maeil Business",
+      "year": "2025-05",
+      "url": "https://www.mk.co.kr/en/business/11306738",
+      "thumbnail_url": "https://wimg.mk.co.kr/news/cms/202505/02/20250502_01110117000005_L00.jpg"
+    },
+    {
+      "title_en": "Terry's Codes",
+      "title_ko": "Terry's Codes",
       "source": "GitHub",
-      "year": "16k+ stars",
-      "url": "https://github.com/terryum/awesome-deep-learning-papers",
-      "content_lang": "en"
+      "url": "https://github.com/terryum",
+      "thumbnail_url": "/images/featured-codes.webp"
+    },
+    {
+      "title_en": "Terry's Papers",
+      "title_ko": "Terry's Papers",
+      "source": "Google Scholar",
+      "url": "https://scholar.google.com/citations?user=9Zgeg14AAAAJ",
+      "thumbnail_url": "/images/featured-papers.webp"
     }
   ]
 }

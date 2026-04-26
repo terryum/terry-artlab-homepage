@@ -11,6 +11,8 @@
     "type-check": "node scripts/generate-post-bodies.mjs && tsc --noEmit",
     "generate-logos": "node scripts/generate-logos.mjs",
     "generate-og": "node scripts/generate-og-image.mjs",
+    "fetch-og": "node scripts/fetch-og-images.mjs",
+    "generate-en-overlays": "node scripts/generate-en-overlays.mjs",
     "sync-papers": "node scripts/sync-papers.mjs",
     "test-graph": "node scripts/test-graph.mjs",
     "sync-obsidian": "node scripts/sync-obsidian.mjs",

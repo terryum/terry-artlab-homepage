@@ -76,11 +76,11 @@ export default async function AboutPage({
           English collapses into a single flat list since it's sparse. */}
       <AroundTheWeb
         labels={{
-          around_the_web_ko: aboutLabels.around_the_web_ko || 'Around the web (Korean)',
-          around_the_web_en: aboutLabels.around_the_web_en || 'Around the web (English)',
+          around_the_web_ko: aboutLabels.around_the_web_ko || 'Featured Elsewhere (Korean)',
+          around_the_web_en: aboutLabels.around_the_web_en || 'Featured Elsewhere (English)',
           media: aboutLabels.media || 'Media',
-          talks: aboutLabels.talks || 'Talks',
-          interviews: aboutLabels.interviews || 'Interviews',
+          talks: aboutLabels.talks || 'On YouTube',
+          interviews: aboutLabels.interviews || 'In Press',
           speaking: aboutLabels.speaking || 'Speaking',
           books: aboutLabels.books || 'Books & Writings',
           etc: aboutLabels.etc || 'Etc.',
@@ -96,11 +96,10 @@ export default async function AboutPage({
         <h2 className="text-base font-[540] text-text-primary tracking-tight mb-2">
           {aboutLabels.contact || 'Contact'}
         </h2>
-        <ContactEmail
-          localPart="terry.t.um"
-          domain="gmail.com"
-          fallbackLabel={aboutLabels.email_label || 'Email'}
-        />
+        <div className="flex flex-col gap-1">
+          <ContactEmail localPart="terry" domain="cosmax.com" fallbackLabel="Cosmax" />
+          <ContactEmail localPart="terry" domain="artlab.ai"  fallbackLabel="ArtLab" />
+        </div>
       </section>
     </div>
   );

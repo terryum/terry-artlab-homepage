@@ -3,8 +3,12 @@
 import { useState } from 'react';
 import { SITE_CONFIG } from '@/lib/site-config';
 
-// Email is split to prevent bot harvesting from static HTML
-const EMAIL_PARTS = ['terry.t.um', 'gmail.com'] as const;
+// Emails are split to prevent bot harvesting from static HTML.
+// First entry is the primary (used for mailto on touch devices).
+const EMAIL_PARTS: readonly (readonly [string, string])[] = [
+  ['terry', 'cosmax.com'],
+  ['terry', 'artlab.ai'],
+];
 
 /** 기본 노출 아이콘 (순서대로) */
 const PRIMARY_NAMES = ['GitHub', 'LinkedIn', 'Facebook', 'Instagram', 'X', 'Google Scholar'];
@@ -122,16 +126,19 @@ export default function SocialIcons({ className = '' }: { className?: string }) 
 
   function handleEmailClick(e: React.MouseEvent<HTMLAnchorElement>) {
     e.preventDefault();
-    const addr = `${EMAIL_PARTS[0]}@${EMAIL_PARTS[1]}`;
+    const addrs = EMAIL_PARTS.map(([l, d]) => `${l}@${d}`);
+    const primary = addrs[0];
 
     const isTouchDevice = window.matchMedia(
       '(hover: none) and (pointer: coarse)',
     ).matches;
 
     if (isTouchDevice) {
-      window.location.href = `mailto:${addr}`;
+      // mailto: only supports a single address reliably; use the primary.
+      window.location.href = `mailto:${primary}`;
     } else {
-      navigator.clipboard.writeText(addr);
+      // Desktop: copy both addresses (newline-separated) so the user can paste either.
+      navigator.clipboard.writeText(addrs.join('\n'));
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     }
