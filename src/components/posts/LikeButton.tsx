@@ -62,7 +62,7 @@ export default function LikeButton({ slug, locale }: Props) {
 
   const count = state?.count ?? 0;
   const liked = state?.liked ?? false;
-  const label = locale === 'ko' ? '좋아요' : 'Like';
+  const label = locale === 'ko' ? `좋아요 ${count}` : `Like ${count}`;
 
   return (
     <button
@@ -71,6 +71,7 @@ export default function LikeButton({ slug, locale }: Props) {
       disabled={pending || state === null}
       aria-pressed={liked}
       aria-label={label}
+      title={locale === 'ko' ? '좋아요' : 'Like'}
       className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors ${
         liked
           ? 'border-accent text-accent bg-accent/10'
@@ -90,8 +91,7 @@ export default function LikeButton({ slug, locale }: Props) {
           d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"
         />
       </svg>
-      <span>{label}</span>
-      <span className="tabular-nums text-text-muted">{count}</span>
+      <span className="tabular-nums">{count}</span>
     </button>
   );
 }

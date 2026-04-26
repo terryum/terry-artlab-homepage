@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import CommentList, {
   type PublicComment,
@@ -38,6 +38,7 @@ export default function CommentSection({ slug, locale, actionPrefix }: Props) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [replyOpenFor, setReplyOpenFor] = useState<string | null>(null);
+  const bottomFormRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -96,18 +97,30 @@ export default function CommentSection({ slug, locale, actionPrefix }: Props) {
     setComments((prev) => prev.filter((c) => c.id !== id && c.parent_id !== id));
   };
 
+  // Comment-icon click: open the bottom form and scroll to it.
+  const focusBottomForm = () => {
+    setFormOpen(true);
+    // Allow the form to mount before scrolling.
+    requestAnimationFrame(() => {
+      bottomFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  };
+
   const labels = locale === 'ko'
-    ? { comments: '댓글', write: '댓글 쓰기' }
-    : { comments: 'Comments', write: 'Write' };
+    ? { commentAria: `댓글 쓰기 ${totalCount}`, commentTitle: '댓글', placeholder: '댓글을 남겨주세요...' }
+    : { commentAria: `Write a comment ${totalCount}`, commentTitle: 'Comments', placeholder: 'Leave a comment...' };
 
   return (
     <div>
-      {/* Single action row: like + comment count + write trigger */}
-      <div className="flex flex-wrap items-center gap-2 mb-6">
+      {/* Top action row — icons + counts only */}
+      <div className="flex items-center gap-2 mb-6">
         {actionPrefix}
-        <span
-          className="inline-flex items-center gap-1.5 px-2 py-1.5 text-sm text-text-secondary"
-          aria-label={`${labels.comments} ${totalCount}`}
+        <button
+          type="button"
+          onClick={focusBottomForm}
+          aria-label={labels.commentAria}
+          title={labels.commentTitle}
+          className="inline-flex items-center gap-1.5 rounded-full border border-line-default text-text-secondary hover:text-accent hover:border-accent transition-colors px-3 py-1.5 text-sm"
         >
           <svg
             className="w-4 h-4"
@@ -121,46 +134,11 @@ export default function CommentSection({ slug, locale, actionPrefix }: Props) {
               strokeLinejoin="round"
               d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
             />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8.5v5M9.5 11h5" />
           </svg>
-          <span>{labels.comments}</span>
-          <span className="tabular-nums text-text-muted">{totalCount}</span>
-        </span>
-        <div className="flex-1" />
-        {!formOpen && (
-          <button
-            type="button"
-            onClick={() => setFormOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-full border border-line-default text-text-secondary hover:text-accent hover:border-accent transition-colors px-3 py-1.5 text-sm"
-          >
-            <svg
-              className="w-4 h-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z"
-              />
-            </svg>
-            <span>{labels.write}</span>
-          </button>
-        )}
+          <span className="tabular-nums">{totalCount}</span>
+        </button>
       </div>
-
-      {formOpen && (
-        <div className="mb-6 border border-line-default rounded-md p-4 bg-bg-secondary/30">
-          <CommentForm
-            slug={slug}
-            locale={locale}
-            onCreated={onRootCreated}
-            onCancel={() => setFormOpen(false)}
-            autoFocus
-          />
-        </div>
-      )}
 
       <CommentList
         trees={trees}
@@ -183,6 +161,29 @@ export default function CommentSection({ slug, locale, actionPrefix }: Props) {
           />
         )}
       />
+
+      {/* Bottom: input-styled placeholder OR expanded form */}
+      <div ref={bottomFormRef} className="mt-6 scroll-mt-24">
+        {!formOpen ? (
+          <button
+            type="button"
+            onClick={() => setFormOpen(true)}
+            className="w-full text-left px-4 py-3 rounded-md border border-line-default bg-bg-primary text-text-muted hover:border-accent hover:text-accent transition-colors text-sm"
+          >
+            {labels.placeholder}
+          </button>
+        ) : (
+          <div className="border border-line-default rounded-md p-4 bg-bg-secondary/30">
+            <CommentForm
+              slug={slug}
+              locale={locale}
+              onCreated={onRootCreated}
+              onCancel={() => setFormOpen(false)}
+              autoFocus
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
