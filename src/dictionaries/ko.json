@@ -14,10 +14,16 @@
     "currently": "Currently",
     "around_the_web_ko": "Around the web (Korean)",
     "around_the_web_en": "Around the web (English)",
+    "media": "Media",
     "talks": "Talks",
     "interviews": "Interviews",
-    "books": "Books & writing",
-    "code": "Code"
+    "speaking": "Speaking",
+    "books": "Books & Writings",
+    "etc": "Etc.",
+    "research": "Research",
+    "code": "Code",
+    "contact": "Contact",
+    "email_label": "Email"
   },
   "posts_index": {
     "title": "Posts",

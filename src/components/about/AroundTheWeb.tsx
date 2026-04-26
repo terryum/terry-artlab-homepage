@@ -4,9 +4,13 @@ import type { KoSectionMedia, LocalizedMediaItem } from '@/lib/about';
 interface SectionLabels {
   around_the_web_ko: string;
   around_the_web_en: string;
+  media: string;        // "Media" group header
   talks: string;
   interviews: string;
-  books: string;
+  speaking: string;
+  books: string;        // also serves as the "Books & Writings" group header
+  etc: string;          // "Etc." group header
+  research: string;
   code: string;
 }
 
@@ -72,11 +76,54 @@ function MediaList({
   );
 }
 
-function BooksGallery({ heading, items }: { heading: string; items: LocalizedMediaItem[] }) {
+function GroupHeading({ label }: { label: string }) {
+  return (
+    <h3 className="text-sm font-[540] text-text-primary tracking-tight mb-3 mt-6 first:mt-0">
+      {label}
+    </h3>
+  );
+}
+
+function SubHeading({ label }: { label: string }) {
+  return (
+    <h4 className="text-xs uppercase tracking-wide text-text-muted mb-2">{label}</h4>
+  );
+}
+
+function MediaListSub({
+  heading,
+  items,
+}: {
+  heading: string;
+  items: LocalizedMediaItem[];
+}) {
   if (items.length === 0) return null;
   return (
     <div className="mb-5">
-      <h3 className="text-xs uppercase tracking-wide text-text-muted mb-3">{heading}</h3>
+      <SubHeading label={heading} />
+      <ul className="space-y-1.5">
+        {items.map((item, i) => (
+          <li key={`${item.url}-${i}`} className="text-sm">
+            <a
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-text-primary hover:text-accent transition-colors"
+            >
+              {item.title}
+            </a>
+            <MetaLine source={item.source} year={item.year} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function BooksGallery({ items }: { items: LocalizedMediaItem[] }) {
+  if (items.length === 0) return null;
+  return (
+    <div className="mb-5">
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-x-3 gap-y-4">
         {items.map((item, i) => {
           const isExternal = item.url.startsWith('http');
@@ -121,12 +168,12 @@ function BooksGallery({ heading, items }: { heading: string; items: LocalizedMed
 }
 
 export default function AroundTheWeb({ labels, koSection, enSection }: AroundTheWebProps) {
-  const koHasAny =
-    koSection.talks.length +
-      koSection.interviews.length +
-      koSection.books.length +
-      koSection.code.length >
-    0;
+  const mediaCount =
+    koSection.media.talks.length +
+    koSection.media.interviews.length +
+    koSection.media.speaking.length;
+  const etcCount = koSection.etc.research.length + koSection.etc.code.length;
+  const koHasAny = mediaCount + koSection.books.length + etcCount > 0;
   const enHasAny = enSection.length > 0;
   if (!koHasAny && !enHasAny) return null;
 
@@ -135,10 +182,30 @@ export default function AroundTheWeb({ labels, koSection, enSection }: AroundThe
       {koHasAny && (
         <section className="mt-10 pt-8 border-t border-line-default">
           <SectionHeading label={labels.around_the_web_ko} />
-          <MediaList heading={labels.talks} items={koSection.talks} />
-          <MediaList heading={labels.interviews} items={koSection.interviews} />
-          <BooksGallery heading={labels.books} items={koSection.books} />
-          <MediaList heading={labels.code} items={koSection.code} />
+
+          {mediaCount > 0 && (
+            <>
+              <GroupHeading label={labels.media} />
+              <MediaListSub heading={labels.talks}      items={koSection.media.talks} />
+              <MediaListSub heading={labels.interviews} items={koSection.media.interviews} />
+              <MediaListSub heading={labels.speaking}   items={koSection.media.speaking} />
+            </>
+          )}
+
+          {koSection.books.length > 0 && (
+            <>
+              <GroupHeading label={labels.books} />
+              <BooksGallery items={koSection.books} />
+            </>
+          )}
+
+          {etcCount > 0 && (
+            <>
+              <GroupHeading label={labels.etc} />
+              <MediaListSub heading={labels.research} items={koSection.etc.research} />
+              <MediaListSub heading={labels.code}     items={koSection.etc.code} />
+            </>
+          )}
         </section>
       )}
 

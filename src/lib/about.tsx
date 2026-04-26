@@ -23,9 +23,11 @@ export interface AboutMedia {
   currently: { ko: string; en: string };
   talks: MediaItem[];
   interviews: MediaItem[];
-  writing: MediaItem[];
+  speaking: MediaItem[];   // 강연/세미나 한 줄 — Media 그룹의 한 sub-section
+  writing: MediaItem[];    // hidden for now (empty); kept for future use
   books: MediaItem[];
-  code: MediaItem[];
+  research: MediaItem[];   // 대표 논문 — Etc. 그룹
+  code: MediaItem[];       // GitHub repos — Etc. 그룹
 }
 
 export interface LocalizedMediaItem {
@@ -37,11 +39,19 @@ export interface LocalizedMediaItem {
   role?: string;
 }
 
+// Korean section is grouped: Media (Talks / Interviews / Speaking),
+// Books & Writings (gallery), and Etc. (Research / Code).
 export interface KoSectionMedia {
-  talks: LocalizedMediaItem[];
-  interviews: LocalizedMediaItem[];
+  media: {
+    talks: LocalizedMediaItem[];
+    interviews: LocalizedMediaItem[];
+    speaking: LocalizedMediaItem[];
+  };
   books: LocalizedMediaItem[];
-  code: LocalizedMediaItem[];
+  etc: {
+    research: LocalizedMediaItem[];
+    code: LocalizedMediaItem[];
+  };
 }
 
 export interface LocalizedAboutMedia {
@@ -140,8 +150,10 @@ export async function getAboutMedia(locale: Locale): Promise<LocalizedAboutMedia
   const allCategories = {
     talks:      sortNewestFirst(data.talks      ?? []),
     interviews: sortNewestFirst(data.interviews ?? []),
+    speaking:   sortNewestFirst(data.speaking   ?? []),
     writing:    sortNewestFirst(data.writing    ?? []),
     books:      sortNewestFirst(data.books      ?? []),
+    research:   sortNewestFirst(data.research   ?? []),
     code:       sortNewestFirst(data.code       ?? []),
   };
 
@@ -149,36 +161,47 @@ export async function getAboutMedia(locale: Locale): Promise<LocalizedAboutMedia
   const koSplits = {
     talks:      splitByContentLang(allCategories.talks),
     interviews: splitByContentLang(allCategories.interviews),
+    speaking:   splitByContentLang(allCategories.speaking),
     writing:    splitByContentLang(allCategories.writing),
     books:      splitByContentLang(allCategories.books),
+    research:   splitByContentLang(allCategories.research),
     code:       splitByContentLang(allCategories.code),
   };
 
   const koSection: KoSectionMedia = {
-    talks:      koSplits.talks.ko.map(i => localizeItem(i, locale)),
-    interviews: koSplits.interviews.ko.map(i => localizeItem(i, locale)),
-    books:      koSplits.books.ko.map(i => localizeItem(i, locale)),
-    code:       koSplits.code.ko.map(i => localizeItem(i, locale)),
+    media: {
+      talks:      koSplits.talks.ko.map(i => localizeItem(i, locale)),
+      interviews: koSplits.interviews.ko.map(i => localizeItem(i, locale)),
+      speaking:   koSplits.speaking.ko.map(i => localizeItem(i, locale)),
+    },
+    books: koSplits.books.ko.map(i => localizeItem(i, locale)),
+    etc: {
+      research: koSplits.research.ko.map(i => localizeItem(i, locale)),
+      code:     koSplits.code.ko.map(i => localizeItem(i, locale)),
+    },
   };
 
   // English section: flatten all categories, sort newest-first as one list
   const enRaw = [
     ...koSplits.talks.en,
     ...koSplits.interviews.en,
+    ...koSplits.speaking.en,
     ...koSplits.writing.en,
     ...koSplits.books.en,
+    ...koSplits.research.en,
     ...koSplits.code.en,
   ];
   const enSection = sortNewestFirst(enRaw).map(i => localizeItem(i, locale));
 
   const currently = (data.currently?.[locale] ?? '').trim();
-  const hasAnyMedia =
-    koSection.talks.length +
-      koSection.interviews.length +
-      koSection.books.length +
-      koSection.code.length +
-      enSection.length >
-    0;
+  const koCount =
+    koSection.media.talks.length +
+    koSection.media.interviews.length +
+    koSection.media.speaking.length +
+    koSection.books.length +
+    koSection.etc.research.length +
+    koSection.etc.code.length;
+  const hasAnyMedia = koCount + enSection.length > 0;
 
   return { currently, koSection, enSection, hasAnyMedia };
 }

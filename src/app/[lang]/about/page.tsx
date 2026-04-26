@@ -4,6 +4,7 @@ import { getAboutContent, getAboutMedia, getBioContent, getBioPlainText } from '
 import ProfileImage from '@/components/ProfileImage';
 import SocialIcons from '@/components/SocialIcons';
 import AroundTheWeb from '@/components/about/AroundTheWeb';
+import ContactEmail from '@/components/about/ContactEmail';
 import type { Metadata } from 'next';
 
 export function generateStaticParams() {
@@ -77,14 +78,30 @@ export default async function AboutPage({
         labels={{
           around_the_web_ko: aboutLabels.around_the_web_ko || 'Around the web (Korean)',
           around_the_web_en: aboutLabels.around_the_web_en || 'Around the web (English)',
+          media: aboutLabels.media || 'Media',
           talks: aboutLabels.talks || 'Talks',
           interviews: aboutLabels.interviews || 'Interviews',
-          books: aboutLabels.books || 'Books & writing',
+          speaking: aboutLabels.speaking || 'Speaking',
+          books: aboutLabels.books || 'Books & Writings',
+          etc: aboutLabels.etc || 'Etc.',
+          research: aboutLabels.research || 'Research',
           code: aboutLabels.code || 'Code',
         }}
         koSection={media.koSection}
         enSection={media.enSection}
       />
+
+      {/* Contact — email obfuscated until JS hydrates */}
+      <section className="mt-10 pt-8 border-t border-line-default">
+        <h2 className="text-base font-[540] text-text-primary tracking-tight mb-2">
+          {aboutLabels.contact || 'Contact'}
+        </h2>
+        <ContactEmail
+          localPart="terry.t.um"
+          domain="gmail.com"
+          fallbackLabel={aboutLabels.email_label || 'Email'}
+        />
+      </section>
     </div>
   );
 }
