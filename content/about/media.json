@@ -5,49 +5,52 @@
   },
   "talks": [
     {
-      "title_ko": "AI+Education: 밀레니얼을 위한 AI & Robotics Tech Lab, ART Lab의 도전",
-      "title_en": "AI+Education: ART Lab — An AI & Robotics Tech Lab for the Millennial Era",
-      "source": "KAIST School of Computing",
-      "url": "https://www.youtube.com/watch?v=7-ncAnCYDo8",
-      "content_lang": "ko"
+      "title_ko": "ART Lab — 창업자가 직접 소개하는 회사",
+      "title_en": "ART Lab — Founder's Company Introduction",
+      "source": "YouTube · ART Lab for Beauty AI",
+      "year": "2024-10",
+      "url": "https://www.youtube.com/watch?v=dQ7ydYFvoD8",
+      "content_lang": "en"
     },
     {
       "title_ko": "인공지능 기술 × 스킨케어 시장 = ART Lab",
       "title_en": "AI Technology × the Skincare Market = ART Lab",
-      "source": "YouTube",
+      "source": "YouTube · Terry TaeWoong Um",
+      "year": "2021-03",
       "url": "https://www.youtube.com/watch?v=3n3BNDMBj2g",
       "content_lang": "ko"
     },
     {
-      "title_ko": "ART Lab — 창업자가 직접 소개하는 회사",
-      "title_en": "ART Lab — Founder's Company Introduction",
-      "source": "ART Lab for Beauty AI",
-      "url": "https://www.youtube.com/watch?v=dQ7ydYFvoD8",
-      "content_lang": "en"
+      "title_ko": "AI+Education: 밀레니얼을 위한 AI & Robotics Tech Lab, ART Lab의 도전",
+      "title_en": "AI+Education: ART Lab — An AI & Robotics Tech Lab for the Millennial Era",
+      "source": "YouTube · KAIST School of Computing",
+      "year": "2019-04",
+      "url": "https://www.youtube.com/watch?v=7-ncAnCYDo8",
+      "content_lang": "ko"
     }
   ],
   "interviews": [
     {
-      "title_ko": "코스맥스 AI혁신그룹장 인터뷰 — \"화장품 제조는 지난 30년간 가장 큰 변화를 겪었다\"",
-      "title_en": "\"Cosmetics has undergone the most drastic change in manufacturing over the past 30 years\"",
-      "source": "Maeil Business (English)",
-      "year": "2025",
-      "url": "https://www.mk.co.kr/en/business/11306738",
-      "content_lang": "en"
-    },
-    {
       "title_ko": "[유통DX리더] 엄태웅 코스맥스 AI혁신그룹장 — \"AI와 로봇 기술로 글로벌 뷰티기업 도약\"",
       "title_en": "[Distribution DX Leader] Eom Tae-Woong, Cosmax AI Innovation Group Lead — \"AI and Robotics Will Take Global Beauty Higher\"",
       "source": "전자신문",
-      "year": "2025",
+      "year": "2025-06",
       "url": "https://m.etnews.com/20250612000294",
       "content_lang": "ko"
+    },
+    {
+      "title_ko": "코스맥스 AI혁신그룹장 인터뷰 — \"화장품 제조는 지난 30년간 가장 큰 변화를 겪었다\"",
+      "title_en": "\"Cosmetics has undergone the most drastic change in manufacturing over the past 30 years\"",
+      "source": "Maeil Business",
+      "year": "2025-05",
+      "url": "https://www.mk.co.kr/en/business/11306738",
+      "content_lang": "en"
     },
     {
       "title_ko": "[SBA × IT동아] 아트랩 — \"피부 좋아지는 법, AI가 찾아드립니다\"",
       "title_en": "[SBA × IT Donga] ART Lab — \"AI Will Help You Find Better Skin Care\"",
       "source": "IT동아",
-      "year": "2024",
+      "year": "2024-06",
       "url": "https://www.donga.com/news/It/article/all/20240613/125422001/1",
       "content_lang": "ko"
     },
@@ -55,43 +58,18 @@
       "title_ko": "[특별 인터뷰] \"화장품만 판매하는 시대는 끝나가고 있다\"",
       "title_en": "[Special Interview] \"The Era of Just Selling Cosmetics Is Ending\"",
       "source": "이코노믹리뷰",
-      "year": "2022",
+      "year": "2022-12",
       "url": "https://www.econovill.com/news/articleView.html?idxno=598858",
       "content_lang": "ko"
     }
   ],
-  "writing": [
-    {
-      "title_ko": "AI가 뷰티 제조를 바꾼다",
-      "title_en": "How AI Is Reshaping Beauty Manufacturing",
-      "source": "DBR",
-      "year": "2024",
-      "url": "#",
-      "content_lang": "ko"
-    },
-    {
-      "title_ko": "Physical AI 창업가의 길 — 연구실에서 공장까지",
-      "title_en": "A Founder's Path Into Physical AI — From Lab to Factory",
-      "source": "Forbes Korea",
-      "year": "2024",
-      "url": "#",
-      "content_lang": "ko"
-    },
-    {
-      "title_ko": "AI·로봇 융합이 만드는 다음 10년",
-      "title_en": "The Next Decade of AI–Robotics Convergence",
-      "source": "Maeil Business",
-      "year": "2023",
-      "url": "#",
-      "content_lang": "ko"
-    }
-  ],
+  "writing": [],
   "books": [
     {
       "title_ko": "Physical AI 서베이 시리즈",
       "title_en": "Physical AI Survey Series",
       "source": "terryum.ai/surveys",
-      "year": "2024–",
+      "year": "2024",
       "url": "/surveys"
     },
     {

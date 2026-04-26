@@ -80,11 +80,35 @@ export async function getBioPlainText(locale: Locale) {
   return readPlainText('bio', locale);
 }
 
+// "2025-05" → "May 2025", "2024" → "2024", "2024–" → "2024–" (passthrough for non-ISO).
+function formatYearMonth(input?: string | number): string | undefined {
+  if (input == null) return undefined;
+  const raw = String(input).trim();
+  if (!raw) return undefined;
+  const m = raw.match(/^(\d{4})-(\d{1,2})/);
+  if (!m) return raw;
+  const date = new Date(`${m[1]}-${m[2].padStart(2, '0')}-01T00:00:00Z`);
+  if (isNaN(date.getTime())) return raw;
+  return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+}
+
+// Sortable key: "YYYY-MM" stripped from any year-like prefix; missing → "0000-00".
+function getSortKey(item: MediaItem): string {
+  if (item.year == null) return '0000-00';
+  const m = String(item.year).match(/^(\d{4})(?:-(\d{1,2}))?/);
+  if (!m) return '0000-00';
+  return `${m[1]}-${(m[2] ?? '00').padStart(2, '0')}`;
+}
+
+function sortNewestFirst(items: MediaItem[]): MediaItem[] {
+  return items.slice().sort((a, b) => getSortKey(b).localeCompare(getSortKey(a)));
+}
+
 function localizeItem(item: MediaItem, locale: Locale): LocalizedMediaItem {
   return {
     title: (locale === 'ko' ? item.title_ko : item.title_en) || item.title_en || item.title_ko,
     source: item.source,
-    year: item.year != null ? String(item.year) : undefined,
+    year: formatYearMonth(item.year),
     url: item.url,
     isOtherLang: item.content_lang != null && item.content_lang !== locale,
   };
@@ -92,11 +116,11 @@ function localizeItem(item: MediaItem, locale: Locale): LocalizedMediaItem {
 
 export async function getAboutMedia(locale: Locale): Promise<LocalizedAboutMedia> {
   const data = mediaJson as AboutMedia;
-  const talks = (data.talks ?? []).map(i => localizeItem(i, locale));
-  const interviews = (data.interviews ?? []).map(i => localizeItem(i, locale));
-  const writing = (data.writing ?? []).map(i => localizeItem(i, locale));
-  const books = (data.books ?? []).map(i => localizeItem(i, locale));
-  const code = (data.code ?? []).map(i => localizeItem(i, locale));
+  const talks      = sortNewestFirst(data.talks      ?? []).map(i => localizeItem(i, locale));
+  const interviews = sortNewestFirst(data.interviews ?? []).map(i => localizeItem(i, locale));
+  const writing    = sortNewestFirst(data.writing    ?? []).map(i => localizeItem(i, locale));
+  const books      = sortNewestFirst(data.books      ?? []).map(i => localizeItem(i, locale));
+  const code       = sortNewestFirst(data.code       ?? []).map(i => localizeItem(i, locale));
   const currently = (data.currently?.[locale] ?? '').trim();
   return {
     currently,
