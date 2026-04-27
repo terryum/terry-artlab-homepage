@@ -51,11 +51,18 @@ const VAULT_ROOT = await resolveVaultRoot();
 
 // ── Vault folder structure ──
 const VAULT_FOLDERS = [
-  'From AI/Papers',
-  'From AI/Threads',
-  'From Terry/Memos',
-  'From Terry/Essays',
-  'From Terry/Drafts',
+  'Public/Papers',
+  'Public/Threads',
+  'Public/Memos',
+  'Public/Essays',
+  'Private/Drafts',
+  'Private/Notes',
+  'Private/Tasks',
+  'Private/Whytree',
+  'Private/Research',
+  'Private/Posts/Essays',
+  'Private/Posts/Memos',
+  'Private/Posts/Threads',
   'Ops/Meta',
   'Ops/Templates',
 ];
@@ -72,10 +79,10 @@ function r2ImageUrl(slug, filename) {
 
 // ── content_type → vault subfolder mapping ──
 const TYPE_TO_FOLDER = {
-  papers: 'From AI/Papers',
-  threads: 'From AI/Threads',
-  memos: 'From Terry/Memos',
-  essays: 'From Terry/Essays',
+  papers: 'Public/Papers',
+  threads: 'Public/Threads',
+  memos: 'Public/Memos',
+  essays: 'Public/Essays',
 };
 
 // ── Relation type → Korean label ──
@@ -649,7 +656,7 @@ async function main() {
     const terryMemos = parseTerryMemo(koMdx);
 
     // Determine vault subfolder
-    const vaultSubfolder = TYPE_TO_FOLDER[contentType] || 'From Terry/Memos';
+    const vaultSubfolder = TYPE_TO_FOLDER[contentType] || 'Public/Memos';
     const notePath = path.join(VAULT_ROOT, vaultSubfolder, `${slug}.md`);
 
     const existingContent = await readExistingNote(notePath);
@@ -795,25 +802,51 @@ async function main() {
   }
 
   // ── Reverse scan: index unregistered Obsidian memos/drafts ──
-  const scanDirs = ['From Terry/Memos', 'From Terry/Essays', 'From Terry/Drafts'];
+  const scanDirs = ['Public/Memos', 'Public/Essays', 'Private/Drafts'];
   let newlyIndexed = 0;
 
   // Canonicalize stored entry.path to an absolute filesystem path for dedupe.
-  // Stored formats seen in the wild:
-  //   "vault/From Terry/..."                 (repo-relative, canonical going forward)
-  //   "~/Codes/personal/terry-obsidian/..."  (legacy tilde-absolute)
-  //   "/Users/.../vault/From Terry/..."      (absolute)
-  //   "From Terry/..."                       (vault-relative, very old)
+  // Stored formats seen in the wild (from oldest to newest):
+  //   "From Terry/..."                       (very old vault-relative — pre-restructure)
+  //   "vault/From Terry/..."                 (repo-relative — pre-restructure)
+  //   "~/Codes/personal/terry-obsidian/..."  (tilde-absolute)
+  //   "/Users/.../vault/..."                 (absolute)
+  //   "vault/Public/..." | "vault/Private/..." (current canonical, post-restructure)
   const vaultParent = path.dirname(VAULT_ROOT);
   function resolveEntryPath(p) {
     if (!p) return null;
     if (path.isAbsolute(p)) return p;
     if (p.startsWith('~/')) return path.join(os.homedir(), p.slice(2));
-    if (p.startsWith('vault/')) return path.join(vaultParent, p);
-    if (p.startsWith('From Terry/') || p.startsWith('From AI/')) {
-      return path.join(VAULT_ROOT, p);
+    if (p.startsWith('vault/')) {
+      const repoRel = remapLegacyVaultPath(p);
+      return path.join(vaultParent, repoRel);
+    }
+    if (p.startsWith('From Terry/') || p.startsWith('From AI/') || p.startsWith('My Notes/')) {
+      const vaultRel = remapLegacyVaultPath(`vault/${p}`).replace(/^vault\//, '');
+      return path.join(VAULT_ROOT, vaultRel);
     }
     return null; // posts/... and other non-vault paths cannot match vault files
+  }
+
+  // Map legacy "vault/From AI/..." | "vault/From Terry/..." | "vault/My Notes/..." | "vault/Templates/..."
+  // paths to current canonical "vault/Public/..." | "vault/Private/..." | "vault/Ops/Templates/..." paths.
+  // Used so old global-index.json entries still resolve after the 2026-04 vault restructure.
+  function remapLegacyVaultPath(p) {
+    return p
+      .replace(/^vault\/From AI\/Papers\//, 'vault/Public/Papers/')
+      .replace(/^vault\/From AI\/Threads\/Private\//, 'vault/Private/Posts/Threads/')
+      .replace(/^vault\/From AI\/Threads\//, 'vault/Public/Threads/')
+      .replace(/^vault\/From Terry\/Essays\/Private\//, 'vault/Private/Posts/Essays/')
+      .replace(/^vault\/From Terry\/Essays\//, 'vault/Public/Essays/')
+      .replace(/^vault\/From Terry\/Memos\/Private\//, 'vault/Private/Posts/Memos/')
+      .replace(/^vault\/From Terry\/Memos\//, 'vault/Public/Memos/')
+      .replace(/^vault\/From Terry\/Drafts\//, 'vault/Private/Drafts/')
+      .replace(/^vault\/From Terry\/Articles\//, 'vault/Private/Drafts/')
+      .replace(/^vault\/My Notes\/Private\//, 'vault/Private/Notes/')
+      .replace(/^vault\/My Notes\/Tasks\//, 'vault/Private/Tasks/')
+      .replace(/^vault\/My Notes\/Research\//, 'vault/Private/Research/')
+      .replace(/^vault\/My Notes\/whytree\//, 'vault/Private/Whytree/')
+      .replace(/^vault\/Templates\//, 'vault/Ops/Templates/');
   }
 
   for (const dir of scanDirs) {
@@ -828,7 +861,7 @@ async function main() {
       if (/_Source\.md$/.test(file) || /-source\.md$/.test(file)) continue;
 
       const filePath = path.join(dirPath, file);
-      // Canonical stored format: repo-relative ("vault/From Terry/...")
+      // Canonical stored format: repo-relative ("vault/Public/..." or "vault/Private/...")
       const storePath = path.relative(vaultParent, filePath);
 
       // Path-based dedupe: resolve each stored entry path to absolute, compare to filePath
