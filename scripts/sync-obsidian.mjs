@@ -50,19 +50,20 @@ async function resolveVaultRoot() {
 const VAULT_ROOT = await resolveVaultRoot();
 
 // ── Vault folder structure ──
+// "Notes" mirrors the homepage's notes tab (memos + threads merged) per
+// TAB_CONFIG in src/lib/site-config.ts. Folder differentiation between memos
+// and threads is no longer maintained; content_type frontmatter is the SoT.
 const VAULT_FOLDERS = [
   'Public/Papers',
-  'Public/Threads',
-  'Public/Memos',
   'Public/Essays',
+  'Public/Notes',
   'Private/Drafts',
   'Private/Notes',
   'Private/Tasks',
   'Private/Whytree',
   'Private/Research',
   'Private/Posts/Essays',
-  'Private/Posts/Memos',
-  'Private/Posts/Threads',
+  'Private/Posts/Notes',
   'Ops/Meta',
   'Ops/Templates',
 ];
@@ -78,10 +79,11 @@ function r2ImageUrl(slug, filename) {
 }
 
 // ── content_type → vault subfolder mapping ──
+// memos and threads share Public/Notes (matches homepage 'notes' tab grouping).
 const TYPE_TO_FOLDER = {
   papers: 'Public/Papers',
-  threads: 'Public/Threads',
-  memos: 'Public/Memos',
+  threads: 'Public/Notes',
+  memos: 'Public/Notes',
   essays: 'Public/Essays',
 };
 
@@ -656,7 +658,7 @@ async function main() {
     const terryMemos = parseTerryMemo(koMdx);
 
     // Determine vault subfolder
-    const vaultSubfolder = TYPE_TO_FOLDER[contentType] || 'Public/Memos';
+    const vaultSubfolder = TYPE_TO_FOLDER[contentType] || 'Public/Notes';
     const notePath = path.join(VAULT_ROOT, vaultSubfolder, `${slug}.md`);
 
     const existingContent = await readExistingNote(notePath);
@@ -802,7 +804,7 @@ async function main() {
   }
 
   // ── Reverse scan: index unregistered Obsidian memos/drafts ──
-  const scanDirs = ['Public/Memos', 'Public/Essays', 'Private/Drafts'];
+  const scanDirs = ['Public/Notes', 'Public/Essays', 'Private/Drafts'];
   let newlyIndexed = 0;
 
   // Canonicalize stored entry.path to an absolute filesystem path for dedupe.
@@ -831,15 +833,21 @@ async function main() {
   // Map legacy "vault/From AI/..." | "vault/From Terry/..." | "vault/My Notes/..." | "vault/Templates/..."
   // paths to current canonical "vault/Public/..." | "vault/Private/..." | "vault/Ops/Templates/..." paths.
   // Used so old global-index.json entries still resolve after the 2026-04 vault restructure.
+  // Note: memos and threads both map to Public/Notes (and Private/Posts/Notes) — matches
+  // the homepage's 'notes' tab grouping.
   function remapLegacyVaultPath(p) {
     return p
       .replace(/^vault\/From AI\/Papers\//, 'vault/Public/Papers/')
-      .replace(/^vault\/From AI\/Threads\/Private\//, 'vault/Private/Posts/Threads/')
-      .replace(/^vault\/From AI\/Threads\//, 'vault/Public/Threads/')
+      .replace(/^vault\/From AI\/Threads\/Private\//, 'vault/Private/Posts/Notes/')
+      .replace(/^vault\/From AI\/Threads\//, 'vault/Public/Notes/')
+      .replace(/^vault\/Public\/Threads\//, 'vault/Public/Notes/')
+      .replace(/^vault\/Public\/Memos\//, 'vault/Public/Notes/')
+      .replace(/^vault\/Private\/Posts\/Threads\//, 'vault/Private/Posts/Notes/')
+      .replace(/^vault\/Private\/Posts\/Memos\//, 'vault/Private/Posts/Notes/')
       .replace(/^vault\/From Terry\/Essays\/Private\//, 'vault/Private/Posts/Essays/')
       .replace(/^vault\/From Terry\/Essays\//, 'vault/Public/Essays/')
-      .replace(/^vault\/From Terry\/Memos\/Private\//, 'vault/Private/Posts/Memos/')
-      .replace(/^vault\/From Terry\/Memos\//, 'vault/Public/Memos/')
+      .replace(/^vault\/From Terry\/Memos\/Private\//, 'vault/Private/Posts/Notes/')
+      .replace(/^vault\/From Terry\/Memos\//, 'vault/Public/Notes/')
       .replace(/^vault\/From Terry\/Drafts\//, 'vault/Private/Drafts/')
       .replace(/^vault\/From Terry\/Articles\//, 'vault/Private/Drafts/')
       .replace(/^vault\/My Notes\/Private\//, 'vault/Private/Notes/')
