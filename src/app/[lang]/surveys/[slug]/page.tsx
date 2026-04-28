@@ -32,12 +32,14 @@ export async function generateMetadata({
   if (!survey || !survey.embed_url) notFound();
   const title = survey.title[lang as 'ko' | 'en'] || survey.title.en;
   const description = survey.description[lang as 'ko' | 'en'] || survey.description.en;
-  const ogImage = survey.cover_image?.replace(/-cover\.webp$/, '-og.jpg');
+  const ogImage = survey.cover_image?.replace(/-cover\.webp$/, '-og.png');
 
   return {
     title,
     description,
-    ...(survey.visibility === 'group' ? { robots: { index: false, follow: false } } : {}),
+    ...(survey.visibility === 'group' || survey.visibility === 'private'
+      ? { robots: { index: false, follow: false } }
+      : {}),
     openGraph: {
       title,
       description,

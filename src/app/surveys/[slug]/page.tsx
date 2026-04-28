@@ -18,7 +18,7 @@ export async function generateMetadata({
   const description = survey.description.en;
   const ogImage = survey.cover_image?.startsWith('/api/')
     ? undefined
-    : survey.cover_image?.replace(/-cover\.webp$/, '-og.jpg');
+    : survey.cover_image?.replace(/-cover\.webp$/, '-og.png');
 
   return {
     title,

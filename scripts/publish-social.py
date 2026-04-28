@@ -694,6 +694,14 @@ def publish_bluesky(text: str, url: str, dry_run: bool, image_url: str = "") -> 
     if target_image:
         print(f"  이미지 업로드 중: {target_image}")
         thumb_blob = _upload_bluesky_blob(target_image, access_token)
+        if not thumb_blob:
+            # silent fail 방지 — 사용자가 "게시 OK인데 카드에 이미지 없음" 사고 인지하도록
+            print(f"  ⚠ Bluesky thumb 업로드 실패 — 게시는 진행되나 link card에 이미지 없음", file=sys.stderr)
+            print(f"     OG image URL: {target_image}", file=sys.stderr)
+            print(f"     원인 후보: 1MB 초과 / R2 dev URL access / OG meta 부재", file=sys.stderr)
+    elif url:
+        # OG meta에 image 자체가 없는 경우
+        print(f"  ⚠ Bluesky: OG image URL을 찾을 수 없음 (URL의 og:image meta 부재) — link card 이미지 없음", file=sys.stderr)
 
     # Step 3: facets + record 구성
     facets = _build_bluesky_facets(text)

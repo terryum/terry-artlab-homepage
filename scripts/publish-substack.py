@@ -65,11 +65,23 @@ def save_published_cache(published: dict):
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
+SUBSTACK_SUPPORTED_TYPES = ("essays", "tech")  # 명시적 — threads/memos/papers/surveys 미지원
+
+
 def find_target_post(posts: list, target_slug: "str | None", already_published: dict) -> "dict | None":
     candidates = get_publishable_candidates(posts)
     if not candidates:
         return None
     if target_slug:
+        # 미지원 type 명시 알림 (silent skip 방지 — 2026-04-28 사고 D)
+        match = next((p for p in posts if p.get("slug") == target_slug), None)
+        if match and match.get("content_type") not in SUBSTACK_SUPPORTED_TYPES:
+            print(
+                f"✗ Substack 미지원: post type='{match.get('content_type')}' "
+                f"(지원 타입: {', '.join(SUBSTACK_SUPPORTED_TYPES)})",
+                file=sys.stderr,
+            )
+            return None
         post = find_post_by_slug(candidates, target_slug)
         if not post:
             print(f"Error: slug '{target_slug}' not found in publishable posts.", file=sys.stderr)
