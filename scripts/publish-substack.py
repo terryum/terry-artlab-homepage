@@ -65,7 +65,7 @@ def save_published_cache(published: dict):
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
-SUBSTACK_SUPPORTED_TYPES = ("essays", "tech")  # 명시적 — threads/memos/papers/surveys 미지원
+SUBSTACK_SUPPORTED_TYPES = ("essays", "tech")  # 이 스크립트(=Posts 전용)에서만. Surveys/Projects는 publish-project-social.py가 자체 substack 처리.
 
 
 def find_target_post(posts: list, target_slug: "str | None", already_published: dict) -> "dict | None":

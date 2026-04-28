@@ -60,13 +60,13 @@ argument-hint: "<번호 | slug | 제목 | URL> [플랫폼 필터]"
 - **1인칭 톤**: "저의 AI scientist들과 분석하였습니다" — 주체성 강조
 - **규모감**: 논문 수, 챕터 수 등 구체적 숫자 포함
 - **공유 URL**: `https://www.terryum.ai/surveys/{slug}` (캐시버스팅: `?v={YYYYMMDD}`)
-- **커버이미지**: `images/projects/{slug}-og.jpg` (OG 메타태그로 자동 전달)
+- **커버이미지**: `images/projects/{slug}-og.png` (OG 메타태그로 자동 전달, 4-asset 표준 spec)
 
 ### Projects
 - **데이터 소스**: `projects.json`의 `description.ko` / `description.en`
 - **1인칭 톤**: 내가 만든 결과물임을 강조
 - **공유 URL**: `https://www.terryum.ai/projects/{slug}` 또는 외부 링크
-- **커버이미지**: `images/projects/{slug}-og.jpg` (없으면 cover.webp)
+- **커버이미지**: `images/projects/{slug}-og.png` (없으면 cover.webp, 4-asset 표준 spec)
 
 ### 플랫폼별 언어 + 글자수
 
@@ -145,17 +145,18 @@ argument-hint: "<번호 | slug | 제목 | URL> [플랫폼 필터]"
 콘텐츠 타입에 따라 적절한 스크립트 사용:
 
 ```bash
-# Posts (소셜미디어: facebook, threads, linkedin, x, bluesky) — 기본 메시지
+# Posts (essays/memos/threads/papers): publish-social.py — substack 미포함
 python scripts/publish-social.py --slug={slug} --platform={platforms}
 
 # Posts (커스텀 메시지) — Step 3.7 글자수 초과 시 사용
 python scripts/publish-social.py --slug={slug} --message-ko-file=/tmp/share-ko.txt --message-en-file=/tmp/share-en.txt --platform={platforms}
 
-# Posts (Substack: 별도 스크립트 — EN/KO 동시 발행)
+# Posts essays/tech의 Substack: 별도 스크립트 (publish-social.py와 분리)
 python scripts/publish-substack.py --slug={slug}
 
-# Surveys / Projects (기본 메시지)
+# Surveys / Projects: publish-project-social.py — substack 자체 처리 (한 번에 6 platforms)
 python scripts/publish-project-social.py --slug={slug} --platform={platforms}
+# {platforms} 미지정 시 default = facebook,threads,linkedin,x,bluesky,substack 전부
 
 # Surveys / Projects (커스텀 메시지)
 python scripts/publish-project-social.py --slug={slug} --message-ko-file=/tmp/share-ko.txt --message-en-file=/tmp/share-en.txt --platform={platforms}
@@ -163,9 +164,15 @@ python scripts/publish-project-social.py --slug={slug} --message-ko-file=/tmp/sh
 
 `--message-ko-file`은 facebook/threads에 적용, `--message-en-file`은 linkedin/x/bluesky에 적용. 빌더가 override를 받아 그대로 쓰되, 한계 초과면 동일한 truncate 규칙으로 자른다 (즉 사용자가 한계 이내로 사이즈를 맞춰 넘기면 잘림 없이 발행됨).
 
-**중요: Substack은 `publish-social.py`에 포함되어 있지 않다.** 반드시 `publish-substack.py`를 별도로 실행해야 한다. `--platform=substack`은 `publish-social.py`에서 무시된다.
+### Substack 발행 — 콘텐츠 타입별 라우팅 (필독)
 
-**Substack 지원 범위**: `essays`, `tech` 타입만. `threads`, `memos`, `papers`, `surveys`는 publish-substack.py가 명시적 stderr 메시지(`✗ Substack 미지원: ...`)와 함께 skip한다 (2026-04-28 사고 D 후 명시화). 결과 요약에 반드시 `— substack: 미지원 (<type>)` 형태로 표시할 것 — silent skip 금지.
+| 콘텐츠 | 스크립트 | Substack 처리 |
+|---|---|---|
+| **Posts** essays / tech | `publish-substack.py` (별도 호출) | ✓ 지원 — EN+KO 동시 발행 |
+| **Posts** threads / memos / papers | `publish-substack.py` | ✗ 미지원 — stderr `✗ Substack 미지원: post type='<type>'` 출력 후 종료 |
+| **Surveys / Projects** | `publish-project-social.py --platform=...,substack` | ✓ 지원 — 같은 스크립트가 6 platforms 모두 처리 |
+
+**2026-04-28 사고 D (S5 substack silent skip)**: `/share S5` 호출 시 platform list를 명시적으로 `facebook,threads,linkedin,x,bluesky` 5개로 지정해 substack이 빠졌다. publish-project-social.py default가 substack 포함이므로 **platform 미지정 (전체) 또는 명시적으로 substack 포함 필수**. `/share` 결과에 substack 발행 여부가 안 보이면 silent skip 의심하고 `--platform=substack`으로 재호출.
 
 **글자수 초과 시 재발행**: 특정 플랫폼이 실패하면 해당 플랫폼만 기본 메시지로 재시도:
 ```bash
