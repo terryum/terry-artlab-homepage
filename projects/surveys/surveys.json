@@ -1,6 +1,92 @@
 {
-  "next_survey_number": 5,
+  "next_survey_number": 6,
   "surveys": [
+    {
+      "slug": "survey-claude-to-codex",
+      "survey_number": 5,
+      "title": {
+        "ko": "Claude Code에서 Codex로",
+        "en": "From Claude Code to Codex"
+      },
+      "description": {
+        "ko": "Claude Code 사용자가 Codex로 옮겨 멀티에이전트 코딩과 AI Scientist 워크플로우를 익히는 길. GPT-5.5 출시 후 커뮤니티가 발견한 패턴부터 LLM Wiki 기반 연구 활동까지.",
+        "en": "How Claude Code users move to Codex for multi-agent coding and AI Scientist workflows. Covers the post-GPT-5.5 community patterns and LLM-Wiki-driven research."
+      },
+      "cover_image": "/images/projects/survey-claude-to-codex-cover.webp",
+      "tech_stack": [
+        "AI Coding",
+        "Codex",
+        "Multi-Agent",
+        "Survey"
+      ],
+      "toc": [
+        {
+          "ko": "서론: 왜 Codex로",
+          "en": "Why Codex Now"
+        },
+        {
+          "ko": "두 도구 비교",
+          "en": "Two Tools Compared"
+        },
+        {
+          "ko": "Codex 첫걸음",
+          "en": "Codex First Steps"
+        },
+        {
+          "ko": "하네스 엔지니어링",
+          "en": "Harness Engineering"
+        },
+        {
+          "ko": "Codex 하네스 구성",
+          "en": "Build the Harness"
+        },
+        {
+          "ko": "검증 가능한 코딩",
+          "en": "Verifiable Coding"
+        },
+        {
+          "ko": "모델 릴리스 비교",
+          "en": "Model Timeline"
+        },
+        {
+          "ko": "GPT-5.5 이후",
+          "en": "After GPT-5.5"
+        },
+        {
+          "ko": "고급 멀티에이전트",
+          "en": "Advanced Agents"
+        },
+        {
+          "ko": "LLM Wiki",
+          "en": "LLM Wiki"
+        },
+        {
+          "ko": "AI 외장 메모리",
+          "en": "AI External Memory"
+        },
+        {
+          "ko": "AI Scientist",
+          "en": "AI Scientist"
+        }
+      ],
+      "links": [
+        {
+          "type": "demo",
+          "url": "https://survey-claude-to-codex.pages.dev/",
+          "label": "Read"
+        },
+        {
+          "type": "github",
+          "url": "https://github.com/terryum/terry-surveys"
+        }
+      ],
+      "embed_url": "https://survey-claude-to-codex.pages.dev/",
+      "status": "active",
+      "featured": true,
+      "order": 0,
+      "published_at": "2026-04-28",
+      "updated_at": "2026-04-28"
+    },
     {
       "slug": "survey-humanoid-revolution",
       "survey_number": 4,
@@ -13,27 +99,86 @@
         "en": "A 16-chapter survey of the humanoid robotics transformation from 2015 to 2026. Covers the limits of the orthodox LIPM/ZMP/MPC stack, the four catalysts (QDD actuators, GPU-parallel simulation, teacher-student RL, sim-to-real), the System 0/1/2 architecture with VLA integration, frontier-company analyses (Boston Dynamics, Figure, Agility, Unitree, AgiBot), and future diffusion scenarios through the lens of Korea's Manufacturing Physical AI."
       },
       "cover_image": "/images/projects/survey-humanoid-revolution-cover.webp",
-      "tech_stack": ["Humanoid", "Robotics", "RL", "VLA", "Sim-to-Real", "Survey"],
+      "tech_stack": [
+        "Humanoid",
+        "Robotics",
+        "RL",
+        "VLA",
+        "Sim-to-Real",
+        "Survey"
+      ],
       "toc": [
-        { "ko": "정통파 스택", "en": "Orthodox Stack" },
-        { "ko": "여전한 기본기", "en": "Lasting Foundations" },
-        { "ko": "패러다임 전환", "en": "Paradigm Shift" },
-        { "ko": "QDD 액추에이터", "en": "QDD Actuators" },
-        { "ko": "GPU 병렬 시뮬", "en": "GPU Parallel Sim" },
-        { "ko": "학습 Canon", "en": "Learning Canon" },
-        { "ko": "Sim-to-Real", "en": "Sim-to-Real" },
-        { "ko": "모던 이론", "en": "Modern Theory" },
-        { "ko": "System 0/1/2", "en": "System 0/1/2" },
-        { "ko": "VLA 통합", "en": "VLA Integration" },
-        { "ko": "Boston Dynamics", "en": "Boston Dynamics" },
-        { "ko": "미국 도전자", "en": "US Challengers" },
-        { "ko": "중국의 강자", "en": "China Leaders" },
-        { "ko": "한국 생태계", "en": "Korea's Position" },
-        { "ko": "차별화 네 축", "en": "Four Axes" },
-        { "ko": "확산 시나리오", "en": "Diffusion Paths" }
+        {
+          "ko": "정통파 스택",
+          "en": "Orthodox Stack"
+        },
+        {
+          "ko": "여전한 기본기",
+          "en": "Lasting Foundations"
+        },
+        {
+          "ko": "패러다임 전환",
+          "en": "Paradigm Shift"
+        },
+        {
+          "ko": "QDD 액추에이터",
+          "en": "QDD Actuators"
+        },
+        {
+          "ko": "GPU 병렬 시뮬",
+          "en": "GPU Parallel Sim"
+        },
+        {
+          "ko": "학습 Canon",
+          "en": "Learning Canon"
+        },
+        {
+          "ko": "Sim-to-Real",
+          "en": "Sim-to-Real"
+        },
+        {
+          "ko": "모던 이론",
+          "en": "Modern Theory"
+        },
+        {
+          "ko": "System 0/1/2",
+          "en": "System 0/1/2"
+        },
+        {
+          "ko": "VLA 통합",
+          "en": "VLA Integration"
+        },
+        {
+          "ko": "Boston Dynamics",
+          "en": "Boston Dynamics"
+        },
+        {
+          "ko": "미국 도전자",
+          "en": "US Challengers"
+        },
+        {
+          "ko": "중국의 강자",
+          "en": "China Leaders"
+        },
+        {
+          "ko": "한국 생태계",
+          "en": "Korea's Position"
+        },
+        {
+          "ko": "차별화 네 축",
+          "en": "Four Axes"
+        },
+        {
+          "ko": "확산 시나리오",
+          "en": "Diffusion Paths"
+        }
       ],
       "links": [
-        { "type": "demo", "url": "https://survey-humanoid-revolution.pages.dev/", "label": "Read" }
+        {
+          "type": "demo",
+          "url": "https://survey-humanoid-revolution.pages.dev/",
+          "label": "Read"
+        }
       ],
       "embed_url": "https://survey-humanoid-revolution.pages.dev/",
       "status": "active",
@@ -54,22 +199,64 @@
         "en": "A research strategy survey on leveraging human hand data and tactile sensing beyond teleoperation bottlenecks. Provides the rationale for TacGlove, TacTeleOp, and TacPlay joint research across 4 Parts and 11 Chapters."
       },
       "cover_image": "/images/projects/survey-snu-largescale-tactile-hand-cover.webp",
-      "tech_stack": ["Robotics", "Tactile Sensing", "Human Data", "Survey"],
+      "tech_stack": [
+        "Robotics",
+        "Tactile Sensing",
+        "Human Data",
+        "Survey"
+      ],
       "toc": [
-        { "ko": "왜 사람 손 데이터", "en": "Why Human Hand Data" },
-        { "ko": "사람 손 데이터 수집", "en": "Human Hand Datasets" },
-        { "ko": "촉각의 가치", "en": "Value of Touch" },
-        { "ko": "Teleop-Free 접근", "en": "Teleop-Free" },
-        { "ko": "Co-training", "en": "Co-training" },
-        { "ko": "Embodiment 해소", "en": "Embodiment Gap" },
-        { "ko": "TacGlove", "en": "TacGlove" },
-        { "ko": "TacTeleOp", "en": "TacTeleOp" },
-        { "ko": "TacPlay", "en": "TacPlay" },
-        { "ko": "실험 설계", "en": "Experimental Design" },
-        { "ko": "산업 적용", "en": "Industrial Apps" }
+        {
+          "ko": "왜 사람 손 데이터",
+          "en": "Why Human Hand Data"
+        },
+        {
+          "ko": "사람 손 데이터 수집",
+          "en": "Human Hand Datasets"
+        },
+        {
+          "ko": "촉각의 가치",
+          "en": "Value of Touch"
+        },
+        {
+          "ko": "Teleop-Free 접근",
+          "en": "Teleop-Free"
+        },
+        {
+          "ko": "Co-training",
+          "en": "Co-training"
+        },
+        {
+          "ko": "Embodiment 해소",
+          "en": "Embodiment Gap"
+        },
+        {
+          "ko": "TacGlove",
+          "en": "TacGlove"
+        },
+        {
+          "ko": "TacTeleOp",
+          "en": "TacTeleOp"
+        },
+        {
+          "ko": "TacPlay",
+          "en": "TacPlay"
+        },
+        {
+          "ko": "실험 설계",
+          "en": "Experimental Design"
+        },
+        {
+          "ko": "산업 적용",
+          "en": "Industrial Apps"
+        }
       ],
       "links": [
-        { "type": "demo", "url": "https://survey-snu-largescale-tactile-hand.pages.dev/", "label": "Read" }
+        {
+          "type": "demo",
+          "url": "https://survey-snu-largescale-tactile-hand.pages.dev/",
+          "label": "Read"
+        }
       ],
       "embed_url": "https://survey-snu-largescale-tactile-hand.pages.dev/",
       "status": "active",
@@ -78,7 +265,9 @@
       "published_at": "2026-04-07",
       "updated_at": "2026-04-07",
       "visibility": "group",
-      "allowed_groups": ["snu"]
+      "allowed_groups": [
+        "snu"
+      ]
     },
     {
       "slug": "survey-korea-vla-agentic-robotics",
@@ -92,23 +281,69 @@
         "en": "A survey tracing the evolution from LLM-based planning through VLA and Code as Policy to agentic robotics. Compares agentic coding vs agentic robotics across 7 dimensions to illuminate fundamental differences in the physical world."
       },
       "cover_image": "/images/projects/survey-korea-vla-agentic-robotics-cover.webp",
-      "tech_stack": ["Robotics", "VLA", "LLM", "Agentic AI", "Survey"],
+      "tech_stack": [
+        "Robotics",
+        "VLA",
+        "LLM",
+        "Agentic AI",
+        "Survey"
+      ],
       "toc": [
-        { "ko": "서론: 코딩→로보틱스", "en": "Intro: Coding→Robotics" },
-        { "ko": "LLM as Planner", "en": "LLM as Planner" },
-        { "ko": "Code as Policies", "en": "Code as Policies" },
-        { "ko": "VLA 모델의 부상", "en": "Rise of VLA Models" },
-        { "ko": "계층적 계획 수립", "en": "Hierarchical Planning" },
-        { "ko": "저수준 제어: 확산정책", "en": "Low-Level: Diffusion" },
-        { "ko": "메모리와 세계 표현", "en": "Memory & World Model" },
-        { "ko": "폐루프 에이전트", "en": "Closed-Loop Agents" },
-        { "ko": "Sim-to-Real 전이", "en": "Sim-to-Real Transfer" },
-        { "ko": "코딩 vs 로보틱스", "en": "Coding vs Robotics" },
-        { "ko": "부록: 코딩 에이전트", "en": "Appendix: Code Agents" }
+        {
+          "ko": "서론: 코딩→로보틱스",
+          "en": "Intro: Coding→Robotics"
+        },
+        {
+          "ko": "LLM as Planner",
+          "en": "LLM as Planner"
+        },
+        {
+          "ko": "Code as Policies",
+          "en": "Code as Policies"
+        },
+        {
+          "ko": "VLA 모델의 부상",
+          "en": "Rise of VLA Models"
+        },
+        {
+          "ko": "계층적 계획 수립",
+          "en": "Hierarchical Planning"
+        },
+        {
+          "ko": "저수준 제어: 확산정책",
+          "en": "Low-Level: Diffusion"
+        },
+        {
+          "ko": "메모리와 세계 표현",
+          "en": "Memory & World Model"
+        },
+        {
+          "ko": "폐루프 에이전트",
+          "en": "Closed-Loop Agents"
+        },
+        {
+          "ko": "Sim-to-Real 전이",
+          "en": "Sim-to-Real Transfer"
+        },
+        {
+          "ko": "코딩 vs 로보틱스",
+          "en": "Coding vs Robotics"
+        },
+        {
+          "ko": "부록: 코딩 에이전트",
+          "en": "Appendix: Code Agents"
+        }
       ],
       "links": [
-        { "type": "demo", "url": "https://survey-korea-vla-agentic-robotics.pages.dev/", "label": "Read" },
-        { "type": "github", "url": "https://github.com/terryum/survey-korea-vla-agentic-robotics" }
+        {
+          "type": "demo",
+          "url": "https://survey-korea-vla-agentic-robotics.pages.dev/",
+          "label": "Read"
+        },
+        {
+          "type": "github",
+          "url": "https://github.com/terryum/survey-korea-vla-agentic-robotics"
+        }
       ],
       "embed_url": "https://survey-korea-vla-agentic-robotics.pages.dev/",
       "status": "active",
@@ -129,25 +364,75 @@
         "en": "A survey of 131+ papers on tactile sensing for robot hands, written with AI scientists. Covers sensor technologies, grasp control, in-hand manipulation, sim-to-real transfer, and human-robot skill transfer across 13 chapters."
       },
       "cover_image": "/images/projects/survey-robot-hand-tactile-sensor-cover.webp",
-      "tech_stack": ["Robotics", "Tactile Sensing", "Survey"],
+      "tech_stack": [
+        "Robotics",
+        "Tactile Sensing",
+        "Survey"
+      ],
       "toc": [
-        { "ko": "소개", "en": "Introduction" },
-        { "ko": "촉각 센서 기술", "en": "Tactile Sensor Technologies" },
-        { "ko": "센서 설계 원리", "en": "Sensor Design Principles" },
-        { "ko": "신호 처리 및 표현", "en": "Signal Processing & Representation" },
-        { "ko": "로봇 손 기구학 및 설계", "en": "Robot Hand Kinematics & Design" },
-        { "ko": "파지 및 인핸드 조작", "en": "Grasping & In-Hand Manipulation" },
-        { "ko": "촉각 기반 제어", "en": "Tactile-Guided Control" },
-        { "ko": "촉각 데이터 학습", "en": "Learning from Tactile Data" },
-        { "ko": "시뮬레이션-실제 전이", "en": "Sim-to-Real Transfer" },
-        { "ko": "인간-로봇 기술 전이", "en": "Human-Robot Skill Transfer" },
-        { "ko": "멀티모달 통합", "en": "Multi-Modal Integration" },
-        { "ko": "산업 응용", "en": "Industrial Applications" },
-        { "ko": "미래 방향", "en": "Future Directions" }
+        {
+          "ko": "소개",
+          "en": "Introduction"
+        },
+        {
+          "ko": "촉각 센서 기술",
+          "en": "Tactile Sensor Technologies"
+        },
+        {
+          "ko": "센서 설계 원리",
+          "en": "Sensor Design Principles"
+        },
+        {
+          "ko": "신호 처리 및 표현",
+          "en": "Signal Processing & Representation"
+        },
+        {
+          "ko": "로봇 손 기구학 및 설계",
+          "en": "Robot Hand Kinematics & Design"
+        },
+        {
+          "ko": "파지 및 인핸드 조작",
+          "en": "Grasping & In-Hand Manipulation"
+        },
+        {
+          "ko": "촉각 기반 제어",
+          "en": "Tactile-Guided Control"
+        },
+        {
+          "ko": "촉각 데이터 학습",
+          "en": "Learning from Tactile Data"
+        },
+        {
+          "ko": "시뮬레이션-실제 전이",
+          "en": "Sim-to-Real Transfer"
+        },
+        {
+          "ko": "인간-로봇 기술 전이",
+          "en": "Human-Robot Skill Transfer"
+        },
+        {
+          "ko": "멀티모달 통합",
+          "en": "Multi-Modal Integration"
+        },
+        {
+          "ko": "산업 응용",
+          "en": "Industrial Applications"
+        },
+        {
+          "ko": "미래 방향",
+          "en": "Future Directions"
+        }
       ],
       "links": [
-        { "type": "demo", "url": "https://survey-robot-hand-tactile-sensor.pages.dev/", "label": "Read" },
-        { "type": "github", "url": "https://github.com/terryum/survey-robot-hand-tactile-sensor" }
+        {
+          "type": "demo",
+          "url": "https://survey-robot-hand-tactile-sensor.pages.dev/",
+          "label": "Read"
+        },
+        {
+          "type": "github",
+          "url": "https://github.com/terryum/survey-robot-hand-tactile-sensor"
+        }
       ],
       "embed_url": "https://survey-robot-hand-tactile-sensor.pages.dev/",
       "status": "active",
