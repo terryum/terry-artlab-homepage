@@ -75,14 +75,24 @@ export default function ContentCard({ post, locale, showTabTag, hidePubDate, sta
       thumbnailAlt={post.title}
       thumbnailFit={post.thumb_fit === 'contain' ? 'contain' : 'cover'}
     >
-      <h3 className="text-base font-[480] text-text-primary group-hover:text-accent transition-colors leading-snug">
+      {(post.post_number != null || (post.visibility && post.visibility !== 'public')) && (
+        <div className="text-xs text-text-muted">
+          {post.post_number != null && (
+            <span className="font-mono">#{post.post_number}</span>
+          )}
+          <LockBadge
+            visibility={post.visibility}
+            allowedGroups={post.allowed_groups}
+            locale={locale}
+            className="ml-1.5 text-accent/70"
+            prefix={post.post_number != null ? '· ' : ''}
+          />
+        </div>
+      )}
+      <h3 className="text-base font-[480] text-text-primary group-hover:text-accent transition-colors leading-snug mt-0.5">
         {post.starred && (
           <span className="inline-block mr-1 text-amber-400" title="Seminal Paper">★</span>
         )}
-        {post.post_number != null && (
-          <span className="font-mono text-xs text-text-muted mr-1.5">#{post.post_number}</span>
-        )}
-        <LockBadge visibility={post.visibility} allowedGroups={post.allowed_groups} />
         {post.title}
       </h3>
       {isReading && post.source_author && (

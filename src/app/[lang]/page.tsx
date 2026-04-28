@@ -87,6 +87,9 @@ export default async function HomePage({
                 date={`last updated: ${new Date(survey.updated_at || survey.published_at).toISOString().slice(0, 10)}`}
                 tags={survey.tech_stack.slice(0, 3)}
                 external={!isInternal}
+                visibility={survey.visibility}
+                allowedGroups={survey.allowed_groups}
+                locale={l}
               />
             );
           })}
