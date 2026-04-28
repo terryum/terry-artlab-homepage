@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import LockBadge from './cards/LockBadge';
 import { isUnoptimizedImage } from '@/lib/card-utils';
+import { formatSurveyNumber } from '@/lib/numbering';
 import type { SurveyMeta } from '@/types/survey';
 
 interface SurveyCardProps {
@@ -60,7 +61,7 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
           <div className="flex items-start justify-between gap-2">
             <div>
               <span className="text-xs text-text-muted">
-                S{survey.survey_number}
+                {formatSurveyNumber(survey.survey_number)}
                 <LockBadge
                   visibility={survey.visibility}
                   allowedGroups={survey.allowed_groups}
@@ -119,7 +120,7 @@ export default function SurveyCard({ survey, locale }: SurveyCardProps) {
           <div className="flex items-start justify-between gap-2">
             <div>
               <span className="text-xs text-text-muted">
-                S{survey.survey_number}
+                {formatSurveyNumber(survey.survey_number)}
                 <LockBadge
                   visibility={survey.visibility}
                   allowedGroups={survey.allowed_groups}

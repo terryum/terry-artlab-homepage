@@ -44,9 +44,9 @@
     }
   },
   "home": {
-    "featured_surveys": "Featured Surveys",
+    "featured_surveys": "Latest Surveys",
     "latest_essays": "Latest Essays",
-    "recent_papers": "Recent Papers",
+    "recent_papers": "Latest Papers",
     "latest_notes": "Latest Notes",
     "view_all": "View all",
     "show_more": "Show more",

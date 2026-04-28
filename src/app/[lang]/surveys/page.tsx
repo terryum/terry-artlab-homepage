@@ -1,6 +1,7 @@
 import { isValidLocale, type Locale } from '@/lib/i18n';
 import { getDictionary } from '@/lib/dictionaries';
 import { getAllSurveys } from '@/lib/surveys';
+import { getAudience, filterByAudience } from '@/lib/audience';
 import { Container } from '@/components/ui/Container';
 import SurveyList from '@/components/surveys/SurveyList';
 import type { Metadata } from 'next';
@@ -33,7 +34,8 @@ export default async function SurveysPage({
   if (!isValidLocale(lang)) return null;
 
   const dict = await getDictionary(lang);
-  const surveys = await getAllSurveys();
+  const audience = await getAudience();
+  const surveys = filterByAudience(await getAllSurveys(), audience);
 
   return (
     <Container className="py-10">

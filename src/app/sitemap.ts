@@ -33,18 +33,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // Survey pages (public only)
+  // Survey pages (public only — restricted surveys are noindex)
   const surveys = await loadPublicSurveys();
   for (const survey of surveys) {
-    if (survey.embed_url) {
-      for (const lang of ['ko', 'en']) {
-        entries.push({
-          url: `${BASE_URL}/${lang}/surveys/${survey.slug}`,
-          lastModified: new Date(survey.published_at),
-          changeFrequency: 'monthly',
-          priority: 0.7,
-        });
-      }
+    const visibility = survey.visibility ?? 'public';
+    if (visibility !== 'public') continue;
+    for (const lang of ['ko', 'en']) {
+      entries.push({
+        url: `${BASE_URL}/${lang}/surveys/${survey.slug}`,
+        lastModified: new Date(survey.published_at),
+        changeFrequency: 'monthly',
+        priority: 0.7,
+      });
     }
   }
 

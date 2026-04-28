@@ -7,6 +7,7 @@ import {
   fetchPropertyCreateDate,
 } from '@/lib/ga4-stats';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { formatPostNumber, formatSurveyNumber, formatProjectNumber } from '@/lib/numbering';
 import postsIndex from '../../../../../posts/index.json';
 import surveysBundle from '../../../../../projects/surveys/surveys.json';
 import projectsBundle from '../../../../../projects/gallery/projects.json';
@@ -21,16 +22,16 @@ interface TitleEntry {
 
 const POST_ENTRIES = new Map<string, TitleEntry>(
   (postsIndex as { posts: Array<{ slug: string; post_number: number; title_ko?: string; title_en?: string }> }).posts
-    .map((p) => [p.slug, { number: `#${p.post_number}`, title_ko: p.title_ko ?? p.slug, title_en: p.title_en ?? p.slug }]),
+    .map((p) => [p.slug, { number: formatPostNumber(p.post_number), title_ko: p.title_ko ?? p.slug, title_en: p.title_en ?? p.slug }]),
 );
 const SURVEY_ENTRIES = new Map<string, TitleEntry>(
   (surveysBundle as { surveys: Array<{ slug: string; survey_number: number; title?: { ko?: string; en?: string } }> }).surveys
-    .map((s) => [s.slug, { number: `#S${s.survey_number}`, title_ko: s.title?.ko ?? s.slug, title_en: s.title?.en ?? s.slug }]),
+    .map((s) => [s.slug, { number: formatSurveyNumber(s.survey_number), title_ko: s.title?.ko ?? s.slug, title_en: s.title?.en ?? s.slug }]),
 );
 const PROJECT_ENTRIES = new Map<string, TitleEntry>(
   (projectsBundle as { projects: Array<{ slug: string; project_number?: number; title?: { ko?: string; en?: string } }> }).projects
     .filter((p): p is { slug: string; project_number: number; title?: { ko?: string; en?: string } } => p.project_number != null)
-    .map((p) => [p.slug, { number: `#P${p.project_number}`, title_ko: p.title?.ko ?? p.slug, title_en: p.title?.en ?? p.slug }]),
+    .map((p) => [p.slug, { number: formatProjectNumber(p.project_number), title_ko: p.title?.ko ?? p.slug, title_en: p.title?.en ?? p.slug }]),
 );
 
 function lookupEntry(kind: string, slug: string): TitleEntry | null {

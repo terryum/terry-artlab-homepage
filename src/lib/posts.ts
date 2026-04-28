@@ -5,6 +5,7 @@ import type { Post, PostMeta, FigureItem, Reference, PostRelation, AISummary } f
 import { normalizeTagSlug } from '@/lib/tags';
 import { resolvePostAssetPath, resolvePostCdnPath } from '@/lib/paths';
 import { findBySlug } from '@/lib/find-by-slug';
+import { byNumberDesc } from '@/lib/sort';
 import { TAB_CONFIG } from '@/lib/site-config';
 import indexJson from '../../posts/index.json';
 import taxonomyJson from '../../posts/taxonomy.json';
@@ -282,11 +283,7 @@ export async function getPostsByType(
       meta !== null && meta.status === 'published' && meta.content_type === contentType
   );
 
-  return posts.sort((a, b) => {
-    const dateDiff = new Date(b.published_at).getTime() - new Date(a.published_at).getTime();
-    if (dateDiff !== 0) return dateDiff;
-    return (b.post_number ?? 0) - (a.post_number ?? 0);
-  });
+  return posts.sort(byNumberDesc);
 }
 
 export async function getLatestPosts(
@@ -423,11 +420,7 @@ export async function getAllPostsFromIndex(locale: string): Promise<PostMeta[]> 
       };
     });
 
-  return result.sort((a, b) => {
-    const dateDiff = new Date(b.published_at).getTime() - new Date(a.published_at).getTime();
-    if (dateDiff !== 0) return dateDiff;
-    return (b.post_number ?? 0) - (a.post_number ?? 0);
-  });
+  return result.sort(byNumberDesc);
 }
 
 /** Public posts only — no cookies() call, safe for ISR/static rendering */
@@ -436,7 +429,7 @@ function getAllPublicPosts(locale: string): Promise<PostMeta[]> {
     const allMeta = await Promise.all(slugs.map((slug) => getPostMeta(slug, locale)));
     return allMeta
       .filter((meta): meta is PostMeta => meta !== null && meta.status === 'published')
-      .sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime());
+      .sort(byNumberDesc);
   });
 }
 
@@ -462,7 +455,10 @@ export async function getAdjacentPosts(
   // IMPORTANT: Use getAllPostsFromIndex (public-only, reads index.json via static import)
   // instead of getAllPosts (which calls cookies() → forces route to be dynamic on Workers).
   // Public post detail pages must stay fully SSG so Cloudflare serves pre-rendered HTML.
-  const allPosts = await getAllPostsFromIndex(locale);
+  // Restrict prev/next to public posts so private/group titles don't leak through
+  // adjacent-link rendering on a public detail page.
+  const allPosts = (await getAllPostsFromIndex(locale))
+    .filter(p => !p.visibility || p.visibility === 'public');
 
   const currentMeta = findBySlug(allPosts, slug);
   if (!currentMeta) return { prev: null, next: null };
@@ -502,22 +498,3 @@ export async function getPostParamsByType(
   return results.filter((r): r is { lang: string; slug: string } => r !== null);
 }
 
-/**
- * Filter posts by visibility based on the user's authenticated group and admin status.
- * - public (or undefined): always visible
- * - group: visible only if user's group is in allowed_groups, or user is admin
- */
-export function filterByVisibility(
-  posts: PostMeta[],
-  authenticatedGroup: string | null,
-  isAdmin: boolean,
-): PostMeta[] {
-  if (isAdmin) return posts;
-  return posts.filter((p) => {
-    if (!p.visibility || p.visibility === 'public') return true;
-    if (p.visibility === 'group' && authenticatedGroup) {
-      return p.allowed_groups?.includes(authenticatedGroup) ?? false;
-    }
-    return false;
-  });
-}

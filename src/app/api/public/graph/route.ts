@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getPublicSupabaseClient } from '@/lib/supabase-public';
 import { getPostsByType } from '@/lib/posts';
+import { getAudience, isSlugVisibleToAudience } from '@/lib/audience';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 interface GraphPaper {
   slug: string;
@@ -143,16 +145,30 @@ async function loadSupabaseGraphData(): Promise<GraphPayload | null> {
   }
 }
 
+function applyAudienceFilter(data: GraphPayload, audience: Awaited<ReturnType<typeof getAudience>>): GraphPayload {
+  const visiblePapers = data.papers.filter((p) => isSlugVisibleToAudience(p.slug, audience));
+  const visibleSet = new Set(visiblePapers.map((p) => p.slug));
+  const visibleEdges = data.edges.filter(
+    (e) => visibleSet.has(e.source_slug) && visibleSet.has(e.target_slug),
+  );
+  const visibleLayouts = data.layouts.filter((l) => visibleSet.has(l.slug));
+  return { papers: visiblePapers, edges: visibleEdges, layouts: visibleLayouts };
+}
+
 export async function GET() {
   try {
-    const supabaseData = await loadSupabaseGraphData();
-    const data = supabaseData ?? await loadFallbackGraphData();
+    const [supabaseData, audience] = await Promise.all([
+      loadSupabaseGraphData(),
+      getAudience(),
+    ]);
+    const rawData = supabaseData ?? await loadFallbackGraphData();
+    const data = applyAudienceFilter(rawData, audience);
 
     return NextResponse.json(
       data,
       {
         headers: {
-          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+          'Cache-Control': 'private, max-age=60',
           'X-Paper-Map-Source': supabaseData ? 'supabase' : 'filesystem',
         },
       }

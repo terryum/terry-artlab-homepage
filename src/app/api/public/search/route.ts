@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPublicSupabaseClient } from '@/lib/supabase-public';
+import { getAudience, isSlugVisibleToAudience } from '@/lib/audience';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const GRAPH_DECAY = 0.5;
 
@@ -126,14 +128,18 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // 3. Sort by rank and return
+    // 3. Audience-aware filter, sort by rank, return
+    const audience = await getAudience();
     const sorted = Array.from(results.values())
+      .filter((r) => isSlugVisibleToAudience(r.slug, audience))
       .sort((a, b) => b.rank - a.rank)
       .slice(0, limit);
 
+    // Cookie-based audience filtering means responses are per-viewer; cache
+    // privately at the browser only.
     return NextResponse.json(
       { results: sorted },
-      { headers: { 'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600' } }
+      { headers: { 'Cache-Control': 'private, max-age=60' } }
     );
   } catch (err) {
     console.error('Search error:', err);

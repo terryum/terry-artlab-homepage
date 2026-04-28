@@ -48,7 +48,9 @@ export async function generateMetadata({
   return {
     title,
     description,
-    ...(post.meta.visibility === 'group' ? { robots: { index: false, follow: false } } : {}),
+    ...(post.meta.visibility === 'group' || post.meta.visibility === 'private'
+      ? { robots: { index: false, follow: false } }
+      : {}),
     openGraph: {
       title,
       description,

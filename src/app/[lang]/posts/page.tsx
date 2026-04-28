@@ -1,10 +1,12 @@
 import { type Locale } from '@/lib/i18n';
 import { getDictionary } from '@/lib/dictionaries';
 import { buildContentIndexProps } from '@/lib/content-page-helpers';
+import { getAudience } from '@/lib/audience';
 import ContentIndexPage from '@/components/ContentIndexPage';
 import type { Metadata } from 'next';
 
-// Fully static
+// Audience-aware: filters list by viewer's session.
+export const dynamic = 'force-dynamic';
 
 export function generateStaticParams() {
   return [{ lang: 'ko' }, { lang: 'en' }];
@@ -29,7 +31,8 @@ export default async function PostsPage({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  const props = await buildContentIndexProps(lang);
+  const audience = await getAudience();
+  const props = await buildContentIndexProps(lang, audience);
   if (!props) return null;
 
   return (

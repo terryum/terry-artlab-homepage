@@ -1,7 +1,8 @@
 import { notFound, redirect } from 'next/navigation';
 import { isValidLocale, type Locale } from '@/lib/i18n';
 import { getDictionary, type Dictionary } from '@/lib/dictionaries';
-import { getAllPosts, getAllPostsFromIndex, getPost, getPostAlternateLocale, postExistsForLocale, loadIndexJson, loadTaxonomyJson, getAdjacentPosts, filterByVisibility, type AdjacentPosts } from '@/lib/posts';
+import { getAllPostsFromIndex, getPost, getPostAlternateLocale, postExistsForLocale, loadIndexJson, loadTaxonomyJson, getAdjacentPosts, type AdjacentPosts } from '@/lib/posts';
+import { filterByAudience, type Audience } from '@/lib/audience';
 import { computeTagCounts, sortTagsByCount, getTagLabel } from '@/lib/tags';
 import { renderMDX } from '@/lib/mdx';
 import { TAB_CONFIG, TAB_TAG_SLUGS } from '@/lib/site-config';
@@ -36,11 +37,12 @@ export interface ContentIndexProps {
 
 export async function buildContentIndexProps(
   lang: string,
+  audience: Audience,
 ): Promise<ContentIndexProps | null> {
   if (!isValidLocale(lang)) return null;
 
   const dict = await getDictionary(lang);
-  const posts = await getAllPostsFromIndex(lang);
+  const posts = filterByAudience(await getAllPostsFromIndex(lang), audience);
 
   const tagCounts = computeTagCounts(posts);
   const sorted = sortTagsByCount(tagCounts);
@@ -164,15 +166,20 @@ export async function buildContentDetailProps(
       post_number: number | null;
       relations: Array<{ target: string; type: string }>;
       ai_summary?: { one_liner: string } | null;
+      visibility?: 'public' | 'private' | 'group';
     }>;
 
-    // Find current post's relations in index.json
+    // Find current post's relations in index.json. Filter target visibility to
+    // public so a public papers detail can't surface a private/group neighbor's
+    // title via the related-posts rail. (SSG-safe: no cookies read.)
     const currentIndexPost = posts.find(p => p.slug === slug);
     if (currentIndexPost?.relations?.length) {
       relatedPosts = currentIndexPost.relations
         .flatMap(rel => {
           const target = posts.find(p => p.slug === rel.target);
           if (!target) return [];
+          const targetVisibility = target.visibility ?? 'public';
+          if (targetVisibility !== 'public') return [];
           const item: RelatedPostData = {
             slug: target.slug,
             title: lang === 'ko' ? target.title_ko : target.title_en,

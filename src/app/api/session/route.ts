@@ -1,12 +1,18 @@
 import { NextResponse } from 'next/server';
-import { getAuthenticatedGroup } from '@/lib/group-auth';
-import { isAdmin } from '@/lib/identity';
+import { getAudience } from '@/lib/audience';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const [group, admin] = await Promise.all([
-    getAuthenticatedGroup(),
-    isAdmin(),
-  ]);
-  const sessionLabel = admin ? 'Admin' : group ? group.toUpperCase() : null;
-  return NextResponse.json({ sessionLabel });
+  const audience = await getAudience();
+  const sessionLabel = audience.isAdmin
+    ? 'Admin'
+    : audience.group
+      ? audience.group.toUpperCase()
+      : null;
+  return NextResponse.json({
+    isAdmin: audience.isAdmin,
+    group: audience.group,
+    sessionLabel,
+  });
 }

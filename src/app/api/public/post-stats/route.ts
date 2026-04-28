@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { fetchPageviewsBySlug } from '@/lib/ga4-stats';
+import { getAudience, isSlugVisibleToAudience } from '@/lib/audience';
 import indexJson from '../../../../../posts/index.json';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 interface PostStats {
   likes: number;
@@ -25,6 +27,12 @@ export async function GET() {
   const startDate = process.env.GA4_START_DATE ?? '2024-01-01';
   const endDate = todayIso();
 
+  const audience = await getAudience();
+  const visibleSlugs = new Set<string>();
+  for (const slug of KNOWN_SLUGS) {
+    if (isSlugVisibleToAudience(slug, audience)) visibleSlugs.add(slug);
+  }
+
   const [likesRes, commentsRes, viewsMap] = await Promise.all([
     supabase.from('post_likes').select('post_slug'),
     supabase.from('post_comments_public').select('post_slug'),
@@ -33,7 +41,7 @@ export async function GET() {
           propertyId,
           startDate,
           endDate,
-          knownSlugs: KNOWN_SLUGS,
+          knownSlugs: visibleSlugs,
         }).catch((err) => {
           const msg = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
           console.warn('[public/post-stats] GA4 fetch failed:', msg);
@@ -45,19 +53,19 @@ export async function GET() {
   const likesBySlug = new Map<string, number>();
   for (const row of likesRes.data ?? []) {
     const slug = (row as { post_slug?: string }).post_slug;
-    if (!slug) continue;
+    if (!slug || !visibleSlugs.has(slug)) continue;
     likesBySlug.set(slug, (likesBySlug.get(slug) ?? 0) + 1);
   }
 
   const commentsBySlug = new Map<string, number>();
   for (const row of commentsRes.data ?? []) {
     const slug = (row as { post_slug?: string }).post_slug;
-    if (!slug) continue;
+    if (!slug || !visibleSlugs.has(slug)) continue;
     commentsBySlug.set(slug, (commentsBySlug.get(slug) ?? 0) + 1);
   }
 
   const stats: Record<string, PostStats> = {};
-  for (const slug of KNOWN_SLUGS) {
+  for (const slug of visibleSlugs) {
     stats[slug] = {
       likes: likesBySlug.get(slug) ?? 0,
       comments: commentsBySlug.get(slug) ?? 0,
@@ -69,7 +77,7 @@ export async function GET() {
     { stats, fetchedAt: new Date().toISOString() },
     {
       headers: {
-        'cache-control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+        'cache-control': 'private, max-age=300',
       },
     },
   );

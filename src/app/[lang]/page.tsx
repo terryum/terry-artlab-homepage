@@ -2,6 +2,9 @@ import { isValidLocale, type Locale } from '@/lib/i18n';
 import { getDictionary } from '@/lib/dictionaries';
 import { getAllPostsFromIndex } from '@/lib/posts';
 import { loadPublicSurveys } from '@/lib/surveys';
+import { getAudience, filterByAudience } from '@/lib/audience';
+import { sortByNumberDesc } from '@/lib/sort';
+import { formatSurveyNumber } from '@/lib/numbering';
 import { getBioContent, getBioPlainText } from '@/lib/about';
 import { getPostsForTab } from '@/lib/tabs';
 import HeroSection from '@/components/HeroSection';
@@ -9,7 +12,8 @@ import LatestSection from '@/components/LatestSection';
 import CompactCard from '@/components/CompactCard';
 import type { Metadata } from 'next';
 
-// Fully static
+// Audience-aware: filters home sections by viewer's session.
+export const dynamic = 'force-dynamic';
 
 export function generateStaticParams() {
   return [{ lang: 'ko' }, { lang: 'en' }];
@@ -35,7 +39,8 @@ export default async function HomePage({
   const { lang } = await params;
   if (!isValidLocale(lang)) return null;
 
-  const [dict, bioContent, allPosts, surveys] = await Promise.all([
+  const audience = await getAudience();
+  const [dict, bioContent, allPostsRaw, surveysRaw] = await Promise.all([
     getDictionary(lang),
     getBioContent(lang),
     getAllPostsFromIndex(lang),
@@ -43,6 +48,8 @@ export default async function HomePage({
   ]);
 
   const l = lang as 'ko' | 'en';
+  const allPosts = filterByAudience(allPostsRaw, audience);
+  const surveys = sortByNumberDesc(filterByAudience(surveysRaw, audience));
   const essaysPosts = getPostsForTab(allPosts, 'essays');
   const papersPosts = getPostsForTab(allPosts, 'papers');
   const notesPosts = getPostsForTab(allPosts, 'notes');
@@ -76,7 +83,7 @@ export default async function HomePage({
                 image={thumb || survey.cover_image}
                 title={survey.title[l] || survey.title.en}
                 description={survey.description[l] || survey.description.en}
-                number={`S${survey.survey_number}`}
+                number={formatSurveyNumber(survey.survey_number)}
                 date={`last updated: ${new Date(survey.updated_at || survey.published_at).toISOString().slice(0, 10)}`}
                 tags={survey.tech_stack.slice(0, 3)}
                 external={!isInternal}
