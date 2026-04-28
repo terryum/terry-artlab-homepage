@@ -179,9 +179,7 @@ export default function KnowledgeGraph({ papers, edges, layouts, locale }: Knowl
     (_: React.MouseEvent, node: Node) => {
       const paper = papers.find(p => p.slug === node.id);
       if (!paper) return;
-      const contentType = getContentType(paper);
-      const basePath = contentType === 'papers' ? 'research' : contentType;
-      router.push(`/${locale}/${basePath}/${node.id}`);
+      router.push(`/${locale}/posts/${node.id}`);
     },
     [papers, locale, router]
   );

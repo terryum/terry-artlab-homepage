@@ -3,41 +3,45 @@
 > 목적: `/clear` 이후에도 이전 작업을 빠르게 재개하기 위한 **짧은 스냅샷** (append 금지, 매번 덮어쓰기)
 
 ## 1) 세션 스냅샷
-- 마지막 업데이트: 2026-04-25 (KST)
-- 현재 단계: 카드 cover stale 회귀 수정 + R2 ISR cache GC 인프라 추가. Phase 1 (긴급 + 영구 처치) 완료. Phase 2 4건 잔존
-- 전체 진행도: v1 100% + 인프라 완성 + 컴포넌트 리팩토링 2차 완료 + ISR cache 운영 자동화
+- 마지막 업데이트: 2026-04-28 (KST)
+- 현재 단계: (1) 옛 IA(Ideas/Research/Tech) 잔재 정리 + (2) admin Stats 개선 (engagement 신호 + Devices + Top Posts × Referrer 드릴다운 + scroll_depth 트래킹) 완료
+- 전체 진행도: v1 100% + 인프라 완성 + 컴포넌트 리팩토링 2차 완료 + ISR cache 운영 자동화 + IA/Stats 정리
 
 ## 2) 지금 기준 핵심 결정 (최대 5개)
-- 인프라: **Cloudflare Workers(OpenNext) + Pages + R2 + GitHub**. Supabase 의존 제거 완료
+- 인프라: **Cloudflare Workers(OpenNext) + Pages + R2 + GitHub**. Supabase 는 댓글/좋아요/그래프 등 데이터 레이어로만 유지
 - Canonical 도메인: **`www.terryum.ai`**
-- posts/[slug] 데이터 경로: **3 단계 fallback** — (1) fs.readFile (build-time SSG, Node.js) → (2) `src/data/post-bodies.ts` 의 inline ?raw 임포트 (Workers runtime, fs-free) → (3) R2 `private/posts/<type>/<slug>/<lang>.mdx` (group/private 슬러그). dynamicParams=true 안전 활성화
-- 카드 cover URL: index.json 의 `cover_image` / `cover_thumb` 가 단일 소스. 누락 시 `resolvePostCdnPath(slug, 'cover.webp')` fallback (legacy)
-- R2 ISR cache GC: 매 deploy 후 `scripts/r2-cache-gc.mjs --apply --keep 3` 가 자동 실행 (deploy.yml `continue-on-error`)
+- 사용자 노출 카테고리: **Essays / Surveys / Papers / Notes** (Notes 탭 = `memos` + `threads` content_type 자동 병합 in `TAB_CONFIG`). 옛 라우팅(`?tab=memos|threads`, `?author=`)은 `middleware.ts` 308 리다이렉트로 호환
+- Stats 의 "관심" 신호: 좋아요/공유 같은 sparse 카운트 정렬 X. Dense 한 GA4 metric (`userEngagementDuration` per visitor, `engagementRate` per page) + `scroll_depth` 이벤트(누적 1-2주 후 컬럼화)로 측정
+- 발행 파이프라인: `posts/{essays,memos,threads}/<slug>/` 폴더 구조와 `content_type` 메타는 Obsidian 동기화 의존. terry-obsidian `/post` canonical (변경 금지 영역)
 
 ## 3) 완료됨 (이번 세션)
-- [x] **카드 cover stale 회귀 fix** — `generate-index.mjs` 가 meta.json 의 `cover_image`/`cover_thumb` 를 index.json 에 propagate. `posts.ts` 가 `resolvePostAssetPath` 로 `./cover-v2.webp` 같은 relative path 를 R2 CDN URL 로 resolve (commit `2b636bf`)
-- [x] **`scripts/r2-cache-gc.mjs`** 추가 — `incremental-cache/<buildId>/` prefix 중 newest N (default 3) 만 보존, 나머지 DeleteObjects 1000-batch. 옵션: `--dry-run`, `--apply`, `--keep <N>`
-- [x] 1회성 GC 적용: 54 prefix / 7878 객체 삭제 (28초)
-- [x] `.github/workflows/deploy.yml` 에 GC step 추가 (deploy 성공 시만, `continue-on-error: true`)
-- [x] OpenNext `1.11 → 1.19.4` 릴리즈 노트 스캔: 내장 stale buildId GC 옵션 없음 — 자체 스크립트 유지가 정답
+- [x] **IA 잔재 정리** — 코드 4건(`KnowledgeGraph.tsx` 죽은 `/research` 라우트 매핑 제거 → `/posts/[slug]`, `GraphPopup.tsx` 범례 "Essays/Memos" → "Essays/Notes", `generate-index.mjs` `tech` 데드 분기 제거, `post.ts` 주석) + docs 11개 파일 갱신 (`SITEMAP_IA`/`DESIGN_SYSTEM`/`PRD`/`PRD_ADMIN`/`PAGE_SPECS`/`QA_CHECKLIST`/`POST_GENERATOR_BLOG`(deprecated 헤더)/`POSTING_WORKFLOW`/`REFACTOR_PAPER_DB`/`IMAGE_LOADING_STRATEGY`/`DISCOVERABILITY_ANALYTICS`)
+- [x] **admin Stats 개선** — `/api/admin/stats` posts 응답에서 삭제된 슬러그 자동 제외 + slug → title (locale별), Top Posts에 `userEngagementDuration / visitors` ("Avg Engaged") + `engagementRate` per page ("Engage %") 컬럼, KPI Visitors 카드에 신규/재방문 비율 부가, 새 **Devices** 차트 (Sources/Countries 옆 3분할), 행 클릭 시 **referrer 드릴다운** (pagePath × sessionSource), 댓글 인디케이터 💬 N (`post_comments_public` 카운트, 정량 정렬 X)
+- [x] **`scroll_depth` GA4 이벤트 트래킹 시작** — `src/components/ScrollDepthTracker.tsx` (25/50/75/100% 한 번씩 발화) 가 `ContentDetailPage` 에 자동 마운트. 1-2주 누적 후 stats 컬럼화 가능
+- [x] `docs/PRD_ADMIN_STATS.md` 새 KPI/Devices/드릴다운/scroll_depth 반영
 
 ## 4) 알려진 제약
-- 비공개 슬러그 on-demand 렌더링: 메타 (index-private.json) + 본문 (R2 `private/posts/...`) 모두 R2 에 업로드돼야 동작. terry-private repo 의 본문이 R2 미업로드면 sync-obsidian 도 R2 fetch 가 빈 결과 반환
-- 미지의 dynamic 슬러그 (`/en/posts/zzz`): body 는 not-found tree 정상 렌더 + `<meta name="robots" content="noindex">` 적용 (Google 인덱싱 차단)이지만 HTTP status 는 여전히 200 — `dynamicParams=true` + on-demand prerender 의 Next.js 15 구조적 한계. 진짜 HTTP 404 가 필요하면 middleware 에서 known-slug 검증 후 rewrite 가 필요 (별도 작업)
-- Cloudflare CDN edge cache (`s-maxage=31536000`) 는 deploy 가 자동 갱신하지 않음. 카드 회귀 같은 사고 시 R2 ISR cache 만 비우면 부족할 수 있고, Cloudflare 대시보드에서 URL purge 필요할 수 있음
+- 비공개 슬러그 on-demand 렌더링: 메타 (index-private.json) + 본문 (R2 `private/posts/...`) 모두 R2 에 업로드돼야 동작
+- 미지의 dynamic 슬러그 (`/en/posts/zzz`): noindex 적용되지만 HTTP status 200 (Next.js 15 + dynamicParams 한계)
+- Cloudflare CDN edge cache (`s-maxage=31536000`) 는 deploy 자동 갱신 X — 사고 시 R2 ISR cache + CF dashboard URL purge 모두 필요할 수 있음
+- `scroll_depth` 데이터는 GA4 collection → Data API 반영까지 24시간+, 의미 있는 트렌드는 1-2주 후
 
 ## 5) 다음 작업 후보
-- **#1** 비공개 본문 자동 R2 업로드 (`/post --visibility=group/private` 흐름 끝에 R2 업로드 단계 추가) — terry-obsidian 워크스페이스에서 진행
-- **Hard HTTP 404**: 위 4) 항목 참조. middleware 에서 known-slug 검증 후 rewrite 또는 Next.js issue 진척 확인
-- **번들 사이즈 트리거 도달 시**: `node scripts/check-bundle-size.mjs --strict` 가 5 MiB 임계 알림. 도달 시 R2 fetch 또는 chunked imports 검토
-- **5-repo 코드베이스 정리** (2026-04-25 시작): A/B 그룹 + C6 완료. C1 큰 파일 분리, C2 vitest 도입, C3 동적 404, C4 에러 관측성, C5 R2 토큰 권한 분리는 미완. **백로그·실행 가이드**: `~/.claude/plans/terryum-ai-terry-surveys-toasty-zephyr.md` 의 § C 섹션 참조 (각 항목 파일·라인·검증법까지 박혀 있음). 권장 다음 세션은 **C2(테스트 깔기) → C1(분리)** 순.
+- **#1 (1-2주 뒤)** `scroll_depth` 데이터 누적 후 stats route 에 customEvent report 추가 + Top Posts에 "Read 75%+" 컬럼 합치기 (사용자가 필요 시 수동 트리거 — `/schedule` 미설정)
+- **#2** 비공개 본문 자동 R2 업로드 (`/post --visibility=group/private` 흐름 끝에 R2 업로드 단계 추가) — terry-obsidian 워크스페이스에서 진행
+- **Hard HTTP 404**: middleware 에서 known-slug 검증 후 rewrite 또는 Next.js issue 진척 확인
+- **5-repo 코드베이스 정리**: C2 (vitest 도입) → C1 (큰 파일 분리) 순. 백로그: `~/.claude/plans/terryum-ai-terry-surveys-toasty-zephyr.md` § C
 
 ## 6) 검증 상태 (이번 세션 마지막)
-- 로컬 dev (`http://localhost:3041/en`): 6 회귀 슬러그 모두 카드에서 `cover-v2.webp` / `cover-thumb-v2.webp` 정상 표시 ✅
-- 로컬 detail page: regression 없음 (`-v2` 그대로 유지) ✅
-- `npx tsc --noEmit`: posts.ts / paths.ts / generate-index.mjs 타입 체크 통과 ✅
-- R2 cache GC dry-run / apply / re-dry-run = 0 pending ✅
-- prod push 완료 (`2b636bf`), CF Workers 자동 배포 진행 (확인 시점 build `CR75ROs6h5ukxY0k6sDT6` 라이브)
+- `npx tsc --noEmit` 모든 단계 통과 ✅
+- 잔재 grep: 유지 항목(About 페이지의 research 섹션 라벨, TECH_ARCHITECTURE 파일명, sync-obsidian vault 폴더, SocialIcons Threads, deprecated 헤더 설명) 외 0건 ✅
+- `node scripts/generate-index.mjs` 재실행 시 `posts/global-index.json` 변경 없음 = `tech` 분기 데드 코드 확인 ✅
+- 로컬 dev (`http://localhost:3041`):
+  - `/ko/posts?tab={essays|papers|notes}`, `/ko/surveys`, `/ko` → 200 ✅
+  - `?tab=memos|threads` → 308 → `?tab=notes` ✅
+  - `/api/admin/stats` → 401, `/admin/stats` → 307 → `/login` (인증 게이트 정상) ✅
+  - `/ko/posts/<slug>` → 200, `ScrollDepthTracker` 마운트 확인 ✅
+- ⚠️ admin 로그인 후 실제 stats UI 검증은 수동 (사용자 직접)
 
 ## 7) 컨텍스트 메모
 - R2 버킷: `terryum-ai-cache` (incremental cache), `terryum-ai-assets` (public) = `pub-0c3a2ab4c1e34dd1b7abc088a943482d.r2.dev`

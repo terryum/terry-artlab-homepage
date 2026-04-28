@@ -21,7 +21,7 @@
 }
 ```
 
-### `posts/research/*/meta.json` 추가 필드
+### `posts/papers/*/meta.json` 추가 필드
 ```json
 {
   "taxonomy_primary": "robotics/arm",

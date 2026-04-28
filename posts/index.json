@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-25T07:32:16.015Z",
+  "generated_at": "2026-04-27T23:30:11.880Z",
   "total_posts": 49,
   "posts": [
     {
@@ -3424,6 +3424,76 @@
         "ai/productivity"
       ],
       "visibility": "public",
+      "allowed_groups": []
+    },
+    {
+      "post_number": 48,
+      "slug": "260425-sw-becomes-cosmetics",
+      "content_type": "essays",
+      "title_en": "Software Becomes Cosmetics",
+      "title_ko": "SW는 화장품이 된다",
+      "summary_ko": "SW 만드는 능력이 흔해지면 가치는 다른 축으로 이동한다. 한국 화장품 산업이 이미 그린 곡선을 SW가 따라간다.",
+      "summary_en": "When the ability to build software becomes common, value shifts to other axes — brand, marketing, ODM. Korea's cosmetics industry already drew that curve.",
+      "cover_image": "https://pub-0c3a2ab4c1e34dd1b7abc088a943482d.r2.dev/private/posts/essays/260425-sw-becomes-cosmetics/cover.webp",
+      "cover_thumb": "https://pub-0c3a2ab4c1e34dd1b7abc088a943482d.r2.dev/private/posts/essays/260425-sw-becomes-cosmetics/cover-thumb.webp",
+      "domain": "AI & Society",
+      "subfields": [
+        "industry transition",
+        "branding",
+        "marketing"
+      ],
+      "key_concepts": [
+        "software commoditization",
+        "ODM",
+        "branding",
+        "marketing",
+        "cosmetics industry"
+      ],
+      "methodology": [],
+      "contribution_type": null,
+      "tags": [
+        "Essays",
+        "AI",
+        "Industry",
+        "Marketing",
+        "Branding"
+      ],
+      "source_author": null,
+      "source_date": null,
+      "published_at": "2026-04-25T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "SW가 보편재가 되면 가치의 축은 만들기에서 브랜드·마케팅·ODM으로 옮겨간다",
+        "problem": "AI로 SW 양산이 폭증하면 만드는 능력은 더 이상 가치가 아니다",
+        "solution": "한국 화장품 산업이 그린 곡선 — 브랜드, 마케팅, ODM 분업 — 을 SW도 따라간다",
+        "key_result": "SW의 미래는 화장품 산업을 보면 알 수 있다",
+        "limitations": []
+      },
+      "relations": [
+        {
+          "target": "260415-democratization-of-research",
+          "type": "extends"
+        },
+        {
+          "target": "260413-new-leverage",
+          "type": "related"
+        },
+        {
+          "target": "260420-debt-changes-hands",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": [
+        "260415-democratization-of-research",
+        "260413-new-leverage",
+        "260420-debt-changes-hands"
+      ],
+      "taxonomy_primary": "ai/society",
+      "taxonomy_secondary": [
+        "industry/transition"
+      ],
+      "visibility": "private",
       "allowed_groups": []
     },
     {

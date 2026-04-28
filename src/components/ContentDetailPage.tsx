@@ -7,6 +7,7 @@ import Figure from './Figure';
 import LanguageSwitcher from './LanguageSwitcher';
 import ShareButton from './ShareButton';
 import RelatedPapers from './RelatedPapers';
+import ScrollDepthTracker from './ScrollDepthTracker';
 import SubstackSubscribe from './SubstackSubscribe';
 import PostInteractions from './posts/PostInteractions';
 import { localizeGalleryItems } from '@/lib/localize';
@@ -80,6 +81,7 @@ export default function ContentDetailPage({
 
   return (
     <article className="max-w-3xl mx-auto px-4 md:px-6 lg:px-8 py-10">
+      <ScrollDepthTracker slug={meta.slug} contentType={meta.content_type} />
       {/* Back to list / Taxonomy breadcrumb */}
       <div className="flex items-center gap-1.5 flex-wrap mb-6">
         <Link

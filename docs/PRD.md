@@ -24,9 +24,11 @@
 ## 5. v1 제품 범위 (In Scope)
 ### 5.1 탭 구조 (v1)
 - **Home**: 간략한 자기소개 + 최신 업데이트 콘텐츠 리스트
-- **Ideas**: 직접 작성한 글(블로그형 리스트)
-- **Research**: 읽은 논문/리포트 요약 포스팅(블로그형 리스트)
-- **About**: 상세 Bio + Contact + 프로필/소셜 링크
+- **Essays**: 직접 작성한 장문의 글 (`posts/essays/`, `content_type: "essays"`)
+- **Surveys**: Physical AI 분야 서베이 책 갤러리 (별도 라우트 `/surveys`, terry-surveys 모노레포에서 빌드)
+- **Papers**: 외부 논문/학술지/블로그 요약 (`posts/papers/`, `content_type: "papers"`)
+- **Notes**: 짧은 메모와 ChatGPT 대화 요약을 통합 노출 (`posts/memos/` + `posts/threads/` → `tab=notes`로 자동 병합, `site-config.ts` `TAB_CONFIG` 참조)
+- **About**: 상세 Bio + Contact + 프로필/소셜 링크 + Around the Web (Books / 대표 Papers / Code)
 
 ### 5.2 콘텐츠 운영 방식 (v1)
 - 운영자는 한국어 원문을 Markdown 기반으로 작성한다.
@@ -63,7 +65,7 @@
 
 ## 9. 성공 기준 (v1)
 ### 9.1 제품/구현 성공
-- 4개 탭이 동작하며 한/영 페이지 전환이 자연스럽게 이루어진다.
+- Essays / Surveys / Papers / Notes / About 탭이 동작하며 한/영 페이지 전환이 자연스럽게 이루어진다.
 - 한국어 원문 1개 입력 시 한국어/영어 포스트가 모두 발행된다.
 - Home에 최신 콘텐츠가 자동 반영된다.
 - 포스트마다 썸네일/요약/메타데이터가 일관되게 노출된다.
@@ -82,6 +84,6 @@
 
 ## 11. v2 이후 확장 방향 (참고)
 - Substack 연동 또는 이전(백필 포함)
-- Research 자동화 고도화(arXiv 링크 입력 기반 포스팅 자동 생성)
+- Papers 자동화 고도화 (arXiv 링크 입력 기반 포스팅 자동 생성, terry-papers `/paper` 스킬 확장)
 - 영상/출연 아카이브 확장 (필요 시 별도 탭 추가)
 - 뉴스레터 운영 도입 및 구독 세분화

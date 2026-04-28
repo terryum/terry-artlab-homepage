@@ -102,7 +102,7 @@ export interface PostMeta {
   // Taxonomy
   taxonomy_primary?: string;
   taxonomy_secondary?: string[];
-  // Ideas-specific
+  // Essay status (used by essays meta.json)
   idea_status?: 'hypothesis' | 'exploring' | 'validated' | 'abandoned' | 'incorporated';
   related_posts?: string[];
   // ACL

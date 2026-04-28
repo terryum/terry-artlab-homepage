@@ -22,14 +22,18 @@
 - [ ] 브라우저 언어 기반 첫 진입 라우팅 동작 확인
 - [ ] 수동 언어 전환 후 선택값 유지(쿠키/스토리지) 확인
 - [ ] 번역 없는 페이지 fallback 동작 확인
-- [ ] 메뉴 라벨 `Ideas`, `Research` 표시 확인 (PC/모바일 동일)
+- [ ] 메뉴 라벨 `Essays / Surveys / Papers / Notes / About` 표시 확인 (PC/모바일 동일)
+- [ ] `?tab=memos`, `?tab=threads`, `?author=terry|ai` → `?tab=notes` 308 리다이렉트 동작 확인 (`middleware.ts`)
 
 ### 3) 페이지/템플릿 일관성
-- [ ] `Ideas` / `Research` 목록 템플릿 동일 구조 확인
-- [ ] `Ideas` / `Research` 상세 템플릿 동일 구조 확인
-- [ ] `Research`에만 원문 링크/arXiv 출처 UI 표시 확인
-- [ ] Home 최신 콘텐츠 리스트 렌더링 정상
-- [ ] About 페이지 Bio/Contact 표시 정상
+- [ ] `/posts?tab=essays|papers|notes` 모두 동일 템플릿(`ContentIndexPage`) 렌더링 확인
+- [ ] `/posts/[slug]` 단일 상세 템플릿(`ContentDetailPage`)이 essays/papers/memos/threads 모두 정상 렌더링 확인
+- [ ] Notes 탭에 memos + threads 통합 표시 확인 (`TAB_CONFIG`의 matchTags)
+- [ ] Papers 상세에만 원문 링크/arXiv 출처 UI 표시 확인
+- [ ] Threads 상세에만 ChatGPT source line(compact) 표시 확인
+- [ ] `/surveys`, `/surveys/[slug]` 별도 라우트 정상
+- [ ] Home 최신 콘텐츠 리스트(Latest Essays / Recent Papers / Latest Notes / Surveys) 렌더링 정상
+- [ ] About 페이지 Bio/Contact/Around the Web 표시 정상
 
 ### 4) 디자인/반응형
 - [ ] 라이트/다크 모드 모두 배경+텍스트 대비 WCAG AA 이상
@@ -78,7 +82,7 @@
 - [ ] 영어 번역이 의미 보존(고유명사/링크/코드/수식 변형 없음)
 - [ ] 요약이 과장/클릭베이트 없음
 - [ ] 태그 수/체계가 과도하지 않음
-- [ ] `Research` 글이면 원문(arXiv/출처) 링크 포함
+- [ ] `Papers` 글이면 원문(arXiv/출처) 링크 포함
 - [ ] 외부 링크(YouTube/arXiv 등) 열림 확인
 
 ### 5) 발행 후 반영 확인

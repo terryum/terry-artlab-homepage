@@ -6,39 +6,37 @@ import {
   runReport,
   fetchPropertyCreateDate,
 } from '@/lib/ga4-stats';
+import { getSupabaseAdmin } from '@/lib/supabase';
 import postsIndex from '../../../../../posts/index.json';
 import surveysBundle from '../../../../../projects/surveys/surveys.json';
 import projectsBundle from '../../../../../projects/gallery/projects.json';
 
 export const runtime = 'nodejs';
 
-const POST_NUMBERS = new Map<string, number>(
-  (postsIndex as { posts: Array<{ slug: string; post_number: number }> }).posts
-    .map((p) => [p.slug, p.post_number]),
+interface TitleEntry {
+  number: string;
+  title_ko: string;
+  title_en: string;
+}
+
+const POST_ENTRIES = new Map<string, TitleEntry>(
+  (postsIndex as { posts: Array<{ slug: string; post_number: number; title_ko?: string; title_en?: string }> }).posts
+    .map((p) => [p.slug, { number: `#${p.post_number}`, title_ko: p.title_ko ?? p.slug, title_en: p.title_en ?? p.slug }]),
 );
-const SURVEY_NUMBERS = new Map<string, number>(
-  (surveysBundle as { surveys: Array<{ slug: string; survey_number: number }> }).surveys
-    .map((s) => [s.slug, s.survey_number]),
+const SURVEY_ENTRIES = new Map<string, TitleEntry>(
+  (surveysBundle as { surveys: Array<{ slug: string; survey_number: number; title?: { ko?: string; en?: string } }> }).surveys
+    .map((s) => [s.slug, { number: `#S${s.survey_number}`, title_ko: s.title?.ko ?? s.slug, title_en: s.title?.en ?? s.slug }]),
 );
-const PROJECT_NUMBERS = new Map<string, number>(
-  (projectsBundle as { projects: Array<{ slug: string; project_number?: number }> }).projects
-    .filter((p): p is { slug: string; project_number: number } => p.project_number != null)
-    .map((p) => [p.slug, p.project_number]),
+const PROJECT_ENTRIES = new Map<string, TitleEntry>(
+  (projectsBundle as { projects: Array<{ slug: string; project_number?: number; title?: { ko?: string; en?: string } }> }).projects
+    .filter((p): p is { slug: string; project_number: number; title?: { ko?: string; en?: string } } => p.project_number != null)
+    .map((p) => [p.slug, { number: `#P${p.project_number}`, title_ko: p.title?.ko ?? p.slug, title_en: p.title?.en ?? p.slug }]),
 );
 
-function formatNumberForPath(kind: string, slug: string): string | null {
-  if (kind === 'posts') {
-    const n = POST_NUMBERS.get(slug);
-    return n != null ? `#${n}` : null;
-  }
-  if (kind === 'surveys') {
-    const n = SURVEY_NUMBERS.get(slug);
-    return n != null ? `#S${n}` : null;
-  }
-  if (kind === 'projects') {
-    const n = PROJECT_NUMBERS.get(slug);
-    return n != null ? `#P${n}` : null;
-  }
+function lookupEntry(kind: string, slug: string): TitleEntry | null {
+  if (kind === 'posts') return POST_ENTRIES.get(slug) ?? null;
+  if (kind === 'surveys') return SURVEY_ENTRIES.get(slug) ?? null;
+  if (kind === 'projects') return PROJECT_ENTRIES.get(slug) ?? null;
   return null;
 }
 
@@ -120,14 +118,37 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const [kpiRes, trendRes, sourcesRes, countriesRes, postsRes] = await Promise.all([
+    const postPathFilter = {
+      orGroup: {
+        expressions: [
+          { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/ko/posts/' } } },
+          { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/en/posts/' } } },
+          { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/ko/surveys/' } } },
+          { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/en/surveys/' } } },
+          { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/ko/projects/' } } },
+          { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/en/projects/' } } },
+        ],
+      },
+    } as const;
+
+    const [
+      kpiRes,
+      trendRes,
+      sourcesRes,
+      countriesRes,
+      devicesRes,
+      postsRes,
+      postSourcesRes,
+      commentsRes,
+    ] = await Promise.all([
       runReport(propertyId, token, {
         dateRanges,
         metrics: [
           { name: 'totalUsers' },
+          { name: 'newUsers' },
           { name: 'screenPageViews' },
           { name: 'engagementRate' },
-          { name: 'averageSessionDuration' },
+          { name: 'userEngagementDuration' },
         ],
       }),
       runReport(propertyId, token, {
@@ -152,35 +173,52 @@ export async function GET(request: NextRequest) {
       }),
       runReport(propertyId, token, {
         dateRanges,
+        dimensions: [{ name: 'deviceCategory' }],
+        metrics: [{ name: 'totalUsers' }],
+        orderBys: [{ metric: { metricName: 'totalUsers' }, desc: true }],
+      }),
+      runReport(propertyId, token, {
+        dateRanges,
         dimensions: [{ name: 'pagePath' }],
         metrics: [
           { name: 'screenPageViews' },
           { name: 'totalUsers' },
-          { name: 'averageSessionDuration' },
+          { name: 'userEngagementDuration' },
+          { name: 'engagementRate' },
         ],
-        dimensionFilter: {
-          orGroup: {
-            expressions: [
-              { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/ko/posts/' } } },
-              { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/en/posts/' } } },
-              { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/ko/surveys/' } } },
-              { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/en/surveys/' } } },
-              { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/ko/projects/' } } },
-              { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/en/projects/' } } },
-            ],
-          },
-        },
+        dimensionFilter: postPathFilter,
         orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }],
-        limit: 30,
+        limit: 60,
       }),
+      runReport(propertyId, token, {
+        dateRanges,
+        dimensions: [{ name: 'pagePath' }, { name: 'sessionSource' }],
+        metrics: [{ name: 'screenPageViews' }],
+        dimensionFilter: postPathFilter,
+        orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }],
+        limit: 500,
+      }),
+      getSupabaseAdmin()
+        .from('post_comments_public')
+        .select('post_slug')
+        .then(
+          (r) => r,
+          () => ({ data: null, error: null }),
+        ),
     ]);
 
     const kpiRow = kpiRes.rows?.[0];
+    const totalUsers = Number(kpiRow?.metricValues?.[0]?.value ?? 0);
+    const newUsers = Number(kpiRow?.metricValues?.[1]?.value ?? 0);
+    const engagementSeconds = Number(kpiRow?.metricValues?.[4]?.value ?? 0);
     const kpi = {
-      visitors: Number(kpiRow?.metricValues?.[0]?.value ?? 0),
-      pageviews: Number(kpiRow?.metricValues?.[1]?.value ?? 0),
-      engagementRate: Number(kpiRow?.metricValues?.[2]?.value ?? 0),
-      avgSessionDuration: Number(kpiRow?.metricValues?.[3]?.value ?? 0),
+      visitors: totalUsers,
+      newUsers,
+      returningUsers: Math.max(0, totalUsers - newUsers),
+      newUserRate: totalUsers > 0 ? newUsers / totalUsers : 0,
+      pageviews: Number(kpiRow?.metricValues?.[2]?.value ?? 0),
+      engagementRate: Number(kpiRow?.metricValues?.[3]?.value ?? 0),
+      avgEngagementPerUser: totalUsers > 0 ? engagementSeconds / totalUsers : 0,
     };
 
     const trend = (trendRes.rows ?? []).map((row) => ({
@@ -201,30 +239,69 @@ export async function GET(request: NextRequest) {
       visitors: Number(row.metricValues?.[0]?.value ?? 0),
     }));
 
-    const posts = (postsRes.rows ?? []).map((row) => {
+    const devices = (devicesRes.rows ?? []).map((row) => ({
+      device: row.dimensionValues?.[0]?.value ?? '',
+      visitors: Number(row.metricValues?.[0]?.value ?? 0),
+    }));
+
+    // Build per-path referrer breakdown (top 5 sources per page)
+    const referrersByPath = new Map<string, { source: string; pageviews: number }[]>();
+    for (const row of postSourcesRes.rows ?? []) {
       const path = row.dimensionValues?.[0]?.value ?? '';
-      const match = path.match(/^\/(ko|en)\/(posts|surveys|projects)\/(.+)$/);
-      const locale = match?.[1] ?? '';
-      const kind = match?.[2] ?? 'posts';
-      const slug = match?.[3] ?? path;
-      const number = formatNumberForPath(kind, slug);
-      return {
-        path,
-        locale,
-        slug,
-        number,
-        exists: number != null,
-        pageviews: Number(row.metricValues?.[0]?.value ?? 0),
-        visitors: Number(row.metricValues?.[1]?.value ?? 0),
-        avgDuration: Number(row.metricValues?.[2]?.value ?? 0),
-      };
-    });
+      const source = row.dimensionValues?.[1]?.value ?? '(direct)';
+      const pageviews = Number(row.metricValues?.[0]?.value ?? 0);
+      const list = referrersByPath.get(path) ?? [];
+      list.push({ source, pageviews });
+      referrersByPath.set(path, list);
+    }
+    for (const list of referrersByPath.values()) {
+      list.sort((a, b) => b.pageviews - a.pageviews);
+    }
+
+    // Build comment-count map per slug
+    const commentsBySlug = new Map<string, number>();
+    for (const row of (commentsRes.data ?? []) as Array<{ post_slug?: string }>) {
+      const slug = row.post_slug;
+      if (!slug) continue;
+      commentsBySlug.set(slug, (commentsBySlug.get(slug) ?? 0) + 1);
+    }
+
+    const posts = (postsRes.rows ?? [])
+      .map((row) => {
+        const path = row.dimensionValues?.[0]?.value ?? '';
+        const match = path.match(/^\/(ko|en)\/(posts|surveys|projects)\/(.+)$/);
+        const locale = match?.[1] ?? '';
+        const kind = match?.[2] ?? 'posts';
+        const slug = match?.[3] ?? path;
+        const entry = lookupEntry(kind, slug);
+        if (!entry) return null;
+        const pageviews = Number(row.metricValues?.[0]?.value ?? 0);
+        const visitors = Number(row.metricValues?.[1]?.value ?? 0);
+        const engagementSeconds = Number(row.metricValues?.[2]?.value ?? 0);
+        const engagementRate = Number(row.metricValues?.[3]?.value ?? 0);
+        return {
+          path,
+          locale,
+          slug,
+          number: entry.number,
+          title: locale === 'ko' ? entry.title_ko : entry.title_en,
+          pageviews,
+          visitors,
+          avgEngagement: visitors > 0 ? engagementSeconds / visitors : 0,
+          engagementRate,
+          commentCount: commentsBySlug.get(slug) ?? 0,
+          referrers: (referrersByPath.get(path) ?? []).slice(0, 5),
+        };
+      })
+      .filter((p): p is NonNullable<typeof p> => p !== null)
+      .slice(0, 30);
 
     return NextResponse.json({
       kpi,
       trend,
       sources,
       countries,
+      devices,
       posts,
       period,
       dateRange: { startDate, endDate },

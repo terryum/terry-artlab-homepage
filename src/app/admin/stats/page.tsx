@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, Fragment } from 'react';
 import dynamic from 'next/dynamic';
 
 type PresetKind = '7d' | '30d' | '90d' | 'all';
@@ -8,20 +8,38 @@ type Period =
   | { kind: PresetKind }
   | { kind: 'custom'; startDate: string; endDate: string };
 type PostLocale = 'all' | 'ko' | 'en';
-type SortKey = 'views' | 'visitors' | 'avgTime';
+type SortKey = 'views' | 'visitors' | 'avgEngagement' | 'engagementRate';
 type SortDir = 'asc' | 'desc';
+
+interface PostRow {
+  path: string;
+  locale: string;
+  slug: string;
+  number: string;
+  title: string;
+  pageviews: number;
+  visitors: number;
+  avgEngagement: number;
+  engagementRate: number;
+  commentCount: number;
+  referrers: { source: string; pageviews: number }[];
+}
 
 interface StatsData {
   kpi: {
     visitors: number;
+    newUsers: number;
+    returningUsers: number;
+    newUserRate: number;
     pageviews: number;
     engagementRate: number;
-    avgSessionDuration: number;
+    avgEngagementPerUser: number;
   };
   trend: { date: string; visitors: number; pageviews: number }[];
   sources: { source: string; medium: string; sessions: number; visitors: number }[];
   countries: { country: string; visitors: number }[];
-  posts: { path: string; locale: string; slug: string; number: string | null; exists: boolean; pageviews: number; visitors: number; avgDuration: number }[];
+  devices: { device: string; visitors: number }[];
+  posts: PostRow[];
   period: string;
   dateRange: { startDate: string; endDate: string };
 }
@@ -42,8 +60,10 @@ function formatRangeLabel(startDate: string, endDate: string): string {
 const TrendChart = dynamic(() => import('./TrendChart'), { ssr: false, loading: () => <ChartSkeleton /> });
 const SourcesChart = dynamic(() => import('./SourcesChart'), { ssr: false, loading: () => <ChartSkeleton /> });
 const CountriesChart = dynamic(() => import('./CountriesChart'), { ssr: false, loading: () => <ChartSkeleton /> });
+const DevicesChart = dynamic(() => import('./DevicesChart'), { ssr: false, loading: () => <ChartSkeleton /> });
 
 function formatDuration(seconds: number): string {
+  if (!Number.isFinite(seconds) || seconds <= 0) return '–';
   const m = Math.floor(seconds / 60);
   const s = Math.round(seconds % 60);
   if (m === 0) return `${s}s`;
@@ -54,11 +74,12 @@ function ChartSkeleton() {
   return <div className="h-48 bg-bg-secondary rounded-md animate-pulse" />;
 }
 
-function KpiCard({ label, value }: { label: string; value: string }) {
+function KpiCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
     <div className="border border-line-default rounded-md p-4">
       <p className="text-sm text-text-secondary">{label}</p>
       <p className="text-2xl font-semibold text-text-primary mt-1">{value}</p>
+      {sub && <p className="text-xs text-text-muted mt-1">{sub}</p>}
     </div>
   );
 }
@@ -74,6 +95,7 @@ export default function StatsPage() {
   const [error, setError] = useState('');
   const [sortBy, setSortBy] = useState<SortKey>('views');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
+  const [expandedPath, setExpandedPath] = useState<string | null>(null);
 
   const handleSort = (key: SortKey) => {
     if (sortBy === key) {
@@ -84,8 +106,14 @@ export default function StatsPage() {
     }
   };
 
-  const sortFieldOf = (p: { pageviews: number; visitors: number; avgDuration: number }, key: SortKey) =>
-    key === 'views' ? p.pageviews : key === 'visitors' ? p.visitors : p.avgDuration;
+  const sortFieldOf = (p: PostRow, key: SortKey) =>
+    key === 'views'
+      ? p.pageviews
+      : key === 'visitors'
+      ? p.visitors
+      : key === 'avgEngagement'
+      ? p.avgEngagement
+      : p.engagementRate;
 
   const periodKey = useMemo(
     () =>
@@ -145,6 +173,9 @@ export default function StatsPage() {
 
   const sortArrow = (key: SortKey) =>
     sortBy === key ? (sortDir === 'desc' ? '↓' : '↑') : '';
+
+  const toggleExpand = (path: string) =>
+    setExpandedPath((cur) => (cur === path ? null : path));
 
   return (
     <div className="space-y-6">
@@ -236,10 +267,22 @@ export default function StatsPage() {
         <>
           {/* KPI Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <KpiCard label="Visitors" value={data.kpi.visitors.toLocaleString()} />
+            <KpiCard
+              label="Visitors"
+              value={data.kpi.visitors.toLocaleString()}
+              sub={
+                data.kpi.visitors > 0
+                  ? `New ${(data.kpi.newUserRate * 100).toFixed(0)}% · Returning ${((1 - data.kpi.newUserRate) * 100).toFixed(0)}%`
+                  : undefined
+              }
+            />
             <KpiCard label="Pageviews" value={data.kpi.pageviews.toLocaleString()} />
             <KpiCard label="Engagement" value={`${(data.kpi.engagementRate * 100).toFixed(1)}%`} />
-            <KpiCard label="Avg Duration" value={formatDuration(data.kpi.avgSessionDuration)} />
+            <KpiCard
+              label="Avg Engagement"
+              value={formatDuration(data.kpi.avgEngagementPerUser)}
+              sub="per visitor"
+            />
           </div>
 
           {/* Trend Chart */}
@@ -248,8 +291,8 @@ export default function StatsPage() {
             <TrendChart data={data.trend} />
           </div>
 
-          {/* Sources + Countries */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Sources + Countries + Devices */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <h2 className="text-sm font-medium text-text-primary mb-3">유입경로</h2>
               <SourcesChart data={data.sources} />
@@ -257,6 +300,10 @@ export default function StatsPage() {
             <div>
               <h2 className="text-sm font-medium text-text-primary mb-3">국가별 방문자</h2>
               <CountriesChart data={data.countries} />
+            </div>
+            <div>
+              <h2 className="text-sm font-medium text-text-primary mb-3">디바이스</h2>
+              <DevicesChart data={data.devices} />
             </div>
           </div>
 
@@ -280,12 +327,13 @@ export default function StatsPage() {
                 ))}
               </div>
             </div>
+            <p className="text-xs text-text-muted mb-2">행을 클릭하면 해당 글의 유입경로 분포를 펼쳐 봅니다.</p>
             <div className="overflow-x-auto border border-line-default rounded-md">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-line-default bg-bg-secondary">
                     <th className="text-left px-3 py-2 text-text-secondary font-medium w-16">#</th>
-                    <th className="text-left px-3 py-2 text-text-secondary font-medium">Slug</th>
+                    <th className="text-left px-3 py-2 text-text-secondary font-medium">Title</th>
                     <th className="text-center px-3 py-2 text-text-secondary font-medium">Lang</th>
                     <th className="text-right px-3 py-2 text-text-secondary font-medium">
                       <button
@@ -305,10 +353,20 @@ export default function StatsPage() {
                     </th>
                     <th className="text-right px-3 py-2 text-text-secondary font-medium">
                       <button
-                        onClick={() => handleSort('avgTime')}
+                        onClick={() => handleSort('avgEngagement')}
                         className="inline-flex items-center gap-1 hover:text-accent transition-colors"
+                        title="userEngagementDuration / visitors — 백그라운드 탭 제외, 진짜 읽힌 시간"
                       >
-                        Avg Time <span className="text-text-muted">{sortArrow('avgTime') || '↕'}</span>
+                        Avg Engaged <span className="text-text-muted">{sortArrow('avgEngagement') || '↕'}</span>
+                      </button>
+                    </th>
+                    <th className="text-right px-3 py-2 text-text-secondary font-medium">
+                      <button
+                        onClick={() => handleSort('engagementRate')}
+                        className="inline-flex items-center gap-1 hover:text-accent transition-colors"
+                        title="페이지를 본 세션 중 engaged 세션 비율 (≥10s 또는 1+ event)"
+                      >
+                        Engage % <span className="text-text-muted">{sortArrow('engagementRate') || '↕'}</span>
                       </button>
                     </th>
                   </tr>
@@ -316,29 +374,91 @@ export default function StatsPage() {
                 <tbody>
                   {filteredPosts.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="px-3 py-4 text-center text-text-secondary">No data</td>
+                      <td colSpan={7} className="px-3 py-4 text-center text-text-secondary">No data</td>
                     </tr>
                   ) : (
-                    filteredPosts.map((post) => (
-                      <tr
-                        key={post.path}
-                        className={`border-b border-line-default last:border-b-0 ${
-                          post.exists ? '' : 'opacity-50'
-                        }`}
-                      >
-                        <td className="px-3 py-2 text-text-secondary font-mono text-xs">{post.number ?? ''}</td>
-                        <td className="px-3 py-2 text-text-primary truncate max-w-xs">
-                          <span>{post.slug}</span>
-                          {!post.exists && (
-                            <span className="ml-2 text-xs text-text-muted">(deleted)</span>
+                    filteredPosts.map((post) => {
+                      const isExpanded = expandedPath === post.path;
+                      return (
+                        <Fragment key={post.path}>
+                          <tr
+                            className="border-b border-line-default last:border-b-0 cursor-pointer hover:bg-bg-secondary/40"
+                            onClick={() => toggleExpand(post.path)}
+                          >
+                            <td className="px-3 py-2 text-text-secondary font-mono text-xs">{post.number}</td>
+                            <td className="px-3 py-2 text-text-primary truncate max-w-xs" title={post.slug}>
+                              <span className="text-text-muted mr-1 select-none">
+                                {isExpanded ? '▾' : '▸'}
+                              </span>
+                              <a
+                                href={post.path}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="hover:text-accent transition-colors"
+                              >
+                                {post.title}
+                              </a>
+                              {post.commentCount > 0 && (
+                                <span
+                                  className="ml-2 text-xs text-text-muted"
+                                  title={`${post.commentCount} comment${post.commentCount === 1 ? '' : 's'}`}
+                                >
+                                  💬 {post.commentCount}
+                                </span>
+                              )}
+                            </td>
+                            <td className="px-3 py-2 text-center text-text-secondary uppercase text-xs">{post.locale}</td>
+                            <td className="text-right px-3 py-2 text-text-secondary tabular-nums">{post.pageviews.toLocaleString()}</td>
+                            <td className="text-right px-3 py-2 text-text-secondary tabular-nums">{post.visitors.toLocaleString()}</td>
+                            <td className="text-right px-3 py-2 text-text-secondary tabular-nums">{formatDuration(post.avgEngagement)}</td>
+                            <td className="text-right px-3 py-2 text-text-secondary tabular-nums">
+                              {post.engagementRate > 0 ? `${(post.engagementRate * 100).toFixed(0)}%` : '–'}
+                            </td>
+                          </tr>
+                          {isExpanded && (
+                            <tr className="border-b border-line-default last:border-b-0 bg-bg-secondary/30">
+                              <td colSpan={7} className="px-3 py-3">
+                                {post.referrers.length === 0 ? (
+                                  <p className="text-xs text-text-muted">유입경로 데이터 없음.</p>
+                                ) : (
+                                  <div>
+                                    <p className="text-xs text-text-secondary mb-2">
+                                      유입경로 (Top {post.referrers.length})
+                                    </p>
+                                    <ul className="space-y-1">
+                                      {post.referrers.map((r) => {
+                                        const total = post.referrers.reduce((s, x) => s + x.pageviews, 0);
+                                        const pct = total > 0 ? (r.pageviews / total) * 100 : 0;
+                                        return (
+                                          <li key={r.source} className="flex items-center gap-2 text-xs">
+                                            <span className="w-32 truncate text-text-secondary">
+                                              {r.source || '(direct)'}
+                                            </span>
+                                            <span className="flex-1 h-2 bg-bg-primary rounded overflow-hidden">
+                                              <span
+                                                className="block h-full bg-accent/60"
+                                                style={{ width: `${pct}%` }}
+                                              />
+                                            </span>
+                                            <span className="w-10 text-right text-text-muted tabular-nums">
+                                              {r.pageviews.toLocaleString()}
+                                            </span>
+                                            <span className="w-10 text-right text-text-muted tabular-nums">
+                                              {pct.toFixed(0)}%
+                                            </span>
+                                          </li>
+                                        );
+                                      })}
+                                    </ul>
+                                  </div>
+                                )}
+                              </td>
+                            </tr>
                           )}
-                        </td>
-                        <td className="px-3 py-2 text-center text-text-secondary uppercase text-xs">{post.locale}</td>
-                        <td className="text-right px-3 py-2 text-text-secondary tabular-nums">{post.pageviews.toLocaleString()}</td>
-                        <td className="text-right px-3 py-2 text-text-secondary tabular-nums">{post.visitors.toLocaleString()}</td>
-                        <td className="text-right px-3 py-2 text-text-secondary tabular-nums">{formatDuration(post.avgDuration)}</td>
-                      </tr>
-                    ))
+                        </Fragment>
+                      );
+                    })
                   )}
                 </tbody>
               </table>

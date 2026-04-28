@@ -431,10 +431,7 @@ async function main() {
     const entry = {
       id: p.post_number,
       slug: p.slug,
-      type: p.content_type === 'papers' ? 'papers'
-        : p.content_type === 'essays' ? 'essays'
-        : p.content_type === 'tech' ? 'tech'
-        : p.content_type,
+      type: p.content_type,
       visibility: p.visibility || 'public',
       title: p.title_ko || p.slug,
       path: `posts/${p.content_type}/${p.slug}/`,

@@ -47,7 +47,7 @@
 | 레벨 | 크기 | 굵기 (weight) | 용도 |
 |------|------|--------------|------|
 | `h1` | 26px | 600 (semibold) | 페이지 제목, 이름 |
-| `h2` | 20px (text-xl) | 540 | 섹션 제목 (Latest Ideas 등) |
+| `h2` | 20px (text-xl) | 540 | 섹션 제목 (Latest Essays 등) |
 | `h3` | 16px (text-base) | 480 | 카드/리스트 글 제목 |
 
 ### 크기/행간/자간
@@ -61,14 +61,18 @@
 - 홈/목록 `max-w-3xl`, 상세 본문 `max-w-2xl ~ max-w-3xl`
 - 단일 컬럼 중심, 패딩: 모바일 `px-4`, 태블릿 `px-6`, 데스크톱 `px-8`
 - 섹션 간격: 기본 24px, 주요 섹션 40~56px
-- 메뉴: `Home / Ideas / Research / About` (PC/모바일 동일)
+- 메뉴: `Home / Essays / Surveys / Papers / Notes / About` (PC/모바일 동일)
 - 활성 메뉴: Teal 텍스트 + 얇은 밑줄(또는 상단선) 중 하나만 사용
 - 소셜 아이콘은 헤더/About 상단 배치, 컬러 과장 금지
 
 ## 공통 템플릿 규칙 (중요)
-- `Ideas` / `Research`는 동일한 목록/상세 템플릿 사용
-- 차이는 메타 표시 필드만 허용 (`Research`에만 원문 링크/arXiv 출처 배지)
-- 본문 타이포/목차/이미지/구분선 스타일은 공통 유지
+- 모든 포스트 타입(Essays / Papers / Notes의 memos·threads)은 `/posts/[slug]` 단일 상세 템플릿을 사용한다.
+- 목록은 `/posts?tab=...` 탭 필터 한 종류만 사용한다 (`TAB_CONFIG`).
+- 차이는 메타 표시 필드만 허용:
+  - **Papers**: 원문(arXiv 등) 출처 배지/링크
+  - **Threads**: ChatGPT source line (compact)
+- Surveys는 별도 라우트(`/surveys`, `/surveys/[slug]`)지만 카드/상세의 시각 언어는 공통 유지.
+- 본문 타이포/목차/이미지/구분선 스타일은 공통 유지.
 
 ## 컴포넌트 스타일
 ### 링크
@@ -76,7 +80,7 @@
 - hover/focus: Teal + Teal underline
 - 본문 링크는 underline 유지 (색만으로 구분 금지)
 
-### 리스트 카드 (Write/Read 공용)
+### 리스트 카드 (모든 포스트 타입 공용)
 - 배경 흰색, 그림자 없음, `border-b` 구분선만 사용
 - 구성: 제목 → 요약 → 메타(날짜/태그/읽는 시간/출처)
 - 썸네일은 옵션, 없어도 레이아웃 유지
@@ -108,5 +112,5 @@
 ## 접근성/구현 메모 (Claude Code용)
 - 본문 대비 WCAG AA 이상, 키보드 포커스 명확, 색상만으로 상태 구분 금지
 - `tailwind.config`에 색상/폰트 토큰 등록, `@layer base`에 `body/prose/link/blockquote/hr` 기본 스타일 지정
-- Write/Read는 공용 템플릿 컴포넌트 + 필드 props 분기
+- 모든 포스트 타입은 공용 템플릿 컴포넌트 + 필드 props 분기 (`ContentDetailPage`)
 - 기본 정책: `No heavy shadows / No colorful cards / No dense grids`
