@@ -6,7 +6,16 @@ import {
   verifyGoogleIdToken,
   verifyState,
 } from '@/lib/oauth';
-import { identityCookieOptions, isAllowedEmail, signIdentityToken } from '@/lib/identity';
+import {
+  identityCookieOptions,
+  isBootstrapAdminEmail,
+  signIdentityToken,
+} from '@/lib/identity';
+import { getMember, touchLastLogin, upsertMember } from '@/lib/members';
+import { signSignupToken, signupCookieOptions } from '@/lib/signup-token';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const STATE_COOKIE = 'oauth-state';
 
@@ -36,25 +45,55 @@ export async function GET(request: NextRequest) {
   }
 
   const redirectUri = getRedirectUri(url.origin);
-  let identity;
+  let google;
   try {
     const tokens = await exchangeCodeForTokens(code, redirectUri);
-    identity = await verifyGoogleIdToken(tokens.id_token);
+    google = await verifyGoogleIdToken(tokens.id_token);
   } catch (err) {
     console.error('[oauth] token verification failed:', err);
     return errorRedirect(url.origin, 'verify_failed');
   }
 
-  if (!identity.emailVerified) return errorRedirect(url.origin, 'email_unverified');
-  if (!isAllowedEmail(identity.email)) return errorRedirect(url.origin, 'unauthorized');
+  if (!google.emailVerified) return errorRedirect(url.origin, 'email_unverified');
 
-  const sessionToken = signIdentityToken(identity.email.toLowerCase());
+  const email = google.email.toLowerCase();
+  const name = google.name || email;
   const target = safeRedirect(state.redirect);
-  // Absolute URL needed for redirects across subdomains; fall back to origin for relative paths.
   const finalUrl = target.startsWith('/') ? new URL(target, url.origin).toString() : target;
 
-  const response = NextResponse.redirect(finalUrl);
-  response.cookies.set(identityCookieOptions(sessionToken));
+  // Bootstrap admin: ADMIN_EMAIL goes through unconditionally and is upserted
+  // as an admin member on first login.
+  if (isBootstrapAdminEmail(email)) {
+    await upsertMember({ email, name, role: 'admin', group_slug: null });
+    const sessionToken = signIdentityToken({ email, role: 'admin', group: null });
+    const response = NextResponse.redirect(finalUrl);
+    response.cookies.set(identityCookieOptions(sessionToken));
+    response.cookies.set({ name: STATE_COOKIE, value: '', maxAge: 0, path: '/' });
+    return response;
+  }
+
+  // Existing member: refresh last_login_at and issue a session.
+  const existing = await getMember(email);
+  if (existing) {
+    await touchLastLogin(email);
+    const sessionToken = signIdentityToken({
+      email,
+      role: existing.role,
+      group: existing.group_slug,
+    });
+    const response = NextResponse.redirect(finalUrl);
+    response.cookies.set(identityCookieOptions(sessionToken));
+    response.cookies.set({ name: STATE_COOKIE, value: '', maxAge: 0, path: '/' });
+    return response;
+  }
+
+  // Unknown email: hand off to /signup with a short-lived signup-token cookie
+  // proving Google verified this email. Preserve the original redirect target.
+  const signupToken = signSignupToken({ email, name });
+  const signupUrl = new URL('/signup', url.origin);
+  signupUrl.searchParams.set('redirect', target);
+  const response = NextResponse.redirect(signupUrl.toString());
+  response.cookies.set(signupCookieOptions(signupToken));
   response.cookies.set({ name: STATE_COOKIE, value: '', maxAge: 0, path: '/' });
   return response;
 }

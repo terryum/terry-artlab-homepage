@@ -1,9 +1,9 @@
 /**
  * Identity session: Google OAuth-backed user session.
- * Replaces the legacy password-based admin-session.
+ * Token payload: `user:<email>:<role>:<group>:<ts>` (`role` ∈ {admin, member},
+ * `group` empty string for admins). HMAC-signed via signToken.
  *
- * Cookie: `id-session` (HMAC-signed), set on `.terryum.ai` in production
- * so `www.terryum.ai` and `stock.terryum.ai` share the same session.
+ * Cookie: `id-session`, set on `.terryum.ai` in production so subdomains share.
  */
 import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
@@ -12,34 +12,55 @@ import { signToken, verifyToken, isTokenExpired, cookieOptions } from './auth-co
 export const ID_COOKIE_NAME = 'id-session';
 export const ID_SESSION_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 
+export type IdentityRole = 'admin' | 'member';
+
+export interface IdentityClaim {
+  email: string;
+  role: IdentityRole;
+  group: string | null;
+}
+
 function cookieDomain(): string | undefined {
   if (process.env.NODE_ENV !== 'production') return undefined;
-  // Shared across www.terryum.ai + stock.terryum.ai
   return '.terryum.ai';
 }
 
-export function signIdentityToken(email: string): string {
-  return signToken(`user:${email}:${Date.now()}`);
+export function signIdentityToken(claim: IdentityClaim): string {
+  const group = claim.group ?? '';
+  return signToken(`user:${claim.email}:${claim.role}:${group}:${Date.now()}`);
 }
 
-export function verifyIdentityToken(token: string): { email: string } | null {
+const IDENTITY_PAYLOAD_RE = /^user:([^:]+):(admin|member):([^:]*):(\d+)$/;
+
+export function verifyIdentityToken(token: string): IdentityClaim | null {
   const result = verifyToken(token);
   if (!result) return null;
-  const match = result.payload.match(/^user:([^:]+):(\d+)$/);
+  const match = result.payload.match(IDENTITY_PAYLOAD_RE);
   if (!match) return null;
-  if (isTokenExpired(Number(match[2]), ID_SESSION_MAX_AGE)) return null;
-  return { email: match[1] };
+  if (isTokenExpired(Number(match[4]), ID_SESSION_MAX_AGE)) return null;
+  const role = match[2] as IdentityRole;
+  const group = match[3] ? match[3] : null;
+  return { email: match[1], role, group };
 }
 
-export async function getCurrentUser(): Promise<{ email: string } | null> {
+export async function getCurrentIdentity(): Promise<IdentityClaim | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get(ID_COOKIE_NAME)?.value;
   return token ? verifyIdentityToken(token) : null;
 }
 
-export function getCurrentUserFromRequest(request: NextRequest): { email: string } | null {
+export function getIdentityFromRequest(request: NextRequest): IdentityClaim | null {
   const token = request.cookies.get(ID_COOKIE_NAME)?.value;
   return token ? verifyIdentityToken(token) : null;
+}
+
+export async function isAdmin(): Promise<boolean> {
+  const id = await getCurrentIdentity();
+  return id?.role === 'admin';
+}
+
+export function isAdminFromRequest(request: NextRequest): boolean {
+  return getIdentityFromRequest(request)?.role === 'admin';
 }
 
 function getAdminEmail(): string {
@@ -48,19 +69,8 @@ function getAdminEmail(): string {
   return email.toLowerCase();
 }
 
-export async function isAdmin(): Promise<boolean> {
-  const user = await getCurrentUser();
-  if (!user) return false;
-  return user.email.toLowerCase() === getAdminEmail();
-}
-
-export function isAdminFromRequest(request: NextRequest): boolean {
-  const user = getCurrentUserFromRequest(request);
-  if (!user) return false;
-  return user.email.toLowerCase() === getAdminEmail();
-}
-
-export function isAllowedEmail(email: string): boolean {
+/** True if the email matches the bootstrap ADMIN_EMAIL env var. */
+export function isBootstrapAdminEmail(email: string): boolean {
   return email.toLowerCase() === getAdminEmail();
 }
 

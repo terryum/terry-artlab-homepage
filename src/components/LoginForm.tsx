@@ -1,57 +1,23 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-
 interface LoginFormProps {
   redirectTo?: string;
   error?: string;
 }
 
 const ERROR_MESSAGES: Record<string, string> = {
-  unauthorized: "This account isn't authorized to sign in.",
-  email_unverified: 'Your Google email is not verified.',
-  state_mismatch: 'Security check failed. Please try again.',
-  invalid_state: 'Invalid login state. Please try again.',
-  missing_params: 'Login was not completed.',
-  verify_failed: 'Could not verify your Google account. Please try again.',
-  access_denied: 'Login was cancelled.',
+  unauthorized: '이 계정은 로그인이 허용되지 않습니다.',
+  email_unverified: 'Google 이메일이 인증되지 않았습니다.',
+  state_mismatch: '보안 검증 실패. 다시 시도해주세요.',
+  invalid_state: '잘못된 로그인 상태. 다시 시도해주세요.',
+  missing_params: '로그인이 완료되지 않았습니다.',
+  verify_failed: 'Google 계정 검증에 실패했습니다.',
+  access_denied: '로그인이 취소되었습니다.',
 };
 
 export default function LoginForm({ redirectTo, error }: LoginFormProps) {
-  const [group, setGroup] = useState('');
-  const [password, setPassword] = useState('');
-  const [formError, setFormError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-
-  const safeRedirect = redirectTo && redirectTo.startsWith('/') ? redirectTo : '/posts';
   const googleUrl = `/api/auth/google/start?redirect=${encodeURIComponent(redirectTo || '/')}`;
   const providerError = error ? (ERROR_MESSAGES[error] ?? 'Sign-in failed.') : '';
-
-  async function handleGroupSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!group.trim() || !password.trim()) return;
-    setFormError('');
-    setLoading(true);
-    try {
-      const res = await fetch('/api/co/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ group: group.trim().toLowerCase(), password: password.trim() }),
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        setFormError(data.error || 'Invalid group or password');
-        return;
-      }
-      router.push(safeRedirect);
-    } catch {
-      setFormError('Something went wrong');
-    } finally {
-      setLoading(false);
-    }
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
@@ -75,36 +41,9 @@ export default function LoginForm({ redirectTo, error }: LoginFormProps) {
           Sign in with Google
         </a>
 
-        <div className="flex items-center gap-3 text-xs text-text-muted">
-          <div className="flex-1 h-px bg-line-default" />
-          <span>or group access</span>
-          <div className="flex-1 h-px bg-line-default" />
-        </div>
-
-        <form onSubmit={handleGroupSubmit} className="space-y-3">
-          <input
-            type="text"
-            value={group}
-            onChange={(e) => setGroup(e.target.value)}
-            placeholder="Group"
-            className="w-full px-3 py-2 border border-line-default rounded-md bg-bg-primary text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-accent"
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            className="w-full px-3 py-2 border border-line-default rounded-md bg-bg-primary text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-accent"
-          />
-          {formError && <p className="text-red-500 text-sm text-center">{formError}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full px-3 py-2 bg-accent text-white text-sm rounded-md hover:opacity-90 disabled:opacity-50 transition-opacity"
-          >
-            {loading ? 'Verifying...' : 'Group login'}
-          </button>
-        </form>
+        <p className="text-xs text-text-muted text-center">
+          첫 로그인 시 가입키를 입력하시면 됩니다.
+        </p>
       </div>
     </div>
   );

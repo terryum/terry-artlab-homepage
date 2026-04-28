@@ -1,7 +1,6 @@
 import 'server-only';
 import { cache } from 'react';
-import { isAdmin } from '@/lib/identity';
-import { getAuthenticatedGroup } from '@/lib/group-auth';
+import { getCurrentIdentity } from '@/lib/identity';
 import indexJson from '../../posts/index.json';
 
 export interface Audience {
@@ -10,8 +9,9 @@ export interface Audience {
 }
 
 export const getAudience = cache(async (): Promise<Audience> => {
-  const [admin, group] = await Promise.all([isAdmin(), getAuthenticatedGroup()]);
-  return { isAdmin: admin, group };
+  const id = await getCurrentIdentity();
+  if (!id) return { isAdmin: false, group: null };
+  return { isAdmin: id.role === 'admin', group: id.group };
 });
 
 export interface AccessFields {

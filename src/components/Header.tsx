@@ -64,10 +64,7 @@ function SettingsDropdown({ locale, sessionLabel }: { locale: Locale; sessionLab
 
   async function handleLogout() {
     setLoading(true);
-    await Promise.all([
-      fetch('/api/co/logout', { method: 'POST' }),
-      fetch('/api/auth/logout', { method: 'POST' }),
-    ]);
+    await fetch('/api/auth/logout', { method: 'POST' });
     window.location.href = `/${locale}`;
   }
 
@@ -113,6 +110,16 @@ function SettingsDropdown({ locale, sessionLabel }: { locale: Locale; sessionLab
                   <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 7.5l3 9m3 0l3-9m-10 0h10" />
                 </svg>
                 Graph
+              </Link>
+              <Link
+                href={`/${locale}/admin/members`}
+                onClick={() => setOpen(false)}
+                className={menuItemClass}
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-5.13a4 4 0 11-8 0 4 4 0 018 0zm6 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                Members
               </Link>
               <div className="h-px bg-line-default my-1" />
             </>

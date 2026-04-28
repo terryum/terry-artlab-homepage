@@ -1,7 +1,7 @@
 /**
  * Shared authentication primitives: rate limiting, HMAC signing, cookie options.
- * Used by group-auth (password-based group sessions) and identity (OAuth-based
- * user sessions).
+ * Used by identity (OAuth session), signup-token (short-lived signup proof),
+ * and the signup endpoint (rate limit + invite-key timing-safe compare).
  */
 import crypto from 'crypto';
 

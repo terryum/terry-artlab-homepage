@@ -104,6 +104,7 @@ export interface GoogleIdentity {
   email: string;
   emailVerified: boolean;
   sub: string;
+  name: string;
 }
 
 export async function verifyGoogleIdToken(idToken: string): Promise<GoogleIdentity> {
@@ -115,7 +116,8 @@ export async function verifyGoogleIdToken(idToken: string): Promise<GoogleIdenti
   if (typeof email !== 'string') throw new Error('id_token missing email claim');
   const emailVerified = payload.email_verified === true;
   const sub = typeof payload.sub === 'string' ? payload.sub : '';
-  return { email, emailVerified, sub };
+  const name = typeof payload.name === 'string' ? payload.name : '';
+  return { email, emailVerified, sub, name };
 }
 
 /**
