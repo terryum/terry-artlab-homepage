@@ -44,6 +44,27 @@ argument-hint: "<번호 | slug | 제목 | URL> [플랫폼 필터]"
 
 ---
 
+## Step 1.5. Visibility 사전 점검 (silent skip 금지)
+
+**Posts/Surveys/Projects 공통**: 식별된 콘텐츠의 visibility 가 `public` 이 아니면 소셜 공유 대상이 아니다. private/group 본문이 X·Bluesky·Facebook 카드로 노출되는 사고를 차단한다.
+
+확인 위치:
+- Post: `terryum-ai/posts/index.json` 의 entry `visibility` (또는 `posts/<type>/<slug>/meta.json` 의 `visibility`)
+- Survey: `projects/surveys/surveys.json` 의 entry `visibility` (없으면 public 으로 간주)
+- Project: `projects/gallery/projects.json` 의 entry `visibility` (없으면 public 으로 간주)
+
+분기:
+- `public` → 정상 진행
+- `private` 또는 `group` → **사용자에게 promotion 흐름 안내**:
+  - Post: `/post --from=<slug> --visibility=public` 호출 시 vault Hidden→공개 이동 + frontmatter 갱신 + terry-private 본문→terryum-ai 복사 + index entry 의 `visibility/body_source` 갱신 + build:cf + deploy 가 한 번에 처리됨
+  - Survey/Project: surveys.json / projects.json 의 entry 를 `visibility: "public"` 으로 갱신 + 빌드/배포
+- 사용자가 "private 인데 public 전환 후 share" 라고 명시하면 → promotion 자동 수행 후 /share 재진입
+- 명시 없이 그냥 `/share #48` 같은 호출이라 visibility 가 private 인 경우 → 한 줄 확인 후 진행 여부 결정. **자동 share 절대 금지**.
+
+> **Why**: 비공개 본문은 R2 + 인증 게이트로 보호되지만 OG 카드/제목/요약은 index.json 에 박혀 있어 소셜 카드로 즉시 새어 나간다. visibility 점검 누락 시 의도치 않은 공개 사고가 트위터/블루스카이에 분 단위로 퍼진다.
+
+---
+
 ## Step 2. 콘텐츠 타입별 메시지 전략
 
 ### Posts (papers, essays, memos, threads)
