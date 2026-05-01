@@ -33,7 +33,7 @@
  */
 
 import sharp from 'sharp';
-import { readdir, stat, readFile } from 'fs/promises';
+import { readdir, stat, readFile, mkdir, copyFile } from 'fs/promises';
 import { existsSync, statSync } from 'fs';
 import { join, dirname, basename } from 'path';
 import { fileURLToPath } from 'url';
@@ -158,6 +158,28 @@ async function deriveThumb(coverPath, thumbPath) {
     .toFile(thumbPath);
 }
 
+// Mirror post assets to public/posts/<slug>/ so CF Worker can serve them at
+// `/posts/<slug>/cover.webp` (self-domain path used by frontend cover_image refs).
+// Without this mirror, only R2 fetch works and self-domain returns 404.
+// public/posts/*/cover*.webp is .gitignored, so this runs locally on every publish.
+// Survey/project assets already live under public/images/projects, so no mirror needed.
+async function mirrorPostToPublic(slug, outputs) {
+  const publicDir = join(ROOT, 'public', 'posts', slug);
+  await mkdir(publicDir, { recursive: true });
+  const pairs = [
+    ['cover.webp',       outputs.cover],
+    ['cover-thumb.webp', outputs.thumb],
+    ['og.png',           outputs.og],
+  ];
+  let count = 0;
+  for (const [name, src] of pairs) {
+    if (!existsSync(src)) continue;
+    await copyFile(src, join(publicDir, name));
+    count++;
+  }
+  return count;
+}
+
 // --- main -------------------------------------------------------------
 async function main() {
   const args = parseArgs(process.argv);
@@ -223,8 +245,8 @@ async function main() {
   }
 
   if (work.length === 0) {
-    console.log('  ✓ All assets already meet spec — nothing to do');
-    return;
+    console.log('  ✓ All assets already meet spec');
+    // fall through to mirror — public/posts/<slug>/ may still be out of sync
   }
 
   if (args.dryRun) {
@@ -239,6 +261,13 @@ async function main() {
     const budget = SIZE_BUDGET[name];
     const status = size <= budget ? '✓' : '⚠ over budget';
     console.log(`  ${status} ${name} → ${outputs[name]} (${(size / 1024).toFixed(1)} KB / ${(budget / 1024).toFixed(0)} KB budget)`);
+  }
+
+  // Mirror post assets to public/posts/<slug>/ for CF Worker self-domain serving.
+  // Without this, /posts/<slug>/cover.webp returns 404 and only R2 path works.
+  if (args.type === 'post') {
+    const n = await mirrorPostToPublic(args.slug, outputs);
+    console.log(`  ✓ mirrored ${n} asset(s) → public/posts/${args.slug}/`);
   }
 }
 
