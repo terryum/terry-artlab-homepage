@@ -66,11 +66,11 @@
 - 소셜 아이콘은 헤더/About 상단 배치, 컬러 과장 금지
 
 ## 공통 템플릿 규칙 (중요)
-- 모든 포스트 타입(Essays / Papers / Notes의 memos·threads)은 `/posts/[slug]` 단일 상세 템플릿을 사용한다.
+- 모든 포스트 타입(Essays / Papers / Notes)은 `/posts/[slug]` 단일 상세 템플릿을 사용한다.
 - 목록은 `/posts?tab=...` 탭 필터 한 종류만 사용한다 (`TAB_CONFIG`).
 - 차이는 메타 표시 필드만 허용:
   - **Papers**: 원문(arXiv 등) 출처 배지/링크
-  - **Threads**: ChatGPT source line (compact)
+  - **Notes (ChatGPT 요약, `meta.source === "chatgpt"`)**: ChatGPT source line (compact)
 - Surveys는 별도 라우트(`/surveys`, `/surveys/[slug]`)지만 카드/상세의 시각 언어는 공통 유지.
 - 본문 타이포/목차/이미지/구분선 스타일은 공통 유지.
 

@@ -13,10 +13,10 @@
 - 더미 개발 모드 지원 (더미 카드/더미 상세)
 
 ## 핵심 구조 원칙 (중요)
-- 모든 포스트 타입(Essays / Papers / Notes의 memos·threads)은 **동일한 정보 구조/레이아웃** 을 사용한다.
+- 모든 포스트 타입(Essays / Papers / Notes)은 **동일한 정보 구조/레이아웃** 을 사용한다.
 - 목록은 `/posts?tab=...` 탭 필터 한 종류만 사용한다 (`TAB_CONFIG` in `src/lib/site-config.ts`).
 - 상세는 `/posts/[slug]` 단일 템플릿을 사용한다 (`ContentDetailPage`).
-- 차이는 표시 필드만 분기한다 (예: Papers의 출처 배지, Threads의 ChatGPT source line).
+- 차이는 표시 필드만 분기한다 (예: Papers의 출처 배지, ChatGPT 요약 노트의 source line — `meta.source === "chatgpt"` 분기).
 - Surveys는 별도 라우트(`/surveys`, `/surveys/[slug]`)를 사용하지만 시각 언어는 공통 유지.
 - 목적: 유지보수 단순화 + 독자 읽기 경험 일관성 확보
 
@@ -49,7 +49,7 @@
 ### 탭별 차이 (목록)
 - **Essays**: 기본 카드 사용
 - **Papers**: 기본 카드 + 출처 배지(arXiv 등) + 원문 링크 아이콘(선택)
-- **Notes**: 기본 카드 (memos/threads 모두 동일 카드, threads는 ChatGPT source 메타 표시)
+- **Notes**: 기본 카드 (ChatGPT 요약 노트는 source 메타 표시)
 
 ## 3) Posts Detail Template (공용 — `/posts/[slug]`)
 
@@ -67,8 +67,7 @@
   - arXiv/원문 링크
   - 원문 제목(선택)
   - 저자/출처(선택)
-- **Memos**: 공용 레이아웃 그대로 사용 (Notes 탭으로 노출)
-- **Threads**: 공용 레이아웃 + ChatGPT source line (compact)
+- **Notes**: 공용 레이아웃 그대로 사용. ChatGPT 요약 노트(`meta.source === "chatgpt"`)는 공용 레이아웃 + ChatGPT source line (compact).
 
 ## 4) Surveys
 ### 목록 (`/surveys`)
@@ -95,13 +94,13 @@
 - ContentIndexPage (공용 템플릿 — `/posts` 탭 페이지)
 - ContentDetailPage (공용 템플릿 — `/posts/[slug]`)
 - ContentCard (공용 카드 + source badge 옵션)
-- SourceBadge / ExternalSourceLink (Papers/Threads 옵션)
+- SourceBadge / ExternalSourceLink (Papers / ChatGPT 요약 노트 옵션)
 - TagChip
 - Footer
 
 ## 더미 콘텐츠 개발 규칙 (초기 개발용)
 - 각 탭(Essays / Papers / Notes) 더미 카드 최소 4개
-- 각 타입별 더미 상세 포스트 1개 (essays / papers / memos / threads)
+- 각 타입별 더미 상세 포스트 1개 (essays / papers / notes)
 - 모든 탭이 동일 템플릿에 더미 데이터만 연결해 UI 검증
 
 ## 비범위 (v1 제외)

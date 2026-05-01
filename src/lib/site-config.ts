@@ -28,15 +28,15 @@ export interface TabDefinition {
 // Header order: Essays · Surveys · Papers · Notes (depth/weight descending).
 // Surveys is rendered separately (top-level route), not via TAB_CONFIG.
 export const TAB_CONFIG: TabDefinition[] = [
-  { slug: 'essays', matchTags: ['essays'],            order: 0 },
-  { slug: 'papers', matchTags: ['papers'],            order: 1 },
-  { slug: 'notes',  matchTags: ['memos', 'threads'],  order: 2 },
+  { slug: 'essays', matchTags: ['essays'], order: 0 },
+  { slug: 'papers', matchTags: ['papers'], order: 1 },
+  { slug: 'notes',  matchTags: ['notes'],  order: 2 },
 ];
 
 /** All tab matchTags combined — used to hide tab tags from TagFilterBar & ContentCard */
 export const TAB_TAG_SLUGS = new Set(TAB_CONFIG.flatMap(t => t.matchTags));
 
-/** Resolve a post's content_type to its nav tab slug (e.g. "memos" → "notes"). */
+/** Resolve a post's content_type to its nav tab slug. */
 export function getTabSlugForContentType(contentType: string | undefined | null): string | null {
   if (!contentType) return null;
   const tab = TAB_CONFIG.find(

@@ -17,7 +17,7 @@
  * `private/` tree.
  *
  * Usage:
- *   node scripts/delete-private-mdx.mjs --type=memos --slug=260424-foo
+ *   node scripts/delete-private-mdx.mjs --type=notes --slug=260424-foo
  *   node scripts/delete-private-mdx.mjs --type=papers --slug=xxx --dry-run
  *
  * Exit codes:
@@ -49,11 +49,11 @@ const { type, slug } = flags;
 const dryRun = !!flags['dry-run'];
 
 if (!type || !slug) {
-  console.error('Usage: delete-private-mdx.mjs --type=<memos|essays|threads|papers> --slug=<slug> [--dry-run]');
+  console.error('Usage: delete-private-mdx.mjs --type=<essays|notes|papers> --slug=<slug> [--dry-run]');
   process.exit(1);
 }
 
-const VALID_TYPES = new Set(['memos', 'essays', 'threads', 'papers']);
+const VALID_TYPES = new Set(['essays', 'notes', 'papers']);
 if (!VALID_TYPES.has(type)) {
   console.error(`❌ --type must be one of: ${[...VALID_TYPES].join(', ')}`);
   process.exit(1);

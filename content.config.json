@@ -1,5 +1,5 @@
 {
-  "allContentDirs": ["papers", "threads", "essays", "memos"],
-  "activeTabs": ["papers", "threads", "essays", "memos"],
-  "publishableTypes": ["essays", "memos", "threads"]
+  "allContentDirs": ["papers", "essays", "notes"],
+  "activeTabs": ["papers", "essays", "notes"],
+  "publishableTypes": ["essays", "notes"]
 }

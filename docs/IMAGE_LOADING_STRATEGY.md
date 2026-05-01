@@ -3,12 +3,12 @@
 ## Pipeline Overview
 
 ```
-posts/{papers,essays,memos,threads}/<slug>/ko.mdx       (title source for thumbnail)
+posts/{papers,essays,notes}/<slug>/ko.mdx       (title source for thumbnail)
         │
         ▼  generate-thumbnails.mjs
 public/posts/<slug>/cover-thumb.webp      (112×112 title-based, ~2-3KB)
 
-posts/{papers,essays,memos,threads}/<slug>/cover.webp   (source, gitignored in public/)
+posts/{papers,essays,notes}/<slug>/cover.webp   (source, gitignored in public/)
         │
         ▼  copy-post-images.mjs
 public/posts/<slug>/cover.webp            (full-size, ~1200×675)

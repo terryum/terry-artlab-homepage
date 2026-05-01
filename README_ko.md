@@ -84,7 +84,7 @@
 ### 클론하면 얻을 수 있는 것
 
 - Next.js 15 사이트 전체 소스 (App Router, i18n 라우팅, MDX 렌더링)
-- 콘텐츠 파이프라인: `posts/{papers,essays,memos,notes}/` 폴더 구조
+- 콘텐츠 파이프라인: `posts/{papers,essays,notes}/` 폴더 구조
 - 논문 관계 그래프 UI (React Flow + Supabase)
 - 어드민 대시보드 (통계, 그래프 편집기 — 비밀번호 보호)
 - 그룹별 접근 제어 시스템 (`/co/[group]`)
@@ -306,11 +306,9 @@ posts/
 ├── essays/
 │   └── 260310-brain-augmentation/
 │       └── [동일 구조]
-├── memos/
-│   └── 260310-on-the-manifold-first-post/
-│       └── [동일 구조]
 └── notes/
-    └── [동일 구조]
+    └── 260419-vercel-quiet-bill/
+        └── [동일 구조]
 ```
 
 - `content_type` = 폴더명 = URL 탭 슬러그

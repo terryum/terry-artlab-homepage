@@ -5,7 +5,7 @@
 ## 실행 방법
 
 - **Papers (arXiv / 학술 / 블로그 요약)**: `/paper <url>` — canonical: `terry-papers` repo
-- **Essays / Memos / Threads (직접 작성/ChatGPT 요약)**: `/post --type=essays|memos|threads --from=#-N` — canonical: `terry-obsidian` repo
+- **Essays / Notes (직접 작성 또는 ChatGPT 요약)**: `/post --type=essays|notes --from=#-N` — canonical: `terry-obsidian` repo
 - **Surveys 책 발행**: `/survey ...` — canonical: `terry-surveys` repo
 - **소셜 공유**: `/share <slug-or-id>` — canonical: 이 repo (`terryum-ai`)
 - **포스트 삭제**: `/del <slug-or-id>` — canonical: 이 repo
@@ -24,6 +24,6 @@
 |---|---|
 | `essays` | Essays (`/posts?tab=essays`) |
 | `papers` | Papers (`/posts?tab=papers`) |
-| `memos`, `threads` | Notes (`/posts?tab=notes`) — 자동 병합 |
+| `notes` | Notes (`/posts?tab=notes`) — 짧은 메모 + ChatGPT 요약(`source: "chatgpt"` 식별) |
 
 Surveys 는 별도 라우트(`/surveys`)이며 위 탭에 포함되지 않는다.

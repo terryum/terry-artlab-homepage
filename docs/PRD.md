@@ -27,7 +27,7 @@
 - **Essays**: 직접 작성한 장문의 글 (`posts/essays/`, `content_type: "essays"`)
 - **Surveys**: Physical AI 분야 서베이 책 갤러리 (별도 라우트 `/surveys`, terry-surveys 모노레포에서 빌드)
 - **Papers**: 외부 논문/학술지/블로그 요약 (`posts/papers/`, `content_type: "papers"`)
-- **Notes**: 짧은 메모와 ChatGPT 대화 요약을 통합 노출 (`posts/memos/` + `posts/threads/` → `tab=notes`로 자동 병합, `site-config.ts` `TAB_CONFIG` 참조)
+- **Notes**: 짧은 메모와 ChatGPT 대화 요약 (`posts/notes/`, `content_type: "notes"`). ChatGPT 요약 노트는 meta `source: "chatgpt"` 필드로 식별되어 ThreadSourceLine 라벨이 자동 노출.
 - **About**: 상세 Bio + Contact + 프로필/소셜 링크 + Around the Web (Books / 대표 Papers / Code)
 
 ### 5.2 콘텐츠 운영 방식 (v1)

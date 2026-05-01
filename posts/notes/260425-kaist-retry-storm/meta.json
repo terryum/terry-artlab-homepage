@@ -5,13 +5,25 @@
   "published_at": "2026-04-25T00:00:00+09:00",
   "updated_at": "2026-04-25T00:00:00+09:00",
   "status": "published",
-  "content_type": "memos",
+  "content_type": "notes",
   "visibility": "public",
-  "tags": ["Memos", "vercel", "cloudflare", "retry-storm", "llm-agent", "postmortem", "infra-cost"],
+  "tags": [
+    "Notes",
+    "vercel",
+    "cloudflare",
+    "retry-storm",
+    "llm-agent",
+    "postmortem",
+    "infra-cost"
+  ],
   "cover_image": "./cover.webp",
   "reading_time_min": 8,
   "domain": "Infrastructure",
-  "subfields": ["edge hosting", "cost engineering", "bot mitigation"],
+  "subfields": [
+    "edge hosting",
+    "cost engineering",
+    "bot mitigation"
+  ],
   "key_concepts": [
     "retry storm",
     "onerror self-loop",

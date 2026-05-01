@@ -29,7 +29,7 @@ argument-hint: "<slug 또는 #번호> [--force]"
 
 1. `#N` 형식이면 `posts/global-index.json`에서 매칭되는 entry의 slug 추출
 2. slug로 포스트 위치 확인:
-   - **공개 포스트**: `posts/{papers,memos,essays,notes,threads}/<slug>/` 디렉토리 존재 확인
+   - **공개 포스트**: `posts/{papers,essays,notes}/<slug>/` 디렉토리 존재 확인
    - **비공개 포스트 (visibility=private/group)**: `posts/index-private.json` entry 확인 + terry-private repo 의 `posts/<type>/<slug>/` 디렉토리 확인 + R2 `private/posts/<type>/<slug>/` 객체 확인
 3. 찾지 못하면 에러 출력 후 중단
 
@@ -162,11 +162,10 @@ node scripts/generate-index.mjs
 
 ### 5-a) 노트 파일 삭제
 
-content_type → vault 폴더 매핑:
-- `papers` → `From AI/Papers/`
-- `notes` → `From AI/Notes/`
-- `memos` → `From Terry/Memos/`
-- `essays` → `From Terry/Essays/`
+content_type → vault 폴더 매핑 (sync-obsidian.mjs `TYPE_TO_FOLDER` 참조):
+- `papers` → `Public/Papers/`
+- `essays` → `Public/Essays/`
+- `notes` → `Public/Notes/`
 
 ```bash
 rm -f "$HOME/Documents/Obsidian Vault/{vault_folder}/<slug>.md"

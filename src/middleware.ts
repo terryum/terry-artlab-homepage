@@ -115,7 +115,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url, { status: 308 });
   }
 
-  // Legacy IA redirects (memos/threads tabs and author= filter merged into "notes").
+  // External-link compatibility gateway: rewrite legacy ?tab and ?author values
+  // (memos/threads/terry/ai) onto the canonical ?tab=notes. This is the ONLY
+  // place where the retired category names should appear in code — they exist
+  // here solely to keep old inbound URLs working.
   if (/^\/(ko|en)\/posts\/?$/.test(pathname)) {
     const tab = request.nextUrl.searchParams.get('tab');
     const author = request.nextUrl.searchParams.get('author');

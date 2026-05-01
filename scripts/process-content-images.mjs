@@ -70,8 +70,8 @@ function parseArgs(argv) {
 
 // --- path resolution --------------------------------------------------
 async function findPostDir(slug) {
-  // posts/{type}/{slug}/ — type is essays|memos|threads|tech|papers
-  const types = ['essays', 'memos', 'threads', 'tech', 'papers'];
+  // posts/{type}/{slug}/ — type is essays|notes|papers
+  const types = ['essays', 'notes', 'papers'];
   for (const t of types) {
     const p = join(ROOT, 'posts', t, slug);
     if (existsSync(p)) return p;

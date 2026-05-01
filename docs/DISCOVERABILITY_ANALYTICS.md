@@ -76,7 +76,7 @@
   - `event_name`
   - `page_type` (`home|posts_index|post_detail|surveys_index|survey_detail|about`)
   - `content_id` (포스트일 때)
-  - `content_kind` (`essays|papers|memos|threads|surveys|video|none`)
+  - `content_kind` (`essays|papers|notes|surveys|video|none`)
   - `locale` (`ko|en`)
   - `source` (`list_card|hero|footer|inline_link` 등)
 

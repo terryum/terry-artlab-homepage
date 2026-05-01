@@ -50,9 +50,8 @@ async function resolveVaultRoot() {
 const VAULT_ROOT = await resolveVaultRoot();
 
 // ── Vault folder structure ──
-// "Notes" mirrors the homepage's notes tab (memos + threads merged) per
-// TAB_CONFIG in src/lib/site-config.ts. Folder differentiation between memos
-// and threads is no longer maintained; content_type frontmatter is the SoT.
+// Mirrors the homepage tabs (Papers / Essays / Notes) — content_type
+// frontmatter is the SoT.
 const VAULT_FOLDERS = [
   'Public/Papers',
   'Public/Essays',
@@ -79,11 +78,9 @@ function r2ImageUrl(slug, filename) {
 }
 
 // ── content_type → vault subfolder mapping ──
-// memos and threads share Public/Notes (matches homepage 'notes' tab grouping).
 const TYPE_TO_FOLDER = {
   papers: 'Public/Papers',
-  threads: 'Public/Notes',
-  memos: 'Public/Notes',
+  notes: 'Public/Notes',
   essays: 'Public/Essays',
 };
 
@@ -242,7 +239,7 @@ function buildTerryTags(meta) {
   return out;
 }
 
-// ── Build canonical full-body note for essays/memos (from-terry, no sync_hash) ──
+// ── Build canonical full-body note for terry-authored types (no sync_hash) ──
 function buildCanonicalTerryNote(meta, koMdx) {
   const koFm = parseFrontmatter(koMdx);
   const title = koFm.title || meta.source_title || meta.slug;
@@ -662,9 +659,9 @@ async function main() {
     const notePath = path.join(VAULT_ROOT, vaultSubfolder, `${slug}.md`);
 
     const existingContent = await readExistingNote(notePath);
-    const isTerryAuthored = contentType === 'essays' || contentType === 'memos';
+    const isTerryAuthored = contentType === 'essays' || contentType === 'notes';
 
-    // Human-curated essays/memos: file exists and frontmatter lacks sync_hash → skip entirely
+    // Human-curated essays/notes: file exists and frontmatter lacks sync_hash → skip entirely
     if (isTerryAuthored && existingContent && !hasSyncHashField(existingContent)) {
       const drifts = detectHumanCuratedDrift(existingContent, meta);
       if (drifts.length > 0) {
@@ -803,7 +800,7 @@ async function main() {
     }
   }
 
-  // ── Reverse scan: index unregistered Obsidian memos/drafts ──
+  // ── Reverse scan: index unregistered Obsidian notes/drafts ──
   const scanDirs = ['Public/Notes', 'Public/Essays', 'Private/Drafts'];
   let newlyIndexed = 0;
 
@@ -832,9 +829,8 @@ async function main() {
 
   // Map legacy "vault/From AI/..." | "vault/From Terry/..." | "vault/My Notes/..." | "vault/Templates/..."
   // paths to current canonical "vault/Public/..." | "vault/Private/..." | "vault/Ops/Templates/..." paths.
-  // Used so old global-index.json entries still resolve after the 2026-04 vault restructure.
-  // Note: memos and threads both map to Public/Notes (and Private/Posts/Notes) — matches
-  // the homepage's 'notes' tab grouping.
+  // Used so old global-index.json entries still resolve after the 2026-04 vault restructure
+  // (and the 2026-05 retirement of the memos/threads folder split → unified notes/).
   function remapLegacyVaultPath(p) {
     return p
       .replace(/^vault\/From AI\/Papers\//, 'vault/Public/Papers/')

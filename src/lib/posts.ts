@@ -94,8 +94,7 @@ function normalizeTags(
   const tagSlugs = rawTags.map((t) => normalizeTagSlug(t));
   const contentTypeTagMap: Record<PostCategory, string> = {
     papers: 'Papers',
-    threads: 'Threads',
-    memos: 'Memos',
+    notes: 'Notes',
     essays: 'Essays',
   };
   const contentTypeTag = category ? contentTypeTagMap[category] : 'Essays';
@@ -372,7 +371,6 @@ export async function getAllPostsFromIndex(locale: string): Promise<PostMeta[]> 
   const CONTENT_TYPE_TAG: Record<string, string> = {
     papers: 'Papers',
     notes: 'Notes',
-    memos: 'Memos',
     essays: 'Essays',
   };
   const result: PostMeta[] = posts
@@ -444,9 +442,8 @@ export interface AdjacentPosts {
 }
 
 /**
- * Returns adjacent posts within the same nav tab.
- * Grouping is driven by TAB_CONFIG.matchTags — e.g. memos and threads share
- * the "notes" tab, so prev/next on a memo links to the next memo or thread.
+ * Returns adjacent posts within the same nav tab. Grouping is driven by
+ * TAB_CONFIG.matchTags so prev/next stays within a tab.
  */
 export async function getAdjacentPosts(
   slug: string,

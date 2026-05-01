@@ -12,7 +12,7 @@
 
 [On the Manifold](https://www.terryum.ai) is a bilingual (Korean/English) research blog, knowledge graph, and personal homepage. Inspired by [Andrej Karpathy's approach](https://x.com/karpathy/status/1911080111710109960) to external-brain knowledge management, the entire content pipeline is operated by Claude Code — papers are summarized, indexed, connected, and published through natural language commands.
 
-The site hosts 40+ research paper summaries, tech essays, memos, and an interactive paper relationship graph. The project uses a multi-workspace setup:
+The site hosts 40+ research paper summaries, tech essays, notes, and an interactive paper relationship graph. The project uses a multi-workspace setup:
 
 | Workspace | Role | Repository |
 |-----------|------|------------|
@@ -69,7 +69,7 @@ Skills are split across two workspaces:
 
 | Skill | Description | Example |
 |-------|-------------|---------|
-| `/write` | Generate a styled draft from Obsidian memos | `/write #-1 #-3 --type=tech` |
+| `/write` | Generate a styled draft from Obsidian notes | `/write #-1 #-3 --type=notes` |
 | `/draft` | Create a publishable draft in Obsidian Drafts folder | `/draft essays This is the title...` |
 | `/memo` | Create an Obsidian memo with auto-indexed metadata | `/memo AI and robotics intersection` |
 | `/tagging` | Auto-tag posts based on content analysis | `/tagging` |
@@ -85,7 +85,7 @@ This is a personal project, not a plug-and-play template. However, since the rep
 ### What You Get by Cloning
 
 - Full Next.js 15 site source code (App Router, i18n routing, MDX rendering)
-- Content pipeline: `posts/{papers,essays,memos,notes}/` folder structure
+- Content pipeline: `posts/{papers,essays,notes}/` folder structure
 - Paper relationship graph UI (React Flow + Supabase)
 - Admin dashboard (stats, graph editor — behind password)
 - Group-based access control for private content (`/co/[group]`)
@@ -223,16 +223,16 @@ This is the part that requires the most manual setup, since the Obsidian vault l
 
 ```
 Homepage (posts/)  ──sync-obsidian.mjs──►  Obsidian Vault
-                                            ├── From AI/Papers/    ← research summaries
-                                            ├── From AI/Notes/     ← tech notes
-                                            ├── From Terry/Essays/ ← essays
-                                            ├── From Terry/Memos/  ← personal memos
-                                            └── Ops/Meta/          ← taxonomy, concept index
+                                            ├── Public/Papers/   ← research summaries
+                                            ├── Public/Essays/   ← essays
+                                            ├── Public/Notes/    ← short notes + ChatGPT summaries
+                                            ├── Private/Drafts/  ← unpublished drafts
+                                            └── Ops/Meta/        ← taxonomy, concept index
 ```
 
 - Published posts are synced as Obsidian notes with wikilinks and frontmatter
 - Manual notes created in Obsidian get negative IDs (`#-1`, `#-2`, ...) and can be referenced in Claude Code commands
-- The sync is **one-directional** (homepage → Obsidian) for published content, but Obsidian memos can be pulled back via `/write`
+- The sync is **one-directional** (homepage → Obsidian) for published content, but Obsidian notes can be pulled back via `/write`
 
 #### Setting Up Obsidian
 
@@ -249,13 +249,14 @@ Homepage (posts/)  ──sync-obsidian.mjs──►  Obsidian Vault
    This creates:
    ```
    Your Vault/
-   ├── From AI/
+   ├── Public/
    │   ├── Papers/
-   │   └── Notes/
-   ├── From Terry/
-   │   ├── Memos/
    │   ├── Essays/
-   │   └── Drafts/
+   │   └── Notes/
+   ├── Private/
+   │   ├── Drafts/
+   │   ├── Notes/
+   │   └── Tasks/
    └── Ops/
        ├── Meta/
        └── Templates/
@@ -307,11 +308,9 @@ posts/
 ├── essays/
 │   └── 260310-brain-augmentation/
 │       └── [same structure]
-├── memos/
-│   └── 260310-on-the-manifold-first-post/
-│       └── [same structure]
 └── notes/
-    └── [same structure]
+    └── 260419-vercel-quiet-bill/
+        └── [same structure]
 ```
 
 - `content_type` = folder name = URL tab slug
@@ -322,7 +321,7 @@ posts/
 ### ID System
 
 - **Public posts**: positive IDs (`#1`, `#2`, ...) — visible on the website
-- **Private memos**: negative IDs (`#-1`, `#-2`, ...) — Obsidian only, never published
+- **Private drafts**: negative IDs (`#-1`, `#-2`, ...) — Obsidian only, never published
 - Any document is referenceable by `#number` in Claude Code commands
 
 ---

@@ -23,14 +23,14 @@
 - [ ] 수동 언어 전환 후 선택값 유지(쿠키/스토리지) 확인
 - [ ] 번역 없는 페이지 fallback 동작 확인
 - [ ] 메뉴 라벨 `Essays / Surveys / Papers / Notes / About` 표시 확인 (PC/모바일 동일)
-- [ ] `?tab=memos`, `?tab=threads`, `?author=terry|ai` → `?tab=notes` 308 리다이렉트 동작 확인 (`middleware.ts`)
+- [ ] 외부 inbound 링크 호환: `?tab=memos`, `?tab=threads`, `?author=terry|ai` → `?tab=notes` 308 리다이렉트 동작 확인 (`middleware.ts`)
 
 ### 3) 페이지/템플릿 일관성
 - [ ] `/posts?tab=essays|papers|notes` 모두 동일 템플릿(`ContentIndexPage`) 렌더링 확인
-- [ ] `/posts/[slug]` 단일 상세 템플릿(`ContentDetailPage`)이 essays/papers/memos/threads 모두 정상 렌더링 확인
-- [ ] Notes 탭에 memos + threads 통합 표시 확인 (`TAB_CONFIG`의 matchTags)
+- [ ] `/posts/[slug]` 단일 상세 템플릿(`ContentDetailPage`)이 essays/papers/notes 모두 정상 렌더링 확인
+- [ ] Notes 탭에 모든 `content_type: "notes"` 포스트 표시 확인 (`TAB_CONFIG`의 matchTags)
 - [ ] Papers 상세에만 원문 링크/arXiv 출처 UI 표시 확인
-- [ ] Threads 상세에만 ChatGPT source line(compact) 표시 확인
+- [ ] ChatGPT 요약 노트 상세에만 ChatGPT source line(compact) 표시 확인 (`source === "chatgpt"`)
 - [ ] `/surveys`, `/surveys/[slug]` 별도 라우트 정상
 - [ ] Home 최신 콘텐츠 리스트(Latest Essays / Recent Papers / Latest Notes / Surveys) 렌더링 정상
 - [ ] About 페이지 Bio/Contact/Around the Web 표시 정상

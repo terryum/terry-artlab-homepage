@@ -171,7 +171,7 @@ function dedup(entries) {
 function filterInternal(entries, kbPath) {
   const idx = loadJson(path.join(kbPath, 'posts', 'index.json')) || {};
   const slugs = new Set();
-  // posts/index.json layout: { papers: [...], essays: [...], memos: [...] } or array
+  // posts/index.json layout: { papers: [...], essays: [...], notes: [...] } or array
   const collect = (v) => {
     if (!v) return;
     if (Array.isArray(v)) v.forEach(collect);

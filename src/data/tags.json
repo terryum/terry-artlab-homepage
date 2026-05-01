@@ -1,6 +1,5 @@
 {
   "tags": [
-    { "slug": "memos",   "label": { "ko": "Memos",   "en": "Memos"   }, "category": "tab" },
     { "slug": "essays",  "label": { "ko": "Essays",  "en": "Essays"  }, "category": "tab" },
     { "slug": "papers",  "label": { "ko": "Papers",  "en": "Papers"  }, "category": "tab" },
     { "slug": "notes",   "label": { "ko": "Notes",   "en": "Notes"   }, "category": "tab" },

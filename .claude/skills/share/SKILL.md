@@ -67,14 +67,14 @@ argument-hint: "<번호 | slug | 제목 | URL> [플랫폼 필터]"
 
 ## Step 2. 콘텐츠 타입별 메시지 전략
 
-### Posts (papers, essays, memos, threads)
+### Posts (papers, essays, notes)
 - **데이터 소스**: MDX frontmatter의 `summary` → `card_summary` → `ai_summary.one_liner`
 - **papers**: AI가 쓴 논문 요약. 핵심 기여와 결과를 간결하게 전달
-- **essays/memos**: Terry가 직접 쓴 글. 가장 강한 인사이트 1-2문장으로
-- **threads**: AI 대화(ChatGPT share URL 또는 Claude 세션)를 Terry가 요약한 글. 탐색 주제·레슨·FAQ 구조 중 가장 강한 1~2 bullet을 뽑아 한두 문장으로
+- **essays**: Terry가 직접 쓴 장문. 가장 강한 인사이트 1-2문장으로
+- **notes**: 짧은 메모 또는 ChatGPT 대화 요약. 가장 강한 1~2 bullet/문장. ChatGPT 요약(`meta.source === "chatgpt"`)은 탐색 주제·레슨·FAQ 구조 중 핵심을 뽑아 한두 문장으로
 - **공유 URL**: `https://www.terryum.ai/posts/{slug}` (캐시버스팅: `?v={YYYYMMDD}`)
 - **커버이미지**: `posts/{slug}/og.png` (OG 메타태그로 자동 전달)
-- **publishableTypes**: `content.config.json`의 `publishableTypes` 배열이 소셜 공유 대상을 결정. 현재 `["essays", "memos", "threads"]`. `papers`는 외부 논문 요약이라 기본적으로 `/share` 대상이 아니다 — 공유 시 사용자 확인 후 임시로 배열 확장 또는 개별 스크립트 우회
+- **publishableTypes**: `content.config.json`의 `publishableTypes` 배열이 소셜 공유 대상을 결정. 현재 `["essays", "notes"]`. `papers`는 외부 논문 요약이라 기본적으로 `/share` 대상이 아니다 — 공유 시 사용자 확인 후 임시로 배열 확장 또는 개별 스크립트 우회
 
 ### Surveys
 - **데이터 소스**: `surveys.json`의 `description.ko` / `description.en`
@@ -189,8 +189,8 @@ python scripts/publish-project-social.py --slug={slug} --message-ko-file=/tmp/sh
 
 | 콘텐츠 | 스크립트 | Substack 처리 |
 |---|---|---|
-| **Posts** essays / tech | `publish-substack.py` (별도 호출) | ✓ 지원 — EN+KO 동시 발행 |
-| **Posts** threads / memos / papers | `publish-substack.py` | ✗ 미지원 — stderr `✗ Substack 미지원: post type='<type>'` 출력 후 종료 |
+| **Posts** essays | `publish-substack.py` (별도 호출) | ✓ 지원 — EN+KO 동시 발행 |
+| **Posts** notes / papers | `publish-substack.py` | ✗ 미지원 — stderr `✗ Substack 미지원: post type='<type>'` 출력 후 종료 |
 | **Surveys / Projects** | `publish-project-social.py --platform=...,substack` | ✓ 지원 — 같은 스크립트가 6 platforms 모두 처리 |
 
 **2026-04-28 사고 D (S5 substack silent skip)**: `/share S5` 호출 시 platform list를 명시적으로 `facebook,threads,linkedin,x,bluesky` 5개로 지정해 substack이 빠졌다. publish-project-social.py default가 substack 포함이므로 **platform 미지정 (전체) 또는 명시적으로 substack 포함 필수**. `/share` 결과에 substack 발행 여부가 안 보이면 silent skip 의심하고 `--platform=substack`으로 재호출.
@@ -224,7 +224,7 @@ python scripts/publish-project-social.py --slug={slug} --platform=threads
 - **`✓`**: 게시 성공 + OG/thumb 정상
 - **`⚠`**: 게시 성공이지만 thumb/OG 누락 — publish-social.py가 stderr로 사고 알림 출력
 - **`✗`**: 게시 실패 (원인 포함, 예: `CreditsDepleted`, `blob too big`, `unauthorized`)
-- **`— 미지원 (<type>)`**: 해당 콘텐츠 타입을 스크립트가 지원 안 함 (예: `substack — 미지원 (threads)`)
+- **`— 미지원 (<type>)`**: 해당 콘텐츠 타입을 스크립트가 지원 안 함 (예: `substack — 미지원 (notes)`)
 
 **Bluesky thumb 누락 시 진단** (2026-04-28 사고 C 후 강화):
 - publish-social.py가 stderr로 다음을 출력: `⚠ Bluesky thumb 업로드 실패 — 게시는 진행되나 link card에 이미지 없음`

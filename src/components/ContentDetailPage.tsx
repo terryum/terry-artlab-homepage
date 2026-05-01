@@ -147,8 +147,8 @@ export default function ContentDetailPage({
         />
       )}
 
-      {/* Threads: compact ChatGPT source line */}
-      {meta.content_type === 'threads' && meta.source_url && (
+      {/* Notes sourced from a ChatGPT conversation: compact source line */}
+      {meta.source === 'chatgpt' && meta.source_url && (
         <ThreadSourceLine
           sourceUrl={meta.source_url}
           prefix={labels.thread_source_prefix ?? 'Based on a ChatGPT conversation'}

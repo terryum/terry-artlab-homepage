@@ -23,7 +23,7 @@
 - Home: `/ko`, `/en`
 - Essays: `/ko/posts?tab=essays`, `/en/posts?tab=essays`
 - Papers: `/ko/posts?tab=papers`, `/en/posts?tab=papers`
-- Notes: `/ko/posts?tab=notes`, `/en/posts?tab=notes` (memos + threads content_type 통합)
+- Notes: `/ko/posts?tab=notes`, `/en/posts?tab=notes` (`content_type: "notes"`)
 - Surveys: `/ko/surveys`, `/en/surveys`
 - About: `/ko/about`, `/en/about`
 
@@ -58,7 +58,7 @@
 - 글 카드 리스트 (썸네일, 제목, 요약, 발행일, 태그)
 - 기본 정렬: 최신순
 - 페이지네이션 또는 Load More (구현 방식은 기술 문서에서 결정)
-- Notes 탭은 `content_type` 이 `memos` 또는 `threads` 인 포스트를 함께 보여준다 (`site-config.ts` `TAB_CONFIG`).
+- Notes 탭은 `content_type: "notes"` 인 포스트를 보여준다 (`site-config.ts` `TAB_CONFIG`). 짧은 메모와 ChatGPT 대화 요약이 함께 들어가며, 후자는 `source: "chatgpt"` 메타 필드로 식별되어 ThreadSourceLine 라벨이 자동 노출된다.
 
 ### 2-1) Posts (상세 — 단일 템플릿)
 - 제목 / 메타정보 (날짜, 태그)
@@ -66,7 +66,7 @@
 - 언어 전환 링크 (KO/EN 대응 포스트)
 - 이전/다음 글 링크 (옵션)
 - Papers 한정: 원문(arXiv 등) 출처 배지/링크
-- Threads 한정: ChatGPT source line
+- Notes (ChatGPT 요약, `source: "chatgpt"`): ChatGPT source line
 
 ### 3) Surveys (목록)
 - 페이지 소개 문구
@@ -92,5 +92,5 @@
 - Home은 최신 콘텐츠 허브, 전체 탐색은 각 탭에서 수행
 
 ## 레거시 호환
-- `?tab=memos`, `?tab=threads`, `?author=terry|ai` 는 `middleware.ts` 에서 308 → `?tab=notes` 로 자동 리다이렉트.
+- 외부 inbound 링크 호환: `?tab=memos`, `?tab=threads`, `?author=terry|ai` 는 `middleware.ts` 에서 308 → `?tab=notes` 로 자동 리다이렉트 (옛 카테고리 이름이 코드에 남는 유일한 합법적 위치).
 - `/projects/*` 는 308 → `/about` 로 리다이렉트 (Projects → About 의 "Code" 큐레이션으로 통합).

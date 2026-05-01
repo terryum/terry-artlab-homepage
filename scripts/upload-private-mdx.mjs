@@ -13,9 +13,9 @@
  *
  * Usage:
  *   node scripts/upload-private-mdx.mjs \
- *     --type=memos \
+ *     --type=notes \
  *     --slug=260424-foo \
- *     --source=/Users/terrytaewoongum/Codes/personal/terry-private/posts/memos/260424-foo
+ *     --source=/Users/terrytaewoongum/Codes/personal/terry-private/posts/notes/260424-foo
  *
  *   node scripts/upload-private-mdx.mjs --type=papers --slug=xxx --source=... --skip-meta
  *   node scripts/upload-private-mdx.mjs --type=papers --slug=xxx --source=... --dry-run
@@ -52,11 +52,11 @@ const skipMeta = !!flags['skip-meta'];
 const dryRun = !!flags['dry-run'];
 
 if (!type || !slug || !source) {
-  console.error('Usage: upload-private-mdx.mjs --type=<memos|essays|threads|papers> --slug=<slug> --source=<dir>');
+  console.error('Usage: upload-private-mdx.mjs --type=<essays|notes|papers> --slug=<slug> --source=<dir>');
   process.exit(1);
 }
 
-const VALID_TYPES = new Set(['memos', 'essays', 'threads', 'papers']);
+const VALID_TYPES = new Set(['essays', 'notes', 'papers']);
 if (!VALID_TYPES.has(type)) {
   console.error(`❌ --type must be one of: ${[...VALID_TYPES].join(', ')}`);
   process.exit(1);
