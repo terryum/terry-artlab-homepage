@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-27T23:30:11.880Z",
+  "generated_at": "2026-05-01T04:18:35.244Z",
   "total_posts": 49,
   "posts": [
     {
@@ -3038,7 +3038,7 @@
     {
       "post_number": 42,
       "slug": "260419-vercel-quiet-bill",
-      "content_type": "memos",
+      "content_type": "notes",
       "title_en": "The Quiet Bill — When Vercel Bills You for Bots",
       "title_ko": "조용한 청구서 - Bot에도 과금하는 Vercel",
       "summary_ko": "Vercel Pro에서 봇+Observability가 청구서를 부풀렸다. Cloudflare는 보안 스택이 계량기 앞에 있어서 구조적으로 싸다.",
@@ -3063,7 +3063,7 @@
       "methodology": [],
       "contribution_type": null,
       "tags": [
-        "Memos",
+        "Notes",
         "Vercel",
         "Cloudflare",
         "Infra",
@@ -3093,7 +3093,7 @@
     {
       "post_number": 43,
       "slug": "260420-one-day-recovery",
-      "content_type": "memos",
+      "content_type": "notes",
       "title_en": "SkinChat Infrastructure Debt, Cleared in a Day",
       "title_ko": "하루 만에 고친 SkinChat 인프라 부채",
       "summary_ko": "비개발자 혼자 하루 세션으로 SkinChat·SkinLog 인프라 부채 7건 해소. 응답 −37%/−32%, 90일 장애 복구, 보안 2건 봉쇄.",
@@ -3119,7 +3119,7 @@
       "methodology": [],
       "contribution_type": null,
       "tags": [
-        "Memos",
+        "Notes",
         "Infra",
         "Supabase",
         "Lambda",
@@ -3240,7 +3240,7 @@
     {
       "post_number": 45,
       "slug": "260423-slack-agents-control-plane",
-      "content_type": "threads",
+      "content_type": "notes",
       "title_en": "Skills, Agents, and Multi-Agent Slack",
       "title_ko": "스킬, 에이전트, 그리고 멀티에이전트 슬랙",
       "summary_ko": "에이전트와 Skill은 어떻게 다르고, 같은 정의를 Claude Code와 슬랙에서 어떻게 재사용할 수 있는가.",
@@ -3264,7 +3264,7 @@
       "methodology": [],
       "contribution_type": null,
       "tags": [
-        "Threads",
+        "Notes",
         "AI Agents",
         "Claude Code",
         "Slack",
@@ -3295,7 +3295,7 @@
     {
       "post_number": 46,
       "slug": "260424-claude-to-codex",
-      "content_type": "threads",
+      "content_type": "notes",
       "title_en": "From Claude Code to Codex",
       "title_ko": "Claude Code에서 Codex로 넘어가는 길",
       "summary_ko": "코드 양에 따라 재구현이냐 자동 이관이냐 — Claude Code → Codex 두 갈래.",
@@ -3321,7 +3321,7 @@
       "methodology": [],
       "contribution_type": null,
       "tags": [
-        "Threads",
+        "Notes",
         "Claude Code",
         "Codex",
         "AI Tooling",
@@ -3434,8 +3434,8 @@
       "title_ko": "SW는 화장품이 된다",
       "summary_ko": "SW 만드는 능력이 흔해지면 가치는 다른 축으로 이동한다. 한국 화장품 산업이 이미 그린 곡선을 SW가 따라간다.",
       "summary_en": "When the ability to build software becomes common, value shifts to other axes — brand, marketing, ODM. Korea's cosmetics industry already drew that curve.",
-      "cover_image": "https://pub-0c3a2ab4c1e34dd1b7abc088a943482d.r2.dev/private/posts/essays/260425-sw-becomes-cosmetics/cover.webp",
-      "cover_thumb": "https://pub-0c3a2ab4c1e34dd1b7abc088a943482d.r2.dev/private/posts/essays/260425-sw-becomes-cosmetics/cover-thumb.webp",
+      "cover_image": "/posts/260425-sw-becomes-cosmetics/cover.webp",
+      "cover_thumb": "/posts/260425-sw-becomes-cosmetics/cover-thumb.webp",
       "domain": "AI & Society",
       "subfields": [
         "industry transition",
@@ -3493,13 +3493,13 @@
       "taxonomy_secondary": [
         "industry/transition"
       ],
-      "visibility": "private",
+      "visibility": "public",
       "allowed_groups": []
     },
     {
       "post_number": 49,
       "slug": "260425-kaist-retry-storm",
-      "content_type": "memos",
+      "content_type": "notes",
       "title_en": "The Vercel Surge — The Culprit Was Someone at KAIST",
       "title_ko": "Vercel 폭주, 범인은 KAIST의 어떤 분이었다",
       "summary_ko": "5천만 회 두드린 봇과, 그걸 4일간 인지조차 못한 내 잘못.",
@@ -3525,7 +3525,7 @@
       "methodology": [],
       "contribution_type": null,
       "tags": [
-        "Memos",
+        "Notes",
         "vercel",
         "cloudflare",
         "retry-storm",

@@ -6,8 +6,7 @@
   "updated_at": "2026-05-01T00:00:00Z",
   "status": "published",
   "content_type": "essays",
-  "visibility": "private",
-  "body_source": "r2",
+  "visibility": "public",
   "title_ko": "SW는 화장품이 된다",
   "title_en": "Software Becomes Cosmetics",
   "subtitle_ko": "SW의 미래는 화장품 산업에 있다",
@@ -23,8 +22,8 @@
     "Marketing",
     "Branding"
   ],
-  "cover_image": "https://pub-0c3a2ab4c1e34dd1b7abc088a943482d.r2.dev/private/posts/essays/260425-sw-becomes-cosmetics/cover.webp",
-  "cover_thumb": "https://pub-0c3a2ab4c1e34dd1b7abc088a943482d.r2.dev/private/posts/essays/260425-sw-becomes-cosmetics/cover-thumb.webp",
+  "cover_image": "/posts/260425-sw-becomes-cosmetics/cover.webp",
+  "cover_thumb": "/posts/260425-sw-becomes-cosmetics/cover-thumb.webp",
   "reading_time_min": 5,
   "domain": "AI & Society",
   "subfields": [
