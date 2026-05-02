@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-01T04:18:35.244Z",
-  "total_posts": 49,
+  "generated_at": "2026-05-02T22:12:10.959Z",
+  "total_posts": 50,
   "posts": [
     {
       "post_number": 1,
@@ -3553,6 +3553,72 @@
       "taxonomy_secondary": [],
       "visibility": "public",
       "allowed_groups": []
+    },
+    {
+      "post_number": 50,
+      "slug": "260430-my-facebook-20-years",
+      "content_type": "essays",
+      "title_en": "Twenty Years on Facebook, in Data",
+      "title_ko": "페이스북 통계로 보는 나의 20년",
+      "summary_ko": "20년 5363편의 페이스북 글을 14개 좌표로 분류해보니 한 사람의 시기별 좌표 이동이 또렷이 드러났다. 무심히 쓴 글들의 분포가 의식한 일기보다 자기를 더 정직하게 비춘다.",
+      "summary_en": "Twenty years of 5,363 Facebook posts, classified into 14 axes. The unconsciously-written posts turn out to be a more honest mirror of one person than any deliberate journal.",
+      "cover_image": "/posts/260430-my-facebook-20-years/cover.webp",
+      "cover_thumb": "/posts/260430-my-facebook-20-years/cover-thumb.webp",
+      "domain": "Self & Reflection",
+      "subfields": [
+        "personal data",
+        "writing",
+        "AI agent"
+      ],
+      "key_concepts": [
+        "digital trace",
+        "personal data",
+        "self-reflection",
+        "social media archive",
+        "AI replication"
+      ],
+      "methodology": [],
+      "contribution_type": null,
+      "tags": [
+        "Essays",
+        "Reflection",
+        "Data",
+        "Writing",
+        "AI"
+      ],
+      "source_author": null,
+      "source_date": null,
+      "published_at": "2026-04-30T00:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "20년간 페이스북에 쌓인 5363편을 14개 카테고리로 분류해 보니 한 사람의 좌표 이동이 곡선으로 드러났다",
+        "problem": "AI agent로 자기를 복제하려면 개인 데이터를 학습시켜야 하는데, 개인적 삶은 보통 아날로그라 동기화가 어렵다",
+        "solution": "지난 20년 페이스북 데이터를 14개 좌표로 분류해 시기별 카테고리 분포를 시각화하면 한 사람의 시간 곡선이 드러난다",
+        "key_result": "의식해서 쓴 일기보다 무심히 쓴 글들의 분포가 자기를 더 정직하게 비춘다",
+        "limitations": []
+      },
+      "relations": [
+        {
+          "target": "260413-new-leverage",
+          "type": "related"
+        },
+        {
+          "target": "260406-writing-daily-by-hand",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": [
+        "260413-new-leverage",
+        "260406-writing-daily-by-hand"
+      ],
+      "taxonomy_primary": "self/reflection",
+      "taxonomy_secondary": [
+        "writing/practice",
+        "ai/personal-agent"
+      ],
+      "visibility": "public",
+      "allowed_groups": []
     }
   ],
   "knowledge_graph": {
@@ -4136,253 +4202,13 @@
         "type": "related"
       },
       {
-        "from": "2201-mano-hand-model",
-        "to": "2407-stretchable-glove-hand-pose",
+        "from": "260430-my-facebook-20-years",
+        "to": "260413-new-leverage",
         "type": "related"
       },
       {
-        "from": "2201-mano-hand-model",
-        "to": "2512-unitachand",
-        "type": "related"
-      },
-      {
-        "from": "2504-pp-tac",
-        "to": "2505-dexumi",
-        "type": "related"
-      },
-      {
-        "from": "2201-mano-hand-model",
-        "to": "2602-robopaint",
-        "type": "related"
-      },
-      {
-        "from": "2407-tactile-skin-inhand-translation",
-        "to": "2504-pp-tac",
-        "type": "related"
-      },
-      {
-        "from": "2407-tactile-skin-inhand-translation",
-        "to": "2407-stretchable-glove-hand-pose",
-        "type": "related"
-      },
-      {
-        "from": "2407-tactile-skin-inhand-translation",
-        "to": "2501-dexforce-force-informed-actions",
-        "type": "related"
-      },
-      {
-        "from": "2409-3dtactile-dex",
-        "to": "2504-pp-tac",
-        "type": "related"
-      },
-      {
-        "from": "2409-3dtactile-dex",
-        "to": "2407-tactile-skin-inhand-translation",
-        "type": "related"
-      },
-      {
-        "from": "2409-3dtactile-dex",
-        "to": "2501-dexforce-force-informed-actions",
-        "type": "related"
-      },
-      {
-        "from": "2409-3dtactile-dex",
-        "to": "2505-dexumi",
-        "type": "related"
-      },
-      {
-        "from": "2410-pi0-vla-flow-model",
-        "to": "2511-pi0-6-recap",
-        "type": "related"
-      },
-      {
-        "from": "2501-dexforce-force-informed-actions",
-        "to": "2505-forcevla-force-aware-moe",
-        "type": "related"
-      },
-      {
-        "from": "2504-pp-tac",
-        "to": "2407-stretchable-glove-hand-pose",
-        "type": "related"
-      },
-      {
-        "from": "2505-dexumi",
-        "to": "2407-stretchable-glove-hand-pose",
-        "type": "compares_with"
-      },
-      {
-        "from": "2505-dexumi",
-        "to": "2501-dexforce-force-informed-actions",
-        "type": "addresses_task"
-      },
-      {
-        "from": "2505-dexumi",
-        "to": "2505-forcevla-force-aware-moe",
-        "type": "related"
-      },
-      {
-        "from": "2505-forcevla-force-aware-moe",
-        "to": "2410-pi0-vla-flow-model",
-        "type": "builds_on"
-      },
-      {
-        "from": "2505-forcevla-force-aware-moe",
-        "to": "2501-dexforce-force-informed-actions",
-        "type": "uses_method"
-      },
-      {
-        "from": "2506-exostart",
-        "to": "2505-dexumi",
-        "type": "compares_with"
-      },
-      {
-        "from": "2506-exostart",
-        "to": "2501-dexforce-force-informed-actions",
-        "type": "addresses_task"
-      },
-      {
-        "from": "2506-exostart",
-        "to": "2505-forcevla-force-aware-moe",
-        "type": "addresses_task"
-      },
-      {
-        "from": "2509-dexop",
-        "to": "2505-dexumi",
-        "type": "compares_with"
-      },
-      {
-        "from": "2509-dexop",
-        "to": "2506-exostart",
-        "type": "compares_with"
-      },
-      {
-        "from": "2509-dexop",
-        "to": "2407-stretchable-glove-hand-pose",
-        "type": "addresses_task"
-      },
-      {
-        "from": "2511-gen0-embodied-foundation-model",
-        "to": "2410-pi0-vla-flow-model",
-        "type": "related"
-      },
-      {
-        "from": "2511-gen0-embodied-foundation-model",
-        "to": "2511-pi0-6-recap",
-        "type": "related"
-      },
-      {
-        "from": "2511-pi0-6-recap",
-        "to": "2410-pi0-vla-flow-model",
-        "type": "builds_on"
-      },
-      {
-        "from": "2512-osmo-tactile-glove",
-        "to": "2407-tactile-skin-inhand-translation",
-        "type": "builds_on"
-      },
-      {
-        "from": "2512-osmo-tactile-glove",
-        "to": "2512-unitachand",
-        "type": "compares_with"
-      },
-      {
-        "from": "2512-osmo-tactile-glove",
-        "to": "2504-pp-tac",
-        "type": "related"
-      },
-      {
-        "from": "2512-osmo-tactile-glove",
-        "to": "2409-3dtactile-dex",
-        "type": "related"
-      },
-      {
-        "from": "2512-osmo-tactile-glove",
-        "to": "2505-dexumi",
-        "type": "compares_with"
-      },
-      {
-        "from": "2512-unitachand",
-        "to": "2409-3dtactile-dex",
-        "type": "related"
-      },
-      {
-        "from": "2512-unitachand",
-        "to": "2407-tactile-skin-inhand-translation",
-        "type": "related"
-      },
-      {
-        "from": "2512-unitachand",
-        "to": "2504-pp-tac",
-        "type": "related"
-      },
-      {
-        "from": "2512-unitachand",
-        "to": "2505-dexumi",
-        "type": "related"
-      },
-      {
-        "from": "2602-robopaint",
-        "to": "2505-dexumi",
-        "type": "compares_with"
-      },
-      {
-        "from": "2602-robopaint",
-        "to": "2506-exostart",
-        "type": "compares_with"
-      },
-      {
-        "from": "2602-robopaint",
-        "to": "2509-dexop",
-        "type": "compares_with"
-      },
-      {
-        "from": "2602-robopaint",
-        "to": "2410-pi0-vla-flow-model",
-        "type": "related"
-      },
-      {
-        "from": "2603-capx-coding-agents-manipulation",
-        "to": "2410-pi0-vla-flow-model",
-        "type": "compares_with"
-      },
-      {
-        "from": "2603-medical-ai-scientist",
-        "to": "2502-ai-co-scientist",
-        "type": "compares_with"
-      },
-      {
-        "from": "2603-roboclaw-agentic-long-horizon",
-        "to": "2410-pi0-vla-flow-model",
-        "type": "builds_on"
-      },
-      {
-        "from": "2603-roboclaw-agentic-long-horizon",
-        "to": "2603-capx-coding-agents-manipulation",
-        "type": "compares_with"
-      },
-      {
-        "from": "2604-gen1-scaling-mastery",
-        "to": "2511-gen0-embodied-foundation-model",
-        "type": "builds_on"
-      },
-      {
-        "from": "2604-gen1-scaling-mastery",
-        "to": "2410-pi0-vla-flow-model",
-        "type": "related"
-      },
-      {
-        "from": "2604-gen1-scaling-mastery",
-        "to": "2511-pi0-6-recap",
-        "type": "related"
-      },
-      {
-        "from": "2604-harnessing-claude-intelligence",
-        "to": "2603-meta-harness-optimization",
-        "type": "related"
-      },
-      {
-        "from": "2604-harnessing-claude-intelligence",
-        "to": "2502-ai-co-scientist",
+        "from": "260430-my-facebook-20-years",
+        "to": "260406-writing-daily-by-hand",
         "type": "related"
       }
     ],
@@ -5511,6 +5337,21 @@
     ],
     "AI Bot Block": [
       49
+    ],
+    "digital trace": [
+      50
+    ],
+    "personal data": [
+      50
+    ],
+    "self-reflection": [
+      50
+    ],
+    "social media archive": [
+      50
+    ],
+    "AI replication": [
+      50
     ]
   },
   "domain_stats": {
@@ -5522,7 +5363,8 @@
     "Infra & Cost": 1,
     "Infra & Ops": 1,
     "ai-tooling": 2,
-    "Infrastructure": 1
+    "Infrastructure": 1,
+    "Self & Reflection": 1
   },
   "taxonomy_stats": {
     "robotics/brain/vla": 7,
@@ -5545,6 +5387,9 @@
     "ops/security:secondary": 1,
     "ai/productivity:secondary": 1,
     "industry/transition:secondary": 1,
+    "self/reflection": 1,
+    "writing/practice:secondary": 1,
+    "ai/personal-agent:secondary": 1,
     "robotics/arm": 5,
     "robotics/hand": 13,
     "robotics": 29,

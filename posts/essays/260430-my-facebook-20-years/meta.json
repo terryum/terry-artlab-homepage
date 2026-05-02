@@ -1,0 +1,72 @@
+{
+  "post_id": "260430-my-facebook-20-years",
+  "slug": "260430-my-facebook-20-years",
+  "post_number": 50,
+  "published_at": "2026-04-30T00:00:00Z",
+  "updated_at": "2026-05-03T00:00:00Z",
+  "status": "published",
+  "content_type": "essays",
+  "visibility": "public",
+  "title_ko": "페이스북 통계로 보는 나의 20년",
+  "title_en": "Twenty Years on Facebook, in Data",
+  "subtitle_ko": "5363편이 그려낸 한 사람의 좌표 곡선",
+  "subtitle_en": "5,363 posts plotting one trajectory",
+  "summary_ko": "20년간 페이스북에 쌓인 5363편을 14개 카테고리로 분류했다. 일상 감정에서 사회비평으로, 다시 창업·경영으로 옮겨간 곡선이 한 사람의 시기별 좌표 이동을 그대로 보여준다. 의식해서 쓴 일기보다 무심히 쓴 글들의 분포가 자기를 더 정직하게 비추는 거울이 된다.",
+  "summary_en": "Twenty years of 5,363 Facebook posts, classified into 14 categories. The curves — from daily emotion to social commentary, then to startup operations — trace one person's shifting coordinates over the decades. The unconsciously-written posts turn out to be a more honest mirror than any deliberate journal.",
+  "card_summary_ko": "20년 5363편의 페이스북 글을 14개 좌표로 분류해보니 한 사람의 시기별 좌표 이동이 또렷이 드러났다. 무심히 쓴 글들의 분포가 의식한 일기보다 자기를 더 정직하게 비춘다.",
+  "card_summary_en": "Twenty years of 5,363 Facebook posts, classified into 14 axes. The unconsciously-written posts turn out to be a more honest mirror of one person than any deliberate journal.",
+  "tags": [
+    "Essays",
+    "Reflection",
+    "Data",
+    "Writing",
+    "AI"
+  ],
+  "cover_image": "/posts/260430-my-facebook-20-years/cover.webp",
+  "cover_thumb": "/posts/260430-my-facebook-20-years/cover-thumb.webp",
+  "reading_time_min": 6,
+  "domain": "Self & Reflection",
+  "subfields": [
+    "personal data",
+    "writing",
+    "AI agent"
+  ],
+  "key_concepts": [
+    "digital trace",
+    "personal data",
+    "self-reflection",
+    "social media archive",
+    "AI replication"
+  ],
+  "idea_status": null,
+  "related_posts": [
+    "260413-new-leverage",
+    "260406-writing-daily-by-hand"
+  ],
+  "taxonomy_primary": "self/reflection",
+  "taxonomy_secondary": [
+    "writing/practice",
+    "ai/personal-agent"
+  ],
+  "relations": [
+    {
+      "target": "260413-new-leverage",
+      "type": "related"
+    },
+    {
+      "target": "260406-writing-daily-by-hand",
+      "type": "related"
+    }
+  ],
+  "ai_summary": {
+    "one_liner": "20년간 페이스북에 쌓인 5363편을 14개 카테고리로 분류해 보니 한 사람의 좌표 이동이 곡선으로 드러났다",
+    "problem": "AI agent로 자기를 복제하려면 개인 데이터를 학습시켜야 하는데, 개인적 삶은 보통 아날로그라 동기화가 어렵다",
+    "solution": "지난 20년 페이스북 데이터를 14개 좌표로 분류해 시기별 카테고리 분포를 시각화하면 한 사람의 시간 곡선이 드러난다",
+    "key_result": "의식해서 쓴 일기보다 무심히 쓴 글들의 분포가 자기를 더 정직하게 비춘다",
+    "limitations": []
+  },
+  "figures": [],
+  "tables": [],
+  "newsletter_eligible": false,
+  "featured": false
+}
