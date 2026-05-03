@@ -185,10 +185,8 @@ export default function ContentDetailPage({
         labels={labels}
       />
 
-      {/* Related Papers (reading type only) */}
-      {meta.content_type === 'papers' && (
-        <RelatedPapers locale={locale} relatedPosts={relatedPosts} />
-      )}
+      {/* Related posts (papers, essays, notes — component returns null when empty) */}
+      <RelatedPapers locale={locale} relatedPosts={relatedPosts} />
 
       {/* Substack subscribe (essays/tech only) */}
       {meta.content_type === 'essays' && (
