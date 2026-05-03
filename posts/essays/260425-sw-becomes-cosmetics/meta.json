@@ -22,8 +22,8 @@
     "Marketing",
     "Branding"
   ],
-  "cover_image": "/posts/260425-sw-becomes-cosmetics/cover.webp",
-  "cover_thumb": "/posts/260425-sw-becomes-cosmetics/cover-thumb.webp",
+  "cover_image": "./cover.webp",
+  "cover_thumb": "./cover-thumb.webp",
   "reading_time_min": 5,
   "domain": "AI & Society",
   "subfields": [

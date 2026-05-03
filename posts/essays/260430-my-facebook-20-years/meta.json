@@ -22,8 +22,8 @@
     "Writing",
     "AI"
   ],
-  "cover_image": "/posts/260430-my-facebook-20-years/cover.webp",
-  "cover_thumb": "/posts/260430-my-facebook-20-years/cover-thumb.webp",
+  "cover_image": "./cover.webp",
+  "cover_thumb": "./cover-thumb.webp",
   "reading_time_min": 6,
   "domain": "Self & Reflection",
   "subfields": [
