@@ -153,49 +153,48 @@ export async function buildContentDetailProps(
   const { content } = await renderMDX(post.content, slug);
   const alternateLocale = await getPostAlternateLocale(slug, lang);
 
-  // Build related posts from index.json
+  // Build related posts from index.json (all content types: papers, essays, notes)
   let relatedPosts: RelatedPostData[] = [];
   let taxonomyBreadcrumb: { id: string; label: { ko: string; en: string } }[] = [];
 
+  const indexData = await loadIndexJson();
+  const indexPosts = indexData.posts as Array<{
+    slug: string;
+    title_ko: string;
+    title_en: string;
+    post_number: number | null;
+    relations: Array<{ target: string; type: string }> | null;
+    ai_summary?: { one_liner: string } | null;
+    visibility?: 'public' | 'private' | 'group';
+  }>;
+
+  // Find current post's relations in index.json. Filter target visibility to
+  // public so a public detail can't surface a private/group neighbor's title
+  // via the related-posts rail. (SSG-safe: no cookies read.)
+  const currentIndexPost = indexPosts.find(p => p.slug === slug);
+  if (currentIndexPost?.relations?.length) {
+    relatedPosts = currentIndexPost.relations
+      .flatMap(rel => {
+        const target = indexPosts.find(p => p.slug === rel.target);
+        if (!target) return [];
+        const targetVisibility = target.visibility ?? 'public';
+        if (targetVisibility !== 'public') return [];
+        const item: RelatedPostData = {
+          slug: target.slug,
+          title: lang === 'ko' ? target.title_ko : target.title_en,
+          oneLiner: target.ai_summary?.one_liner ?? '',
+          relationType: rel.type,
+          postNumber: target.post_number ?? undefined,
+        };
+        return [item];
+      });
+  }
+
   if (post.meta.content_type === 'papers') {
-    const [indexData, taxonomyData] = await Promise.all([loadIndexJson(), loadTaxonomyJson()]);
-    const posts = indexData.posts as Array<{
-      slug: string;
-      title_ko: string;
-      title_en: string;
-      post_number: number | null;
-      relations: Array<{ target: string; type: string }>;
-      ai_summary?: { one_liner: string } | null;
-      visibility?: 'public' | 'private' | 'group';
-    }>;
-
-    // Find current post's relations in index.json. Filter target visibility to
-    // public so a public papers detail can't surface a private/group neighbor's
-    // title via the related-posts rail. (SSG-safe: no cookies read.)
-    const currentIndexPost = posts.find(p => p.slug === slug);
-    if (currentIndexPost?.relations?.length) {
-      relatedPosts = currentIndexPost.relations
-        .flatMap(rel => {
-          const target = posts.find(p => p.slug === rel.target);
-          if (!target) return [];
-          const targetVisibility = target.visibility ?? 'public';
-          if (targetVisibility !== 'public') return [];
-          const item: RelatedPostData = {
-            slug: target.slug,
-            title: lang === 'ko' ? target.title_ko : target.title_en,
-            oneLiner: target.ai_summary?.one_liner ?? '',
-            relationType: rel.type,
-            postNumber: target.post_number ?? undefined,
-          };
-          return [item];
-        });
-    }
-
-    // Build taxonomy breadcrumb
+    const taxonomyData = await loadTaxonomyJson();
     const taxonomyPrimary = post.meta.taxonomy_primary;
     if (taxonomyPrimary) {
       const nodes = (taxonomyData as { nodes: Record<string, { label: { ko: string; en: string }; children: string[] }> }).nodes;
-      // Find parent node
       const parentId = taxonomyPrimary.includes('/')
         ? taxonomyPrimary.split('/')[0]
         : null;
