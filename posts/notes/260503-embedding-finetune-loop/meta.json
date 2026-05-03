@@ -7,11 +7,21 @@
   "status": "published",
   "content_type": "notes",
   "visibility": "public",
-  "tags": ["Notes", "Embedding", "Clustering", "Knowledge graph", "LLM"],
+  "tags": [
+    "Notes",
+    "Embedding",
+    "Clustering",
+    "Knowledge graph",
+    "LLM"
+  ],
   "cover_image": "./cover.webp",
   "reading_time_min": 8,
   "domain": "AI/ML",
-  "subfields": ["embedding", "clustering", "human-in-the-loop"],
+  "subfields": [
+    "embedding",
+    "clustering",
+    "human-in-the-loop"
+  ],
   "key_concepts": [
     "embedding",
     "hierarchical clustering",
@@ -20,7 +30,9 @@
     "cluster cohesion"
   ],
   "idea_status": null,
-  "related_posts": ["260430-my-facebook-20-years"],
+  "related_posts": [
+    "260430-my-facebook-20-years"
+  ],
   "ai_summary": {
     "one_liner": "5,000편 페이스북 글을 임베딩만으로 묶지 못해, 4 가지 override + 14 round 의 사람-알고리즘 fine-tune loop 로 cluster 를 끌어올린 기록.",
     "problem": "임베딩 + 코사인 유사도만으로는 카테고리 횡단 cluster, 거대 노이즈 버킷, 흩어진 응집이 생겨 책 챕터 source 로 못 쓴다.",
@@ -34,5 +46,11 @@
   "figures": [],
   "tables": [],
   "newsletter_eligible": false,
-  "featured": false
+  "featured": false,
+  "relations": [
+    {
+      "target": "260430-my-facebook-20-years",
+      "type": "related"
+    }
+  ]
 }

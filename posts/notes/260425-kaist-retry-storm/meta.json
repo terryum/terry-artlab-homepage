@@ -48,5 +48,11 @@
   "figures": [],
   "tables": [],
   "newsletter_eligible": false,
-  "featured": false
+  "featured": false,
+  "relations": [
+    {
+      "target": "260419-vercel-quiet-bill",
+      "type": "related"
+    }
+  ]
 }

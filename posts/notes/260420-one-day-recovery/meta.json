@@ -43,12 +43,12 @@
   ],
   "relations": [
     {
-      "slug": "260419-vercel-quiet-bill",
+      "target": "260419-vercel-quiet-bill",
       "type": "related",
       "note": "같은 묵힌 인프라 부채 정비 사례"
     },
     {
-      "slug": "260420-debt-changes-hands",
+      "target": "260420-debt-changes-hands",
       "type": "related",
       "note": "이번 정비의 의미를 다룬 에세이"
     }

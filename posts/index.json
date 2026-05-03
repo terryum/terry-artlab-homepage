@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03T07:56:45.664Z",
+  "generated_at": "2026-05-03T08:48:49.733Z",
   "total_posts": 51,
   "posts": [
     {
@@ -1854,10 +1854,25 @@
           "AI 활용의 긍정적 측면에 대한 균형적 논의 부재"
         ]
       },
-      "relations": [],
+      "relations": [
+        {
+          "target": "260310-on-the-manifold-first-post",
+          "type": "related"
+        },
+        {
+          "target": "260420-debt-changes-hands",
+          "type": "related"
+        },
+        {
+          "target": "260430-my-facebook-20-years",
+          "type": "related"
+        }
+      ],
       "idea_status": "exploring",
       "related_posts": [
-        "260310-on-the-manifold-first-post"
+        "260310-on-the-manifold-first-post",
+        "260420-debt-changes-hands",
+        "260430-my-facebook-20-years"
       ],
       "taxonomy_primary": null,
       "taxonomy_secondary": [],
@@ -1908,12 +1923,35 @@
           "AI agent의 자율적 초월 가능성에 대한 깊은 논의 부재"
         ]
       },
-      "relations": [],
+      "relations": [
+        {
+          "target": "260310-brain-augmentation",
+          "type": "related"
+        },
+        {
+          "target": "2604-harnessing-claude-intelligence",
+          "type": "related"
+        },
+        {
+          "target": "260406-writing-daily-by-hand",
+          "type": "related"
+        },
+        {
+          "target": "260420-debt-changes-hands",
+          "type": "related"
+        },
+        {
+          "target": "260430-my-facebook-20-years",
+          "type": "related"
+        }
+      ],
       "idea_status": "exploring",
       "related_posts": [
-        "260406-writing-daily-by-hand",
         "260310-brain-augmentation",
-        "2604-harnessing-claude-intelligence"
+        "2604-harnessing-claude-intelligence",
+        "260406-writing-daily-by-hand",
+        "260420-debt-changes-hands",
+        "260430-my-facebook-20-years"
       ],
       "taxonomy_primary": null,
       "taxonomy_secondary": [],
@@ -2252,6 +2290,10 @@
       },
       "relations": [
         {
+          "target": "2603-autoresearch-autonomous-ml",
+          "type": "related"
+        },
+        {
           "target": "260310-brain-augmentation",
           "type": "extends"
         },
@@ -2260,25 +2302,26 @@
           "type": "related"
         },
         {
+          "target": "2604-self-driving-labs",
+          "type": "related"
+        },
+        {
           "target": "260413-new-leverage",
           "type": "related"
         },
         {
-          "target": "2603-autoresearch-autonomous-ml",
-          "type": "related"
-        },
-        {
-          "target": "2604-self-driving-labs",
+          "target": "260420-debt-changes-hands",
           "type": "related"
         }
       ],
       "idea_status": null,
       "related_posts": [
+        "2603-autoresearch-autonomous-ml",
         "260310-brain-augmentation",
         "2604-automated-alignment-researchers",
+        "2604-self-driving-labs",
         "260413-new-leverage",
-        "2603-autoresearch-autonomous-ml",
-        "2604-self-driving-labs"
+        "260420-debt-changes-hands"
       ],
       "taxonomy_primary": "ai/society",
       "taxonomy_secondary": [
@@ -3082,9 +3125,21 @@
           "고도화된 봇은 여전히 Worker까지 도달하므로 비용 제로는 아님"
         ]
       },
-      "relations": [],
+      "relations": [
+        {
+          "target": "260420-one-day-recovery",
+          "type": "related"
+        },
+        {
+          "target": "260425-kaist-retry-storm",
+          "type": "related"
+        }
+      ],
       "idea_status": null,
-      "related_posts": [],
+      "related_posts": [
+        "260420-one-day-recovery",
+        "260425-kaist-retry-storm"
+      ],
       "taxonomy_primary": "infra/serverless",
       "taxonomy_secondary": [],
       "visibility": "public",
@@ -3141,12 +3196,12 @@
       },
       "relations": [
         {
-          "slug": "260419-vercel-quiet-bill",
+          "target": "260419-vercel-quiet-bill",
           "type": "related",
           "note": "같은 묵힌 인프라 부채 정비 사례"
         },
         {
-          "slug": "260420-debt-changes-hands",
+          "target": "260420-debt-changes-hands",
           "type": "related",
           "note": "이번 정비의 의미를 다룬 에세이"
         }
@@ -3207,8 +3262,8 @@
       },
       "relations": [
         {
-          "target": "260420-one-day-recovery",
-          "type": "extends"
+          "target": "260406-writing-daily-by-hand",
+          "type": "related"
         },
         {
           "target": "260413-new-leverage",
@@ -3219,16 +3274,16 @@
           "type": "related"
         },
         {
-          "target": "260406-writing-daily-by-hand",
-          "type": "related"
+          "target": "260420-one-day-recovery",
+          "type": "extends"
         }
       ],
       "idea_status": null,
       "related_posts": [
-        "260420-one-day-recovery",
         "260406-writing-daily-by-hand",
         "260413-new-leverage",
-        "260415-democratization-of-research"
+        "260415-democratization-of-research",
+        "260420-one-day-recovery"
       ],
       "taxonomy_primary": "ai/society",
       "taxonomy_secondary": [
@@ -3544,7 +3599,12 @@
         "key_result": "동일 사고 재발 시 금전 손실 0, 1분 내 차단, 청구서가 아닌 이메일이 첫 인지 채널로 전환.",
         "limitations": []
       },
-      "relations": [],
+      "relations": [
+        {
+          "target": "260419-vercel-quiet-bill",
+          "type": "related"
+        }
+      ],
       "idea_status": null,
       "related_posts": [
         "260419-vercel-quiet-bill"
@@ -3599,18 +3659,23 @@
       },
       "relations": [
         {
+          "target": "260406-writing-daily-by-hand",
+          "type": "related"
+        },
+        {
           "target": "260413-new-leverage",
           "type": "related"
         },
         {
-          "target": "260406-writing-daily-by-hand",
+          "target": "260503-embedding-finetune-loop",
           "type": "related"
         }
       ],
       "idea_status": null,
       "related_posts": [
+        "260406-writing-daily-by-hand",
         "260413-new-leverage",
-        "260406-writing-daily-by-hand"
+        "260503-embedding-finetune-loop"
       ],
       "taxonomy_primary": "self/reflection",
       "taxonomy_secondary": [
@@ -3666,7 +3731,12 @@
           "T00 mega-cluster artifact (theme axis 의 top-1 쏠림) 는 secondary theme 으로 우회 중"
         ]
       },
-      "relations": [],
+      "relations": [
+        {
+          "target": "260430-my-facebook-20-years",
+          "type": "related"
+        }
+      ],
       "idea_status": null,
       "related_posts": [
         "260430-my-facebook-20-years"
@@ -3935,6 +4005,46 @@
         "type": "sharesTopicWith"
       },
       {
+        "from": "260406-writing-daily-by-hand",
+        "to": "260310-on-the-manifold-first-post",
+        "type": "related"
+      },
+      {
+        "from": "260406-writing-daily-by-hand",
+        "to": "260420-debt-changes-hands",
+        "type": "related"
+      },
+      {
+        "from": "260406-writing-daily-by-hand",
+        "to": "260430-my-facebook-20-years",
+        "type": "related"
+      },
+      {
+        "from": "260413-new-leverage",
+        "to": "260310-brain-augmentation",
+        "type": "related"
+      },
+      {
+        "from": "260413-new-leverage",
+        "to": "2604-harnessing-claude-intelligence",
+        "type": "related"
+      },
+      {
+        "from": "260413-new-leverage",
+        "to": "260406-writing-daily-by-hand",
+        "type": "related"
+      },
+      {
+        "from": "260413-new-leverage",
+        "to": "260420-debt-changes-hands",
+        "type": "related"
+      },
+      {
+        "from": "260413-new-leverage",
+        "to": "260430-my-facebook-20-years",
+        "type": "related"
+      },
+      {
         "from": "2604-automated-alignment-researchers",
         "to": "2502-ai-co-scientist",
         "type": "sharesTopicWith"
@@ -3986,6 +4096,11 @@
       },
       {
         "from": "260415-democratization-of-research",
+        "to": "2603-autoresearch-autonomous-ml",
+        "type": "related"
+      },
+      {
+        "from": "260415-democratization-of-research",
         "to": "260310-brain-augmentation",
         "type": "extends"
       },
@@ -3996,17 +4111,17 @@
       },
       {
         "from": "260415-democratization-of-research",
+        "to": "2604-self-driving-labs",
+        "type": "related"
+      },
+      {
+        "from": "260415-democratization-of-research",
         "to": "260413-new-leverage",
         "type": "related"
       },
       {
         "from": "260415-democratization-of-research",
-        "to": "2603-autoresearch-autonomous-ml",
-        "type": "related"
-      },
-      {
-        "from": "260415-democratization-of-research",
-        "to": "2604-self-driving-labs",
+        "to": "260420-debt-changes-hands",
         "type": "related"
       },
       {
@@ -4195,17 +4310,29 @@
         "type": "sharesTopicWith"
       },
       {
-        "from": "260420-one-day-recovery",
+        "from": "260419-vercel-quiet-bill",
+        "to": "260420-one-day-recovery",
+        "type": "related"
+      },
+      {
+        "from": "260419-vercel-quiet-bill",
+        "to": "260425-kaist-retry-storm",
         "type": "related"
       },
       {
         "from": "260420-one-day-recovery",
+        "to": "260419-vercel-quiet-bill",
+        "type": "related"
+      },
+      {
+        "from": "260420-one-day-recovery",
+        "to": "260420-debt-changes-hands",
         "type": "related"
       },
       {
         "from": "260420-debt-changes-hands",
-        "to": "260420-one-day-recovery",
-        "type": "extends"
+        "to": "260406-writing-daily-by-hand",
+        "type": "related"
       },
       {
         "from": "260420-debt-changes-hands",
@@ -4219,8 +4346,8 @@
       },
       {
         "from": "260420-debt-changes-hands",
-        "to": "260406-writing-daily-by-hand",
-        "type": "related"
+        "to": "260420-one-day-recovery",
+        "type": "extends"
       },
       {
         "from": "260422-work-that-isnt",
@@ -4258,13 +4385,278 @@
         "type": "related"
       },
       {
+        "from": "260425-kaist-retry-storm",
+        "to": "260419-vercel-quiet-bill",
+        "type": "related"
+      },
+      {
+        "from": "260430-my-facebook-20-years",
+        "to": "260406-writing-daily-by-hand",
+        "type": "related"
+      },
+      {
         "from": "260430-my-facebook-20-years",
         "to": "260413-new-leverage",
         "type": "related"
       },
       {
         "from": "260430-my-facebook-20-years",
-        "to": "260406-writing-daily-by-hand",
+        "to": "260503-embedding-finetune-loop",
+        "type": "related"
+      },
+      {
+        "from": "260503-embedding-finetune-loop",
+        "to": "260430-my-facebook-20-years",
+        "type": "related"
+      },
+      {
+        "from": "2201-mano-hand-model",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "related"
+      },
+      {
+        "from": "2201-mano-hand-model",
+        "to": "2512-unitachand",
+        "type": "related"
+      },
+      {
+        "from": "2504-pp-tac",
+        "to": "2505-dexumi",
+        "type": "related"
+      },
+      {
+        "from": "2201-mano-hand-model",
+        "to": "2602-robopaint",
+        "type": "related"
+      },
+      {
+        "from": "2407-tactile-skin-inhand-translation",
+        "to": "2504-pp-tac",
+        "type": "related"
+      },
+      {
+        "from": "2407-tactile-skin-inhand-translation",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "related"
+      },
+      {
+        "from": "2407-tactile-skin-inhand-translation",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "related"
+      },
+      {
+        "from": "2409-3dtactile-dex",
+        "to": "2504-pp-tac",
+        "type": "related"
+      },
+      {
+        "from": "2409-3dtactile-dex",
+        "to": "2407-tactile-skin-inhand-translation",
+        "type": "related"
+      },
+      {
+        "from": "2409-3dtactile-dex",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "related"
+      },
+      {
+        "from": "2409-3dtactile-dex",
+        "to": "2505-dexumi",
+        "type": "related"
+      },
+      {
+        "from": "2410-pi0-vla-flow-model",
+        "to": "2511-pi0-6-recap",
+        "type": "related"
+      },
+      {
+        "from": "2501-dexforce-force-informed-actions",
+        "to": "2505-forcevla-force-aware-moe",
+        "type": "related"
+      },
+      {
+        "from": "2504-pp-tac",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "related"
+      },
+      {
+        "from": "2505-dexumi",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "compares_with"
+      },
+      {
+        "from": "2505-dexumi",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "addresses_task"
+      },
+      {
+        "from": "2505-dexumi",
+        "to": "2505-forcevla-force-aware-moe",
+        "type": "related"
+      },
+      {
+        "from": "2505-forcevla-force-aware-moe",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "builds_on"
+      },
+      {
+        "from": "2505-forcevla-force-aware-moe",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "uses_method"
+      },
+      {
+        "from": "2506-exostart",
+        "to": "2505-dexumi",
+        "type": "compares_with"
+      },
+      {
+        "from": "2506-exostart",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "addresses_task"
+      },
+      {
+        "from": "2506-exostart",
+        "to": "2505-forcevla-force-aware-moe",
+        "type": "addresses_task"
+      },
+      {
+        "from": "2509-dexop",
+        "to": "2505-dexumi",
+        "type": "compares_with"
+      },
+      {
+        "from": "2509-dexop",
+        "to": "2506-exostart",
+        "type": "compares_with"
+      },
+      {
+        "from": "2509-dexop",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "addresses_task"
+      },
+      {
+        "from": "2511-gen0-embodied-foundation-model",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "related"
+      },
+      {
+        "from": "2511-gen0-embodied-foundation-model",
+        "to": "2511-pi0-6-recap",
+        "type": "related"
+      },
+      {
+        "from": "2511-pi0-6-recap",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "builds_on"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2407-tactile-skin-inhand-translation",
+        "type": "builds_on"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2512-unitachand",
+        "type": "compares_with"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2504-pp-tac",
+        "type": "related"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2409-3dtactile-dex",
+        "type": "related"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2505-dexumi",
+        "type": "compares_with"
+      },
+      {
+        "from": "2512-unitachand",
+        "to": "2409-3dtactile-dex",
+        "type": "related"
+      },
+      {
+        "from": "2512-unitachand",
+        "to": "2407-tactile-skin-inhand-translation",
+        "type": "related"
+      },
+      {
+        "from": "2512-unitachand",
+        "to": "2504-pp-tac",
+        "type": "related"
+      },
+      {
+        "from": "2512-unitachand",
+        "to": "2505-dexumi",
+        "type": "related"
+      },
+      {
+        "from": "2602-robopaint",
+        "to": "2505-dexumi",
+        "type": "compares_with"
+      },
+      {
+        "from": "2602-robopaint",
+        "to": "2506-exostart",
+        "type": "compares_with"
+      },
+      {
+        "from": "2602-robopaint",
+        "to": "2509-dexop",
+        "type": "compares_with"
+      },
+      {
+        "from": "2602-robopaint",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "related"
+      },
+      {
+        "from": "2603-capx-coding-agents-manipulation",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "compares_with"
+      },
+      {
+        "from": "2603-medical-ai-scientist",
+        "to": "2502-ai-co-scientist",
+        "type": "compares_with"
+      },
+      {
+        "from": "2603-roboclaw-agentic-long-horizon",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "builds_on"
+      },
+      {
+        "from": "2603-roboclaw-agentic-long-horizon",
+        "to": "2603-capx-coding-agents-manipulation",
+        "type": "compares_with"
+      },
+      {
+        "from": "2604-gen1-scaling-mastery",
+        "to": "2511-gen0-embodied-foundation-model",
+        "type": "builds_on"
+      },
+      {
+        "from": "2604-gen1-scaling-mastery",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "related"
+      },
+      {
+        "from": "2604-gen1-scaling-mastery",
+        "to": "2511-pi0-6-recap",
+        "type": "related"
+      },
+      {
+        "from": "2604-harnessing-claude-intelligence",
+        "to": "2603-meta-harness-optimization",
+        "type": "related"
+      },
+      {
+        "from": "2604-harnessing-claude-intelligence",
+        "to": "2502-ai-co-scientist",
         "type": "related"
       }
     ],

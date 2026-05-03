@@ -28,9 +28,11 @@
   ],
   "idea_status": "exploring",
   "related_posts": [
-    "260406-writing-daily-by-hand",
     "260310-brain-augmentation",
-    "2604-harnessing-claude-intelligence"
+    "2604-harnessing-claude-intelligence",
+    "260406-writing-daily-by-hand",
+    "260420-debt-changes-hands",
+    "260430-my-facebook-20-years"
   ],
   "ai_summary": {
     "one_liner": "AI agent 시대에 레버리지의 공식이 '조직의 크기'에서 '복제 원본의 수준'으로 바뀌었다는 에세이",
@@ -45,5 +47,27 @@
   "figures": [],
   "tables": [],
   "newsletter_eligible": false,
-  "featured": false
+  "featured": false,
+  "relations": [
+    {
+      "target": "260310-brain-augmentation",
+      "type": "related"
+    },
+    {
+      "target": "2604-harnessing-claude-intelligence",
+      "type": "related"
+    },
+    {
+      "target": "260406-writing-daily-by-hand",
+      "type": "related"
+    },
+    {
+      "target": "260420-debt-changes-hands",
+      "type": "related"
+    },
+    {
+      "target": "260430-my-facebook-20-years",
+      "type": "related"
+    }
+  ]
 }

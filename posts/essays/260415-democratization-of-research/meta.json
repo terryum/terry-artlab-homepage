@@ -6,22 +6,65 @@
   "updated_at": "2026-04-15T00:00:00Z",
   "status": "published",
   "content_type": "essays",
-  "tags": ["Essays", "AI", "Future of Work", "Research"],
+  "tags": [
+    "Essays",
+    "AI",
+    "Future of Work",
+    "Research"
+  ],
   "cover_image": "./cover.webp",
   "reading_time_min": 5,
   "domain": "AI & Society",
-  "subfields": ["research automation", "knowledge commoditization"],
-  "key_concepts": ["democratization", "research automation", "AI scientist", "knowledge commoditization", "physical AI"],
+  "subfields": [
+    "research automation",
+    "knowledge commoditization"
+  ],
+  "key_concepts": [
+    "democratization",
+    "research automation",
+    "AI scientist",
+    "knowledge commoditization",
+    "physical AI"
+  ],
   "idea_status": null,
-  "related_posts": ["260310-brain-augmentation", "2604-automated-alignment-researchers", "260413-new-leverage", "2603-autoresearch-autonomous-ml", "2604-self-driving-labs"],
+  "related_posts": [
+    "2603-autoresearch-autonomous-ml",
+    "260310-brain-augmentation",
+    "2604-automated-alignment-researchers",
+    "2604-self-driving-labs",
+    "260413-new-leverage",
+    "260420-debt-changes-hands"
+  ],
   "taxonomy_primary": "ai/society",
-  "taxonomy_secondary": ["ai/agents", "robotics/brain"],
+  "taxonomy_secondary": [
+    "ai/agents",
+    "robotics/brain"
+  ],
   "relations": [
-    {"target": "260310-brain-augmentation", "type": "extends"},
-    {"target": "2604-automated-alignment-researchers", "type": "related"},
-    {"target": "260413-new-leverage", "type": "related"},
-    {"target": "2603-autoresearch-autonomous-ml", "type": "related"},
-    {"target": "2604-self-driving-labs", "type": "related"}
+    {
+      "target": "2603-autoresearch-autonomous-ml",
+      "type": "related"
+    },
+    {
+      "target": "260310-brain-augmentation",
+      "type": "extends"
+    },
+    {
+      "target": "2604-automated-alignment-researchers",
+      "type": "related"
+    },
+    {
+      "target": "2604-self-driving-labs",
+      "type": "related"
+    },
+    {
+      "target": "260413-new-leverage",
+      "type": "related"
+    },
+    {
+      "target": "260420-debt-changes-hands",
+      "type": "related"
+    }
   ],
   "ai_summary": {
     "one_liner": "코딩의 민주화 이후, 학술 연구도 AI에 의해 민주화된다",

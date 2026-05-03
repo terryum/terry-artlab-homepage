@@ -31,10 +31,22 @@
     "WAF"
   ],
   "idea_status": null,
-  "related_posts": [],
+  "related_posts": [
+    "260420-one-day-recovery",
+    "260425-kaist-retry-storm"
+  ],
   "taxonomy_primary": "infra/serverless",
   "taxonomy_secondary": [],
-  "relations": [],
+  "relations": [
+    {
+      "target": "260420-one-day-recovery",
+      "type": "related"
+    },
+    {
+      "target": "260425-kaist-retry-storm",
+      "type": "related"
+    }
+  ],
   "ai_summary": {
     "one_liner": "보안 스택이 과금 계량기 앞에 있느냐 뒤에 있느냐의 구조 차이가 청구서 자릿수를 바꾼다",
     "problem": "Vercel Pro에서 봇 트래픽과 Observability 이벤트가 raw count로 카운트되어 청구서가 사용자 수 대비 비정상 확대",

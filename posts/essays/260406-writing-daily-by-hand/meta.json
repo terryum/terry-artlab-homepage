@@ -28,7 +28,9 @@
   ],
   "idea_status": "exploring",
   "related_posts": [
-    "260310-on-the-manifold-first-post"
+    "260310-on-the-manifold-first-post",
+    "260420-debt-changes-hands",
+    "260430-my-facebook-20-years"
   ],
   "ai_summary": {
     "one_liner": "AI 시대에 직접 읽고 쓰는 행위의 의미를 재정의하며 매일 가볍게 읽고 쓰기로 결심한 에세이",
@@ -43,5 +45,19 @@
   "figures": [],
   "tables": [],
   "newsletter_eligible": false,
-  "featured": false
+  "featured": false,
+  "relations": [
+    {
+      "target": "260310-on-the-manifold-first-post",
+      "type": "related"
+    },
+    {
+      "target": "260420-debt-changes-hands",
+      "type": "related"
+    },
+    {
+      "target": "260430-my-facebook-20-years",
+      "type": "related"
+    }
+  ]
 }

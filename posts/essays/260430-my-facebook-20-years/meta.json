@@ -40,8 +40,9 @@
   ],
   "idea_status": null,
   "related_posts": [
+    "260406-writing-daily-by-hand",
     "260413-new-leverage",
-    "260406-writing-daily-by-hand"
+    "260503-embedding-finetune-loop"
   ],
   "taxonomy_primary": "self/reflection",
   "taxonomy_secondary": [
@@ -50,11 +51,15 @@
   ],
   "relations": [
     {
+      "target": "260406-writing-daily-by-hand",
+      "type": "related"
+    },
+    {
       "target": "260413-new-leverage",
       "type": "related"
     },
     {
-      "target": "260406-writing-daily-by-hand",
+      "target": "260503-embedding-finetune-loop",
       "type": "related"
     }
   ],
