@@ -1,0 +1,38 @@
+{
+  "post_id": "260503-embedding-finetune-loop",
+  "slug": "260503-embedding-finetune-loop",
+  "post_number": 51,
+  "published_at": "2026-05-03T07:55:28Z",
+  "updated_at": "2026-05-03T07:55:28Z",
+  "status": "published",
+  "content_type": "notes",
+  "visibility": "public",
+  "tags": ["Notes", "Embedding", "Clustering", "Knowledge graph", "LLM"],
+  "cover_image": "./cover.webp",
+  "reading_time_min": 8,
+  "domain": "AI/ML",
+  "subfields": ["embedding", "clustering", "human-in-the-loop"],
+  "key_concepts": [
+    "embedding",
+    "hierarchical clustering",
+    "human-in-the-loop fine-tuning",
+    "leave-one-out cross-validation",
+    "cluster cohesion"
+  ],
+  "idea_status": null,
+  "related_posts": ["260430-my-facebook-20-years"],
+  "ai_summary": {
+    "one_liner": "5,000편 페이스북 글을 임베딩만으로 묶지 못해, 4 가지 override + 14 round 의 사람-알고리즘 fine-tune loop 로 cluster 를 끌어올린 기록.",
+    "problem": "임베딩 + 코사인 유사도만으로는 카테고리 횡단 cluster, 거대 노이즈 버킷, 흩어진 응집이 생겨 책 챕터 source 로 못 쓴다.",
+    "solution": "taxonomy-aware top-down + cohesion-driven hierarchical KMeans 위에 4 가지 override (`overrides` / `leaf_merges` / `leaf_groups` / `leftover-subdivide`) 를 JSON 한 파일로 모아 round 단위로 적용 → re-cluster → 측정.",
+    "key_result": "14 round 후 14 카테고리 / 266 leaf, end-task LOO-CV 에서 V1_k10 이 baseline +5.21, 4 fold 모두 winner. leftover 비율 코퍼스의 < 5%.",
+    "limitations": [
+      "옛 계정 archive 가 빠진 코퍼스 — 알고리즘이 못 메꾸는 coverage gap",
+      "T00 mega-cluster artifact (theme axis 의 top-1 쏠림) 는 secondary theme 으로 우회 중"
+    ]
+  },
+  "figures": [],
+  "tables": [],
+  "newsletter_eligible": false,
+  "featured": false
+}

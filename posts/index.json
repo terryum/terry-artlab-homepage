@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-02T22:12:10.959Z",
-  "total_posts": 50,
+  "generated_at": "2026-05-03T07:56:45.664Z",
+  "total_posts": 51,
   "posts": [
     {
       "post_number": 1,
@@ -3619,6 +3619,62 @@
       ],
       "visibility": "public",
       "allowed_groups": []
+    },
+    {
+      "post_number": 51,
+      "slug": "260503-embedding-finetune-loop",
+      "content_type": "notes",
+      "title_en": "Embedding 5,000 Facebook Posts — Development Notes",
+      "title_ko": "페이스북 글 5000개 임베딩 개발 기록",
+      "summary_ko": "임베딩만으론 책 source 로 못 쓴다. override 4종 + 14 round fine-tune loop + 종료 신호 4개.",
+      "summary_en": "Embeddings alone won't make a book source. Four overrides + 14 rounds + four stop signals.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
+      "domain": "AI/ML",
+      "subfields": [
+        "embedding",
+        "clustering",
+        "human-in-the-loop"
+      ],
+      "key_concepts": [
+        "embedding",
+        "hierarchical clustering",
+        "human-in-the-loop fine-tuning",
+        "leave-one-out cross-validation",
+        "cluster cohesion"
+      ],
+      "methodology": [],
+      "contribution_type": null,
+      "tags": [
+        "Notes",
+        "Embedding",
+        "Clustering",
+        "Knowledge graph",
+        "LLM"
+      ],
+      "source_author": null,
+      "source_date": null,
+      "published_at": "2026-05-03T07:55:28Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "5,000편 페이스북 글을 임베딩만으로 묶지 못해, 4 가지 override + 14 round 의 사람-알고리즘 fine-tune loop 로 cluster 를 끌어올린 기록.",
+        "problem": "임베딩 + 코사인 유사도만으로는 카테고리 횡단 cluster, 거대 노이즈 버킷, 흩어진 응집이 생겨 책 챕터 source 로 못 쓴다.",
+        "solution": "taxonomy-aware top-down + cohesion-driven hierarchical KMeans 위에 4 가지 override (`overrides` / `leaf_merges` / `leaf_groups` / `leftover-subdivide`) 를 JSON 한 파일로 모아 round 단위로 적용 → re-cluster → 측정.",
+        "key_result": "14 round 후 14 카테고리 / 266 leaf, end-task LOO-CV 에서 V1_k10 이 baseline +5.21, 4 fold 모두 winner. leftover 비율 코퍼스의 < 5%.",
+        "limitations": [
+          "옛 계정 archive 가 빠진 코퍼스 — 알고리즘이 못 메꾸는 coverage gap",
+          "T00 mega-cluster artifact (theme axis 의 top-1 쏠림) 는 secondary theme 으로 우회 중"
+        ]
+      },
+      "relations": [],
+      "idea_status": null,
+      "related_posts": [
+        "260430-my-facebook-20-years"
+      ],
+      "taxonomy_primary": null,
+      "taxonomy_secondary": [],
+      "visibility": "public",
+      "allowed_groups": []
     }
   ],
   "knowledge_graph": {
@@ -5352,6 +5408,21 @@
     ],
     "AI replication": [
       50
+    ],
+    "embedding": [
+      51
+    ],
+    "hierarchical clustering": [
+      51
+    ],
+    "human-in-the-loop fine-tuning": [
+      51
+    ],
+    "leave-one-out cross-validation": [
+      51
+    ],
+    "cluster cohesion": [
+      51
     ]
   },
   "domain_stats": {
@@ -5364,7 +5435,8 @@
     "Infra & Ops": 1,
     "ai-tooling": 2,
     "Infrastructure": 1,
-    "Self & Reflection": 1
+    "Self & Reflection": 1,
+    "AI/ML": 1
   },
   "taxonomy_stats": {
     "robotics/brain/vla": 7,

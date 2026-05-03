@@ -1,0 +1,139 @@
+---
+locale: "ko"
+title: "페이스북 글 5000개 임베딩 개발 기록"
+subtitle: "고치기 → re-cluster → 측정 → 다시"
+summary: "FB 5,000편을 vector DB 에 넣으면 끝일까. 카테고리 횡단 cluster, 거대 노이즈 버킷, 흩어진 응집 — 임베딩만으론 책 source 로 못 쓴다. 4 가지 override 와 14 round 의 fine-tune loop, 그리고 멈춰도 되는 종료 신호 4개."
+card_summary: "임베딩만으론 책 source 로 못 쓴다. override 4종 + 14 round fine-tune loop + 종료 신호 4개."
+terrys_memo: ""
+---
+
+## TL;DR
+
+- 코퍼스: 페이스북 archive 5,000편 → filter 30% drop → Haiku classify → OpenAI text-embedding-3-small (1,536d, L2-normalize) → cluster
+- 첫 시도 (flat HDBSCAN): 절반 이상이 노이즈 버킷, 카테고리 횡단 cluster 다수 → 사용 불가
+- 두 번째 (taxonomy-aware top-down + cohesion-driven hierarchical KMeans): 14 카테고리 / 263 leaf, depth 1–3
+- 알고리즘만으로 도달한 cluster 품질 50%, 나머지 50% 는 사람이 14 cycle override 로 끌어올림
+- 측정: leaf cohesion + LOO-CV (책 outline 자동 초안 → 사람 점수). theme axis k=10 이 baseline 대비 +5.21
+
+## 1. "FB → vector DB 임베딩하면 끝 아니야?" 라는 오해
+
+가장 흔한 가정은 이렇다:
+
+> 데이터 받아서 임베딩 떠놓고 코사인 유사도로 검색하면 끝.
+
+이 가정은 단순히 비슷한 글을 찾는 retrieval 에는 맞을 수도 있다. 그러나 **책 챕터의 source 모음을 만드는 retrieval** 에는 맞지 않는다. 임베딩 공간의 "가까움" 과 사람이 "한 챕터로 묶고 싶음" 은 다른 axis 다.
+
+구체적 실패 패턴 세 가지를 봤다:
+
+- **카테고리 횡단 cluster** — "캐나다 박사 시절 일상" + "프로그래밍 디버깅 일상" + "운동 후기" 가 한 cluster. 셋 다 1인칭 일상 톤이라 임베딩 공간에선 가깝다. 책 관점에선 완전 별개.
+- **거대 노이즈 버킷** — density-based 알고리즘 (HDBSCAN) 은 보수적이라 사람이 보면 묶일 글들도 `cluster_id=-1` 로 떨궈버린다. 5,000편 중 절반 이상이 떨어졌다.
+- **응집되어야 할 글이 흩어짐** — 음악 관련 글이 4 leaf 에 흩어지는 식. embedding distance 만으론 "이 4 leaf 는 한 묶음" 을 못 잡는다.
+
+결론: **임베딩은 출발점**이고, retrieval 이 책 챕터 source 로 쓸 만큼 정밀해지려면 **사람이 의미 구조를 위에 얹어야** 한다.
+
+## 2. 점검 지점 — 무엇을 보면 cluster 가 나쁜지 알 수 있는가
+
+각 카테고리 root 에서 **depth-2 (직접 자식들)** 를 한 번에 출력하고 다음 5개 신호를 본다:
+
+| 신호 | 의미 | 액션 |
+|------|------|------|
+| **size** | leaf 가 너무 큼 (>80) | 더 쪼개야 함 (subdivide) |
+| **mean cosine cohesion** | 0.25 미만 | 묶임이 약함, 분할 검토 또는 misclass 의심 |
+| **TF-IDF 주제어 6개** | 한 leaf 안에 이질적 주제 | 카테고리 misclass 또는 mid-node 필요 |
+| **첫 글 snippet** | 라벨이 안 맞는 글 발견 | post-level override 후보 |
+| **leftover 비율** | 한 카테고리 leftover 가 30+ | leftover subdivide 필요 |
+
+**핵심**: 알고리즘이 만든 metric (size, cohesion) 위에 **TF-IDF 주제어 + 첫 글 snippet 의 사람 검토** 가 항상 따라붙어야 한다. 수치만 보면 사람 눈에 보이는 misclass 를 놓친다.
+
+## 3. Cluster를 수정하는 4 가지 override 메커니즘
+
+수정은 모두 **JSON 한 파일** (`_classify_overrides.json`) 에 모아둔다. 어떤 수정이 들어갔는지 한곳에서 보이고, cluster 직전에 한 번에 적용된다.
+
+### 3-1. `overrides` — post-level 카테고리 재분류
+
+```json
+{ "overrides": { "ts:1419234123-abc...": "학계", ... } }
+```
+
+가장 단순. Haiku 가 라벨 틀린 글을 사람이 다른 카테고리로 옮긴다. 한 번에 수백~천 단위 들어가는 경우도 흔함 (예: 인생·단상 1037편을 3 카테고리로 split 할 때 1037 entry 가 한꺼번에).
+
+### 3-2. `leaf_merges` — 흩어진 leaf 합치기
+
+```json
+{ "leaf_merges": [{"from": "ilsang-cwimi/8", "to": "ilsang-cwimi/12", "reason": "음악 합치기"}] }
+```
+
+응집되어야 하는데 임베딩이 못 묶은 leaf 들을 사람이 직접 merge. cluster 후 적용. cascading 으로 빈 inner node 자동 청소.
+
+### 3-3. `leaf_groups` — mid-node 삽입 (post_id 기반)
+
+한 카테고리 안에 두 개의 자연스러운 sub-stream 이 있을 때 mid-node 끼워넣기. 단상 글을 light/deep 으로 분리, 사회를 media/gender/labor-class/rights-law/memorial/education 6 sub 로 분리 등.
+
+```json
+{ "leaf_groups": { "insaeng-dansang": { "light": ["pid1", ...], "deep": ["pid7", ...] } } }
+```
+
+**핵심 디자인**: slug 가 아니라 **post_id 기반**. 재클러스터링하면 leaf 경계가 바뀌지만 post_id 는 안 변한다. 다수결 로직이 새 leaf 를 적절한 group 에 알아서 매핑.
+
+### 3-4. `leftover-subdivide` — 노이즈 버킷에서 의미 길어 올리기
+
+n ≥ 30 인 leftover leaf 를 KMeans 로 다시 나누되 **임계치를 더 관대하게** (`leaf_min=5`, `cohesion_floor=0.25`). graduate sub 는 sub-leaf 로 끌어올리고 나머지는 더 작은 leftover.
+
+결과 예시:
+
+| 항목 | Before | After |
+|------|--------|-------|
+| leftover posts 합계 | 349 | 148 (−58%) |
+| 큰 leftover 5개 | 1 leaf 씩 | 13 의미있는 sub-leaf |
+| `yeongu-hagsul/leftover` (78편) | 단일 노이즈 버킷 | "확률·gaussian", "논문읽기 routine", "RL/PGM", "마감 단상" 등 5 sub-leaf |
+
+## 4. Loop — 고치기 → re-cluster → 측정 → 고치기 → … → 종료 신호
+
+§3 의 override 는 한 번에 다 적용하지 않는다. 작은 batch 로 고치고 → re-cluster → 측정해서 신호 보고 → 다음 batch. 이 사이클이 fine-tune 의 본체다.
+
+**한 round (= 14 카테고리 한 바퀴):**
+
+1. 카테고리 root 의 depth-2 출력 (size + cohesion + TF-IDF 주제어 6개 + 첫 글 snippet)
+2. 사람이 보고 §3 override 중 적용할 것을 `_classify_overrides.json` 에 추가
+3. `fbpull cluster` 재실행 — 임베딩·LLM 캐시 100% hit, 비용 0
+4. 다음 카테고리로 → 14개 다 돌면 한 round 끝
+5. round 단위 측정 → 종료 신호 안 떨어지면 1로
+
+**측정은 두 층:**
+
+- **Intra-round (진행 중)**: leaf cohesion lift + 사람의 depth-2 검토. 수치 (cohesion, leftover 비율) 와 사람 신호 (TF-IDF 주제어가 한 leaf 안에서 일관되는가, 첫 글 snippet 이 라벨에 맞는가) 를 같이 본다. 한쪽만 보면 misclass 가 빠진다.
+- **End-task (종료 판단)**: 책 outline 자동 초안 작성을 end-task 로 잡고 4-fold leave-one-out CV. baseline 대비 의미있게 오르고 4 fold 모두 같은 winner 면 representation 안정.
+
+이 코퍼스: V0 baseline 22.66 → V1_k10 27.88 (+5.21), 4 fold 모두 V1 winner. 직관 ("k=15 가 더 좋아 보인다") 만으론 hyperparameter 결정 못 한다.
+
+**Loop 종료 신호 (모두 만족하면 멈춤):**
+
+| 신호 | 임계 | 의미 |
+|------|------|------|
+| cohesion 분포 변화 | round 간 < 1% | 알고리즘이 더 짤 게 없음 |
+| leftover 비율 | 코퍼스의 < 5% | 노이즈 버킷이 의미 단위로 흡수됨 |
+| audit 신규 misclass | round 당 < 5건 | 사람도 더 잡을 게 없음 |
+| end-task LOO-CV winner | 4 fold 모두 동일 | representation 이 generalize |
+
+실제 14 round 이후 4 신호가 모두 켜지면서 멈췄다. 굵직한 변화 (대부분 1~5 round 구간):
+
+- 인생·단상 1037 → 단상 553 + 삶의 철학 270 + 성장·자기 214 (3-way split)
+- 학습·학계 → 연구·학술 332 + 학계 456 + 학습·메타인지 335
+- 사회 645 → 525 (120편 redirect), 30 leaf → 15 leaf
+- 창업·경영 ↔ 조직·리더십 boundary 재정의 (170 posts redirect)
+
+**Loop 인프라 한 줄**: stage 분리 (각 단계 출력이 jsonl/npy/json 으로 디스크에 떨어짐) + 결정적 캐시 키 (LLM `(model, post_id, text_hash)`, embedding `(model, sha256(text)[:16])`). 이게 없으면 re-cluster 한 번에 임베딩·분류 비용이 다 다시 들어 14 round 는 못 돌린다.
+
+## 5. 레슨 요약
+
+- (오해) "임베딩 + 코사인 유사도 = 끝" 은 retrieval 의 정밀도 요구가 낮을 때만 성립. **책 챕터 source 모으기 같은 의미 구조 retrieval 에선 사람이 위에 의미 layer 를 얹어야** 한다.
+- (점검) cluster 품질 신호는 size · cohesion 같은 수치만으로 안 잡힌다. **TF-IDF 주제어 + 첫 글 snippet 의 사람 검토**가 항상 따라붙어야 misclass 가 보인다.
+- (수정 패턴) 사람이 만지는 모든 결정은 **JSON 한 파일에 모은다.** 분산된 메모·코드 주석으로 흩어지면 cycle 14 번을 못 돌린다.
+- (mid-node) `leaf_groups` 같은 high-level 그룹 정의는 **slug 가 아니라 post_id 기반**으로 짠다. 재클러스터링하면 leaf 경계가 바뀌지만 post_id 는 안 변한다 — brittleness 제거.
+- (측정) "더 나은 임베딩" 은 **end-task 점수까지 가서 LOO-CV 로 비교**해야 가려진다. cohesion 같은 중간 metric 만으로는 hyperparameter 결정 못 한다.
+- (loop 인프라) stage 분리 + `(model, content_hash)` 캐시 키가 fine-tune loop 의 전제조건. 캐시가 결정적으로 hit 되어야 cluster 100번 다시 돌릴 엄두가 난다.
+- (coverage) 알고리즘이 못 메꾸는 것: **거기 없는 글**. 옛 계정 archive 가 빠진 코퍼스를 아무리 정교하게 다듬어도 그 시기 글은 안 나온다. 다음 단계는 코퍼스 합병.
+
+## 관련 글
+
+- [페이스북 통계로 보는 나의 20년](/ko/posts/260430-my-facebook-20-years) — 같은 코퍼스를 통계·도식 중심으로 회고한 글. 그 글이 "무엇이 들어 있나"라면 이 글은 "어떻게 정리했나".

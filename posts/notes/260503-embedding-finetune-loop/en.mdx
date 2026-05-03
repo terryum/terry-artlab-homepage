@@ -1,0 +1,140 @@
+---
+locale: "en"
+translation_of: "260503-embedding-finetune-loop:ko"
+title: "Embedding 5,000 Facebook Posts — Development Notes"
+subtitle: "Fix → recluster → measure"
+summary: "Drop a 5,000-post Facebook archive into a vector DB and call it done? Cross-category clusters, giant noise buckets, scattered cohesion — embeddings alone don't make a usable book source. Four override mechanisms, 14 rounds of human-in-the-loop fine-tuning, and the four signals that say it's safe to stop."
+card_summary: "Embeddings alone won't make a book source. Four overrides + 14 rounds + four stop signals."
+terrys_memo: ""
+---
+
+## TL;DR
+
+- Corpus: Facebook archive of 5,000 posts → 30% drop after filter → Haiku classify → OpenAI text-embedding-3-small (1,536d, L2-normalized) → cluster
+- First attempt (flat HDBSCAN): more than half ended up in noise buckets, many cross-category clusters → unusable
+- Second attempt (taxonomy-aware top-down + cohesion-driven hierarchical KMeans): 14 categories / 263 leaves, depth 1–3
+- Algorithms got cluster quality halfway. The other half came from 14 rounds of human override
+- Measurement: leaf cohesion + LOO-CV (auto-drafted book outline → human score). Theme axis k=10 beat baseline by +5.21
+
+## 1. The "FB → vector DB and we're done" misconception
+
+The most common assumption sounds like this:
+
+> Just pull the data, embed it, search by cosine similarity. Done.
+
+That assumption can hold for retrieval that's "find me posts that are similar." It does **not** hold for retrieval that's "give me a source pile for a book chapter." Closeness in embedding space and "I want these in one chapter" are different axes.
+
+Three concrete failure patterns showed up:
+
+- **Cross-category clusters** — "PhD-era life in Canada" + "programming-debug daily life" + "after-workout reflections" all in one cluster. All three are first-person daily-life prose, so embedding distance pulls them together. From a book-chapter angle they belong nowhere near each other.
+- **Giant noise bucket** — density-based algorithms (HDBSCAN) are conservative. Posts a human would happily group together end up in `cluster_id=-1`. Out of 5,000 posts, more than half got dumped there.
+- **What should cohere ends up scattered** — music-related posts split across 4 leaves. Embedding distance alone can't say "these 4 leaves are one group."
+
+Conclusion: **embedding is the starting point**, not the answer. To make retrieval precise enough for book-chapter sources, **a human has to lay a meaning structure on top.**
+
+## 2. Audit signals — how do you tell a cluster is bad
+
+For each category root, dump **depth-2 (immediate children)** in one shot and look at five signals:
+
+| Signal | Meaning | Action |
+|--------|---------|--------|
+| **size** | leaf too big (>80) | needs further split (subdivide) |
+| **mean cosine cohesion** | below 0.25 | weak coupling — split or suspect misclass |
+| **TF-IDF top-6 terms** | heterogeneous topics inside one leaf | category misclass or mid-node needed |
+| **first-post snippet** | post obviously mislabeled | post-level override candidate |
+| **leftover ratio** | one category's leftover ≥ 30 | leftover subdivide needed |
+
+**The point**: algorithm-generated metrics (size, cohesion) need **TF-IDF terms + first-post snippet under human review** stuck onto them. Numbers alone miss misclassifications a human eye catches instantly.
+
+## 3. Four override mechanisms that fix the cluster
+
+All edits go into **one JSON file** (`_classify_overrides.json`). Every manual decision lives in one place and applies in a single pass right before clustering.
+
+### 3-1. `overrides` — post-level category reassignment
+
+```json
+{ "overrides": { "ts:1419234123-abc...": "academia", ... } }
+```
+
+The simplest form. A human moves Haiku-mislabeled posts to a different category. Bulk batches happen often (e.g., splitting "Life · Musings" 1,037 posts into three categories means 1,037 entries land at once).
+
+### 3-2. `leaf_merges` — fuse scattered leaves
+
+```json
+{ "leaf_merges": [{"from": "ilsang-cwimi/8", "to": "ilsang-cwimi/12", "reason": "merge music"}] }
+```
+
+When leaves should cohere but the embedding failed to pull them together, merge them by hand. Applied after clustering. Empty inner nodes get cleaned up cascadingly.
+
+### 3-3. `leaf_groups` — insert mid-nodes (post_id-based)
+
+When a category has two natural sub-streams, insert a mid-node. Splitting "musings" into light/deep, splitting "society" into 6 sub-nodes (media / gender / labor-class / rights-law / memorial / education), etc.
+
+```json
+{ "leaf_groups": { "insaeng-dansang": { "light": ["pid1", ...], "deep": ["pid7", ...] } } }
+```
+
+**Key design**: keyed by **post_id, not slug**. Re-clustering shifts leaf boundaries but post_ids don't change. Majority-vote logic re-maps each new leaf to the right group automatically.
+
+### 3-4. `leftover-subdivide` — pull meaning out of the noise bucket
+
+For leftover leaves with n ≥ 30, split again with KMeans but **with looser thresholds** (`leaf_min=5`, `cohesion_floor=0.25`). Graduating subs become sub-leaves; the rest stay in a smaller leftover.
+
+Example impact:
+
+| Item | Before | After |
+|------|--------|-------|
+| Total leftover posts | 349 | 148 (−58%) |
+| 5 large leftovers | one leaf each | 13 meaningful sub-leaves |
+| `yeongu-hagsul/leftover` (78 posts) | one noise bucket | 5 sub-leaves: "probability · gaussian", "paper-reading routine", "RL/PGM", "deadline musings", … |
+
+## 4. Loop — fix → recluster → measure → fix → … → stop signals
+
+The §3 overrides don't all apply at once. Fix in small batches → recluster → measure → look at the signals → next batch. That cycle is the body of fine-tuning.
+
+**One round (= sweep through all 14 categories):**
+
+1. Print depth-2 of a category root (size + cohesion + TF-IDF top-6 terms + first-post snippet)
+2. Human reviews and adds the appropriate §3 override to `_classify_overrides.json`
+3. Re-run `fbpull cluster` — embedding/LLM cache hits at 100%, cost is zero
+4. Move to the next category → after 14 it's one round
+5. Measure at the round level → if stop signals haven't fired, go back to 1
+
+**Two layers of measurement:**
+
+- **Intra-round (in flight)**: leaf cohesion lift + human depth-2 review. Read numbers (cohesion, leftover ratio) alongside human signals (do TF-IDF terms inside one leaf agree, does the first-post snippet match the label). One layer alone misses misclassifications.
+- **End-task (stop decision)**: run book-outline auto-drafting as the end task and do 4-fold leave-one-out CV. If the score moves meaningfully above baseline and the same variant wins all 4 folds, the representation is stable.
+
+This corpus: V0 baseline 22.66 → V1_k10 27.88 (+5.21), V1 wins all 4 folds. Intuition ("k=15 looks better") isn't enough to fix a hyperparameter.
+
+**Loop stop signals (stop when all four hold):**
+
+| Signal | Threshold | Meaning |
+|--------|-----------|---------|
+| Cohesion distribution shift | < 1% between rounds | algorithm has nothing more to split |
+| Leftover ratio | < 5% of corpus | noise buckets absorbed into meaning units |
+| New misclassifications per audit | < 5 / round | human has nothing more to catch |
+| End-task LOO-CV winner | identical across 4 folds | representation generalizes |
+
+After 14 rounds all four signals lit up and the loop stopped. The structural shifts (mostly in rounds 1–5):
+
+- Life · Musings 1,037 → Musings 553 + Life Philosophy 270 + Self-Growth 214 (3-way split)
+- Learning · Academia → Research · Scholarship 332 + Academia 456 + Learning · Metacognition 335
+- Society 645 → 525 (120 posts redirected), 30 leaves → 15 leaves
+- Founding · Management ↔ Org · Leadership boundary redrawn (170 posts redirected)
+
+**Loop infrastructure in one line**: stage separation (each step's output drops to disk as jsonl/npy/json) + deterministic cache keys (LLM `(model, post_id, text_hash)`, embedding `(model, sha256(text)[:16])`). Without this, one re-cluster re-pays the entire embedding + classification bill, and 14 rounds become impossible.
+
+## 5. Lessons
+
+- (Misconception) "Embedding + cosine similarity = done" only holds when the retrieval precision bar is low. **For book-chapter source retrieval — semantically structured retrieval — a human has to lay a meaning layer on top.**
+- (Audit) Cluster quality signals don't reduce to numbers like size and cohesion. **TF-IDF terms + first-post snippet under human review** must always ride along, or misclassifications stay invisible.
+- (Edit pattern) Every human decision goes into **one JSON file**. Scatter them across notes and code comments and 14 rounds become unworkable.
+- (Mid-node) High-level group definitions like `leaf_groups` are keyed by **post_id, not slug.** Re-clustering shifts leaf boundaries; post_ids don't move — brittleness gone.
+- (Measurement) "Better embedding" is decided by **end-task LOO-CV**, not by intermediate metrics. Cohesion alone won't let you fix a hyperparameter.
+- (Loop infra) Stage separation + `(model, content_hash)` cache keys are preconditions for the fine-tune loop. Cache must hit deterministically before you'd dare re-cluster a hundred times.
+- (Coverage) What the algorithm can't paper over: **posts that aren't there**. No matter how carefully you tune the cluster, you can't conjure missing data from the older account. Next step is corpus merging.
+
+## Related
+
+- [Twenty Years on Facebook, in Data](/en/posts/260430-my-facebook-20-years) — the same corpus seen from statistics-and-charts angle. If that one is "what's in there", this one is "how it got organized".
