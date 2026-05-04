@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-04T01:03:38.515Z",
+  "generated_at": "2026-05-04T02:12:13.747Z",
   "total_posts": 52,
   "posts": [
     {
@@ -3312,8 +3312,8 @@
       "title_ko": "스킬, 에이전트, 그리고 멀티에이전트 슬랙",
       "summary_ko": "에이전트와 Skill은 어떻게 다르고, 같은 정의를 Claude Code와 슬랙에서 어떻게 재사용할 수 있는가.",
       "summary_en": "How agents differ from skills, and how one definition can run in both Claude Code and Slack.",
-      "cover_image": "./cover.webp",
-      "cover_thumb": null,
+      "cover_image": "./cover-v2.webp",
+      "cover_thumb": "./cover-thumb-v2.webp",
       "domain": "ai-tooling",
       "subfields": [
         "agent-architecture",
@@ -3367,8 +3367,8 @@
       "title_ko": "Claude Code에서 Codex로 넘어가는 길",
       "summary_ko": "코드 양에 따라 재구현이냐 자동 이관이냐 — Claude Code → Codex 두 갈래.",
       "summary_en": "Refactor or auto-migrate: two paths from Claude Code to Codex.",
-      "cover_image": "./cover.webp",
-      "cover_thumb": null,
+      "cover_image": "./cover-v2.webp",
+      "cover_thumb": "./cover-thumb-v2.webp",
       "domain": "ai-tooling",
       "subfields": [
         "coding-agents",
@@ -3807,20 +3807,20 @@
       },
       "relations": [
         {
-          "target": "260420-one-day-recovery",
-          "type": "extends",
-          "note": "하루짜리 부채 정비의 한 달 버전 — 같은 작업을 인프라 전반으로 확장"
-        },
-        {
           "target": "260420-debt-changes-hands",
           "type": "related",
           "note": "비개발자 창업자가 직접 정리한 부채의 또 다른 사례"
+        },
+        {
+          "target": "260420-one-day-recovery",
+          "type": "extends",
+          "note": "하루짜리 부채 정비의 한 달 버전 — 같은 작업을 인프라 전반으로 확장"
         }
       ],
       "idea_status": null,
       "related_posts": [
-        "260420-one-day-recovery",
-        "260420-debt-changes-hands"
+        "260420-debt-changes-hands",
+        "260420-one-day-recovery"
       ],
       "taxonomy_primary": "infra/cost",
       "taxonomy_secondary": [
@@ -4505,12 +4505,262 @@
       },
       {
         "from": "260504-aws-cost-cleanup",
+        "to": "260420-debt-changes-hands",
+        "type": "related"
+      },
+      {
+        "from": "260504-aws-cost-cleanup",
         "to": "260420-one-day-recovery",
         "type": "extends"
       },
       {
-        "from": "260504-aws-cost-cleanup",
-        "to": "260420-debt-changes-hands",
+        "from": "2201-mano-hand-model",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "related"
+      },
+      {
+        "from": "2201-mano-hand-model",
+        "to": "2512-unitachand",
+        "type": "related"
+      },
+      {
+        "from": "2504-pp-tac",
+        "to": "2505-dexumi",
+        "type": "related"
+      },
+      {
+        "from": "2201-mano-hand-model",
+        "to": "2602-robopaint",
+        "type": "related"
+      },
+      {
+        "from": "2407-tactile-skin-inhand-translation",
+        "to": "2504-pp-tac",
+        "type": "related"
+      },
+      {
+        "from": "2407-tactile-skin-inhand-translation",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "related"
+      },
+      {
+        "from": "2407-tactile-skin-inhand-translation",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "related"
+      },
+      {
+        "from": "2409-3dtactile-dex",
+        "to": "2504-pp-tac",
+        "type": "related"
+      },
+      {
+        "from": "2409-3dtactile-dex",
+        "to": "2407-tactile-skin-inhand-translation",
+        "type": "related"
+      },
+      {
+        "from": "2409-3dtactile-dex",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "related"
+      },
+      {
+        "from": "2409-3dtactile-dex",
+        "to": "2505-dexumi",
+        "type": "related"
+      },
+      {
+        "from": "2410-pi0-vla-flow-model",
+        "to": "2511-pi0-6-recap",
+        "type": "related"
+      },
+      {
+        "from": "2501-dexforce-force-informed-actions",
+        "to": "2505-forcevla-force-aware-moe",
+        "type": "related"
+      },
+      {
+        "from": "2504-pp-tac",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "related"
+      },
+      {
+        "from": "2505-dexumi",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "compares_with"
+      },
+      {
+        "from": "2505-dexumi",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "addresses_task"
+      },
+      {
+        "from": "2505-dexumi",
+        "to": "2505-forcevla-force-aware-moe",
+        "type": "related"
+      },
+      {
+        "from": "2505-forcevla-force-aware-moe",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "builds_on"
+      },
+      {
+        "from": "2505-forcevla-force-aware-moe",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "uses_method"
+      },
+      {
+        "from": "2506-exostart",
+        "to": "2505-dexumi",
+        "type": "compares_with"
+      },
+      {
+        "from": "2506-exostart",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "addresses_task"
+      },
+      {
+        "from": "2506-exostart",
+        "to": "2505-forcevla-force-aware-moe",
+        "type": "addresses_task"
+      },
+      {
+        "from": "2509-dexop",
+        "to": "2505-dexumi",
+        "type": "compares_with"
+      },
+      {
+        "from": "2509-dexop",
+        "to": "2506-exostart",
+        "type": "compares_with"
+      },
+      {
+        "from": "2509-dexop",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "addresses_task"
+      },
+      {
+        "from": "2511-gen0-embodied-foundation-model",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "related"
+      },
+      {
+        "from": "2511-gen0-embodied-foundation-model",
+        "to": "2511-pi0-6-recap",
+        "type": "related"
+      },
+      {
+        "from": "2511-pi0-6-recap",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "builds_on"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2407-tactile-skin-inhand-translation",
+        "type": "builds_on"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2512-unitachand",
+        "type": "compares_with"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2504-pp-tac",
+        "type": "related"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2409-3dtactile-dex",
+        "type": "related"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2505-dexumi",
+        "type": "compares_with"
+      },
+      {
+        "from": "2512-unitachand",
+        "to": "2409-3dtactile-dex",
+        "type": "related"
+      },
+      {
+        "from": "2512-unitachand",
+        "to": "2407-tactile-skin-inhand-translation",
+        "type": "related"
+      },
+      {
+        "from": "2512-unitachand",
+        "to": "2504-pp-tac",
+        "type": "related"
+      },
+      {
+        "from": "2512-unitachand",
+        "to": "2505-dexumi",
+        "type": "related"
+      },
+      {
+        "from": "2602-robopaint",
+        "to": "2505-dexumi",
+        "type": "compares_with"
+      },
+      {
+        "from": "2602-robopaint",
+        "to": "2506-exostart",
+        "type": "compares_with"
+      },
+      {
+        "from": "2602-robopaint",
+        "to": "2509-dexop",
+        "type": "compares_with"
+      },
+      {
+        "from": "2602-robopaint",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "related"
+      },
+      {
+        "from": "2603-capx-coding-agents-manipulation",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "compares_with"
+      },
+      {
+        "from": "2603-medical-ai-scientist",
+        "to": "2502-ai-co-scientist",
+        "type": "compares_with"
+      },
+      {
+        "from": "2603-roboclaw-agentic-long-horizon",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "builds_on"
+      },
+      {
+        "from": "2603-roboclaw-agentic-long-horizon",
+        "to": "2603-capx-coding-agents-manipulation",
+        "type": "compares_with"
+      },
+      {
+        "from": "2604-gen1-scaling-mastery",
+        "to": "2511-gen0-embodied-foundation-model",
+        "type": "builds_on"
+      },
+      {
+        "from": "2604-gen1-scaling-mastery",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "related"
+      },
+      {
+        "from": "2604-gen1-scaling-mastery",
+        "to": "2511-pi0-6-recap",
+        "type": "related"
+      },
+      {
+        "from": "2604-harnessing-claude-intelligence",
+        "to": "2603-meta-harness-optimization",
+        "type": "related"
+      },
+      {
+        "from": "2604-harnessing-claude-intelligence",
+        "to": "2502-ai-co-scientist",
         "type": "related"
       }
     ],

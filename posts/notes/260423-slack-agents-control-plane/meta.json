@@ -14,7 +14,8 @@
     "Slack",
     "MCP"
   ],
-  "cover_image": "./cover.webp",
+  "cover_image": "./cover-v2.webp",
+  "cover_thumb": "./cover-thumb-v2.webp",
   "reading_time_min": 3,
   "source": "chatgpt",
   "source_url": "https://chatgpt.com/share/69e9fdec-09c8-83a8-a24c-dc1d6b5bf8fd",
