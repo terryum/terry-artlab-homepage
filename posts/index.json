@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-04T05:24:11.231Z",
+  "generated_at": "2026-05-04T06:29:41.520Z",
   "total_posts": 53,
   "posts": [
     {
@@ -1866,13 +1866,18 @@
         {
           "target": "260430-my-facebook-20-years",
           "type": "related"
+        },
+        {
+          "target": "260504-warmup-cooldown",
+          "type": "related"
         }
       ],
       "idea_status": "exploring",
       "related_posts": [
         "260310-on-the-manifold-first-post",
         "260420-debt-changes-hands",
-        "260430-my-facebook-20-years"
+        "260430-my-facebook-20-years",
+        "260504-warmup-cooldown"
       ],
       "taxonomy_primary": null,
       "taxonomy_secondary": [],
@@ -3463,11 +3468,7 @@
       },
       "relations": [
         {
-          "target": "260420-one-day-recovery",
-          "type": "extends"
-        },
-        {
-          "target": "260420-debt-changes-hands",
+          "target": "260406-writing-daily-by-hand",
           "type": "related"
         },
         {
@@ -3475,16 +3476,25 @@
           "type": "related"
         },
         {
-          "target": "260406-writing-daily-by-hand",
+          "target": "260420-debt-changes-hands",
+          "type": "related"
+        },
+        {
+          "target": "260420-one-day-recovery",
+          "type": "extends"
+        },
+        {
+          "target": "260504-warmup-cooldown",
           "type": "related"
         }
       ],
       "idea_status": null,
       "related_posts": [
-        "260420-one-day-recovery",
-        "260420-debt-changes-hands",
+        "260406-writing-daily-by-hand",
         "260413-new-leverage",
-        "260406-writing-daily-by-hand"
+        "260420-debt-changes-hands",
+        "260420-one-day-recovery",
+        "260504-warmup-cooldown"
       ],
       "taxonomy_primary": "ai/society",
       "taxonomy_secondary": [
@@ -3873,18 +3883,18 @@
       },
       "relations": [
         {
-          "target": "260422-work-that-isnt",
-          "type": "extends"
+          "target": "260406-writing-daily-by-hand",
+          "type": "related"
         },
         {
-          "target": "260406-writing-daily-by-hand",
+          "target": "260422-work-that-isnt",
           "type": "related"
         }
       ],
       "idea_status": null,
       "related_posts": [
-        "260422-work-that-isnt",
-        "260406-writing-daily-by-hand"
+        "260406-writing-daily-by-hand",
+        "260422-work-that-isnt"
       ],
       "taxonomy_primary": null,
       "taxonomy_secondary": [],
@@ -4162,6 +4172,11 @@
       {
         "from": "260406-writing-daily-by-hand",
         "to": "260430-my-facebook-20-years",
+        "type": "related"
+      },
+      {
+        "from": "260406-writing-daily-by-hand",
+        "to": "260504-warmup-cooldown",
         "type": "related"
       },
       {
@@ -4506,12 +4521,7 @@
       },
       {
         "from": "260422-work-that-isnt",
-        "to": "260420-one-day-recovery",
-        "type": "extends"
-      },
-      {
-        "from": "260422-work-that-isnt",
-        "to": "260420-debt-changes-hands",
+        "to": "260406-writing-daily-by-hand",
         "type": "related"
       },
       {
@@ -4521,7 +4531,17 @@
       },
       {
         "from": "260422-work-that-isnt",
-        "to": "260406-writing-daily-by-hand",
+        "to": "260420-debt-changes-hands",
+        "type": "related"
+      },
+      {
+        "from": "260422-work-that-isnt",
+        "to": "260420-one-day-recovery",
+        "type": "extends"
+      },
+      {
+        "from": "260422-work-that-isnt",
+        "to": "260504-warmup-cooldown",
         "type": "related"
       },
       {
@@ -4576,12 +4596,12 @@
       },
       {
         "from": "260504-warmup-cooldown",
-        "to": "260422-work-that-isnt",
-        "type": "extends"
+        "to": "260406-writing-daily-by-hand",
+        "type": "related"
       },
       {
         "from": "260504-warmup-cooldown",
-        "to": "260406-writing-daily-by-hand",
+        "to": "260422-work-that-isnt",
         "type": "related"
       }
     ],

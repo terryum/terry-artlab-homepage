@@ -51,7 +51,7 @@
     },
     {
       "target": "260422-work-that-isnt",
-      "type": "extends"
+      "type": "related"
     }
   ]
 }

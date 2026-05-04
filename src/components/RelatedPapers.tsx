@@ -15,32 +15,26 @@ interface RelatedPapersProps {
   label?: string;
 }
 
-const RELATION_LABELS: Record<string, { ko: string; en: string; strong: boolean }> = {
-  builds_on:              { ko: '기반 논문',      en: 'Builds on',        strong: true },
-  extends:                { ko: '방법론 확장',    en: 'Extends',          strong: true },
-  uses_method:            { ko: '방법 사용',      en: 'Uses method',      strong: true },
-  fills_gap_of:           { ko: '한계 보완',      en: 'Fills gap of',     strong: true },
-  identifies_limitation_of: { ko: '한계 지적',   en: 'Critiques',        strong: false },
-  contradicts:            { ko: '반박',           en: 'Contradicts',      strong: false },
-  supports:               { ko: '지지',           en: 'Supports',         strong: false },
-  compares_with:          { ko: '비교 대상',      en: 'Compares with',    strong: false },
-  addresses_task:         { ko: '같은 문제 접근', en: 'Same task',        strong: false },
-  uses_dataset:           { ko: '데이터셋 공유',  en: 'Uses dataset',     strong: false },
-  inspired_by:            { ko: '아이디어 영감',  en: 'Inspired by',      strong: false },
-  related:                { ko: '관련 포스트',    en: 'Related',          strong: false },
+const RELATION_LABELS: Record<string, { ko: string; en: string }> = {
+  builds_on:              { ko: '기반 논문',      en: 'Builds on'        },
+  extends:                { ko: '이전 글 확장',   en: 'Extends'          },
+  uses_method:            { ko: '방법 사용',      en: 'Uses method'      },
+  fills_gap_of:           { ko: '한계 보완',      en: 'Fills gap of'     },
+  identifies_limitation_of: { ko: '한계 지적',   en: 'Critiques'        },
+  contradicts:            { ko: '반박',           en: 'Contradicts'      },
+  supports:               { ko: '지지',           en: 'Supports'         },
+  compares_with:          { ko: '비교 대상',      en: 'Compares with'    },
+  addresses_task:         { ko: '같은 문제 접근', en: 'Same task'        },
+  uses_dataset:           { ko: '데이터셋 공유',  en: 'Uses dataset'     },
+  inspired_by:            { ko: '아이디어 영감',  en: 'Inspired by'      },
+  related:                { ko: '관련 포스트',    en: 'Related'          },
 };
 
 function RelationBadge({ type, locale }: { type: string; locale: Locale }) {
-  const info = RELATION_LABELS[type] ?? { ko: type, en: type, strong: false };
+  const info = RELATION_LABELS[type] ?? { ko: type, en: type };
   const label = locale === 'ko' ? info.ko : info.en;
   return (
-    <span
-      className={`inline-block text-xs px-2 py-0.5 rounded-full border font-mono ${
-        info.strong
-          ? 'bg-accent/10 border-accent/30 text-accent'
-          : 'bg-surface-muted border-line-default text-text-muted'
-      }`}
-    >
+    <span className="inline-block text-xs px-2 py-0.5 rounded-full border font-mono bg-surface-muted border-line-default text-text-muted">
       {label}
     </span>
   );
