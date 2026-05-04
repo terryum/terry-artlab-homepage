@@ -15,8 +15,12 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { POSTS_DIR, PUBLIC_POSTS_DIR, getContentDirs } from './lib/paths.mjs';
+import { loadEnv } from './lib/env.mjs';
+
+await loadEnv();
 
 const CATEGORIES = await getContentDirs();
+const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL || process.env.NEXT_PUBLIC_R2_URL || '';
 
 // ── Required fields by content type ──────────────────────────────────
 
@@ -210,6 +214,28 @@ async function validatePost(category, slug) {
     }
   } catch {
     warn('Could not read index.json');
+  }
+
+  // ── 7. R2 cover assets (public visibility only) ─────────────────
+  // Catches the silent failure where post-publish-pipeline.mjs upload-to-r2
+  // step was skipped — frontend resolves "./cover.webp" to R2 URL via
+  // resolvePostAssetPath, so missing R2 objects = 404 on every card/detail.
+  // (2026-05-04 #52 incident: post committed cleanly but R2 was empty.)
+  if (R2_PUBLIC_URL && (meta.visibility ?? 'public') === 'public') {
+    const r2Files = ['cover.webp', 'cover-thumb.webp', 'og.png'];
+    const checks = await Promise.all(r2Files.map(async (file) => {
+      const url = `${R2_PUBLIC_URL}/posts/${slug}/${file}`;
+      try {
+        const res = await fetch(url, { method: 'HEAD' });
+        return { file, ok: res.ok, status: res.status };
+      } catch (e) {
+        return { file, ok: false, status: `network:${e.code || e.message}` };
+      }
+    }));
+    const missing = checks.filter(c => !c.ok);
+    if (missing.length > 0) {
+      err(`R2 cover asset(s) missing: ${missing.map(m => `${m.file} (${m.status})`).join(', ')} — run \`node scripts/upload-to-r2.mjs --slug=${slug}\``);
+    }
   }
 
   return { slug, category, errors, warnings };
