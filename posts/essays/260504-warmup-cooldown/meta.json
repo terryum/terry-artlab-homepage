@@ -1,0 +1,57 @@
+{
+  "post_id": "260504-warmup-cooldown",
+  "slug": "260504-warmup-cooldown",
+  "post_number": 53,
+  "published_at": "2026-05-04T12:50:00+09:00",
+  "updated_at": "2026-05-04T12:50:00+09:00",
+  "status": "published",
+  "content_type": "essays",
+  "visibility": "public",
+  "tags": [
+    "Essays",
+    "ai",
+    "productivity",
+    "workflow"
+  ],
+  "cover_image": "./cover.webp",
+  "cover_thumb": "./cover-thumb.webp",
+  "reading_time_min": 3,
+  "domain": "ai-and-work",
+  "subfields": [
+    "productivity",
+    "knowledge-work"
+  ],
+  "key_concepts": [
+    "claude-code",
+    "warm-up",
+    "cool-down",
+    "token-burning",
+    "intentionality"
+  ],
+  "idea_status": null,
+  "related_posts": [
+    "260406-writing-daily-by-hand",
+    "260422-work-that-isnt"
+  ],
+  "ai_summary": {
+    "one_liner": "본 운동만으론 몸이 만들어지지 않는다 — 토큰을 태우기 전에 좌표를 적자.",
+    "problem": "AI 에이전트로 토큰을 격렬하게 태우는 '본 운동'에 빠져 아침의 준비운동(계획)과 저녁의 정리운동(리뷰)이 자꾸 빠진다.",
+    "solution": "본 운동의 출력이 강해질수록 양 끝의 의식이 더 무거워져야 한다 — 깨끗한 정신으로 좌표를 적고, 태운 토큰이 어디에 쓰였는지 점검한다.",
+    "key_result": "도구가 강할수록 방향 없는 추진력의 거리가 길어지고, 그만큼 잘못된 좌표로 멀리 간다.",
+    "limitations": []
+  },
+  "figures": [],
+  "tables": [],
+  "newsletter_eligible": false,
+  "featured": false,
+  "relations": [
+    {
+      "target": "260406-writing-daily-by-hand",
+      "type": "related"
+    },
+    {
+      "target": "260422-work-that-isnt",
+      "type": "extends"
+    }
+  ]
+}

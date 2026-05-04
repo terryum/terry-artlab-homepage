@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-04T02:12:13.747Z",
-  "total_posts": 52,
+  "generated_at": "2026-05-04T05:24:11.231Z",
+  "total_posts": 53,
   "posts": [
     {
       "post_number": 1,
@@ -3829,6 +3829,67 @@
       ],
       "visibility": "public",
       "allowed_groups": []
+    },
+    {
+      "post_number": 53,
+      "slug": "260504-warmup-cooldown",
+      "content_type": "essays",
+      "title_en": "Warm-up and Cool-down",
+      "title_ko": "준비운동과 정리운동",
+      "summary_ko": "토큰을 태우는 본 운동에만 빠지면, 아무리 강한 도구도 잘못된 좌표로 멀리 간다.",
+      "summary_en": "When the main set burns the loudest, the warm-up and cool-down become the discipline that decides direction.",
+      "cover_image": "./cover.webp",
+      "cover_thumb": "./cover-thumb.webp",
+      "domain": "ai-and-work",
+      "subfields": [
+        "productivity",
+        "knowledge-work"
+      ],
+      "key_concepts": [
+        "claude-code",
+        "warm-up",
+        "cool-down",
+        "token-burning",
+        "intentionality"
+      ],
+      "methodology": [],
+      "contribution_type": null,
+      "tags": [
+        "Essays",
+        "ai",
+        "productivity",
+        "workflow"
+      ],
+      "source_author": null,
+      "source_date": null,
+      "published_at": "2026-05-04T12:50:00+09:00",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "본 운동만으론 몸이 만들어지지 않는다 — 토큰을 태우기 전에 좌표를 적자.",
+        "problem": "AI 에이전트로 토큰을 격렬하게 태우는 '본 운동'에 빠져 아침의 준비운동(계획)과 저녁의 정리운동(리뷰)이 자꾸 빠진다.",
+        "solution": "본 운동의 출력이 강해질수록 양 끝의 의식이 더 무거워져야 한다 — 깨끗한 정신으로 좌표를 적고, 태운 토큰이 어디에 쓰였는지 점검한다.",
+        "key_result": "도구가 강할수록 방향 없는 추진력의 거리가 길어지고, 그만큼 잘못된 좌표로 멀리 간다.",
+        "limitations": []
+      },
+      "relations": [
+        {
+          "target": "260422-work-that-isnt",
+          "type": "extends"
+        },
+        {
+          "target": "260406-writing-daily-by-hand",
+          "type": "related"
+        }
+      ],
+      "idea_status": null,
+      "related_posts": [
+        "260422-work-that-isnt",
+        "260406-writing-daily-by-hand"
+      ],
+      "taxonomy_primary": null,
+      "taxonomy_secondary": [],
+      "visibility": "public",
+      "allowed_groups": []
     }
   ],
   "knowledge_graph": {
@@ -4514,253 +4575,13 @@
         "type": "extends"
       },
       {
-        "from": "2201-mano-hand-model",
-        "to": "2407-stretchable-glove-hand-pose",
-        "type": "related"
+        "from": "260504-warmup-cooldown",
+        "to": "260422-work-that-isnt",
+        "type": "extends"
       },
       {
-        "from": "2201-mano-hand-model",
-        "to": "2512-unitachand",
-        "type": "related"
-      },
-      {
-        "from": "2504-pp-tac",
-        "to": "2505-dexumi",
-        "type": "related"
-      },
-      {
-        "from": "2201-mano-hand-model",
-        "to": "2602-robopaint",
-        "type": "related"
-      },
-      {
-        "from": "2407-tactile-skin-inhand-translation",
-        "to": "2504-pp-tac",
-        "type": "related"
-      },
-      {
-        "from": "2407-tactile-skin-inhand-translation",
-        "to": "2407-stretchable-glove-hand-pose",
-        "type": "related"
-      },
-      {
-        "from": "2407-tactile-skin-inhand-translation",
-        "to": "2501-dexforce-force-informed-actions",
-        "type": "related"
-      },
-      {
-        "from": "2409-3dtactile-dex",
-        "to": "2504-pp-tac",
-        "type": "related"
-      },
-      {
-        "from": "2409-3dtactile-dex",
-        "to": "2407-tactile-skin-inhand-translation",
-        "type": "related"
-      },
-      {
-        "from": "2409-3dtactile-dex",
-        "to": "2501-dexforce-force-informed-actions",
-        "type": "related"
-      },
-      {
-        "from": "2409-3dtactile-dex",
-        "to": "2505-dexumi",
-        "type": "related"
-      },
-      {
-        "from": "2410-pi0-vla-flow-model",
-        "to": "2511-pi0-6-recap",
-        "type": "related"
-      },
-      {
-        "from": "2501-dexforce-force-informed-actions",
-        "to": "2505-forcevla-force-aware-moe",
-        "type": "related"
-      },
-      {
-        "from": "2504-pp-tac",
-        "to": "2407-stretchable-glove-hand-pose",
-        "type": "related"
-      },
-      {
-        "from": "2505-dexumi",
-        "to": "2407-stretchable-glove-hand-pose",
-        "type": "compares_with"
-      },
-      {
-        "from": "2505-dexumi",
-        "to": "2501-dexforce-force-informed-actions",
-        "type": "addresses_task"
-      },
-      {
-        "from": "2505-dexumi",
-        "to": "2505-forcevla-force-aware-moe",
-        "type": "related"
-      },
-      {
-        "from": "2505-forcevla-force-aware-moe",
-        "to": "2410-pi0-vla-flow-model",
-        "type": "builds_on"
-      },
-      {
-        "from": "2505-forcevla-force-aware-moe",
-        "to": "2501-dexforce-force-informed-actions",
-        "type": "uses_method"
-      },
-      {
-        "from": "2506-exostart",
-        "to": "2505-dexumi",
-        "type": "compares_with"
-      },
-      {
-        "from": "2506-exostart",
-        "to": "2501-dexforce-force-informed-actions",
-        "type": "addresses_task"
-      },
-      {
-        "from": "2506-exostart",
-        "to": "2505-forcevla-force-aware-moe",
-        "type": "addresses_task"
-      },
-      {
-        "from": "2509-dexop",
-        "to": "2505-dexumi",
-        "type": "compares_with"
-      },
-      {
-        "from": "2509-dexop",
-        "to": "2506-exostart",
-        "type": "compares_with"
-      },
-      {
-        "from": "2509-dexop",
-        "to": "2407-stretchable-glove-hand-pose",
-        "type": "addresses_task"
-      },
-      {
-        "from": "2511-gen0-embodied-foundation-model",
-        "to": "2410-pi0-vla-flow-model",
-        "type": "related"
-      },
-      {
-        "from": "2511-gen0-embodied-foundation-model",
-        "to": "2511-pi0-6-recap",
-        "type": "related"
-      },
-      {
-        "from": "2511-pi0-6-recap",
-        "to": "2410-pi0-vla-flow-model",
-        "type": "builds_on"
-      },
-      {
-        "from": "2512-osmo-tactile-glove",
-        "to": "2407-tactile-skin-inhand-translation",
-        "type": "builds_on"
-      },
-      {
-        "from": "2512-osmo-tactile-glove",
-        "to": "2512-unitachand",
-        "type": "compares_with"
-      },
-      {
-        "from": "2512-osmo-tactile-glove",
-        "to": "2504-pp-tac",
-        "type": "related"
-      },
-      {
-        "from": "2512-osmo-tactile-glove",
-        "to": "2409-3dtactile-dex",
-        "type": "related"
-      },
-      {
-        "from": "2512-osmo-tactile-glove",
-        "to": "2505-dexumi",
-        "type": "compares_with"
-      },
-      {
-        "from": "2512-unitachand",
-        "to": "2409-3dtactile-dex",
-        "type": "related"
-      },
-      {
-        "from": "2512-unitachand",
-        "to": "2407-tactile-skin-inhand-translation",
-        "type": "related"
-      },
-      {
-        "from": "2512-unitachand",
-        "to": "2504-pp-tac",
-        "type": "related"
-      },
-      {
-        "from": "2512-unitachand",
-        "to": "2505-dexumi",
-        "type": "related"
-      },
-      {
-        "from": "2602-robopaint",
-        "to": "2505-dexumi",
-        "type": "compares_with"
-      },
-      {
-        "from": "2602-robopaint",
-        "to": "2506-exostart",
-        "type": "compares_with"
-      },
-      {
-        "from": "2602-robopaint",
-        "to": "2509-dexop",
-        "type": "compares_with"
-      },
-      {
-        "from": "2602-robopaint",
-        "to": "2410-pi0-vla-flow-model",
-        "type": "related"
-      },
-      {
-        "from": "2603-capx-coding-agents-manipulation",
-        "to": "2410-pi0-vla-flow-model",
-        "type": "compares_with"
-      },
-      {
-        "from": "2603-medical-ai-scientist",
-        "to": "2502-ai-co-scientist",
-        "type": "compares_with"
-      },
-      {
-        "from": "2603-roboclaw-agentic-long-horizon",
-        "to": "2410-pi0-vla-flow-model",
-        "type": "builds_on"
-      },
-      {
-        "from": "2603-roboclaw-agentic-long-horizon",
-        "to": "2603-capx-coding-agents-manipulation",
-        "type": "compares_with"
-      },
-      {
-        "from": "2604-gen1-scaling-mastery",
-        "to": "2511-gen0-embodied-foundation-model",
-        "type": "builds_on"
-      },
-      {
-        "from": "2604-gen1-scaling-mastery",
-        "to": "2410-pi0-vla-flow-model",
-        "type": "related"
-      },
-      {
-        "from": "2604-gen1-scaling-mastery",
-        "to": "2511-pi0-6-recap",
-        "type": "related"
-      },
-      {
-        "from": "2604-harnessing-claude-intelligence",
-        "to": "2603-meta-harness-optimization",
-        "type": "related"
-      },
-      {
-        "from": "2604-harnessing-claude-intelligence",
-        "to": "2502-ai-co-scientist",
+        "from": "260504-warmup-cooldown",
+        "to": "260406-writing-daily-by-hand",
         "type": "related"
       }
     ],
@@ -5814,7 +5635,8 @@
       45
     ],
     "claude-code": [
-      46
+      46,
+      53
     ],
     "codex": [
       46
@@ -5938,6 +5760,18 @@
     ],
     "snapshot retention": [
       52
+    ],
+    "warm-up": [
+      53
+    ],
+    "cool-down": [
+      53
+    ],
+    "token-burning": [
+      53
+    ],
+    "intentionality": [
+      53
     ]
   },
   "domain_stats": {
@@ -5951,7 +5785,8 @@
     "ai-tooling": 2,
     "Infrastructure": 1,
     "Self & Reflection": 1,
-    "AI/ML": 1
+    "AI/ML": 1,
+    "ai-and-work": 1
   },
   "taxonomy_stats": {
     "robotics/brain/vla": 7,
