@@ -1,0 +1,110 @@
+---
+locale: "en"
+translation_of: "260504-aws-cost-cleanup:ko"
+title: "$972/mo → $54/mo: One Month of AWS Cleanup"
+subtitle: "Three teardown events to a 94% cut"
+summary: "Two AWS Health EOL notices triggered a month-long infrastructure cleanup. Tearing down a long-decided-but-still-billing ECS fleet, porting a Python Lambda to TypeScript and removing it, then dropping a dead RDS bi instance plus four Node 16 CFN stacks brought daily run-rate from $22 to $1.75 (94% down). Patterns: a teardown decision is not a teardown action, NAT Gateway sneakiness, the safe order for cross-account boundary cutovers."
+card_summary: "An EOL-triggered month of AWS cleanup. ECS fleet · Python Lambda · RDS bi teardowns drop daily $22 → $1.75 (94% cut)."
+terrys_memo: ""
+---
+
+## TL;DR
+
+- A few days of work brought daily run-rate from $22 to $2 ($972/mo → $54/mo, 94% cut)
+- Three teardown events: bulk ECS fleet decommission / Python Lambda port-then-remove / RDS bi + four dead Node 16 stacks
+- A teardown decision ≠ infrastructure deleted. ELBs and NAT Gateways decided dead months ago were still billing per-hour
+- Sequel to the one-day debt cleanup at [SkinChat infra debt closed in a day](/en/posts/260420-one-day-recovery), measured a month later
+
+## Cost timeline
+
+| Date     | Monthly | Cleanup event |
+| -------- | ------- | ------------- |
+| Mar 25   | $660    | (baseline) |
+| Apr 2    | $105    | Agent ECS fleet teardown |
+| Apr 28   | $96     | Python Lambda stack (skingpt-core-api) |
+| May 3    | $54     | RDS bi + 4 dead Node 16 stacks |
+
+## 1. Bulk teardown of an internal-experiment ECS cluster
+
+The biggest savings came from the first cleanup. Eight ELBs and the ECS services behind them — internal AI-agent demos that had either been migrated elsewhere or formally decided dead — were still alive. The catch: a teardown decision ≠ removal from AWS. ELBs and NAT Gateways decided dead months ago were still billing by the hour.
+
+Tear down from the top to stay safe.
+
+```
+DNS (Route53) → ELB target group → ECS service desired=0
+              → Task Definition deregister → ELB delete
+              → ECR repo delete → VPC NAT/Endpoint delete
+```
+
+Cutting DNS first blocks external traffic immediately; setting ECS desired count to 0 lets tasks die gracefully. Delete ELBs after in-flight requests drain, then VPC accessories last. NAT Gateway is the sneakiest line item — billed hourly, so even with all ECS tasks gone, $3–4/day keeps bleeding while NAT lives.
+
+This cleanup alone removed roughly $563/mo across ELB · EC2 · NAT · OpenSearch · ECS · ECR. Add the downscale of an unrelated RDS instance and ~$800+/mo dropped at once.
+
+## 2. Porting Python Lambda to TypeScript, then removing it
+
+The second cleanup wasn't simple teardown — it was port-then-remove. Direct savings were small (~$11/mo), but engineering effort was the largest of the three.
+
+- Lambda RequestResponse invoke buffers the entire response → first-token latency was 5–10s, breaking chat UX
+
+Streaming required changing the call path anyway. As long as we were rewiring it, pull the Python out.
+
+### Work summary
+
+- Ported Python code → TypeScript package (`packages/llm-core`) over 6 weeks
+- Cross-account / cross-Lambda invoke → in-process function calls
+- Streaming split out: a separate Function URL Lambda + NDJSON frames
+
+### Cross-account boundary cutover sequence
+
+A messy boundary like this breaks live if you cut both sides at once:
+
+1. Stand up the new endpoint (Bearer auth, SSM SecureString)
+2. Switch callers to the new endpoint → confirm dev/prod smoke tests pass on both ends
+3. Only then remove the old IAM permissions
+
+One step out of order and production auto-replies would have died.
+
+### Beyond the dollar amount
+
+- Python dependency trail (mecab, clova, video_match, etc.) gone with it
+- Forced EOL upgrade work = 0
+
+## 3. RDS bi + dead Node 16 stacks
+
+### Four dead Node 16 CFN stacks
+
+The four stacks cleaned up the same day (candy-diary, skingpt-api dev/v1) all had 30-day invocation = 0. Tearing down a CFN stack with leftover dependencies fails as ROLLBACK_FAILED, so unwind from the top:
+
+```
+API Gateway custom domain mapping
+  → custom domain + Route53 alias
+  → cloudformation delete-stack
+```
+
+### Snapshot retention — triple backup
+
+For an analytics DB where ad-hoc query traces might still live somewhere, keep two manual snapshots in addition to the final snapshot ($1–2/mo). If it saves one "where did that data go?" moment six months out, it pays for itself.
+
+## 4. Verification — Cost Explorer at daily granularity
+
+- AWS console default = monthly. To see whether a teardown registered in billing within 24h, you have to slice by day
+- Reporting lag of 24–48h sits between "deleted" and "no longer billed"
+- Pivoting the output into a service × day matrix shows at a glance which services dropped on which days
+- To avoid declaring premature success inside that lag window, look at the daily graph again the next day
+
+## 5. Decision table
+
+| Situation | Action |
+|-----------|--------|
+| Lambda/RDS with 30-day invocation = 0 | Teardown candidate. The answer is already there when you start to doubt |
+| EOL notice received, usage unclear | Consider teardown over upgrade. Same-runtime upgrade lets dead infra hide where EOL notices don't reach |
+| Cutting cross-account IAM | New-path cutover confirmed → then remove old permission (never simultaneously) |
+| RDS / public endpoint about to be deleted | Block SG / PubliclyAccessible one more time before issuing delete |
+
+## 6. Lessons
+
+- A teardown decision ≠ infrastructure deleted. ELBs and NAT Gateways can keep billing per-hour months after the call. Build the path from decision to actual delete into the same workflow
+- An EOL notice is not maintenance — it's a cleanup trigger. Upgrading on the same runtime without questioning usage lets dead infra hide where EOL notices don't reach
+- VPC NAT Gateway is the sneakiest. Hourly billing means killing tasks but leaving NAT bleeds $3–4/day
+- For analytics DB teardowns, final snapshot + 2 manual = triple backup. $1–2/mo to cover one future "where is that data?" moment
+- "Deleted" ≠ "no longer billed". A 24–48h reporting lag exists; check the daily graph again the next day before closing out

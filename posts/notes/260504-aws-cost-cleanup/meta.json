@@ -1,0 +1,70 @@
+{
+  "post_id": "260504-aws-cost-cleanup",
+  "slug": "260504-aws-cost-cleanup",
+  "post_number": 52,
+  "published_at": "2026-05-04T00:00:00Z",
+  "updated_at": "2026-05-04T00:00:00Z",
+  "status": "published",
+  "content_type": "notes",
+  "visibility": "public",
+  "tags": [
+    "Notes",
+    "Infra",
+    "AWS",
+    "Cost",
+    "Lambda",
+    "RDS",
+    "Postmortem"
+  ],
+  "cover_image": "./cover.webp",
+  "cover_thumb": "./cover-thumb.webp",
+  "reading_time_min": 6,
+  "domain": "Infra & Ops",
+  "subfields": [
+    "aws",
+    "cost",
+    "lambda",
+    "rds"
+  ],
+  "key_concepts": [
+    "AWS cleanup",
+    "EOL trigger",
+    "VPC NAT Gateway cost",
+    "Cost Explorer daily granularity",
+    "cross-account boundary cutover",
+    "snapshot retention"
+  ],
+  "idea_status": null,
+  "related_posts": [
+    "260420-debt-changes-hands",
+    "260420-one-day-recovery"
+  ],
+  "taxonomy_primary": "infra/cost",
+  "taxonomy_secondary": [
+    "infra/serverless",
+    "ops/cleanup"
+  ],
+  "relations": [
+    {
+      "target": "260420-debt-changes-hands",
+      "type": "related",
+      "note": "비개발자 창업자가 직접 정리한 부채의 또 다른 사례"
+    },
+    {
+      "target": "260420-one-day-recovery",
+      "type": "extends",
+      "note": "하루짜리 부채 정비의 한 달 버전 — 같은 작업을 인프라 전반으로 확장"
+    }
+  ],
+  "ai_summary": {
+    "one_liner": "AWS Health EOL 알림이 트리거한 한 달간의 인프라 청소 — daily $22 → $1.75 (94% 감소)",
+    "problem": "폐기 결정만 났을 뿐 시간당 과금을 토하던 ELB·NAT, EOL 임박한 Python Lambda, 30일 invocation 0 의 RDS bi + dead Node 16 stack 4개",
+    "solution": "세 단계 청소 — ECS fleet 일괄 폐기 / Python Lambda 의 TypeScript 포팅 후 폐기 / RDS bi + dead stack 정리. cross-account boundary 는 신규 경로 cutover 후 구 권한 제거 순서, 폐기 직전 publicly accessible 차단",
+    "key_result": "월 $972 → $54 (94% 감소). 강제 EOL 업그레이드 작업량 0, 보안 노출 1건 봉쇄, 분석 DB snapshot 3중 백업 보존",
+    "limitations": []
+  },
+  "figures": [],
+  "tables": [],
+  "newsletter_eligible": false,
+  "featured": false
+}

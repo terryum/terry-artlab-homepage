@@ -32,7 +32,8 @@
     "260406-writing-daily-by-hand",
     "260413-new-leverage",
     "260415-democratization-of-research",
-    "260420-one-day-recovery"
+    "260420-one-day-recovery",
+    "260504-aws-cost-cleanup"
   ],
   "taxonomy_primary": "ai/society",
   "taxonomy_secondary": [
@@ -54,6 +55,11 @@
     {
       "target": "260420-one-day-recovery",
       "type": "extends"
+    },
+    {
+      "target": "260504-aws-cost-cleanup",
+      "type": "related",
+      "note": "비개발자 창업자가 한 달간 AWS 청소를 직접 수행한 사례"
     }
   ],
   "ai_summary": {

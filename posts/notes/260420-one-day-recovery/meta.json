@@ -35,7 +35,8 @@
   "idea_status": null,
   "related_posts": [
     "260419-vercel-quiet-bill",
-    "260420-debt-changes-hands"
+    "260420-debt-changes-hands",
+    "260504-aws-cost-cleanup"
   ],
   "taxonomy_primary": "infra/serverless",
   "taxonomy_secondary": [
@@ -51,6 +52,11 @@
       "target": "260420-debt-changes-hands",
       "type": "related",
       "note": "이번 정비의 의미를 다룬 에세이"
+    },
+    {
+      "target": "260504-aws-cost-cleanup",
+      "type": "extended_by",
+      "note": "하루짜리 정비를 한 달간 AWS 전반으로 확장한 후속 글"
     }
   ],
   "ai_summary": {
