@@ -1,0 +1,140 @@
+---
+locale: ko
+title: "Conductor: 자연어로 LLM 에이전트들을 조율하는 RL 메타 모델"
+summary: "Sakana AI는 7B 파라미터의 Conductor를 RL로 학습시켜 GPT-5·Gemini 2.5 Pro·Claude Sonnet 4 같은 프론티어 LLM들을 조율하는 통신 토폴로지와 프롬프트 엔지니어링을 자동 발견하도록 했다. Conductor는 LiveCodeBench 83.93·GPQA Diamond 87.5·AIME25 93.3 등 7개 추론 벤치마크 평균 77.27%를 달성하며 GPT-5(74.78%)·Gemini 2.5 Pro(70.97%)를 능가하는 SOTA를 기록했고, 자기 자신을 워커로 선택하는 재귀적 호출로 새로운 형태의 test-time scaling을 가능하게 했다."
+card_summary: "Sakana AI의 7B Conductor는 RL로 LLM 에이전트들의 통신 토폴로지·프롬프트를 자동 학습해 GPT-5·Gemini 2.5 Pro·Claude Sonnet 4를 능가하는 SOTA(평균 77.27%, GPQA 87.5, LiveCodeBench 83.93)를 달성했다."
+terrys_memo: ""
+references:
+  - title: "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning"
+    author: Guo et al. (2025)
+    description: >-
+      verifiable reward로 RL을 직접 적용해 reasoning 능력을 끌어낸 핵심 선행 연구. Conductor도 같은 GRPO 계열 알고리즘을 채택하며,
+      "RL이 모델 잠재 능력을 자연 발생시킨다"는 가설을 multi-agent 조율 설계로 확장한다.
+    arxiv_url: https://arxiv.org/abs/2501.12948
+    scholar_url: https://scholar.google.com/scholar?q=DeepSeek-R1+Incentivizing+Reasoning+Capability+LLMs+Reinforcement+Learning
+    category: foundational
+  - title: "DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models"
+    author: Shao et al. (2024)
+    description: >-
+      GRPO(Group Relative Policy Optimization) 알고리즘을 도입한 논문. Conductor는 KL 정규화 없이 batch 256·200 iteration만으로 수렴하는데,
+      이는 GRPO + 강력한 워커 풀이 small model RL의 탐색 문제를 우회한 결과로 본 논문에서 직접 분석된다.
+    arxiv_url: https://arxiv.org/abs/2402.03300
+    scholar_url: https://scholar.google.com/scholar?q=DeepSeekMath+GRPO+Group+Relative+Policy+Optimization
+    category: foundational
+  - title: "Mixture-of-Agents Enhances Large Language Model Capabilities"
+    author: Wang et al. (2024)
+    description: >-
+      여러 LLM 응답을 layer 형태로 aggregate하는 multi-agent baseline. Conductor가 직접 비교·극복 대상으로 삼는 대표적 manual scaffold으로,
+      Conductor는 동일 비용에서 훨씬 높은 성능을, 동일 성능에서 훨씬 적은 호출로 달성함을 보인다.
+    arxiv_url: https://arxiv.org/abs/2406.04692
+    scholar_url: https://scholar.google.com/scholar?q=Mixture+of+Agents+Enhances+Large+Language+Model+Capabilities+Wang+2024
+    category: recent
+  - title: "MasRouter: Learning to Route LLMs for Multi-Agent Systems"
+    author: Yue et al. (2025)
+    description: >-
+      Multi-agent system을 위한 router 학습 연구. Conductor는 router 단계만이 아니라 통신 토폴로지·프롬프트 정제·재귀 호출까지 end-to-end로 학습한다는 점에서 차별화되며,
+      MasRouter를 비롯한 학습형 multi-agent 베이스라인을 in-distribution·OOD 평가에서 모두 능가한다.
+    arxiv_url: https://arxiv.org/abs/2502.11133
+    scholar_url: https://scholar.google.com/scholar?q=MasRouter+multi-agent+systems+routing+LLM
+    category: recent
+  - title: "AI Co-scientist: Multi-agent System for Autonomous Scientific Discovery"
+    author: Juraj Gottweis et al.
+    description: >-
+      Generate-debate-evolve 루프와 Elo 토너먼트로 멀티에이전트 협업을 구성하는 Google의 시스템. 사람이 설계한 에이전트 간 역할·통신 구조의 한 정점을 보여준다.
+      Conductor는 이런 manual scaffold 자체를 RL로 자동화한다는 점에서 정반대 접근이다.
+    project_url: https://arxiv.org/abs/2502.18864
+    post_slug: 2502-ai-co-scientist
+    category: recent
+---
+
+## TL;DR
+
+LLM마다 강점이 달라 매번 사람이 멀티에이전트 워크플로우를 손으로 짜야 하는 한계를, **7B Conductor를 RL로 학습시켜 자연어 워크플로우(지시문·할당 에이전트·가시성)를 매 입력마다 동적으로 출력하도록 만들어 해결했다.** 통신 토폴로지·프롬프트 엔지니어링·재귀 호출까지 end-to-end 보상 최대화에서 자연 발생하며, 7개 추론 벤치마크 평균 77.27%로 GPT-5(74.78%)·Gemini 2.5 Pro(70.97%)를 능가한다.
+
+## 문제
+
+프론티어 LLM들이 인간 전문가에 근접한 능력을 보여주지만 그 잠재력을 끌어내려면 manual하게 설계된 agentic workflow가 필요하다 — 상용 AI 제품마다 정교한 prompt·refinement·verification 패턴이 핵심 자산이고, 학계도 여전히 prompting 전략에 천착해 있다. 더 큰 문제는 **모델마다 특화 도메인이 달라 보편 최적 LLM이 없다는 것**이다 (Chang et al. 2024). 따라서 작업마다 어떤 모델을 어떤 순서로 조합할지를 사람이 매번 다시 설계해야 한다. 이 논문은 이 메타 설계 자체를 LLM이 RL로 학습할 수 있는지 — 그리고 학습된 자동 조율자가 사람이 설계한 multi-agent scaffold들을 능가할 수 있는지를 묻는다.
+
+## 핵심 아이디어
+
+기존 multi-agent 연구가 router(어느 모델로 보낼지)나 aggregation(여러 응답을 어떻게 합칠지)을 부분적으로 학습한 반면, **Conductor는 워크플로우 전체를 자연어로 설계하는 단일 7B LLM이다.** 핵심 차별점:
+
+- **워크플로우 단위의 자연어 출력**: Conductor는 매 단계마다 (1) 자연어 지시문, (2) 그 지시문을 받을 워커 에이전트, (3) 다른 에이전트의 응답에 대한 가시성을 출력한다. 최대 5단계 워크플로우로 통신 토폴로지가 입력별로 즉석 결정된다.
+- **End-to-end 보상 최대화**: prompt engineering, refinement, verification, meta-prompt optimization이 별도 모듈 없이 RL 학습에서 자연 발생하도록 한다. Qwen2.5-7B에서 출발해 200 GRPO iteration·batch 256·KL 정규화 없이 수렴.
+- **무작위 워커 풀로 일반화**: 학습 시마다 워커 LLM 집합을 무작위로 바꿔서, Conductor가 아무 오픈/클로즈드 모델 조합에도 적응 가능하도록 한다.
+- **재귀적 self-orchestration**: Conductor가 자기 자신을 워커로 선택할 수 있도록 허용 → 테스트 시점에 동적 test-time scaling이 가능.
+
+<Figure src="./fig-11.png" caption="Figure 11: Conductor 개념도. Conductor는 서로 다른 워커 LLM의 전문성을 결합하여 복잡한 사용자 질의에 응답한다. 수학적 추론과 영어-중국어 번역을 함께 다루는 워크플로우를 예시로 시각화했다." />
+
+## 구체적 방법
+
+<Collapsible title="구체적 방법">
+
+### 워크플로우 정의
+
+Conductor는 입력 문제 $q$에 대해 워크플로우 $W = \{s_1, s_2, \ldots, s_T\}$ ($T \le 5$)를 자연어로 출력한다. 각 단계 $s_t$는 다음 세 요소로 구성된다.
+
+- **자연어 지시문** $i_t$: 그 단계에서 워커가 수행할 하위 과제
+- **할당 워커** $w_t \in \mathcal{W}$: 워커 풀 $\mathcal{W}$에서 선택
+- **가시성** $V_t \subseteq \{s_1, \ldots, s_{t-1}\}$: 이 단계의 워커가 볼 수 있는 이전 단계 응답들
+
+이 정의로 통신 토폴로지가 자연스럽게 표현된다 — 모든 이전 응답을 보면 sequential refinement, 일부만 보면 parallel + selective communication, 자기 자신만 보면 isolated execution.
+
+### 학습 알고리즘
+
+Qwen2.5-7B를 base로 GRPO(Group Relative Policy Optimization)를 사용한다. AdamW, batch size 256, 200 iteration, KL 정규화 없음. 각 학습 입력마다 워커 풀을 무작위로 샘플링하여 Conductor가 임의 풀에 적응하도록 한다.
+
+### 학습 데이터
+
+총 960문제 — MATH(competition math), MMLU(multitask comprehension), RLPR(real-world reasoning), LiveCodeBench V1(코드 생성). 4개 도메인 합계지만 의도적으로 작게 유지: "강력한 워커 풀에 의존하면 small model RL의 canonical exploration problem을 우회할 수 있다"는 가설을 검증.
+
+### 워커 풀
+
+- **클로즈드**: Gemini 2.5 Pro, Claude Sonnet 4, GPT-5
+- **오픈**: DeepSeek-R1-Distill-Qwen-32B, Gemma3-27B-instruct, Qwen3-32B
+
+### 재귀적 확장
+
+기본 학습된 Conductor를 추가 파인튜닝하여 자기 자신을 워커로 선택할 수 있게 만든다. 테스트 시점에 Conductor가 첫 번째 라운드 결과를 보고 두 번째 Conductor 호출을 트리거 → 새로운 형태의 dynamic test-time scaling.
+
+</Collapsible>
+
+## 주요 결과
+
+7개 reasoning 벤치마크에서 평균 77.27%로 SOTA. 주요 수치:
+
+- **GPQA Diamond**: 87.5 (Gemini 2.5 Pro 84.8, GPT-5 82.3)
+- **LiveCodeBench**: 83.93 (GPT-5 82.90)
+- **MATH500**: 99.4 (GPT-5 99.0)
+- **MMLU**: 94.1 (GPT-5 93.5)
+- **AIME25**: 93.3 (GPT-5 90.8)
+- **BigCodeBench**: 37.86 (Gemini 2.5 Pro 37.51, GPT-5 32.75)
+- **RLPR**: 44.75 (GPT-5 42.20)
+
+In-distribution 평가에서 Conductor는 Mixture-of-Agents·MasRouter 등 multi-agent 베이스라인과 5턴 reflection 베이스라인을 모두 큰 폭으로 능가하며, **동일 성능을 훨씬 적은 에이전트 호출 수로 달성**한다 (Figure 5).
+
+<Figure src="./fig-1.png" caption="Figure 1: Conductor가 GPQA와 LiveCodeBench에서 SOTA를 달성한 결과. GPT-5·Gemini 2.5 Pro·Claude Sonnet 4 등 주요 프론티어 모델을 모두 능가한다." />
+
+추가 발견:
+- **무작위 풀 학습이 OOD 일반화를 만든다** (Figure 6): 학습 중 거의 보지 못한 오픈 모델 서브셋에서도 강한 성능 유지.
+- **작업 난이도에 따라 에이전트 수를 조정** (Figure 8): MMLU 같은 단순 과제는 2개, LiveCodeBench는 3-4개로 자동 확장.
+- **재귀적 호출이 추가 성능 이득** (Table 2): self-orchestration이 새로운 test-time scaling 축이 됨.
+- **워커 분포가 품질을 반영** (Figure 10): 재귀 라운드에서 Claude·Gemini 쪽으로 자동 재분배 — Conductor가 워커 품질에 대한 implicit ranking을 학습.
+
+<Figure src="./fig-4.png" caption="Figure 4: Conductor의 in-distribution 평가 결과. 멀티에이전트 방법론과 5턴 reflection 에이전트 베이스라인을 모두 큰 차이로 능가하며, 워커 LLM의 능력을 증폭시키는 Conductor의 효용을 입증한다." />
+
+## 달성점과 한계점
+
+**새롭게 달성한 점**:
+- 7B 모델이 RL만으로 GPT-5·Gemini 2.5 Pro 같은 거대 프론티어 모델을 *조율함으로써* 능가 — multi-agent 협업이 RL로 unlock 가능함을 입증한 초기 사례.
+- 통신 토폴로지·프롬프트 엔지니어링·verification 전략 등이 별도 모듈 없이 end-to-end 보상 학습에서 자연 발생.
+- 재귀적 self-orchestration이라는 새로운 test-time scaling 축 제시.
+
+**한계점**:
+- *저자 명시*: 비싼 프론티어 LLM에 의존하기 때문에 AI 접근성의 경제적 격차를 심화시킬 수 있음.
+- *저자 명시*: 최대 5단계 워크플로우 제약 — 더 긴 호흡의 작업에는 추가 확장 필요.
+- 🤖 *AI 분석 (범용성)*: 7개 벤치마크 모두 지식·추론 중심 단답형. open-ended 코딩(IDE 통합·다단계 디버깅), 장문 글쓰기·리서치, 외부 도구 사용 등 *진짜 agentic* 환경으로의 일반화는 아직 미검증. 단답형 reasoning에서의 SOTA가 그대로 long-horizon agent로 옮겨갈지는 별도 평가가 필요하다.
+
+## Terry's memo
+
+- *(None)*

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-04T06:29:41.520Z",
-  "total_posts": 53,
+  "generated_at": "2026-05-05T07:04:17.856Z",
+  "total_posts": 54,
   "posts": [
     {
       "post_number": 1,
@@ -3900,6 +3900,74 @@
       "taxonomy_secondary": [],
       "visibility": "public",
       "allowed_groups": []
+    },
+    {
+      "post_number": 54,
+      "slug": "2512-conductor-llm-orchestration",
+      "content_type": "papers",
+      "title_en": "Conductor: An RL-Trained Meta-Model That Orchestrates LLM Agents in Natural Language",
+      "title_ko": "Conductor: 자연어로 LLM 에이전트들을 조율하는 RL 메타 모델",
+      "summary_ko": "Sakana AI의 7B Conductor는 RL로 LLM 에이전트들의 통신 토폴로지·프롬프트를 자동 학습해 GPT-5·Gemini 2.5 Pro·Claude Sonnet 4를 능가하는 SOTA(평균 77.27%, GPQA 87.5, LiveCodeBench 83.93)를 달성했다.",
+      "summary_en": "Sakana AI's 7B Conductor learns to design communication topologies and prompts for LLM workers via RL, surpassing GPT-5, Gemini 2.5 Pro, and Claude Sonnet 4 (avg 77.27%, GPQA 87.5, LiveCodeBench 83.93).",
+      "cover_image": "./cover.webp",
+      "cover_thumb": null,
+      "domain": "ml",
+      "subfields": [
+        "multi-agent",
+        "llm-orchestration",
+        "reinforcement-learning",
+        "test-time-scaling",
+        "agentic-ai"
+      ],
+      "key_concepts": [
+        "rl-conductor",
+        "llm-orchestration",
+        "multi-agent-coordination",
+        "communication-topology",
+        "automated-prompt-engineering",
+        "recursive-self-orchestration",
+        "test-time-scaling",
+        "GRPO"
+      ],
+      "methodology": [
+        "reinforcement-learning",
+        "GRPO",
+        "randomized-agent-pool-training",
+        "natural-language-workflow",
+        "test-time-recursive-scaling"
+      ],
+      "contribution_type": "method",
+      "tags": [
+        "Papers",
+        "AI",
+        "Multi-Agent",
+        "LLM",
+        "Reinforcement Learning",
+        "Sakana AI",
+        "Test-Time Scaling"
+      ],
+      "source_author": "Stefan Nielsen et al.",
+      "source_date": "2025-12-04",
+      "published_at": "2026-05-05T09:00:00Z",
+      "citation_count": null,
+      "ai_summary": {
+        "one_liner": "Sakana AI의 7B Conductor는 RL로 LLM 에이전트들을 조율하는 통신 토폴로지·프롬프트 엔지니어링을 자동 학습해 LiveCodeBench·GPQA·AIME25에서 GPT-5·Gemini 2.5 Pro·Claude Sonnet 4를 능가하는 SOTA 평균 77.27%를 달성했다",
+        "problem": "프론티어 LLM의 잠재 능력을 끌어내려면 수작업 에이전트 워크플로우와 정교한 프롬프트가 필요하지만, 모델마다 강점이 다르고 보편 최적 LLM이 없어 매번 사람이 조율 전략을 설계해야 하는 한계가 있다",
+        "solution": "RL Conductor는 입력 문제마다 자연어로 워크플로우 단계(지시문·할당 에이전트·가시성)를 출력하는 7B LLM으로, 무작위 에이전트 풀로 GRPO 학습하여 통신 토폴로지·프롬프트 정제·메타 프롬프트 최적화 전략이 end-to-end 보상 최대화에서 자연 발생하도록 한다",
+        "key_result": "7개 추론 벤치마크 평균 77.27% (GPT-5 74.78%, Gemini 2.5 Pro 70.97%) — LiveCodeBench 83.93, GPQA Diamond 87.5, MATH500 99.4, AIME25 93.3 SOTA. 5턴 self-reflection·기존 multi-agent baseline을 비용 대비 성능에서 압도, 재귀적 self-orchestration으로 추가 test-time scaling",
+        "limitations": [
+          "비싼 프론티어 LLM에 의존하여 경제적 격차를 심화시킬 수 있음 (저자 명시)",
+          "최대 5단계 워크플로우 제약 — 더 긴 호흡의 작업에는 추가 확장 필요",
+          "🤖 7개 벤치마크 모두 지식·추론 중심 단답형 — open-ended 코딩, 장문 글쓰기, 도구 사용 등에서의 일반화는 아직 미검증"
+        ]
+      },
+      "relations": [],
+      "idea_status": null,
+      "related_posts": null,
+      "taxonomy_primary": "ai/agent",
+      "taxonomy_secondary": [],
+      "visibility": "public",
+      "allowed_groups": []
     }
   ],
   "knowledge_graph": {
@@ -4603,6 +4671,256 @@
         "from": "260504-warmup-cooldown",
         "to": "260422-work-that-isnt",
         "type": "related"
+      },
+      {
+        "from": "2201-mano-hand-model",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "related"
+      },
+      {
+        "from": "2201-mano-hand-model",
+        "to": "2512-unitachand",
+        "type": "related"
+      },
+      {
+        "from": "2504-pp-tac",
+        "to": "2505-dexumi",
+        "type": "related"
+      },
+      {
+        "from": "2201-mano-hand-model",
+        "to": "2602-robopaint",
+        "type": "related"
+      },
+      {
+        "from": "2407-tactile-skin-inhand-translation",
+        "to": "2504-pp-tac",
+        "type": "related"
+      },
+      {
+        "from": "2407-tactile-skin-inhand-translation",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "related"
+      },
+      {
+        "from": "2407-tactile-skin-inhand-translation",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "related"
+      },
+      {
+        "from": "2409-3dtactile-dex",
+        "to": "2504-pp-tac",
+        "type": "related"
+      },
+      {
+        "from": "2409-3dtactile-dex",
+        "to": "2407-tactile-skin-inhand-translation",
+        "type": "related"
+      },
+      {
+        "from": "2409-3dtactile-dex",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "related"
+      },
+      {
+        "from": "2409-3dtactile-dex",
+        "to": "2505-dexumi",
+        "type": "related"
+      },
+      {
+        "from": "2410-pi0-vla-flow-model",
+        "to": "2511-pi0-6-recap",
+        "type": "related"
+      },
+      {
+        "from": "2501-dexforce-force-informed-actions",
+        "to": "2505-forcevla-force-aware-moe",
+        "type": "related"
+      },
+      {
+        "from": "2504-pp-tac",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "related"
+      },
+      {
+        "from": "2505-dexumi",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "compares_with"
+      },
+      {
+        "from": "2505-dexumi",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "addresses_task"
+      },
+      {
+        "from": "2505-dexumi",
+        "to": "2505-forcevla-force-aware-moe",
+        "type": "related"
+      },
+      {
+        "from": "2505-forcevla-force-aware-moe",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "builds_on"
+      },
+      {
+        "from": "2505-forcevla-force-aware-moe",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "uses_method"
+      },
+      {
+        "from": "2506-exostart",
+        "to": "2505-dexumi",
+        "type": "compares_with"
+      },
+      {
+        "from": "2506-exostart",
+        "to": "2501-dexforce-force-informed-actions",
+        "type": "addresses_task"
+      },
+      {
+        "from": "2506-exostart",
+        "to": "2505-forcevla-force-aware-moe",
+        "type": "addresses_task"
+      },
+      {
+        "from": "2509-dexop",
+        "to": "2505-dexumi",
+        "type": "compares_with"
+      },
+      {
+        "from": "2509-dexop",
+        "to": "2506-exostart",
+        "type": "compares_with"
+      },
+      {
+        "from": "2509-dexop",
+        "to": "2407-stretchable-glove-hand-pose",
+        "type": "addresses_task"
+      },
+      {
+        "from": "2511-gen0-embodied-foundation-model",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "related"
+      },
+      {
+        "from": "2511-gen0-embodied-foundation-model",
+        "to": "2511-pi0-6-recap",
+        "type": "related"
+      },
+      {
+        "from": "2511-pi0-6-recap",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "builds_on"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2407-tactile-skin-inhand-translation",
+        "type": "builds_on"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2512-unitachand",
+        "type": "compares_with"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2504-pp-tac",
+        "type": "related"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2409-3dtactile-dex",
+        "type": "related"
+      },
+      {
+        "from": "2512-osmo-tactile-glove",
+        "to": "2505-dexumi",
+        "type": "compares_with"
+      },
+      {
+        "from": "2512-unitachand",
+        "to": "2409-3dtactile-dex",
+        "type": "related"
+      },
+      {
+        "from": "2512-unitachand",
+        "to": "2407-tactile-skin-inhand-translation",
+        "type": "related"
+      },
+      {
+        "from": "2512-unitachand",
+        "to": "2504-pp-tac",
+        "type": "related"
+      },
+      {
+        "from": "2512-unitachand",
+        "to": "2505-dexumi",
+        "type": "related"
+      },
+      {
+        "from": "2602-robopaint",
+        "to": "2505-dexumi",
+        "type": "compares_with"
+      },
+      {
+        "from": "2602-robopaint",
+        "to": "2506-exostart",
+        "type": "compares_with"
+      },
+      {
+        "from": "2602-robopaint",
+        "to": "2509-dexop",
+        "type": "compares_with"
+      },
+      {
+        "from": "2602-robopaint",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "related"
+      },
+      {
+        "from": "2603-capx-coding-agents-manipulation",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "compares_with"
+      },
+      {
+        "from": "2603-medical-ai-scientist",
+        "to": "2502-ai-co-scientist",
+        "type": "compares_with"
+      },
+      {
+        "from": "2603-roboclaw-agentic-long-horizon",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "builds_on"
+      },
+      {
+        "from": "2603-roboclaw-agentic-long-horizon",
+        "to": "2603-capx-coding-agents-manipulation",
+        "type": "compares_with"
+      },
+      {
+        "from": "2604-gen1-scaling-mastery",
+        "to": "2511-gen0-embodied-foundation-model",
+        "type": "builds_on"
+      },
+      {
+        "from": "2604-gen1-scaling-mastery",
+        "to": "2410-pi0-vla-flow-model",
+        "type": "related"
+      },
+      {
+        "from": "2604-gen1-scaling-mastery",
+        "to": "2511-pi0-6-recap",
+        "type": "related"
+      },
+      {
+        "from": "2604-harnessing-claude-intelligence",
+        "to": "2603-meta-harness-optimization",
+        "type": "related"
+      },
+      {
+        "from": "2604-harnessing-claude-intelligence",
+        "to": "2502-ai-co-scientist",
+        "type": "related"
       }
     ],
     "clusters": [
@@ -4704,7 +5022,8 @@
           25,
           28,
           30,
-          31
+          31,
+          54
         ],
         "core_concepts": [
           "autonomous-research",
@@ -5792,11 +6111,35 @@
     ],
     "intentionality": [
       53
+    ],
+    "rl-conductor": [
+      54
+    ],
+    "llm-orchestration": [
+      54
+    ],
+    "multi-agent-coordination": [
+      54
+    ],
+    "communication-topology": [
+      54
+    ],
+    "automated-prompt-engineering": [
+      54
+    ],
+    "recursive-self-orchestration": [
+      54
+    ],
+    "test-time-scaling": [
+      54
+    ],
+    "GRPO": [
+      54
     ]
   },
   "domain_stats": {
     "robotics": 30,
-    "ml": 2,
+    "ml": 3,
     "ai": 6,
     "philosophy": 2,
     "AI & Society": 4,
@@ -5816,7 +6159,7 @@
     "robotics/arm/exoskeleton": 3,
     "robotics/hand:secondary": 1,
     "robotics/hand/dexterous": 3,
-    "ai/agent": 7,
+    "ai/agent": 8,
     "robotics/hand/dexterous:secondary": 8,
     "robotics/arm/exoskeleton:secondary": 1,
     "robotics/brain": 11,
@@ -5838,6 +6181,6 @@
     "robotics/arm": 5,
     "robotics/hand": 13,
     "robotics": 29,
-    "ai": 11
+    "ai": 12
   }
 }

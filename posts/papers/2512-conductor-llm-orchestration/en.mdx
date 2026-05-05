@@ -1,0 +1,141 @@
+---
+locale: en
+translation_of: "2512-conductor-llm-orchestration:ko"
+title: "Conductor: An RL-Trained Meta-Model That Orchestrates LLM Agents in Natural Language"
+summary: "Sakana AI's 7B Conductor is trained with RL to automatically discover communication topologies and prompt-engineering strategies that orchestrate frontier LLMs like GPT-5, Gemini 2.5 Pro, and Claude Sonnet 4. It sets state of the art on seven reasoning benchmarks (avg 77.27%; LiveCodeBench 83.93, GPQA Diamond 87.5, AIME25 93.3), surpassing GPT-5 (74.78%) and Gemini 2.5 Pro (70.97%), and unlocks a new form of test-time scaling by allowing the Conductor to recursively call itself as a worker."
+card_summary: "Sakana AI's 7B Conductor learns to design communication topologies and prompts for LLM workers via RL, surpassing GPT-5, Gemini 2.5 Pro, and Claude Sonnet 4 (avg 77.27%, GPQA 87.5, LiveCodeBench 83.93)."
+terrys_memo: ""
+references:
+  - title: "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning"
+    author: Guo et al. (2025)
+    description: >-
+      Foundational work showing RL with verifiable rewards directly elicits reasoning ability. The Conductor adopts the same GRPO-family algorithm and extends the
+      "RL surfaces latent capability" hypothesis from single-model reasoning to multi-agent orchestration design.
+    arxiv_url: https://arxiv.org/abs/2501.12948
+    scholar_url: https://scholar.google.com/scholar?q=DeepSeek-R1+Incentivizing+Reasoning+Capability+LLMs+Reinforcement+Learning
+    category: foundational
+  - title: "DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models"
+    author: Shao et al. (2024)
+    description: >-
+      Introduces GRPO (Group Relative Policy Optimization). The Conductor converges with no KL regularization, batch 256, and only 200 iterations — the paper attributes this
+      to GRPO + a strong worker pool sidestepping the canonical exploration problem of small-model RL.
+    arxiv_url: https://arxiv.org/abs/2402.03300
+    scholar_url: https://scholar.google.com/scholar?q=DeepSeekMath+GRPO+Group+Relative+Policy+Optimization
+    category: foundational
+  - title: "Mixture-of-Agents Enhances Large Language Model Capabilities"
+    author: Wang et al. (2024)
+    description: >-
+      A representative manual multi-agent scaffold that aggregates LLM responses in layers. The Conductor explicitly compares against and surpasses MoA, achieving substantially higher performance
+      at the same cost and matching performance with far fewer agent calls.
+    arxiv_url: https://arxiv.org/abs/2406.04692
+    scholar_url: https://scholar.google.com/scholar?q=Mixture+of+Agents+Enhances+Large+Language+Model+Capabilities+Wang+2024
+    category: recent
+  - title: "MasRouter: Learning to Route LLMs for Multi-Agent Systems"
+    author: Yue et al. (2025)
+    description: >-
+      A learned router for multi-agent systems. The Conductor differs by learning communication topology, prompt refinement, and recursive calls end-to-end (not just routing),
+      and outperforms MasRouter and other learned multi-agent baselines on both in-distribution and OOD evaluations.
+    arxiv_url: https://arxiv.org/abs/2502.11133
+    scholar_url: https://scholar.google.com/scholar?q=MasRouter+multi-agent+systems+routing+LLM
+    category: recent
+  - title: "AI Co-scientist: Multi-agent System for Autonomous Scientific Discovery"
+    author: Juraj Gottweis et al.
+    description: >-
+      Google's system using a generate-debate-evolve loop with Elo tournaments — an apex of human-designed agent roles and communication structures.
+      The Conductor takes the opposite approach by automating that manual scaffolding through RL.
+    project_url: https://arxiv.org/abs/2502.18864
+    post_slug: 2502-ai-co-scientist
+    category: recent
+---
+
+## TL;DR
+
+Different LLMs are good at different things, so people had to hand-craft the multi-agent workflow each time. **The Conductor is a 7B LLM trained with RL to dynamically emit a natural-language workflow (instruction · assigned worker · visibility) for every input.** Communication topology, prompt engineering, and recursive calls all emerge naturally from end-to-end reward maximization, and the Conductor reaches an average of 77.27% across seven reasoning benchmarks — beating GPT-5 (74.78%) and Gemini 2.5 Pro (70.97%).
+
+## Problem
+
+Frontier LLMs already approach top human experts on many tasks, but unlocking that latent ability requires manually designed agentic workflows — bespoke prompt, refinement, and verification patterns are core IP for commercial AI products, and academia continues to chase prompting tricks. Worse, **no single LLM is universally best** (Chang et al. 2024): each model specializes in different domains. So someone has to redesign which model goes where, in what order, every time. This paper asks whether that meta-design itself can be learned by an LLM via RL — and whether the resulting auto-conductor can beat the multi-agent scaffolds humans build.
+
+## Core Idea
+
+While prior multi-agent work has partially learned routing (which model to send to) or aggregation (how to merge answers), **the Conductor is a single 7B LLM that designs the entire workflow in natural language.** Key differentiators:
+
+- **Workflow as natural-language output**: For each step the Conductor emits (1) a natural-language instruction, (2) the worker agent that should receive it, and (3) which previous responses that worker can see. Up to 5 steps per workflow, with communication topology decided per input.
+- **End-to-end reward maximization**: prompt engineering, refinement, verification, and meta-prompt optimization emerge from RL training without dedicated modules. Starts from Qwen2.5-7B; converges in 200 GRPO iterations with batch 256 and no KL regularization.
+- **Trained over randomized worker pools**: Worker LLM sets are randomized at training time so the Conductor adapts to arbitrary open/closed-source agent combinations.
+- **Recursive self-orchestration**: Allowing the Conductor to select itself as a worker enables dynamic test-time scaling.
+
+<Figure src="./fig-11.png" caption="Figure 11: Conductor schematic visualization. The Conductor combines the differing specializations of the workers LLMs to answer complex user queries. Here we visualize a workflow bridging both mathematical reasoning and English-Chinese translation." />
+
+## How It Works
+
+<Collapsible title="How It Works">
+
+### Workflow definition
+
+For an input problem $q$, the Conductor outputs a workflow $W = \{s_1, s_2, \ldots, s_T\}$ ($T \le 5$) in natural language. Each step $s_t$ has three components:
+
+- **Natural-language instruction** $i_t$: the subtask the worker should perform
+- **Assigned worker** $w_t \in \mathcal{W}$: chosen from the worker pool $\mathcal{W}$
+- **Visibility** $V_t \subseteq \{s_1, \ldots, s_{t-1}\}$: which prior step responses this worker can see
+
+This formulation captures communication topology naturally — seeing all prior responses gives sequential refinement, seeing some gives parallel + selective communication, seeing only itself gives isolated execution.
+
+### Training algorithm
+
+GRPO (Group Relative Policy Optimization) on Qwen2.5-7B base. AdamW, batch size 256, 200 iterations, no KL regularization. Worker pools are randomly sampled per training input so the Conductor learns to adapt to arbitrary pools.
+
+### Training data
+
+Just 960 problems — MATH (competition), MMLU (multitask), RLPR (real-world reasoning), LiveCodeBench V1 (code generation). Four domains kept deliberately small to test the hypothesis that a strong worker pool sidesteps the canonical exploration problem of small-model RL.
+
+### Worker pool
+
+- **Closed**: Gemini 2.5 Pro, Claude Sonnet 4, GPT-5
+- **Open**: DeepSeek-R1-Distill-Qwen-32B, Gemma3-27B-instruct, Qwen3-32B
+
+### Recursive extension
+
+The base Conductor is further finetuned to allow selecting itself as a worker. At test time, the Conductor sees first-round results and triggers a second Conductor call — a new form of dynamic test-time scaling.
+
+</Collapsible>
+
+## Key Results
+
+State of the art on seven reasoning benchmarks, average 77.27%. Headline numbers:
+
+- **GPQA Diamond**: 87.5 (Gemini 2.5 Pro 84.8, GPT-5 82.3)
+- **LiveCodeBench**: 83.93 (GPT-5 82.90)
+- **MATH500**: 99.4 (GPT-5 99.0)
+- **MMLU**: 94.1 (GPT-5 93.5)
+- **AIME25**: 93.3 (GPT-5 90.8)
+- **BigCodeBench**: 37.86 (Gemini 2.5 Pro 37.51, GPT-5 32.75)
+- **RLPR**: 44.75 (GPT-5 42.20)
+
+In in-distribution evaluation the Conductor surpasses Mixture-of-Agents, MasRouter, and 5-turn reflection baselines by substantial margins, and **matches their performance with far fewer agent calls** (Figure 5).
+
+<Figure src="./fig-1.png" caption="Figure 1: Our Conductor attains the state-of-the-art in GPQA and LiveCodeBench." />
+
+Additional findings:
+- **Randomized-pool training yields OOD generalization** (Figure 6): strong performance on open-model subsets the Conductor barely saw during training.
+- **Adapts agent count to task difficulty** (Figure 8): 2 agents on simple tasks like MMLU, 3–4 agents on LiveCodeBench.
+- **Recursive calls give additional gains** (Table 2): self-orchestration becomes a new test-time scaling axis.
+- **Worker distribution reflects quality** (Figure 10): recursive rounds redistribute selection toward Claude and Gemini — the Conductor implicitly learns a worker-quality ranking.
+
+<Figure src="./fig-4.png" caption="Figure 4: Conductor in-distribution evaluation against multi-agent methods and 5-turn reflection agent baselines. The Conductor surpasses all baselines by substantive margins, exemplifying the Conductor's ability to amplify the capabilities of its workers." />
+
+## What It Achieves and Where It Falls Short
+
+**New achievements**:
+- A 7B model, trained with RL, surpasses GPT-5 and Gemini 2.5 Pro by *orchestrating* them — among the early demonstrations that multi-agent collaboration can be unlocked by RL.
+- Communication topology, prompt engineering, and verification strategies emerge end-to-end from reward maximization without dedicated modules.
+- Recursive self-orchestration introduces a new test-time scaling axis.
+
+**Limitations**:
+- *Author-stated*: Reliance on expensive frontier LLMs may exacerbate the economic divide in AI access.
+- *Author-stated*: Up to 5-step workflows — longer-horizon tasks require further extension.
+- 🤖 *AI analysis (generality)*: All seven benchmarks are knowledge / short-form reasoning. Generalization to truly *agentic* settings — open-ended coding (IDE integration, multi-step debugging), long-form writing / research, external tool use — remains untested. Whether SOTA on short-form reasoning transfers to long-horizon agent work needs separate evaluation.
+
+## Terry's memo
+
+- *(None)*
